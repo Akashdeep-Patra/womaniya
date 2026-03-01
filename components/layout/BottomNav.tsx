@@ -83,7 +83,14 @@ export function BottomNav() {
                     className="absolute top-0 w-8 h-[2px] bg-bengal-sindoor rounded-b-md" 
                   />
                 )}
-                <Icon size={20} strokeWidth={active ? 1.5 : 1} />
+                <Icon 
+                  size={24} 
+                  strokeWidth={active ? 2.5 : 2} 
+                  className={cn(
+                    "transition-all duration-300 drop-shadow-sm",
+                    active ? "fill-bengal-sindoor/20" : "fill-transparent"
+                  )} 
+                />
                 <span className={isBn ? 'font-bengali tracking-wide' : 'font-sans-en'}>{label}</span>
               </Link>
             );
@@ -100,7 +107,11 @@ export function BottomNav() {
                 : 'text-bengal-kajal/50 hover:text-bengal-kajal font-normal'
             )}
           >
-            {isOpen ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1} />}
+            {isOpen ? (
+              <X size={24} strokeWidth={2.5} className="drop-shadow-sm fill-bengal-sindoor/20" />
+            ) : (
+              <Menu size={24} strokeWidth={2} className="drop-shadow-sm fill-transparent" />
+            )}
             <span className={isBn ? 'font-bengali tracking-wide' : 'font-sans-en'}>{t('menu')}</span>
           </button>
         </div>
@@ -151,21 +162,21 @@ export function BottomNav() {
                 <div className="space-y-4 mb-8">
                   <Link href={`/${locale}/shop`} onClick={closeSheet} className="flex items-center justify-between group">
                     <div className="flex items-center gap-3 text-bengal-kajal">
-                      <Sparkles size={18} strokeWidth={1} className="text-bengal-kansa" />
+                      <Sparkles size={20} strokeWidth={2} className="text-bengal-kansa drop-shadow-sm fill-bengal-kansa/20" />
                       <span className={`text-lg ${isBn ? 'font-bengali' : 'font-sans-en font-light tracking-wide'}`}>
                         {isBn ? 'নতুন সংগ্রহ' : 'New Arrivals'}
                       </span>
                     </div>
-                    <ChevronRight size={16} strokeWidth={1} className="text-bengal-kajal/30 group-hover:text-bengal-kansa transition-colors" />
+                    <ChevronRight size={18} strokeWidth={2} className="text-bengal-kajal/40 group-hover:text-bengal-kansa transition-colors drop-shadow-sm" />
                   </Link>
                   <Link href={`/${locale}#story`} onClick={closeSheet} className="flex items-center justify-between group">
                     <div className="flex items-center gap-3 text-bengal-kajal">
-                      <Info size={18} strokeWidth={1} className="text-bengal-kansa" />
+                      <Info size={20} strokeWidth={2} className="text-bengal-kansa drop-shadow-sm fill-bengal-kansa/20" />
                       <span className={`text-lg ${isBn ? 'font-bengali' : 'font-sans-en font-light tracking-wide'}`}>
                         {isBn ? 'আমাদের কথা' : 'About Us'}
                       </span>
                     </div>
-                    <ChevronRight size={16} strokeWidth={1} className="text-bengal-kajal/30 group-hover:text-bengal-kansa transition-colors" />
+                    <ChevronRight size={18} strokeWidth={2} className="text-bengal-kajal/40 group-hover:text-bengal-kansa transition-colors drop-shadow-sm" />
                   </Link>
                 </div>
 
@@ -202,17 +213,17 @@ export function BottomNav() {
                   </h4>
                   <div className="space-y-4">
                     <a href="https://wa.me/919143161829" target="_blank" rel="noreferrer" className="flex items-center gap-3 text-bengal-kajal/80">
-                      <MessageCircle size={16} strokeWidth={1.2} />
+                      <MessageCircle size={18} strokeWidth={2} className="drop-shadow-sm fill-bengal-kajal/5" />
                       <span className={`text-sm ${isBn ? 'font-bengali' : 'font-sans-en font-light'}`}>
                         {isBn ? 'হোয়াটসঅ্যাপ করুন' : 'WhatsApp Us'}
                       </span>
                     </a>
                     <div className="flex items-center gap-3 text-bengal-kajal/80">
-                      <Phone size={16} strokeWidth={1.2} />
+                      <Phone size={18} strokeWidth={2} className="drop-shadow-sm fill-bengal-kajal/5" />
                       <span className="text-sm font-sans-en font-light">+91 91431 61829</span>
                     </div>
                     <div className="flex items-center gap-3 text-bengal-kajal/80">
-                      <MapPin size={16} strokeWidth={1.2} />
+                      <MapPin size={18} strokeWidth={2} className="drop-shadow-sm fill-bengal-kajal/5" />
                       <span className={`text-sm ${isBn ? 'font-bengali' : 'font-sans-en font-light'}`}>
                         {isBn ? 'কলকাতা, ভারত' : 'Kolkata, India'}
                       </span>

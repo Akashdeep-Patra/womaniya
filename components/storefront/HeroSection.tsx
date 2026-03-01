@@ -1,12 +1,13 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { ArrowDown } from 'lucide-react';
+import { BengalWomanHero } from '@/components/illustrations/BengalWomanHero';
+import { LoomWeaver } from '@/components/illustrations/LoomWeaver';
+import { BengalVillage } from '@/components/illustrations/BengalVillage';
 
 export function HeroSection() {
   const t = useTranslations('hero');
@@ -46,24 +47,12 @@ export function HeroSection() {
 
         {/* Layered Image Composition */}
         <div className="relative w-full aspect-4/5 mt-4">
-          <motion.div style={{ y: parallaxMain }} className="absolute inset-x-6 top-0 bottom-12 z-0">
-            <Image
-              src="/instagram/2026-02-25_12-56-26_UTC_1.jpg"
-              alt={isBn ? 'হাতে বোনা বাংলার শাড়ি' : 'Handwoven Bengali saree'}
-              fill priority
-              className="object-cover object-center rounded-3xl"
-              sizes="100vw"
-            />
+          <motion.div style={{ y: parallaxMain }} className="absolute inset-x-6 top-0 bottom-12 z-0 bg-bengal-mati rounded-3xl overflow-hidden shadow-sm">
+            <BengalWomanHero />
           </motion.div>
 
-          <motion.div style={{ y: parallaxOffset1 }} className="absolute -right-4 bottom-4 w-32 aspect-3/4 z-10 border-4 border-bengal-kori shadow-xl rounded-3xl overflow-hidden">
-            <Image
-              src="/instagram/2026-02-23_06-34-00_UTC_1.jpg"
-              alt="Fabric Detail"
-              fill
-              className="object-cover"
-              sizes="150px"
-            />
+          <motion.div style={{ y: parallaxOffset1 }} className="absolute -right-4 bottom-4 w-32 aspect-3/4 z-10 border-4 border-bengal-kori shadow-xl rounded-3xl overflow-hidden bg-bengal-cream">
+            <LoomWeaver />
           </motion.div>
 
           {/* Strong fade to page colour */}
@@ -72,12 +61,12 @@ export function HeroSection() {
 
         {/* Copy — intertwining with images */}
         <div className="px-6 pb-20 -mt-16 flex flex-col gap-6 relative z-20">
-          <h1 className={`leading-[0.95] text-bengal-kajal ${
-            isBn ? 'font-bengali-serif text-[2.8rem]' : 'font-editorial text-[3.2rem]'
+          <h1 className={`leading-[0.85] text-bengal-kajal tracking-tight ${
+            isBn ? 'font-bengali-serif text-[4rem]' : 'font-ancient text-[4rem]'
           }`}>
-            <span className="block mb-2">{t('headline_1')}</span>
-            <span className="block text-bengal-sindoor italic pr-4">{t('headline_2')}</span>
-            <span className="block mt-2 ml-4">{t('headline_3')}</span>
+            <span className="block mb-1">{t('headline_1')}</span>
+            <span className={`block text-bengal-sindoor ${isBn ? '' : 'italic'} pl-12`}>{t('headline_2')}</span>
+            <span className="block mt-1 pl-4">{t('headline_3')}</span>
           </h1>
 
           <div className="w-8 h-[2px] bg-bengal-kansa" />
@@ -124,14 +113,14 @@ export function HeroSection() {
           </div>
 
           <h1
-            className={`leading-[0.9] text-bengal-kajal mb-10 relative ${isBn ? 'font-bengali-serif' : 'font-editorial italic'}`}
-            style={{ fontSize: 'clamp(4rem, 6.5vw, 7.5rem)' }}
+            className={`leading-[0.85] text-bengal-kajal mb-10 relative tracking-tighter ${isBn ? 'font-bengali-serif' : 'font-ancient'}`}
+            style={{ fontSize: 'clamp(5rem, 8vw, 9rem)' }}
           >
-            <span className="block transform -translate-x-4">{t('headline_1')}</span>
-            <span className={`block text-bengal-sindoor my-2 ${isBn ? '' : 'italic'}`}>
+            <span className="block transform -translate-x-6">{t('headline_1')}</span>
+            <span className={`block text-bengal-sindoor my-1 transform translate-x-16 ${isBn ? '' : 'italic'}`}>
               {t('headline_2')}
             </span>
-            <span className="block transform translate-x-12 relative z-20">
+            <span className="block transform -translate-x-2 relative z-20">
               {t('headline_3')}
             </span>
           </h1>
@@ -163,29 +152,17 @@ export function HeroSection() {
           {/* Main Large Image */}
           <motion.div
             style={{ y: parallaxMain }}
-            className="absolute right-0 top-[5%] w-[85%] h-[85%] shadow-2xl"
+            className="absolute right-0 top-[5%] w-[85%] h-[85%] shadow-2xl rounded-3xl overflow-hidden bg-bengal-mati"
           >
-            <Image
-              src="/instagram/2026-02-25_12-56-26_UTC_1.jpg"
-              alt={isBn ? 'বাংলার শাড়ি' : 'Bengali saree'}
-              fill priority
-              className="object-cover object-center rounded-3xl"
-              sizes="50vw"
-            />
+            <BengalWomanHero />
           </motion.div>
 
           {/* Floating Offset Image 1 - Bottom Left Intertwined */}
           <motion.div
             style={{ y: parallaxOffset1 }}
-            className="absolute -left-[10%] bottom-[10%] w-[45%] aspect-3/4 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-8 border-bengal-kori z-20 rounded-[2.5rem] overflow-hidden"
+            className="absolute -left-[10%] bottom-[10%] w-[45%] aspect-3/4 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-8 border-bengal-kori z-20 rounded-[2.5rem] overflow-hidden bg-bengal-cream"
           >
-            <Image
-              src="/instagram/2026-02-23_06-34-00_UTC_1.jpg"
-              alt="Detail 1"
-              fill
-              className="object-cover"
-              sizes="25vw"
-            />
+            <LoomWeaver />
             {/* Subtle overlay text on the small image */}
             <div className="absolute -right-16 bottom-12 rotate-90 origin-bottom-left text-[9px] tracking-[0.4em] uppercase text-bengal-kansa bg-bengal-kori px-3 py-1">
               {t('intro')}
@@ -195,15 +172,9 @@ export function HeroSection() {
           {/* Floating Offset Image 2 - Top Right Accent */}
           <motion.div
             style={{ y: parallaxOffset2 }}
-            className="absolute -right-[5%] -top-[2%] w-[25%] aspect-square shadow-xl rounded-3xl border-4 border-bengal-kori z-30 overflow-hidden"
+            className="absolute -right-[5%] -top-[2%] w-[25%] aspect-square shadow-xl rounded-3xl border-4 border-bengal-kori z-30 overflow-hidden bg-bengal-kori"
           >
-            <Image
-              src="/instagram/2026-02-11_10-27-03_UTC_1.jpg"
-              alt="Detail 2"
-              fill
-              className="object-cover"
-              sizes="15vw"
-            />
+            <BengalVillage />
           </motion.div>
         </div>
 

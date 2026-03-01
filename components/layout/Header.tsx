@@ -5,7 +5,6 @@ import Link                    from 'next/link';
 import { useParams }           from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn }                  from '@/lib/utils';
-import { Menu } from 'lucide-react';
 
 /* ─────────────────────────────────────────────────────────────────
    Locale switcher — refined aesthetic circular/pill toggle
@@ -98,12 +97,8 @@ export function Header() {
           {/* Main Top Row */}
           <div className="relative flex items-center justify-between">
             
-            {/* Left: Mobile Menu / Desktop Nav */}
+            {/* Left: Desktop Nav */}
             <div className="flex-1 flex items-center">
-              <button className="md:hidden flex items-center justify-center p-2 -ml-2 text-bengal-kajal hover:bg-bengal-kansa/10 rounded-full transition-colors">
-                <Menu strokeWidth={1.5} size={22} />
-              </button>
-              
               <nav className="hidden md:flex items-center gap-8">
                 {navLinks.map((l) => (
                   <NavLink key={l.href} href={l.href} label={l.label} isBn={isBn} />

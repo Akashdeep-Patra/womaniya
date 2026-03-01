@@ -72,7 +72,14 @@ export function AdminMobileNav({ locale }: { locale: string }) {
                           : 'text-[#F9F6F0]/50 hover:text-[#F9F6F0]',
                       )}
                     >
-                      <item.icon size={20} strokeWidth={1.5} />
+                      <item.icon 
+                        size={22} 
+                        strokeWidth={active ? 2.5 : 2} 
+                        className={cn(
+                          "transition-all duration-300 drop-shadow-sm",
+                          active ? "fill-[#C5A059]/20" : "fill-transparent"
+                        )} 
+                      />
                       <span>{item.label}</span>
                     </Link>
                   );
@@ -97,7 +104,14 @@ export function AdminMobileNav({ locale }: { locale: string }) {
                   active ? 'text-[#C5A059]' : 'text-[#F9F6F0]/40 hover:text-[#F9F6F0]',
                 )}
               >
-                <tab.icon size={18} strokeWidth={active ? 2 : 1.5} />
+                <tab.icon 
+                  size={20} 
+                  strokeWidth={active ? 2.5 : 2} 
+                  className={cn(
+                    "transition-all duration-300 drop-shadow-sm",
+                    active ? "fill-[#C5A059]/20" : "fill-transparent"
+                  )} 
+                />
                 <span>{tab.label}</span>
               </Link>
             );
@@ -110,7 +124,14 @@ export function AdminMobileNav({ locale }: { locale: string }) {
               moreOpen ? 'text-[#C5A059]' : 'text-[#F9F6F0]/40 hover:text-[#F9F6F0]',
             )}
           >
-            <MoreHorizontal size={18} strokeWidth={1.5} />
+            <MoreHorizontal 
+              size={20} 
+              strokeWidth={moreOpen ? 2.5 : 2} 
+              className={cn(
+                "transition-all duration-300 drop-shadow-sm",
+                moreOpen ? "fill-[#C5A059]/20" : "fill-transparent"
+              )} 
+            />
             <span>More</span>
           </button>
         </div>

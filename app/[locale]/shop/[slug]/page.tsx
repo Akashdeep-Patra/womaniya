@@ -73,7 +73,7 @@ export default async function ProductPage({ params }: Props) {
             href={`/${locale}/shop`}
             className="inline-flex items-center gap-2 text-xs tracking-widest uppercase text-bengal-kajal/50 hover:text-bengal-sindoor mt-6 mb-8 transition-colors"
           >
-            <ArrowLeft size={13} /> {t('back')}
+            <ArrowLeft size={16} strokeWidth={2} className="drop-shadow-sm" /> {t('back')}
           </Link>
 
           {/* Product grid */}

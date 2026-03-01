@@ -27,7 +27,7 @@ export function Providers({ locale, messages, children }: Props) {
               background:  '#F9F6F0',
               color:       '#1A1918',
               border:      '1px solid rgba(197,160,89,0.4)',
-              fontFamily:  'var(--font-outfit)',
+              fontFamily:  'var(--font-sans-en)',
               borderRadius: '16px',
             },
           }}

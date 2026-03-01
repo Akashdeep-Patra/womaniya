@@ -30,6 +30,11 @@
   --font-sans-en:  var(--font-jost), 'Jost', system-ui, sans-serif;
   --font-serif-bn: var(--font-noto-serif-bn), 'Noto Serif Bengali', serif;
   --font-sans-bn:  var(--font-anek-bn), 'Anek Bangla', sans-serif;
+  --font-ancient:  var(--font-cinzel), 'Cinzel Decorative', serif;
+
+  /* Standard Tailwind font mappings for internal/admin pages */
+  --font-sans: var(--font-sans-en);
+  --font-serif: var(--font-serif-en);
 
   /* Shadcn token → CSS var bridge */
   --color-background:         var(--background);
@@ -109,20 +114,6 @@
     font-feature-settings: "kern" 1, "liga" 1;
   }
 
-  /* Bengali text utility */
-  .font-bengali {
-    font-family: var(--font-sans-bn);
-    font-weight: 500;
-  }
-  .font-bengali-serif {
-    font-family: var(--font-serif-bn);
-    font-weight: 800; /* Extra bold/thick for heritage aesthetic */
-  }
-  .font-editorial {
-    font-family: var(--font-serif-en);
-    font-weight: 800; /* Extra bold/thick for heritage aesthetic */
-  }
-
   /* Touch optimisation */
   button, a, [role="button"] {
     @apply touch-manipulation;
@@ -136,6 +127,23 @@
 
 /* ─── Utility Classes ───────────────────────────────────────────── */
 @layer utilities {
+  /* Font utilities */
+  .font-bengali {
+    font-family: var(--font-sans-bn);
+    font-weight: 500;
+  }
+  .font-bengali-serif {
+    font-family: var(--font-serif-bn);
+    font-weight: 800; /* Extra bold/thick for heritage aesthetic */
+  }
+  .font-editorial {
+    font-family: var(--font-serif-en);
+    font-weight: 800; /* Extra bold/thick for heritage aesthetic */
+  }
+  .font-ancient {
+    font-family: var(--font-ancient);
+    font-weight: 700;
+  }
   /* Editorial letter-spacing */
   .tracking-editorial { letter-spacing: 0.18em; }
   .tracking-wide-xl   { letter-spacing: 0.12em; }

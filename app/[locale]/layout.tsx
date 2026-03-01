@@ -4,11 +4,15 @@ import {
   Jost,
   Noto_Serif_Bengali,
   Anek_Bangla,
+  Cinzel_Decorative,
 } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { setRequestLocale, getMessages } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { Providers } from '@/components/providers/Providers';
+import { CustomCursor } from '@/components/layout/CustomCursor';
+import { NoiseOverlay } from '@/components/layout/NoiseOverlay';
+import { ScrollProgress } from '@/components/layout/ScrollProgress';
 import '@/app/globals.css';
 
 /* ── Google Fonts ─────────────────────────────────────────────── */
@@ -42,11 +46,20 @@ const anekBangla = Anek_Bangla({
   weight: ['300', '400', '500', '600', '700', '800'],
 });
 
+/* Cinzel Decorative — ancient English vibe */
+const cinzelDecorative = Cinzel_Decorative({
+  variable: '--font-cinzel',
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '700', '900'],
+});
+
 const fontVars = [
   playfair.variable,
   jost.variable,
   notoSerifBn.variable,
   anekBangla.variable,
+  cinzelDecorative.variable,
 ].join(' ');
 
 /* ── Metadata ─────────────────────────────────────────────────── */
@@ -93,6 +106,9 @@ export default async function LocaleLayout({ children, params }: Props) {
       className={fontVars}
     >
       <body className="min-h-screen bg-bengal-kori text-bengal-kajal antialiased">
+        <CustomCursor />
+        <NoiseOverlay />
+        <ScrollProgress />
         <Providers locale={locale} messages={messages}>
           {children}
         </Providers>
