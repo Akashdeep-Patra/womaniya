@@ -16,9 +16,11 @@ export function JamdaniDiamond({
         {Array.from({ length: 4 }).map((_, i) => {
           const angles = [0, 90, 180, 270];
           const a = (angles[i] * Math.PI) / 180;
+          const px = Number((Math.cos(a) * 11).toFixed(4));
+          const py = Number((Math.sin(a) * 11).toFixed(4));
           return (
-            <ellipse key={i} cx={Math.cos(a) * 11} cy={Math.sin(a) * 11}
-              rx="1.5" ry="3.5" transform={`rotate(${angles[i]},${Math.cos(a) * 11},${Math.sin(a) * 11})`}
+            <ellipse key={i} cx={px} cy={py}
+              rx="1.5" ry="3.5" transform={`rotate(${angles[i]},${px},${py})`}
               fill={color} opacity="0.5" />
           );
         })}

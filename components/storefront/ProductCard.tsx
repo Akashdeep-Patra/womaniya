@@ -35,7 +35,7 @@ export function ProductCard({ product, variant = 'portrait' }: Props) {
         {/* Image */}
         <div
           className={cn(
-            'relative overflow-hidden bg-bengal-mati rounded-sm',
+            'relative overflow-hidden bg-bengal-mati rounded-3xl shadow-sm hover:shadow-lg transition-shadow duration-300',
             variant === 'portrait' ? 'aspect-[4/5]' : 'aspect-square'
           )}
         >

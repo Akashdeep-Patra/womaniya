@@ -40,7 +40,7 @@ export function ProcessSection() {
               />
               {/* Overlay label */}
               <div className="absolute bottom-4 left-4 right-4">
-                <div className="bg-bengal-kajal/85 backdrop-blur-sm rounded-xl px-4 py-3">
+                <div className="bg-bengal-kajal/85 backdrop-blur-sm rounded-3xl px-4 py-3">
                   <p className="text-bengal-kansa text-[10px] tracking-widest uppercase font-sans-en mb-0.5">
                     {isBn ? 'আমাদের তাঁতি' : 'Our Weaver'}
                   </p>
@@ -104,7 +104,7 @@ export function ProcessSection() {
             </div>
 
             {/* Pujo season CTA */}
-            <div className="bg-bengal-sindoor/8 border border-bengal-sindoor/20 rounded-2xl p-5">
+            <div className="bg-bengal-sindoor/8 border border-bengal-sindoor/20 rounded-3xl p-5">
               <p className={`text-bengal-kajal font-medium text-sm mb-1 ${isBn ? 'font-bengali' : 'font-sans-en'}`}>
                 {isBn ? '🪔 পুজো আসছে — আগে বলো' : '🪔 Puja is coming — order early'}
               </p>

@@ -22,10 +22,10 @@ const variants: Record<Variant, string> = {
 };
 
 const sizes: Record<Size, string> = {
-  sm:    'h-8 px-4 text-[10px] tracking-widest rounded-xl',
-  md:    'h-10 px-5 text-xs tracking-widest rounded-xl',
-  lg:    'h-12 px-7 text-sm tracking-wide rounded-2xl',
-  touch: 'h-14 px-6 text-sm tracking-wide w-full rounded-2xl',
+  sm:    'h-8 px-4 text-[10px] tracking-widest rounded-full',
+  md:    'h-10 px-5 text-xs tracking-widest rounded-full',
+  lg:    'h-12 px-7 text-sm tracking-wide rounded-full',
+  touch: 'h-14 px-6 text-sm tracking-wide w-full rounded-full',
 };
 
 export const BengalButton = React.forwardRef<HTMLButtonElement, BengalButtonProps>(

@@ -40,12 +40,14 @@ export function PaisleyCluster({
       <g transform="translate(51,46)" opacity="0.6">
         {Array.from({ length: 6 }).map((_, i) => {
           const a = (i * 60 * Math.PI) / 180;
+          const cx = Number((Math.cos(a) * 5).toFixed(4));
+          const cy = Number((Math.sin(a) * 5).toFixed(4));
           return (
             <ellipse
               key={i}
-              cx={Math.cos(a) * 5} cy={Math.sin(a) * 5}
+              cx={cx} cy={cy}
               rx="1.8" ry="3.5"
-              transform={`rotate(${i * 60},${Math.cos(a) * 5},${Math.sin(a) * 5})`}
+              transform={`rotate(${i * 60},${cx},${cy})`}
               fill={color}
             />
           );

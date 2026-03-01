@@ -59,7 +59,7 @@ export function FeaturesSection() {
               >
                 <BengalCard variant="bordered" className="h-full">
                   <BengalCardBody className="flex flex-col items-center text-center gap-4 py-6 md:py-8">
-                    <div className="w-14 h-14 rounded-2xl bg-bengal-mati flex items-center justify-center">
+                    <div className="w-14 h-14 rounded-full bg-bengal-mati flex items-center justify-center">
                       <Icon size={42} />
                     </div>
                     <div>

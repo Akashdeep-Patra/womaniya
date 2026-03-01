@@ -86,11 +86,7 @@ export function CategoriesSection() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.06 }}
-              className="flex-shrink-0 snap-start
-                w-[72vw] max-w-[280px]
-                sm:w-[44vw] sm:max-w-[320px]
-                md:w-[28vw] md:max-w-[340px]
-                lg:flex-1 lg:w-auto lg:max-w-none"
+              className="flex-shrink-0 snap-start w-[72vw] max-w-[280px] sm:w-[44vw] sm:max-w-[320px] md:w-[28vw] md:max-w-[340px] lg:flex-1 lg:w-auto lg:max-w-none"
             >
               <Link
                 href={`/${locale}/shop?category=${encodeURIComponent(filter)}`}
@@ -141,9 +137,7 @@ export function CategoriesSection() {
         {CATS.map((c, i) => (
           <div
             key={c.filter}
-            className={`h-1 rounded-full transition-all duration-300 ${
-              i === 0 ? 'w-5 bg-bengal-sindoor' : 'w-1.5 bg-bengal-kajal/20'
-            }`}
+            className={`h-1 rounded-full transition-all duration-300 ${i === 0 ? 'w-5 bg-bengal-sindoor' : 'w-1.5 bg-bengal-kajal/20'}`}
           />
         ))}
       </div>

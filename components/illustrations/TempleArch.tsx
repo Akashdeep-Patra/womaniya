@@ -19,9 +19,11 @@ export function TempleArch({
       <g transform={`translate(${cx},12)`}>
         {Array.from({ length: 6 }).map((_, i) => {
           const a = ((i * 60 + 30) * Math.PI) / 180;
+          const px = Number((Math.cos(a) * 5).toFixed(4));
+          const py = Number((Math.sin(a) * 5).toFixed(4));
           return (
-            <ellipse key={i} cx={Math.cos(a) * 5} cy={Math.sin(a) * 5}
-              rx="1" ry="2.5" transform={`rotate(${i * 60 + 30},${Math.cos(a) * 5},${Math.sin(a) * 5})`}
+            <ellipse key={i} cx={px} cy={py}
+              rx="1" ry="2.5" transform={`rotate(${i * 60 + 30},${px},${py})`}
               fill={color} opacity="0.5" />
           );
         })}

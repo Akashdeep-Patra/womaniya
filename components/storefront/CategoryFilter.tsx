@@ -31,7 +31,7 @@ export function CategoryFilter({ active, onChange }: Props) {
             key={cat}
             onClick={() => onChange(cat)}
             className={cn(
-              'relative flex-shrink-0 h-9 px-4 rounded-sm border text-[10px] tracking-widest uppercase font-medium',
+              'relative flex-shrink-0 h-10 px-5 rounded-full border text-[10px] tracking-widest uppercase font-medium shadow-sm transition-all',
               'transition-colors duration-200 touch-manipulation whitespace-nowrap',
               isActive
                 ? 'bg-bengal-sindoor text-bengal-kori border-bengal-sindoor'
@@ -42,7 +42,7 @@ export function CategoryFilter({ active, onChange }: Props) {
             {isActive && (
               <motion.div
                 layoutId="category-pill"
-                className="absolute inset-0 bg-bengal-sindoor rounded-sm -z-10"
+                className="absolute inset-0 bg-bengal-sindoor rounded-full -z-10 shadow-md"
                 transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               />
             )}

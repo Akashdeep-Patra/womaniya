@@ -23,15 +23,15 @@ export function AlponaCorner({
         {Array.from({ length: 7 }).map((_, i) => {
           const angle = ((i * 90) / 6) * (Math.PI / 180);
           const r = 42;
-          const cx = 4 + Math.cos(angle) * r;
-          const cy = 60 - Math.sin(angle) * r;
+          const cx = Number((4 + Math.cos(angle) * r).toFixed(4));
+          const cy = Number((60 - Math.sin(angle) * r).toFixed(4));
           return <circle key={i} cx={cx} cy={cy} r="1.5" fill={color} opacity="0.5" />;
         })}
         {Array.from({ length: 5 }).map((_, i) => {
           const angle = ((i * 90) / 4) * (Math.PI / 180);
           const r = 28;
-          const cx = 4 + Math.cos(angle) * r;
-          const cy = 60 - Math.sin(angle) * r;
+          const cx = Number((4 + Math.cos(angle) * r).toFixed(4));
+          const cy = Number((60 - Math.sin(angle) * r).toFixed(4));
           return (
             <ellipse
               key={`p${i}`}

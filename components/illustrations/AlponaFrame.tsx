@@ -29,9 +29,11 @@ export function AlponaFrame({
           <g key={i} transform={`translate(${cx},${cy})`}>
             {Array.from({ length: 6 }).map((_, j) => {
               const a = (j * 60 * Math.PI) / 180;
+              const px = Number((Math.cos(a) * 6).toFixed(4));
+              const py = Number((Math.sin(a) * 6).toFixed(4));
               return (
-                <ellipse key={j} cx={Math.cos(a) * 6} cy={Math.sin(a) * 6}
-                  rx="1.2" ry="2.8" transform={`rotate(${j * 60},${Math.cos(a) * 6},${Math.sin(a) * 6})`}
+                <ellipse key={j} cx={px} cy={py}
+                  rx="1.2" ry="2.8" transform={`rotate(${j * 60},${px},${py})`}
                   fill={color} opacity="0.35" />
               );
             })}

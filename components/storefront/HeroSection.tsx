@@ -51,12 +51,12 @@ export function HeroSection() {
               src="/hero-placeholder.svg"
               alt={isBn ? 'হাতে বোনা বাংলার শাড়ি' : 'Handwoven Bengali saree'}
               fill priority
-              className="object-cover object-center rounded-sm"
+              className="object-cover object-center rounded-3xl"
               sizes="100vw"
             />
           </motion.div>
 
-          <motion.div style={{ y: parallaxOffset1 }} className="absolute -right-4 bottom-4 w-32 aspect-3/4 z-10 border-4 border-bengal-kori shadow-xl">
+          <motion.div style={{ y: parallaxOffset1 }} className="absolute -right-4 bottom-4 w-32 aspect-3/4 z-10 border-4 border-bengal-kori shadow-xl rounded-3xl overflow-hidden">
             <Image
               src="/hero-offset-placeholder.svg"
               alt="Fabric Detail"
@@ -89,7 +89,7 @@ export function HeroSection() {
           <div className="flex items-center gap-5 pt-2">
             <Link
               href={`/${locale}/shop`}
-              className="inline-flex items-center h-12 px-7 bg-bengal-kajal text-bengal-kori text-[11px] tracking-[0.2em] uppercase font-medium hover:bg-bengal-sindoor transition-colors"
+              className="inline-flex items-center h-12 px-7 bg-bengal-kajal text-bengal-kori text-[11px] tracking-[0.2em] uppercase font-medium hover:bg-bengal-sindoor transition-all duration-300 rounded-full shadow-lg shadow-black/10 hover:shadow-xl hover:-translate-y-0.5"
             >
               {t('cta_shop')}
             </Link>
@@ -143,7 +143,7 @@ export function HeroSection() {
           <div className="flex items-center gap-8 pl-4">
             <Link
               href={`/${locale}/shop`}
-              className="group relative inline-flex items-center h-14 px-8 bg-bengal-kajal text-bengal-kori text-xs tracking-[0.2em] uppercase font-medium overflow-hidden"
+              className="group relative inline-flex items-center h-14 px-8 bg-bengal-kajal text-bengal-kori text-xs tracking-[0.2em] uppercase font-medium overflow-hidden rounded-full shadow-xl shadow-black/10 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
             >
               <span className="absolute inset-0 w-0 bg-bengal-sindoor transition-all duration-400 ease-out group-hover:w-full" />
               <span className="relative z-10">{t('cta_shop')}</span>
@@ -169,7 +169,7 @@ export function HeroSection() {
               src="/hero-placeholder.svg"
               alt={isBn ? 'বাংলার শাড়ি' : 'Bengali saree'}
               fill priority
-              className="object-cover object-center rounded-sm"
+              className="object-cover object-center rounded-3xl"
               sizes="50vw"
             />
           </motion.div>
@@ -177,7 +177,7 @@ export function HeroSection() {
           {/* Floating Offset Image 1 - Bottom Left Intertwined */}
           <motion.div
             style={{ y: parallaxOffset1 }}
-            className="absolute -left-[10%] bottom-[10%] w-[45%] aspect-3/4 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-8 border-bengal-kori z-20"
+            className="absolute -left-[10%] bottom-[10%] w-[45%] aspect-3/4 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-8 border-bengal-kori z-20 rounded-[2.5rem] overflow-hidden"
           >
             <Image
               src="/hero-offset-placeholder.svg"
@@ -195,7 +195,7 @@ export function HeroSection() {
           {/* Floating Offset Image 2 - Top Right Accent */}
           <motion.div
             style={{ y: parallaxOffset2 }}
-            className="absolute -right-[5%] -top-[2%] w-[25%] aspect-square shadow-lg border-4 border-bengal-kori z-30"
+            className="absolute -right-[5%] -top-[2%] w-[25%] aspect-square shadow-xl rounded-3xl border-4 border-bengal-kori z-30 overflow-hidden"
           >
             <Image
               src="/hero-offset-placeholder.svg"

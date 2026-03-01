@@ -15,17 +15,21 @@ export function LotusMedallion({
       <g transform={`translate(${c},${c})`}>
         {Array.from({ length: 12 }).map((_, i) => {
           const a = (i * 30 * Math.PI) / 180;
+          const px = Number((Math.cos(a) * 14).toFixed(4));
+          const py = Number((Math.sin(a) * 14).toFixed(4));
           return (
-            <ellipse key={i} cx={Math.cos(a) * 14} cy={Math.sin(a) * 14}
-              rx="2.5" ry="6" transform={`rotate(${i * 30},${Math.cos(a) * 14},${Math.sin(a) * 14})`}
+            <ellipse key={i} cx={px} cy={py}
+              rx="2.5" ry="6" transform={`rotate(${i * 30},${px},${py})`}
               fill={color} opacity="0.25" />
           );
         })}
         {Array.from({ length: 8 }).map((_, i) => {
           const a = (i * 45 * Math.PI) / 180;
+          const px = Number((Math.cos(a) * 8).toFixed(4));
+          const py = Number((Math.sin(a) * 8).toFixed(4));
           return (
-            <ellipse key={`i${i}`} cx={Math.cos(a) * 8} cy={Math.sin(a) * 8}
-              rx="1.5" ry="4" transform={`rotate(${i * 45},${Math.cos(a) * 8},${Math.sin(a) * 8})`}
+            <ellipse key={`i${i}`} cx={px} cy={py}
+              rx="1.5" ry="4" transform={`rotate(${i * 45},${px},${py})`}
               fill={color} opacity="0.4" />
           );
         })}
