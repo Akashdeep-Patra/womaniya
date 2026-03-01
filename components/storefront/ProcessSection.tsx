@@ -32,7 +32,7 @@ export function ProcessSection() {
           >
             <div className="relative aspect-3/4 rounded-3xl overflow-hidden bg-bengal-mati border border-bengal-kansa/20">
               <Image
-                src="/hero-placeholder.svg"
+                src="/instagram/2026-02-09_12-41-33_UTC_1.jpg"
                 alt="Weaver at loom"
                 fill
                 className="object-cover"

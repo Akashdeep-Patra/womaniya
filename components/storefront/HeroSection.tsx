@@ -48,7 +48,7 @@ export function HeroSection() {
         <div className="relative w-full aspect-4/5 mt-4">
           <motion.div style={{ y: parallaxMain }} className="absolute inset-x-6 top-0 bottom-12 z-0">
             <Image
-              src="/hero-placeholder.svg"
+              src="/instagram/2026-02-25_12-56-26_UTC_1.jpg"
               alt={isBn ? 'হাতে বোনা বাংলার শাড়ি' : 'Handwoven Bengali saree'}
               fill priority
               className="object-cover object-center rounded-3xl"
@@ -58,7 +58,7 @@ export function HeroSection() {
 
           <motion.div style={{ y: parallaxOffset1 }} className="absolute -right-4 bottom-4 w-32 aspect-3/4 z-10 border-4 border-bengal-kori shadow-xl rounded-3xl overflow-hidden">
             <Image
-              src="/hero-offset-placeholder.svg"
+              src="/instagram/2026-02-23_06-34-00_UTC_1.jpg"
               alt="Fabric Detail"
               fill
               className="object-cover"
@@ -166,7 +166,7 @@ export function HeroSection() {
             className="absolute right-0 top-[5%] w-[85%] h-[85%] shadow-2xl"
           >
             <Image
-              src="/hero-placeholder.svg"
+              src="/instagram/2026-02-25_12-56-26_UTC_1.jpg"
               alt={isBn ? 'বাংলার শাড়ি' : 'Bengali saree'}
               fill priority
               className="object-cover object-center rounded-3xl"
@@ -180,7 +180,7 @@ export function HeroSection() {
             className="absolute -left-[10%] bottom-[10%] w-[45%] aspect-3/4 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-8 border-bengal-kori z-20 rounded-[2.5rem] overflow-hidden"
           >
             <Image
-              src="/hero-offset-placeholder.svg"
+              src="/instagram/2026-02-23_06-34-00_UTC_1.jpg"
               alt="Detail 1"
               fill
               className="object-cover"
@@ -198,7 +198,7 @@ export function HeroSection() {
             className="absolute -right-[5%] -top-[2%] w-[25%] aspect-square shadow-xl rounded-3xl border-4 border-bengal-kori z-30 overflow-hidden"
           >
             <Image
-              src="/hero-offset-placeholder.svg"
+              src="/instagram/2026-02-11_10-27-03_UTC_1.jpg"
               alt="Detail 2"
               fill
               className="object-cover"

@@ -115,18 +115,18 @@ export function BottomNav() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
               className="fixed inset-0 bg-bengal-kajal/40 backdrop-blur-sm z-30 md:hidden"
               onClick={closeSheet}
             />
 
             {/* Sheet */}
             <motion.div
-              initial={{ y: '100%', opacity: 0.5 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: '100%', opacity: 0.5 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed bottom-15 left-0 right-0 bg-bengal-kori z-30 rounded-t-3xl border-t border-bengal-kansa/30 overflow-hidden shadow-[0_-10px_40px_rgba(0,0,0,0.1)] md:hidden max-h-[80vh] flex flex-col"
+              initial={{ y: '100%' }}
+              animate={{ y: '0%' }}
+              exit={{ y: '100%' }}
+              transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+              className="fixed bottom-15 left-0 right-0 bg-bengal-kori z-30 rounded-t-3xl border-t border-bengal-kansa/30 overflow-hidden shadow-[0_-10px_40px_rgba(0,0,0,0.1)] md:hidden max-h-[80vh] flex flex-col will-change-transform"
               style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
             >
               {/* Handle */}
