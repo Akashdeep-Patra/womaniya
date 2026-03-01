@@ -4,6 +4,7 @@ import type { AbstractIntlMessages } from 'next-intl';
 import { NextIntlClientProvider }    from 'next-intl';
 import { SmoothScrollProvider }      from '@/components/layout/SmoothScrollProvider';
 import { MagneticCursor }            from '@/components/layout/MagneticCursor';
+import { WhatsAppFloat }             from '@/components/layout/WhatsAppFloat';
 import { Toaster }                   from '@/components/ui/sonner';
 
 type Props = {
@@ -18,6 +19,7 @@ export function Providers({ locale, messages, children }: Props) {
       <SmoothScrollProvider>
         <MagneticCursor />
         {children}
+        <WhatsAppFloat />
         <Toaster
           position="top-center"
           toastOptions={{
@@ -26,6 +28,7 @@ export function Providers({ locale, messages, children }: Props) {
               color:       '#1A1918',
               border:      '1px solid rgba(197,160,89,0.4)',
               fontFamily:  'var(--font-outfit)',
+              borderRadius: '16px',
             },
           }}
         />

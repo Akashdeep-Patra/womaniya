@@ -23,7 +23,7 @@ export function CategoryFilter({ active, onChange }: Props) {
   };
 
   return (
-    <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap">
+    <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap" data-lenis-prevent>
       {CATEGORIES.map((cat) => {
         const isActive = active === cat;
         return (

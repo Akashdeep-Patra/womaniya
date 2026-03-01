@@ -1,5 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
-  <rect width="800" height="1000" fill="#EAE1D8"/>
-  <rect x="320" y="400" width="160" height="200" rx="80" fill="#C5A059" opacity="0.4"/>
-  <text x="400" y="560" font-family="Georgia,serif" font-size="18" fill="#8A1C14" text-anchor="middle" opacity="0.6">Add your saree photo</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" fill="none">
+  <rect width="600" height="800" fill="#EAE1D8"/>
+  <defs>
+    <pattern id="bg-lattice" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M40 8 L72 40 L40 72 L8 40 Z" fill="none" stroke="#C5A059" stroke-width="0.6" opacity="0.18"/>
+      <circle cx="40" cy="40" r="2" fill="#C5A059" opacity="0.2"/>
+    </pattern>
+  </defs>
+  <rect width="600" height="800" fill="url(#bg-lattice)"/>
+  <rect x="30" y="30" width="540" height="740" fill="none" stroke="#C5A059" stroke-width="1" opacity="0.3"/>
+  <path d="M240 120 C220 130,200 160,195 220 C190 290,205 380,210 460 C215 530,220 600,225 680 L375 680 C380 600,385 530,390 460 C395 380,410 290,405 220 C400 160,380 130,360 120 Z" fill="#C5A059" opacity="0.08"/>
+  <path d="M195 280 C160 300,130 340,120 400 C110 460,130 520,160 560 C190 600,210 620,225 680" stroke="#C5A059" stroke-width="1.5" opacity="0.4" fill="none"/>
+  <path d="M240 120 C220 130,210 150,210 180 L230 200 L290 198 L350 200 L390 180 C390 150,380 130,360 120 Z" fill="#C5A059" opacity="0.12" stroke="#C5A059" stroke-width="0.5"/>
+  <g transform="translate(300,420)" opacity="0.2">
+    <circle cx="0" cy="0" r="24" fill="none" stroke="#C5A059" stroke-width="1"/>
+    <circle cx="0" cy="0" r="12" fill="none" stroke="#C5A059" stroke-width="0.8"/>
+    <circle cx="0" cy="0" r="5" fill="#C5A059"/>
+    <circle cx="0" cy="0" r="2" fill="#8A1C14"/>
+  </g>
+  <path d="M30 30 L60 30 M30 30 L30 60" stroke="#C5A059" stroke-width="1.5" opacity="0.5"/>
+  <path d="M570 30 L540 30 M570 30 L570 60" stroke="#C5A059" stroke-width="1.5" opacity="0.5"/>
+  <path d="M30 770 L60 770 M30 770 L30 740" stroke="#C5A059" stroke-width="1.5" opacity="0.5"/>
+  <path d="M570 770 L540 770 M570 770 L570 740" stroke="#C5A059" stroke-width="1.5" opacity="0.5"/>
+  <text x="300" y="755" font-family="Georgia,serif" font-size="10" fill="#8A1C14" text-anchor="middle" opacity="0.45" letter-spacing="3">ADD YOUR SAREE PHOTO</text>
 </svg>

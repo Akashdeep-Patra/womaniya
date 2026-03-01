@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "shop": "Shop",
+    "about": "About",
     "story": "Our Story",
     "contact": "Contact",
     "menu": "Menu",
@@ -10,25 +11,53 @@
     "search": "Search"
   },
   "hero": {
-    "headline_1": "EMBRACE THE",
-    "headline_2": "ELEGANCE",
-    "headline_3": "OF BENGAL.",
-    "subtitle": "Handwoven stories in every thread — authentic Bengali handlooms crafted with generations of artistry.",
+    "headline_1": "WOVEN IN",
+    "headline_2": "TRADITION,",
+    "headline_3": "WORN TODAY.",
+    "subtitle": "We celebrate handloom heritage — Jamdani, Ikkat, Ajrakh — reimagined into conscious, wearable fashion for the modern woman.",
     "cta_shop": "Explore Collection",
     "cta_story": "Our Story",
-    "badge": "Handcrafted in Bengal"
+    "badge": "Handcrafted · Conscious · Heritage",
+    "scroll_hint": "Scroll to explore"
+  },
+  "features": {
+    "title": "The Womaniya Way",
+    "handwoven": "Handwoven",
+    "handwoven_desc": "Every thread is hand-spun and hand-woven by master weavers whose craft spans generations.",
+    "artisan": "Artisan Collaboration",
+    "artisan_desc": "We work directly with Jamdani weavers, Ikkat Pochampally artisans, and Ajrakh block printers.",
+    "conscious": "Conscious Design",
+    "conscious_desc": "Slow, mindful processes — handspun, handwoven, hand block printed — preserving the soul of true craftsmanship.",
+    "heritage": "Living Heritage",
+    "heritage_desc": "Each piece carries the story of human hands, patience, and centuries of artistry kept alive."
   },
   "shop": {
     "title": "The Collection",
-    "subtitle": "Each saree is a living heirloom.",
+    "subtitle": "Each piece is a conversation between tradition and the present moment.",
     "filter_all": "All",
     "filter_jamdani": "Jamdani",
     "filter_silk": "Silk",
     "filter_tant": "Tant",
+    "filter_ikkat": "Ikkat",
+    "filter_ajrakh": "Ajrakh",
     "filter_rtw": "Ready to Wear",
-    "no_products": "No products found in this category.",
+    "no_products": "No pieces found in this category.",
     "view": "View",
-    "from": "From"
+    "from": "From",
+    "new": "New",
+    "featured": "Featured"
+  },
+  "categories": {
+    "jamdani_title": "Dhakai Jamdani",
+    "jamdani_desc": "The poetry of Bengal — woven thread by thread by masters in Dhaka and Murshidabad. A UNESCO-recognised intangible heritage.",
+    "ikkat_title": "Ikkat Pochampally",
+    "ikkat_desc": "Resist-dyed threads rhythmically bound before weaving, creating geometric patterns that shimmer and move.",
+    "ajrakh_title": "Ajrakh Block Print",
+    "ajrakh_desc": "Ancient geometry pressed into living cloth using hand-carved wooden blocks and natural dyes.",
+    "tant_title": "Bengal Tant",
+    "tant_desc": "Airy, breathable, and luminous — the everyday luxury of Bengal woven fine on looms of Nadia and Murshidabad.",
+    "rtw_title": "Ready to Wear",
+    "rtw_desc": "Heritage silhouettes designed for modern life — comfortable, expressive, and effortlessly wearable."
   },
   "product": {
     "price": "Price",
@@ -39,11 +68,30 @@
     "back": "Back to Shop",
     "handwoven": "Handwoven",
     "authentic": "Authentic",
-    "share": "Share"
+    "share": "Share",
+    "care": "Care",
+    "care_desc": "Dry clean or gentle hand wash in cold water. Store in muslin bag.",
+    "artisan_made": "Artisan Made"
+  },
+  "about": {
+    "badge": "About Womaniya",
+    "title": "Where Tradition Meets Today",
+    "intro": "At Womaniya, we celebrate the beauty of handloom traditions by transforming them into contemporary, wearable fashion. Rooted in craft and guided by conscious design, our work brings together heritage textiles and modern silhouettes that fit seamlessly into everyday life.",
+    "body_1": "We collaborate closely with skilled Jamdani weavers, Ikkat Pochampally artisans, and Ajrakh block printers — communities whose knowledge has been passed down through generations. Every textile is thoughtfully created through slow, mindful processes — handspun, handwoven, and hand block printed — preserving the authenticity and soul of true craftsmanship.",
+    "body_2": "Our creations extend beyond clothing into accessories and versatile wardrobe pieces, all designed to be expressive, comfortable, and timeless. Each garment reflects a dialogue between tradition and modernity — where heritage techniques are reimagined into contemporary forms.",
+    "body_3": "By working directly with local artisans and weaving communities, we support sustainable livelihoods while keeping India's rich textile legacy alive. Every piece you wear carries the story of human hands, patience, and artistry.",
+    "closing": "We don't just create fashion — we create meaningful, wearable heritage.",
+    "stat_1_num": "3+",
+    "stat_1_label": "Artisan Communities",
+    "stat_2_num": "100%",
+    "stat_2_label": "Handcrafted",
+    "stat_3_num": "∞",
+    "stat_3_label": "Generations of Craft"
   },
   "story": {
-    "title": "Woven With Love",
-    "body": "Womania is a curated collection of authentic Bengali handlooms — Jamdani, Tant, Silk — each sourced directly from master weavers in Murshidabad and Dhaka."
+    "title": "Woven With Intent",
+    "body": "Womaniya was born from a deep love for India's handloom heritage and a belief that this living art deserves a place in the modern wardrobe. We source directly from weaving communities across Bengal, Telangana, and Gujarat — ensuring artisans are fairly compensated and their craft is preserved.",
+    "cta": "Our Full Story"
   },
   "admin": {
     "title": "Womania Admin",
@@ -55,11 +103,11 @@
     "photo": "Tap to Photograph",
     "photo_hint": "Point your camera at the saree",
     "uploading": "Uploading...",
-    "form_name": "Saree Name",
+    "form_name": "Saree Name (English)",
     "form_name_bn": "নাম (Bengali)",
     "form_price": "Price (₹)",
     "form_category": "Category",
-    "form_description": "Description",
+    "form_description": "Description (English)",
     "form_featured": "Feature on homepage",
     "publish": "Publish Saree",
     "publishing": "Publishing...",
@@ -78,11 +126,15 @@
   },
   "footer": {
     "tagline": "হাতে বোনা, মনে ধরা",
-    "tagline_en": "Hand-woven, Heart-held",
+    "tagline_en": "Hand-woven, Heart-held.",
+    "about_short": "Contemporary fashion rooted in India's handloom heritage — Jamdani, Ikkat, Ajrakh, Tant.",
     "rights": "All rights reserved.",
     "contact": "Contact",
     "whatsapp": "WhatsApp",
-    "instagram": "Instagram"
+    "instagram": "Instagram",
+    "shop": "Shop",
+    "about": "About",
+    "made_with": "Made with reverence for Indian craft."
   },
   "locale": {
     "switch_to": "বাংলা",

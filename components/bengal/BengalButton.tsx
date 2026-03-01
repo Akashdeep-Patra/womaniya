@@ -2,30 +2,30 @@ import * as React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'zari' | 'outline';
+type Variant = 'primary' | 'secondary' | 'ghost' | 'zari' | 'outline' | 'whatsapp';
 type Size    = 'sm' | 'md' | 'lg' | 'touch';
 
 interface BengalButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?:  Variant;
-  size?:     Size;
-  asChild?:  boolean;
-  loading?:  boolean;
+  variant?:   Variant;
+  size?:      Size;
+  loading?:   boolean;
   isBengali?: boolean;
 }
 
 const variants: Record<Variant, string> = {
-  primary:   'bg-bengal-sindoor text-bengal-kori hover:bg-bengal-alta border border-transparent',
-  secondary: 'bg-bengal-mati text-bengal-kajal hover:bg-bengal-dust border border-bengal-kansa/30',
+  primary:   'bg-bengal-sindoor text-bengal-kori hover:bg-bengal-alta shadow-sm shadow-bengal-sindoor/20 border border-transparent',
+  secondary: 'bg-bengal-mati text-bengal-kajal hover:bg-bengal-dust border border-bengal-kansa/20 shadow-sm',
   ghost:     'bg-transparent text-bengal-kajal hover:bg-bengal-mati border border-transparent',
-  zari:      'bg-bengal-kansa text-bengal-kajal hover:opacity-90 border border-bengal-kansa',
-  outline:   'bg-transparent text-bengal-sindoor hover:bg-bengal-sindoor hover:text-bengal-kori border border-bengal-sindoor',
+  zari:      'bg-bengal-kansa text-bengal-kajal hover:opacity-90 shadow-sm shadow-bengal-kansa/25 border border-transparent',
+  outline:   'bg-transparent text-bengal-sindoor hover:bg-bengal-sindoor hover:text-bengal-kori border border-bengal-sindoor/70',
+  whatsapp:  'bg-[#25D366] text-white hover:bg-[#20ba5a] shadow-sm shadow-[#25D366]/25 border border-transparent',
 };
 
 const sizes: Record<Size, string> = {
-  sm:    'h-8 px-4 text-[10px] tracking-widest',
-  md:    'h-10 px-6 text-xs tracking-widest',
-  lg:    'h-12 px-8 text-sm tracking-wider',
-  touch: 'h-14 px-8 text-sm tracking-wider w-full',  // mobile-optimised full-width
+  sm:    'h-8 px-4 text-[10px] tracking-widest rounded-xl',
+  md:    'h-10 px-5 text-xs tracking-widest rounded-xl',
+  lg:    'h-12 px-7 text-sm tracking-wide rounded-2xl',
+  touch: 'h-14 px-6 text-sm tracking-wide w-full rounded-2xl',
 };
 
 export const BengalButton = React.forwardRef<HTMLButtonElement, BengalButtonProps>(
@@ -34,11 +34,12 @@ export const BengalButton = React.forwardRef<HTMLButtonElement, BengalButtonProp
       <motion.button
         ref={ref}
         whileTap={{ scale: 0.97 }}
+        whileHover={{ y: -1 }}
         disabled={disabled || loading}
         className={cn(
-          'inline-flex items-center justify-center font-medium uppercase rounded-sm',
-          'transition-colors duration-200 touch-manipulation select-none',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
+          'inline-flex items-center justify-center font-medium uppercase',
+          'transition-all duration-200 touch-manipulation select-none',
+          'disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
           isBengali ? 'font-bengali tracking-normal' : 'font-sans-en',
           variants[variant],
           sizes[size],

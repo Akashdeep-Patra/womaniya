@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link                    from 'next/link';
 import { useParams }           from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -55,20 +55,20 @@ export function Header() {
   const params = useParams();
   const locale = params.locale as string;
 
-  const [scrolled,    setScrolled]    = useState(false);
-  const [hidden,      setHidden]      = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
+  const [hidden,   setHidden]   = useState(false);
+  const lastScrollYRef           = useRef(0);
 
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
       setScrolled(y > 30);
-      setHidden(y > lastScrollY && y > 120);
-      setLastScrollY(y);
+      setHidden(y > lastScrollYRef.current && y > 120);
+      lastScrollYRef.current = y;
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [lastScrollY]);
+  }, []);
 
   const navLinks = [
     { href: `/${locale}`,       label: locale === 'bn' ? 'হোম'       : 'Home'      },

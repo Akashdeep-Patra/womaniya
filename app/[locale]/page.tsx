@@ -1,12 +1,18 @@
 import { setRequestLocale }    from 'next-intl/server';
 import { getTranslations }     from 'next-intl/server';
-import { HeroSection }         from '@/components/storefront/HeroSection';
-import { ShopGrid }            from '@/components/storefront/ShopGrid';
+import type { Metadata }       from 'next';
+
 import { Header }              from '@/components/layout/Header';
 import { Footer }              from '@/components/layout/Footer';
 import { BottomNav }           from '@/components/layout/BottomNav';
+import { HeroSection }         from '@/components/storefront/HeroSection';
+import { HeritageTicker }      from '@/components/storefront/HeritageTicker';
+import { FeaturesSection }     from '@/components/storefront/FeaturesSection';
+import { CategoriesSection }   from '@/components/storefront/CategoriesSection';
+import { ShopGrid }            from '@/components/storefront/ShopGrid';
+import { AboutSection }        from '@/components/storefront/AboutSection';
+import { WhatsAppSection }     from '@/components/storefront/WhatsAppSection';
 import { getFeaturedProducts } from '@/actions/products';
-import type { Metadata }       from 'next';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -14,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'hero' });
   return {
-    title:       'Womania — Authentic Bengali Handlooms',
+    title:       'Womaniya — Authentic Handloom Heritage',
     description: t('subtitle'),
   };
 }
@@ -27,52 +33,42 @@ export default async function HomePage({ params }: Props) {
   try {
     featured = await getFeaturedProducts();
   } catch {
-    // DB not connected in dev — use empty array
+    // DB not yet connected in dev
   }
 
   return (
     <>
       <Header />
-      <main>
+
+      <main className="mb-bottom-nav md:mb-0">
+        {/* 1. Hero — editorial full-screen */}
         <HeroSection />
 
-        {/* Featured products — shown on homepage */}
+        {/* 2. Heritage ticker — animated strip */}
+        <HeritageTicker />
+
+        {/* 3. Features — The Womaniya Way */}
+        <FeaturesSection />
+
+        {/* 4. Categories — visual editorial grid */}
+        <CategoriesSection />
+
+        {/* 5. Featured products (if any) */}
         {featured.length > 0 && (
-          <ShopGrid products={featured} />
+          <div className="bg-bengal-cream">
+            <ShopGrid products={featured} />
+          </div>
         )}
 
-        {/* Our Story section */}
-        <StorySection locale={locale} />
+        {/* 6. About / Story — rich editorial layout */}
+        <AboutSection />
+
+        {/* 7. WhatsApp CTA */}
+        <WhatsAppSection />
       </main>
+
       <Footer />
       <BottomNav />
     </>
-  );
-}
-
-async function StorySection({ locale }: { locale: string }) {
-  const t = await getTranslations({ locale, namespace: 'story' });
-  const isBn = locale === 'bn';
-
-  return (
-    <section id="story" className="bg-bengal-kajal text-bengal-kori py-16 md:py-24 mb-bottom-nav md:mb-0">
-      <div className="max-w-3xl mx-auto px-6 text-center">
-        <p className="text-bengal-kansa text-[10px] tracking-[0.3em] uppercase mb-4">
-          {isBn ? 'আমাদের গল্প' : 'Our Story'}
-        </p>
-        <h2 className={`font-editorial text-4xl md:text-5xl mb-6 leading-tight ${isBn ? 'font-bengali-serif' : ''}`}>
-          {t('title')}
-        </h2>
-        <p className={`text-bengal-kori/70 text-base md:text-lg leading-relaxed ${isBn ? 'font-bengali' : ''}`}>
-          {t('body')}
-        </p>
-        {/* Decorative motif */}
-        <div className="flex items-center justify-center gap-4 mt-10">
-          <div className="h-px flex-1 bg-bengal-kansa/30" />
-          <span className="font-editorial text-bengal-kansa text-2xl">✦</span>
-          <div className="h-px flex-1 bg-bengal-kansa/30" />
-        </div>
-      </div>
-    </section>
   );
 }
