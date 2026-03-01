@@ -33,8 +33,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     strategy: 'jwt',
   },
   callbacks: {
-    authorized({ auth }) {
-      return !!auth;
+    authorized({ auth, request }) {
+      const { pathname } = request.nextUrl;
+      // Only protect admin routes (exclude login)
+      const isAdminRoute = pathname.includes('/admin') && !pathname.includes('/admin/login');
+      if (isAdminRoute) {
+        return !!auth;
+      }
+      return true; // Landing, shop, etc. are public
     },
   },
 });
