@@ -6,7 +6,7 @@ import {
   Hind_Siliguri,
 } from 'next/font/google';
 import { notFound } from 'next/navigation';
-import { setRequestLocale } from 'next-intl/server';
+import { setRequestLocale, getMessages } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { Providers } from '@/components/providers/Providers';
 import '@/app/globals.css';
@@ -76,14 +76,17 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   setRequestLocale(locale);
 
+  // Must be fetched server-side and passed to the client provider
+  const messages = await getMessages();
+
   return (
     <html
       lang={locale}
       suppressHydrationWarning
       className={fontVars}
     >
-      <body className="min-h-screen bg-bengal-kori text-bengal-kajal antialiased overflow-x-hidden">
-        <Providers locale={locale}>
+      <body className="min-h-screen bg-bengal-kori text-bengal-kajal antialiased">
+        <Providers locale={locale} messages={messages}>
           {children}
         </Providers>
       </body>

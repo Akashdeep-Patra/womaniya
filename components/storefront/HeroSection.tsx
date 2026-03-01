@@ -1,96 +1,118 @@
 'use client';
 
 import Image from 'next/image';
+import Link  from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
-import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
-import { BengalButton } from '@/components/bengal';
-import { BengalBadge }  from '@/components/bengal';
-import Link from 'next/link';
+import { useRef }           from 'react';
+import { useTranslations }  from 'next-intl';
+import { useParams }        from 'next/navigation';
+import { BengalButton }     from '@/components/bengal';
+import { BengalBadge }      from '@/components/bengal';
+import { ArrowDown }        from 'lucide-react';
 
 export function HeroSection() {
   const t      = useTranslations('hero');
   const params = useParams();
   const locale = params.locale as string;
-  const ref    = useRef<HTMLElement>(null);
+  const isBn   = locale === 'bn';
 
-  const { scrollY }      = useScroll();
-  const parallaxY        = useTransform(scrollY, [0, 500], [0, -80]);
-  const parallaxYOffset  = useTransform(scrollY, [0, 500], [0, 40]);
-
-  const isBn = locale === 'bn';
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollY }     = useScroll();
+  const parallaxMain   = useTransform(scrollY, [0, 600], [0, -60]);
+  const parallaxOffset = useTransform(scrollY, [0, 600], [0,  30]);
 
   return (
     <section
-      ref={ref}
-      className="relative min-h-[100svh] bg-bengal-kori overflow-hidden flex flex-col"
+      ref={sectionRef}
+      className="relative bg-bengal-kori pt-14 md:pt-16"
     >
-      {/* Mobile layout */}
-      <div className="flex flex-col flex-1 md:hidden pt-14">
+      {/* ══════════════════════════════
+          MOBILE LAYOUT (< md)
+      ══════════════════════════════ */}
+      <div className="md:hidden">
 
-        {/* Hero image — full bleed on mobile */}
-        <div className="relative w-full flex-1 min-h-[55vw] max-h-[70vw] overflow-hidden">
+        {/* Full-bleed hero image — fixed natural aspect ratio, no flex tricks */}
+        <div className="relative w-full aspect-3/4 overflow-hidden">
           <Image
             src="/hero-placeholder.svg"
-            alt="Handwoven Bengali saree"
+            alt={isBn ? 'বাংলার হ্যান্ডলুম শাড়ি' : 'Handwoven Bengali saree'}
             fill
             priority
             className="object-cover object-top"
             sizes="100vw"
           />
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-bengal-kori" />
+          {/* Soft bottom fade into page */}
+          <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-bengal-kori/80" />
+
+          {/* Floating badge top-left */}
+          <div className="absolute top-4 left-4">
+            <BengalBadge variant="kajal">
+              {t('badge')}
+            </BengalBadge>
+          </div>
         </div>
 
-        {/* Text block */}
-        <div className="px-5 pt-4 pb-24 flex flex-col gap-4">
-          <BengalBadge variant="kansa" className="self-start">
-            {t('badge')}
-          </BengalBadge>
+        {/* Text content — natural flow, no overflow issues */}
+        <div className="px-5 pt-6 pb-8 flex flex-col gap-5">
 
-          <h1 className={`font-editorial text-5xl leading-[0.92] text-bengal-kajal ${isBn ? 'font-bengali-serif' : ''}`}>
+          <h1 className={`leading-[0.9] text-bengal-kajal ${isBn ? 'font-bengali-serif text-4xl' : 'font-editorial text-[clamp(2.8rem,12vw,4rem)]'}`}>
             {t('headline_1')}<br />
             <span className="text-bengal-sindoor">{t('headline_2')}</span><br />
             {t('headline_3')}
           </h1>
 
-          <p className={`text-bengal-kajal/65 text-sm leading-relaxed max-w-xs ${isBn ? 'font-bengali' : ''}`}>
+          <p className={`text-bengal-kajal/60 text-[15px] leading-relaxed ${isBn ? 'font-bengali' : 'font-sans-en'}`}>
             {t('subtitle')}
           </p>
 
-          <div className="flex gap-3 mt-2">
-            <Link href={`/${locale}/shop`}>
-              <BengalButton variant="primary" size="md" isBengali={isBn}>
+          {/* CTAs */}
+          <div className="flex gap-3 pt-1">
+            <Link href={`/${locale}/shop`} className="flex-1">
+              <BengalButton variant="primary" size="touch" isBengali={isBn} className="rounded-md">
                 {t('cta_shop')}
               </BengalButton>
             </Link>
             <Link href={`/${locale}#story`}>
-              <BengalButton variant="outline" size="md" isBengali={isBn}>
+              <BengalButton variant="outline" size="touch" isBengali={isBn} className="px-5 rounded-md">
                 {t('cta_story')}
               </BengalButton>
             </Link>
           </div>
+
+          {/* Scroll hint */}
+          <div className="flex items-center gap-3 mt-2">
+            <div className="h-px flex-1 bg-bengal-kansa/30" />
+            <motion.div
+              animate={{ y: [0, 4, 0] }}
+              transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
+            >
+              <ArrowDown size={14} className="text-bengal-kansa" />
+            </motion.div>
+          </div>
         </div>
       </div>
 
-      {/* Desktop — editorial broken grid */}
-      <div className="hidden md:flex items-center min-h-screen pt-16 max-w-7xl mx-auto w-full px-6">
+      {/* ══════════════════════════════
+          DESKTOP LAYOUT (≥ md)
+      ══════════════════════════════ */}
+      <div className="hidden md:grid md:grid-cols-2 min-h-[calc(100vh-4rem)]">
 
-        {/* Left: text */}
-        <div className="flex-1 z-10">
-          <BengalBadge variant="kansa" className="mb-6">
+        {/* Left column — text */}
+        <div className="flex flex-col justify-center px-8 lg:px-16 xl:px-20 py-16">
+          <BengalBadge variant="kansa" className="self-start mb-8">
             {t('badge')}
           </BengalBadge>
 
-          <h1 className={`font-editorial leading-[0.88] text-bengal-kajal mb-6 ${isBn ? 'font-bengali-serif' : ''}`}
-              style={{ fontSize: 'clamp(4rem, 7vw, 8rem)' }}>
+          <h1
+            className={`leading-[0.88] text-bengal-kajal mb-6 ${isBn ? 'font-bengali-serif' : 'font-editorial'}`}
+            style={{ fontSize: 'clamp(3.5rem, 6vw, 7.5rem)' }}
+          >
             {t('headline_1')}<br />
             <span className="text-bengal-sindoor">{t('headline_2')}</span><br />
             {t('headline_3')}
           </h1>
 
-          <p className={`text-bengal-kajal/65 text-base leading-relaxed max-w-sm mb-8 ${isBn ? 'font-bengali' : ''}`}>
+          <p className={`text-bengal-kajal/60 text-base leading-relaxed max-w-sm mb-10 ${isBn ? 'font-bengali' : ''}`}>
             {t('subtitle')}
           </p>
 
@@ -106,53 +128,52 @@ export function HeroSection() {
               </BengalButton>
             </Link>
           </div>
+
+          {/* Vertical scroll hint */}
+          <div className="flex items-center gap-3 mt-16">
+            <div className="w-px h-10 bg-bengal-kansa/40" />
+            <span className="text-[10px] tracking-[0.25em] uppercase text-bengal-kajal/35">
+              {isBn ? 'নিচে স্ক্রোল করুন' : 'Scroll to explore'}
+            </span>
+          </div>
         </div>
 
-        {/* Right: stacked editorial images */}
-        <div className="flex-1 relative h-[80vh] flex items-center justify-center">
-
+        {/* Right column — editorial images */}
+        <div className="relative overflow-hidden">
           {/* Main image */}
           <motion.div
-            className="relative w-[60%] aspect-[4/5] rounded-sm overflow-hidden shadow-2xl"
-            style={{ y: parallaxY }}
+            style={{ y: parallaxMain }}
+            className="absolute inset-0 top-4 right-0 bottom-0 left-8"
             data-cursor-expand
           >
             <Image
               src="/hero-placeholder.svg"
-              alt="Woman in handwoven Bengali saree"
+              alt={isBn ? 'বাংলার শাড়ি' : 'Bengali saree'}
               fill
               priority
-              className="object-cover"
-              sizes="40vw"
+              className="object-cover object-top rounded-tl-sm"
+              sizes="50vw"
             />
           </motion.div>
 
-          {/* Offset parallax image */}
+          {/* Floating offset card */}
           <motion.div
-            className="absolute bottom-8 -left-4 w-[40%] aspect-square rounded-sm overflow-hidden shadow-xl"
-            style={{ y: parallaxYOffset }}
+            style={{ y: parallaxOffset }}
+            className="absolute bottom-12 -left-8 w-48 aspect-square rounded-sm overflow-hidden shadow-2xl border-4 border-bengal-kori z-10"
             data-cursor-expand
           >
             <Image
               src="/hero-offset-placeholder.svg"
-              alt="Jamdani weave detail"
+              alt={isBn ? 'জামদানির বুনন' : 'Jamdani weave detail'}
               fill
               className="object-cover"
-              sizes="25vw"
+              sizes="200px"
             />
           </motion.div>
 
-          {/* Decorative gold line */}
-          <div className="absolute top-0 right-0 w-px h-1/2 bg-gradient-to-b from-transparent via-bengal-kansa to-transparent" />
+          {/* Gold vertical accent */}
+          <div className="absolute left-0 top-1/4 bottom-1/4 w-px bg-linear-to-b from-transparent via-bengal-kansa/60 to-transparent z-10" />
         </div>
-      </div>
-
-      {/* Floating vertical text */}
-      <div className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 flex-col items-center gap-3">
-        <div className="w-px h-16 bg-bengal-kansa/40" />
-        <span className="text-[9px] tracking-[0.3em] uppercase text-bengal-kajal/40 rotate-90 origin-center whitespace-nowrap">
-          Scroll to Explore
-        </span>
       </div>
     </section>
   );

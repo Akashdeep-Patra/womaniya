@@ -87,6 +87,8 @@
 
   html {
     scroll-behavior: smooth;
+    /* Reserve space for fixed header so #anchor jumps don't hide behind it */
+    scroll-padding-top: 4rem;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

@@ -1,29 +1,69 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
+import Link                    from 'next/link';
+import { useParams }           from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ShoppingBag } from 'lucide-react';
-import { LocaleSwitcher } from './LocaleSwitcher';
-import { cn } from '@/lib/utils';
+import { cn }                  from '@/lib/utils';
 
+/* ─────────────────────────────────────────────────────────────────
+   Locale switcher — hardcoded, no i18n dependency (avoids key bug)
+───────────────────────────────────────────────────────────────── */
+function LocaleToggle({ locale }: { locale: string }) {
+  const isEn = locale === 'en';
+
+  const handleSwitch = () => {
+    const next = isEn ? 'bn' : 'en';
+    window.location.href = window.location.pathname.replace(`/${locale}`, `/${next}`);
+  };
+
+  return (
+    <button
+      onClick={handleSwitch}
+      aria-label="Switch language"
+      className={cn(
+        'h-8 px-3 rounded-full border text-[11px] font-medium tracking-widest uppercase',
+        'border-bengal-kansa/40 text-bengal-kajal/60',
+        'hover:border-bengal-kansa hover:text-bengal-sindoor',
+        'transition-all duration-200 touch-manipulation',
+        !isEn ? 'font-bengali tracking-normal text-sm' : ''
+      )}
+    >
+      {isEn ? 'বাং' : 'EN'}
+    </button>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Desktop nav link with sliding underline
+───────────────────────────────────────────────────────────────── */
+function NavLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link href={href} className="relative group py-1">
+      <span className="text-[11px] tracking-[0.2em] uppercase font-medium text-bengal-kajal/55 group-hover:text-bengal-kajal transition-colors duration-200">
+        {label}
+      </span>
+      <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-bengal-kansa group-hover:w-full transition-all duration-300" />
+    </Link>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Main Header
+───────────────────────────────────────────────────────────────── */
 export function Header() {
-  const t = useTranslations('nav');
   const params = useParams();
   const locale = params.locale as string;
 
   const [scrolled,    setScrolled]    = useState(false);
   const [hidden,      setHidden]      = useState(false);
-  const [menuOpen,    setMenuOpen]    = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
-      setScrolled(y > 20);
-      setHidden(y > lastScrollY && y > 80);
+      setScrolled(y > 30);
+      setHidden(y > lastScrollY && y > 120);
       setLastScrollY(y);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -31,121 +71,74 @@ export function Header() {
   }, [lastScrollY]);
 
   const navLinks = [
-    { href: `/${locale}`,        label: t('home')  },
-    { href: `/${locale}/shop`,   label: t('shop')  },
-    { href: `/${locale}#story`,  label: t('story') },
+    { href: `/${locale}`,       label: locale === 'bn' ? 'হোম'       : 'Home'      },
+    { href: `/${locale}/shop`,  label: locale === 'bn' ? 'শপ'        : 'Shop'      },
+    { href: `/${locale}#story`, label: locale === 'bn' ? 'আমাদের গল্প': 'Our Story' },
   ];
 
   return (
-    <>
-      <motion.header
-        animate={{ y: hidden ? '-100%' : '0%' }}
-        transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className={cn(
-          'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-          scrolled
-            ? 'bg-bengal-kori/90 backdrop-blur-md border-b border-bengal-kansa/20 shadow-sm'
-            : 'bg-transparent'
-        )}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-14 md:h-16">
+    <motion.header
+      animate={{ y: hidden ? '-110%' : '0%' }}
+      transition={{ duration: 0.38, ease: [0.32, 0.72, 0, 1] }}
+      className={cn(
+        'fixed top-0 left-0 right-0 z-50 transition-colors duration-400',
+        scrolled
+          ? 'bg-bengal-kori/92 backdrop-blur-lg border-b border-bengal-kansa/15'
+          : 'bg-transparent'
+      )}
+    >
+      {/* Top gold accent line */}
+      <div className="h-px bg-linear-to-r from-transparent via-bengal-kansa/60 to-transparent" />
 
-            {/* Hamburger (mobile) */}
-            <button
-              className="min-h-[44px] min-w-[44px] flex items-center justify-center md:hidden"
-              onClick={() => setMenuOpen(true)}
-              aria-label={t('menu')}
-            >
-              <Menu size={22} className="text-bengal-kajal" />
-            </button>
+      <div className="max-w-7xl mx-auto px-5 sm:px-6">
+        <div className="relative flex items-center h-14 md:h-16">
 
-            {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-xs tracking-widest uppercase font-medium text-bengal-kajal hover:text-bengal-sindoor transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+          {/* Left: desktop nav links */}
+          <nav className="hidden md:flex items-center gap-8 flex-1">
+            {navLinks.map((l) => (
+              <NavLink key={l.href} href={l.href} label={l.label} />
+            ))}
+          </nav>
 
-            {/* Logo — center */}
-            <Link
-              href={`/${locale}`}
-              className="absolute left-1/2 -translate-x-1/2 font-editorial text-xl md:text-2xl tracking-widest text-bengal-kajal hover:text-bengal-sindoor transition-colors"
-            >
-              W O M A N I A
+          {/* Mobile: empty left spacer */}
+          <div className="flex-1 md:hidden" />
+
+          {/* Center logo — absolute on md+, in-flow on mobile */}
+          <div className="md:absolute md:left-1/2 md:-translate-x-1/2">
+            <Link href={`/${locale}`} className="group flex items-center">
+              {/* Left ornament */}
+              <span className="hidden md:block w-5 h-px bg-bengal-kansa/40 mr-2.5 transition-all duration-300 group-hover:w-8 group-hover:bg-bengal-kansa" />
+
+              <span className="font-editorial tracking-[0.22em] text-[17px] md:text-[19px] text-bengal-kajal group-hover:text-bengal-sindoor transition-colors duration-300">
+                WOMANIA
+              </span>
+
+              {/* Right ornament */}
+              <span className="hidden md:block w-5 h-px bg-bengal-kansa/40 ml-2.5 transition-all duration-300 group-hover:w-8 group-hover:bg-bengal-kansa" />
             </Link>
-
-            {/* Right — locale + cart */}
-            <div className="flex items-center gap-3">
-              <LocaleSwitcher />
-              <button
-                className="min-h-[44px] min-w-[44px] flex items-center justify-center"
-                aria-label={t('cart')}
-              >
-                <ShoppingBag size={20} className="text-bengal-kajal hover:text-bengal-sindoor transition-colors" />
-              </button>
-            </div>
-
           </div>
+
+          {/* Right: locale toggle */}
+          <div className="flex-1 flex justify-end">
+            <LocaleToggle locale={locale} />
+          </div>
+
         </div>
-      </motion.header>
+      </div>
 
-      {/* Mobile full-screen menu */}
+      {/* Bottom animated gold rule on scroll */}
       <AnimatePresence>
-        {menuOpen && (
+        {scrolled && (
           <motion.div
-            initial={{ opacity: 0, x: '-100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{   opacity: 0, x: '-100%' }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed inset-0 z-[60] bg-bengal-kori flex flex-col"
-          >
-            {/* Close button */}
-            <div className="flex items-center justify-between px-4 h-14 border-b border-bengal-kansa/20">
-              <span className="font-editorial text-lg tracking-widest">W O M A N I A</span>
-              <button
-                className="min-h-[44px] min-w-[44px] flex items-center justify-center"
-                onClick={() => setMenuOpen(false)}
-                aria-label={t('close')}
-              >
-                <X size={22} />
-              </button>
-            </div>
-
-            {/* Nav links */}
-            <nav className="flex-1 flex flex-col justify-center px-8 gap-2">
-              {navLinks.map((link, i) => (
-                <motion.div
-                  key={link.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.05 * i }}
-                >
-                  <Link
-                    href={link.href}
-                    onClick={() => setMenuOpen(false)}
-                    className="block py-4 font-editorial text-4xl text-bengal-kajal hover:text-bengal-sindoor transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                  <div className="h-px bg-bengal-kansa/20" />
-                </motion.div>
-              ))}
-            </nav>
-
-            {/* Bottom locale switcher */}
-            <div className="px-8 pb-12 pt-6">
-              <LocaleSwitcher />
-            </div>
-          </motion.div>
+            key="rule"
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            exit={{   scaleX: 0, opacity: 0 }}
+            style={{ transformOrigin: 'left' }}
+            className="h-px bg-linear-to-r from-transparent via-bengal-kansa/35 to-transparent"
+          />
         )}
       </AnimatePresence>
-    </>
+    </motion.header>
   );
 }
