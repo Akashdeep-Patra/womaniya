@@ -7,9 +7,9 @@ type Props = {
   params:   Promise<{ locale: string }>;
 };
 
-export default async function AdminLayout({ children, params }: Props) {
+export default async function AdminDashboardLayout({ children, params }: Props) {
   const { locale } = await params;
-  const session    = await auth();
+  const session   = await auth();
 
   if (!session) {
     redirect(`/${locale}/admin/login`);

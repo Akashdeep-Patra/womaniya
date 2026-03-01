@@ -6,12 +6,14 @@ import { Header }              from '@/components/layout/Header';
 import { Footer }              from '@/components/layout/Footer';
 import { BottomNav }           from '@/components/layout/BottomNav';
 import { HeroSection }         from '@/components/storefront/HeroSection';
-import { HeritageTicker }      from '@/components/storefront/HeritageTicker';
-import { FeaturesSection }     from '@/components/storefront/FeaturesSection';
-import { CategoriesSection }   from '@/components/storefront/CategoriesSection';
-import { ShopGrid }            from '@/components/storefront/ShopGrid';
-import { AboutSection }        from '@/components/storefront/AboutSection';
-import { WhatsAppSection }     from '@/components/storefront/WhatsAppSection';
+import { HeritageTicker }     from '@/components/storefront/HeritageTicker';
+import { FeaturesSection }    from '@/components/storefront/FeaturesSection';
+import { GlimpsesSection }    from '@/components/storefront/GlimpsesSection';
+import { CategoriesSection }  from '@/components/storefront/CategoriesSection';
+import { ShopGrid }           from '@/components/storefront/ShopGrid';
+import { ProcessSection }     from '@/components/storefront/ProcessSection';
+import { AboutSection }       from '@/components/storefront/AboutSection';
+import { WhatsAppSection }    from '@/components/storefront/WhatsAppSection';
 import { getFeaturedProducts } from '@/actions/products';
 
 type Props = { params: Promise<{ locale: string }> };
@@ -50,20 +52,26 @@ export default async function HomePage({ params }: Props) {
         {/* 3. Features — The Womaniya Way */}
         <FeaturesSection />
 
-        {/* 4. Categories — visual editorial grid */}
+        {/* 4. Glimpses — from loom to wardrobe */}
+        <GlimpsesSection />
+
+        {/* 5. Categories — visual editorial grid */}
         <CategoriesSection />
 
-        {/* 5. Featured products (if any) */}
+        {/* 6. Featured products (if any) */}
         {featured.length > 0 && (
           <div className="bg-bengal-cream">
             <ShopGrid products={featured} />
           </div>
         )}
 
-        {/* 6. About / Story — rich editorial layout */}
+        {/* 7. Process — how we craft */}
+        <ProcessSection />
+
+        {/* 8. About / Story — rich editorial layout */}
         <AboutSection />
 
-        {/* 7. WhatsApp CTA */}
+        {/* 9. WhatsApp CTA */}
         <WhatsAppSection />
       </main>
 

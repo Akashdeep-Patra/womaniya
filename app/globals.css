@@ -16,9 +16,9 @@
   --color-bengal-cream:   #FDF8F2;
   --color-bengal-dust:    #D4C5B8;
 
-  /* Typography tokens — resolved from next/font CSS vars */
-  --font-serif-en: var(--font-playfair), 'Playfair Display', Georgia, serif;
-  --font-sans-en:  var(--font-outfit), 'Outfit', system-ui, sans-serif;
+  /* Typography tokens — bold heritage system */
+  --font-serif-en: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
+  --font-sans-en:  var(--font-source-serif), 'Source Serif 4', Georgia, serif;
   --font-serif-bn: var(--font-noto-serif-bn), 'Noto Serif Bengali', serif;
   --font-sans-bn:  var(--font-hind-bn), 'Hind Siliguri', sans-serif;
 
@@ -96,18 +96,22 @@
   body {
     @apply bg-bengal-kori text-bengal-kajal;
     font-family: var(--font-sans-en);
+    font-weight: 500;
     font-feature-settings: "kern" 1, "liga" 1;
   }
 
   /* Bengali text utility */
   .font-bengali {
     font-family: var(--font-sans-bn);
+    font-weight: 500;
   }
   .font-bengali-serif {
     font-family: var(--font-serif-bn);
+    font-weight: 600;
   }
   .font-editorial {
     font-family: var(--font-serif-en);
+    font-weight: 600;
   }
 
   /* Touch optimisation */

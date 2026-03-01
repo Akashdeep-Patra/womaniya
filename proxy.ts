@@ -1,18 +1,16 @@
 /**
  * proxy.ts — Next.js 16 renamed `middleware.ts` to `proxy.ts`.
- * Handles locale detection and routing via next-intl.
- * Default export is still supported in Next.js 16.
+ * Handles locale detection (next-intl) and auth (admin-only protection).
  */
 import createMiddleware from 'next-intl/middleware';
-import type { NextRequest } from 'next/server';
+import { auth } from '@/auth';
 import { routing } from './i18n/routing';
 
 const intlProxy = createMiddleware(routing);
 
-// Named export — Next.js 16 preferred pattern
-export function proxy(request: NextRequest) {
-  return intlProxy(request);
-}
+// Auth runs first; authorized callback only protects /admin (excl. login).
+// Landing, shop, etc. are public.
+export const proxy = auth((req) => intlProxy(req));
 
 export const config = {
   matcher: [

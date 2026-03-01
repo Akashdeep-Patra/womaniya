@@ -93,6 +93,32 @@
     "body": "Womaniya was born from a deep love for India's handloom heritage and a belief that this living art deserves a place in the modern wardrobe. We source directly from weaving communities across Bengal, Telangana, and Gujarat — ensuring artisans are fairly compensated and their craft is preserved.",
     "cta": "Our Full Story"
   },
+  "glimpses": {
+    "badge": "Glimpses",
+    "title": "From Loom to Wardrobe",
+    "subtitle": "Every piece begins its journey on the hands of master artisans.",
+    "item_1_title": "Thread on the Loom",
+    "item_1_desc": "The rhythmic dance of hand and shuttle — threads interlaced with centuries of knowledge.",
+    "item_2_title": "Natural Dyes",
+    "item_2_desc": "Indigo, madder, turmeric — colours drawn from earth, pressed into cloth.",
+    "item_3_title": "Hand Block Print",
+    "item_3_desc": "Wooden blocks carved by hand, each strike a meditation in precision.",
+    "item_4_title": "The Final Touch",
+    "item_4_desc": "Every hem, every fold — finished with care by skilled hands."
+  },
+  "process": {
+    "badge": "The Journey",
+    "title": "How We Craft",
+    "subtitle": "From raw fibre to wearable heritage — each step honours tradition.",
+    "step_1": "Sourcing",
+    "step_1_desc": "We travel to weaving clusters — Bengal, Pochampally, Kutch — to meet artisans and select materials.",
+    "step_2": "Creation",
+    "step_2_desc": "Handloom weaving, resist dyeing, block printing — techniques passed down through generations.",
+    "step_3": "Design",
+    "step_3_desc": "We collaborate with artisans to adapt traditional motifs for contemporary silhouettes.",
+    "step_4": "To You",
+    "step_4_desc": "Carefully packed and sent — each piece arrives with the story of its making."
+  },
   "admin": {
     "title": "Womania Admin",
     "dashboard": "Dashboard",

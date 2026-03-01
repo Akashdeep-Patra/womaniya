@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import {
-  Playfair_Display,
-  Outfit,
+  Cormorant_Garamond,
+  Source_Serif_4,
   Noto_Serif_Bengali,
   Hind_Siliguri,
 } from 'next/font/google';
@@ -12,32 +12,38 @@ import { Providers } from '@/components/providers/Providers';
 import '@/app/globals.css';
 
 /* ── Google Fonts ─────────────────────────────────────────────── */
-const playfair = Playfair_Display({
-  variable: '--font-playfair',
+/* Cormorant Garamond — bold heritage serif for editorial/display */
+const cormorant = Cormorant_Garamond({
+  variable: '--font-cormorant',
   subsets: ['latin'],
   display: 'swap',
+  weight: ['500', '600', '700'],
 });
-const outfit = Outfit({
-  variable: '--font-outfit',
+/* Source Serif 4 — bold, readable body */
+const sourceSerif = Source_Serif_4({
+  variable: '--font-source-serif',
   subsets: ['latin'],
   display: 'swap',
+  weight: ['400', '600', '700'],
 });
+/* Noto Serif Bengali — heritage Bengali display */
 const notoSerifBn = Noto_Serif_Bengali({
   variable: '--font-noto-serif-bn',
   subsets: ['bengali'],
   display: 'swap',
-  weight: ['400', '600', '700'],
+  weight: ['500', '600', '700'],
 });
+/* Hind Siliguri — bold Bengali body */
 const hindSiliguri = Hind_Siliguri({
   variable: '--font-hind-bn',
   subsets: ['bengali'],
   display: 'swap',
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['400', '500', '600', '700'],
 });
 
 const fontVars = [
-  playfair.variable,
-  outfit.variable,
+  cormorant.variable,
+  sourceSerif.variable,
   notoSerifBn.variable,
   hindSiliguri.variable,
 ].join(' ');
