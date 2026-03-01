@@ -24,12 +24,7 @@ export function PaisleyCluster({
     >
       {/* Large paisley — main */}
       <path
-        d="M50 10
-           C50 10, 70 14, 74 32
-           C78 50, 66 68, 54 72
-           C42 76, 30 68, 28 56
-           C26 44, 34 30, 42 24
-           C46 21, 50 10, 50 10 Z"
+        d="M50 10 C50 10 70 14 74 32 C78 50 66 68 54 72 C42 76 30 68 28 56 C26 44 34 30 42 24 C46 21 50 10 50 10 Z"
         fill="none"
         stroke={color}
         strokeWidth="1.2"
@@ -37,12 +32,7 @@ export function PaisleyCluster({
       />
       {/* Inner paisley outline */}
       <path
-        d="M50 18
-           C50 18, 63 22, 66 36
-           C69 50, 61 62, 52 65
-           C43 68, 35 61, 34 52
-           C33 43, 40 32, 46 27
-           C48 24, 50 18, 50 18 Z"
+        d="M50 18 C50 18 63 22 66 36 C69 50 61 62 52 65 C43 68 35 61 34 52 C33 43 40 32 46 27 C48 24 50 18 50 18 Z"
         fill={color}
         opacity="0.08"
       />
