@@ -1,5 +1,9 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import { db } from '@/lib/db';
+import { admins } from '@/db/schema';
+import { eq } from 'drizzle-orm';
+import bcrypt from 'bcryptjs';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -9,15 +13,38 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       authorize: async (credentials) => {
+        if (!credentials?.email || !credentials?.password) return null;
+
+        const email = credentials.email as string;
+        const password = credentials.password as string;
+
+        // 1. Check database first
+        const dbAdmins = await db.select().from(admins).where(eq(admins.email, email)).limit(1);
+        const adminUser = dbAdmins[0];
+
+        if (adminUser) {
+          const isValid = await bcrypt.compare(password, adminUser.password_hash);
+          if (isValid) {
+            return {
+              id:    adminUser.id.toString(),
+              email: adminUser.email,
+              name:  'Womania Admin',
+            };
+          }
+          // If found in DB but wrong password, don't fallback to env
+          return null;
+        }
+
+        // 2. Fallback to Environment Variables (if no DB user is set up yet)
         const adminEmail    = process.env.ADMIN_EMAIL;
         const adminPassword = process.env.ADMIN_PASSWORD;
 
         if (
-          credentials?.email    === adminEmail &&
-          credentials?.password === adminPassword
+          email    === adminEmail &&
+          password === adminPassword
         ) {
           return {
-            id:    '1',
+            id:    'env-1',
             email: adminEmail,
             name:  'Womania Admin',
           };
@@ -37,9 +64,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       const { pathname } = request.nextUrl;
 
       const isAdminRoute = pathname.includes('/admin');
-      const isLoginPage  = pathname.includes('/admin/login');
+      const isLoginPage  = pathname.includes('/admin/login') || pathname.includes('/admin/forgot-password') || pathname.includes('/admin/reset-password');
 
-      // All public routes and the login page are always accessible
+      // All public routes, login, forgot-password, and reset-password are accessible
       if (!isAdminRoute || isLoginPage) return true;
 
       // Admin dashboard/add/products require a valid session
@@ -52,3 +79,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
 });
+

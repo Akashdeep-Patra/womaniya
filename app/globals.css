@@ -16,11 +16,20 @@
   --color-bengal-cream:   #FDF8F2;
   --color-bengal-dust:    #D4C5B8;
 
+  /* Admin design tokens */
+  --color-admin-surface:      #FDFAF5;
+  --color-admin-sidebar:      #1A1918;
+  --color-admin-sidebar-hover:#2A2928;
+  --color-admin-accent:       #C5A059;
+  --color-admin-success:      #2D7A4F;
+  --color-admin-warning:      #D4A017;
+  --color-admin-danger:       #8A1C14;
+
   /* Typography tokens — bold heritage system */
-  --font-serif-en: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
-  --font-sans-en:  var(--font-source-serif), 'Source Serif 4', Georgia, serif;
+  --font-serif-en: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  --font-sans-en:  var(--font-jost), 'Jost', system-ui, sans-serif;
   --font-serif-bn: var(--font-noto-serif-bn), 'Noto Serif Bengali', serif;
-  --font-sans-bn:  var(--font-hind-bn), 'Hind Siliguri', sans-serif;
+  --font-sans-bn:  var(--font-anek-bn), 'Anek Bangla', sans-serif;
 
   /* Shadcn token → CSS var bridge */
   --color-background:         var(--background);
@@ -107,11 +116,11 @@
   }
   .font-bengali-serif {
     font-family: var(--font-serif-bn);
-    font-weight: 600;
+    font-weight: 800; /* Extra bold/thick for heritage aesthetic */
   }
   .font-editorial {
     font-family: var(--font-serif-en);
-    font-weight: 600;
+    font-weight: 800; /* Extra bold/thick for heritage aesthetic */
   }
 
   /* Touch optimisation */

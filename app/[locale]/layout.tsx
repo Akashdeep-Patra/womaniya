@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import {
-  Cormorant_Garamond,
-  Source_Serif_4,
+  Playfair_Display,
+  Jost,
   Noto_Serif_Bengali,
-  Hind_Siliguri,
+  Anek_Bangla,
 } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { setRequestLocale, getMessages } from 'next-intl/server';
@@ -12,40 +12,41 @@ import { Providers } from '@/components/providers/Providers';
 import '@/app/globals.css';
 
 /* ── Google Fonts ─────────────────────────────────────────────── */
-/* Cormorant Garamond — bold heritage serif for editorial/display */
-const cormorant = Cormorant_Garamond({
-  variable: '--font-cormorant',
+/* Playfair Display — highly elegant magazine/editorial serif */
+const playfair = Playfair_Display({
+  variable: '--font-playfair',
   subsets: ['latin'],
   display: 'swap',
-  weight: ['500', '600', '700'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  style: ['normal', 'italic'],
 });
-/* Source Serif 4 — bold, readable body */
-const sourceSerif = Source_Serif_4({
-  variable: '--font-source-serif',
+/* Jost — modern, clean, elegant geometric sans */
+const jost = Jost({
+  variable: '--font-jost',
   subsets: ['latin'],
   display: 'swap',
-  weight: ['400', '600', '700'],
+  weight: ['300', '400', '500', '600', '700'],
 });
 /* Noto Serif Bengali — heritage Bengali display */
 const notoSerifBn = Noto_Serif_Bengali({
   variable: '--font-noto-serif-bn',
   subsets: ['bengali'],
   display: 'swap',
-  weight: ['500', '600', '700'],
+  weight: ['400', '500', '600', '700', '800', '900'],
 });
-/* Hind Siliguri — bold Bengali body */
-const hindSiliguri = Hind_Siliguri({
-  variable: '--font-hind-bn',
+/* Anek Bangla — bold, thick magazine-like Bengali sans for punchy body/subheads */
+const anekBangla = Anek_Bangla({
+  variable: '--font-anek-bn',
   subsets: ['bengali'],
   display: 'swap',
-  weight: ['400', '500', '600', '700'],
+  weight: ['300', '400', '500', '600', '700', '800'],
 });
 
 const fontVars = [
-  cormorant.variable,
-  sourceSerif.variable,
+  playfair.variable,
+  jost.variable,
   notoSerifBn.variable,
-  hindSiliguri.variable,
+  anekBangla.variable,
 ].join(' ');
 
 /* ── Metadata ─────────────────────────────────────────────────── */

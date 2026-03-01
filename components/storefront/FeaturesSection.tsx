@@ -21,19 +21,30 @@ export function FeaturesSection() {
   const isBn   = params.locale === 'bn';
 
   return (
-    <section className="px-4 sm:px-6 py-16 md:py-24 max-w-7xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-80px' }}
-        transition={{ duration: 0.7, ease: 'easeOut' }}
-        className="text-center mb-10 md:mb-14"
-      >
-        <h2 className={`font-editorial text-3xl md:text-4xl text-bengal-kajal mb-3 ${isBn ? 'font-bengali-serif' : ''}`}>
-          {t('title')}
-        </h2>
-        <AlponaDivider className="mx-auto" width={260} />
-      </motion.div>
+    <section className="relative px-4 sm:px-6 py-20 md:py-32 max-w-[1400px] mx-auto overflow-hidden">
+      {/* Intricate decorative background lines */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute left-[5%] top-0 bottom-0 w-px bg-bengal-kansa/20" />
+        <div className="absolute right-[5%] top-0 bottom-0 w-px bg-bengal-kansa/20" />
+        <div className="absolute left-0 right-0 top-[10%] h-px bg-bengal-kansa/20" />
+      </div>
+
+      <div className="relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
+          className="text-center mb-16 md:mb-24 flex flex-col items-center"
+        >
+          <span className="text-[10px] tracking-[0.3em] uppercase text-bengal-kansa font-sans-en mb-6 block">
+            {t('title')}
+          </span>
+          <h2 className={`font-editorial text-4xl md:text-5xl lg:text-6xl text-bengal-kajal mb-6 max-w-2xl leading-tight ${isBn ? 'font-bengali-serif' : ''}`}>
+            Crafted slowly, woven with intention.
+          </h2>
+          <AlponaDivider className="mx-auto" width={260} />
+        </motion.div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
         {keys.map((key, i) => {

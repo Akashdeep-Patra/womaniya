@@ -5,21 +5,283 @@ import {
   numeric,
   boolean,
   timestamp,
+  integer,
+  jsonb,
+  primaryKey,
 } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
+// ─── Categories ──────────────────────────────────────────────────
+export const categories = pgTable('categories', {
+  id:                 serial('id').primaryKey(),
+  slug:               text('slug').unique().notNull(),
+  name_en:            text('name_en').notNull(),
+  name_bn:            text('name_bn'),
+  description_en:     text('description_en'),
+  description_bn:     text('description_bn'),
+  hero_image_url:     text('hero_image_url'),
+  seo_title_en:       text('seo_title_en'),
+  seo_title_bn:       text('seo_title_bn'),
+  seo_description_en: text('seo_description_en'),
+  seo_description_bn: text('seo_description_bn'),
+  sort_order:         integer('sort_order').default(0),
+  status:             text('status').default('draft').notNull(),
+  created_at:         timestamp('created_at').defaultNow(),
+  updated_at:         timestamp('updated_at').defaultNow(),
+});
+
+export type Category    = typeof categories.$inferSelect;
+export type NewCategory = typeof categories.$inferInsert;
+
+// ─── Products (extended) ─────────────────────────────────────────
 export const products = pgTable('products', {
-  id:             serial('id').primaryKey(),
-  slug:           text('slug').unique().notNull(),
-  name_en:        text('name_en').notNull(),
-  name_bn:        text('name_bn'),
-  description_en: text('description_en'),
-  description_bn: text('description_bn'),
-  price:          numeric('price', { precision: 10, scale: 2 }).notNull(),
-  category:       text('category').notNull(),  // 'Jamdani' | 'Silk' | 'Tant' | 'Ready to Wear'
-  image_url:      text('image_url').notNull(),
-  is_featured:    boolean('is_featured').default(false),
-  created_at:     timestamp('created_at').defaultNow(),
+  id:                 serial('id').primaryKey(),
+  slug:               text('slug').unique().notNull(),
+  name_en:            text('name_en').notNull(),
+  name_bn:            text('name_bn'),
+  description_en:     text('description_en'),
+  description_bn:     text('description_bn'),
+  price:              numeric('price', { precision: 10, scale: 2 }).notNull(),
+  category:           text('category').notNull(),
+  category_id:        integer('category_id'),
+  image_url:          text('image_url').notNull(),
+  is_featured:        boolean('is_featured').default(false),
+  status:             text('status').default('published').notNull(),
+  seo_title_en:       text('seo_title_en'),
+  seo_description_en: text('seo_description_en'),
+  created_at:         timestamp('created_at').defaultNow(),
+  updated_at:         timestamp('updated_at').defaultNow(),
 });
 
 export type Product    = typeof products.$inferSelect;
 export type NewProduct = typeof products.$inferInsert;
+
+// ─── Product Images ──────────────────────────────────────────────
+export const productImages = pgTable('product_images', {
+  id:         serial('id').primaryKey(),
+  product_id: integer('product_id').notNull(),
+  image_url:  text('image_url').notNull(),
+  alt_en:     text('alt_en'),
+  alt_bn:     text('alt_bn'),
+  sort_order: integer('sort_order').default(0),
+  is_primary: boolean('is_primary').default(false),
+});
+
+export type ProductImage    = typeof productImages.$inferSelect;
+export type NewProductImage = typeof productImages.$inferInsert;
+
+// ─── Collections ─────────────────────────────────────────────────
+export const collections = pgTable('collections', {
+  id:                 serial('id').primaryKey(),
+  slug:               text('slug').unique().notNull(),
+  name_en:            text('name_en').notNull(),
+  name_bn:            text('name_bn'),
+  description_en:     text('description_en'),
+  description_bn:     text('description_bn'),
+  hero_image_url:     text('hero_image_url'),
+  launch_date:        timestamp('launch_date'),
+  end_date:           timestamp('end_date'),
+  status:             text('status').default('draft').notNull(),
+  is_featured:        boolean('is_featured').default(false),
+  seo_title_en:       text('seo_title_en'),
+  seo_title_bn:       text('seo_title_bn'),
+  seo_description_en: text('seo_description_en'),
+  seo_description_bn: text('seo_description_bn'),
+  created_at:         timestamp('created_at').defaultNow(),
+  updated_at:         timestamp('updated_at').defaultNow(),
+});
+
+export type Collection    = typeof collections.$inferSelect;
+export type NewCollection = typeof collections.$inferInsert;
+
+// ─── Collection ↔ Products (join) ────────────────────────────────
+export const collectionProducts = pgTable('collection_products', {
+  collection_id: integer('collection_id').notNull(),
+  product_id:    integer('product_id').notNull(),
+  sort_order:    integer('sort_order').default(0),
+}, (t) => [
+  primaryKey({ columns: [t.collection_id, t.product_id] }),
+]);
+
+export type CollectionProduct    = typeof collectionProducts.$inferSelect;
+export type NewCollectionProduct = typeof collectionProducts.$inferInsert;
+
+// ─── Campaigns ───────────────────────────────────────────────────
+export const campaigns = pgTable('campaigns', {
+  id:                    serial('id').primaryKey(),
+  slug:                  text('slug').unique().notNull(),
+  name_en:               text('name_en').notNull(),
+  name_bn:               text('name_bn'),
+  description_en:        text('description_en'),
+  description_bn:        text('description_bn'),
+  starts_at:             timestamp('starts_at'),
+  ends_at:               timestamp('ends_at'),
+  status:                text('status').default('draft').notNull(),
+  announcement_text_en:  text('announcement_text_en'),
+  announcement_text_bn:  text('announcement_text_bn'),
+  cta_url:               text('cta_url'),
+  created_at:            timestamp('created_at').defaultNow(),
+  updated_at:            timestamp('updated_at').defaultNow(),
+});
+
+export type Campaign    = typeof campaigns.$inferSelect;
+export type NewCampaign = typeof campaigns.$inferInsert;
+
+// ─── Banners ─────────────────────────────────────────────────────
+export const banners = pgTable('banners', {
+  id:               serial('id').primaryKey(),
+  campaign_id:      integer('campaign_id'),
+  collection_id:    integer('collection_id'),
+  category_id:      integer('category_id'),
+  placement:        text('placement').notNull(),
+  image_url:        text('image_url').notNull(),
+  image_url_mobile: text('image_url_mobile'),
+  title_en:         text('title_en'),
+  title_bn:         text('title_bn'),
+  subtitle_en:      text('subtitle_en'),
+  subtitle_bn:      text('subtitle_bn'),
+  cta_text_en:      text('cta_text_en'),
+  cta_text_bn:      text('cta_text_bn'),
+  cta_url:          text('cta_url'),
+  sort_order:       integer('sort_order').default(0),
+  status:           text('status').default('draft').notNull(),
+  starts_at:        timestamp('starts_at'),
+  ends_at:          timestamp('ends_at'),
+  created_at:       timestamp('created_at').defaultNow(),
+});
+
+export type Banner    = typeof banners.$inferSelect;
+export type NewBanner = typeof banners.$inferInsert;
+
+// ─── Pages ───────────────────────────────────────────────────────
+export const pages = pgTable('pages', {
+  id:                 serial('id').primaryKey(),
+  slug:               text('slug').unique().notNull(),
+  title_en:           text('title_en').notNull(),
+  title_bn:           text('title_bn'),
+  page_type:          text('page_type').default('static').notNull(),
+  hero_image_url:     text('hero_image_url'),
+  status:             text('status').default('draft').notNull(),
+  published_at:       timestamp('published_at'),
+  seo_title_en:       text('seo_title_en'),
+  seo_title_bn:       text('seo_title_bn'),
+  seo_description_en: text('seo_description_en'),
+  seo_description_bn: text('seo_description_bn'),
+  created_at:         timestamp('created_at').defaultNow(),
+  updated_at:         timestamp('updated_at').defaultNow(),
+});
+
+export type Page    = typeof pages.$inferSelect;
+export type NewPage = typeof pages.$inferInsert;
+
+// ─── Page Sections (block content) ───────────────────────────────
+export const pageSections = pgTable('page_sections', {
+  id:           serial('id').primaryKey(),
+  page_id:      integer('page_id').notNull(),
+  section_type: text('section_type').notNull(),
+  content_json: jsonb('content_json'),
+  sort_order:   integer('sort_order').default(0),
+});
+
+export type PageSection    = typeof pageSections.$inferSelect;
+export type NewPageSection = typeof pageSections.$inferInsert;
+
+// ─── Media Assets ────────────────────────────────────────────────
+export const mediaAssets = pgTable('media_assets', {
+  id:         serial('id').primaryKey(),
+  url:        text('url').notNull(),
+  filename:   text('filename').notNull(),
+  alt_en:     text('alt_en'),
+  alt_bn:     text('alt_bn'),
+  mime_type:  text('mime_type'),
+  size_bytes: integer('size_bytes'),
+  width:      integer('width'),
+  height:     integer('height'),
+  tags:       text('tags'),
+  created_at: timestamp('created_at').defaultNow(),
+});
+
+export type MediaAsset    = typeof mediaAssets.$inferSelect;
+export type NewMediaAsset = typeof mediaAssets.$inferInsert;
+
+// ─── Relations ───────────────────────────────────────────────────
+export const productsRelations = relations(products, ({ one, many }) => ({
+  categoryRef: one(categories, {
+    fields:    [products.category_id],
+    references: [categories.id],
+  }),
+  images: many(productImages),
+  collectionLinks: many(collectionProducts),
+}));
+
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  products: many(products),
+  banners:  many(banners),
+}));
+
+export const collectionsRelations = relations(collections, ({ many }) => ({
+  productLinks: many(collectionProducts),
+  banners:      many(banners),
+}));
+
+export const collectionProductsRelations = relations(collectionProducts, ({ one }) => ({
+  collection: one(collections, {
+    fields:    [collectionProducts.collection_id],
+    references: [collections.id],
+  }),
+  product: one(products, {
+    fields:    [collectionProducts.product_id],
+    references: [products.id],
+  }),
+}));
+
+export const productImagesRelations = relations(productImages, ({ one }) => ({
+  product: one(products, {
+    fields:    [productImages.product_id],
+    references: [products.id],
+  }),
+}));
+
+export const campaignsRelations = relations(campaigns, ({ many }) => ({
+  banners: many(banners),
+}));
+
+export const bannersRelations = relations(banners, ({ one }) => ({
+  campaign: one(campaigns, {
+    fields:    [banners.campaign_id],
+    references: [campaigns.id],
+  }),
+  collection: one(collections, {
+    fields:    [banners.collection_id],
+    references: [collections.id],
+  }),
+  category: one(categories, {
+    fields:    [banners.category_id],
+    references: [categories.id],
+  }),
+}));
+
+export const pagesRelations = relations(pages, ({ many }) => ({
+  sections: many(pageSections),
+}));
+
+export const pageSectionsRelations = relations(pageSections, ({ one }) => ({
+  page: one(pages, {
+    fields:    [pageSections.page_id],
+    references: [pages.id],
+  }),
+}));
+
+// ─── Admins ────────────────────────────────────────────────────────
+export const admins = pgTable('admins', {
+  id:                 serial('id').primaryKey(),
+  email:              text('email').unique().notNull(),
+  password_hash:      text('password_hash').notNull(),
+  reset_token:        text('reset_token'),
+  reset_token_expiry: timestamp('reset_token_expiry'),
+  created_at:         timestamp('created_at').defaultNow(),
+  updated_at:         timestamp('updated_at').defaultNow(),
+});
+
+export type Admin    = typeof admins.$inferSelect;
+export type NewAdmin = typeof admins.$inferInsert;

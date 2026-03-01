@@ -6,6 +6,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { BengalInput }  from '@/components/bengal';
 import { BengalButton } from '@/components/bengal';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const t      = useTranslations('admin');
@@ -64,14 +65,21 @@ export default function LoginPage() {
             required
             autoComplete="email"
           />
-          <BengalInput
-            label={t('login_password')}
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            autoComplete="current-password"
-          />
+          <div className="flex flex-col gap-1">
+            <BengalInput
+              label={t('login_password')}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+            />
+            <div className="flex justify-end">
+              <Link href={`/${locale}/admin/forgot-password`} className="text-xs text-bengal-kansa hover:text-bengal-kajal transition-colors">
+                Forgot password?
+              </Link>
+            </div>
+          </div>
 
           {error && (
             <p className="text-bengal-alta text-sm text-center">{error}</p>

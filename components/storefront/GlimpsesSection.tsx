@@ -1,76 +1,77 @@
 'use client';
 
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
-import { BengalBadge } from '@/components/bengal';
-import { AlponaDivider } from '@/components/illustrations/AlponaDivider';
+import { motion }       from 'framer-motion';
+import { useParams }    from 'next/navigation';
+import { KanthaStitch } from '@/components/illustrations/KanthaStitch';
 
-const items = [
-  { key: 'item_1', img: '/hero-placeholder.svg' },
-  { key: 'item_2', img: '/hero-offset-placeholder.svg' },
-  { key: 'item_3', img: '/hero-placeholder.svg' },
-  { key: 'item_4', img: '/hero-offset-placeholder.svg' },
-] as const;
+const STEPS_EN = [
+  { n: '01', title: 'We go to them.',       body: 'Every piece starts at the loom — Murshidabad, Pochampally, Kutch. We visit the weaver, not the middleman.' },
+  { n: '02', title: 'They weave. By hand.', body: 'A single Jamdani takes 15–30 days. No shortcuts. The time is inside the cloth.' },
+  { n: '03', title: 'Checked. Carefully.',  body: "Every saree is inspected before it moves. If it isn't right, it goes back." },
+  { n: '04', title: 'Packed. Shipped. Yours.', body: "Wrapped in muslin. Shipped with a card. The weaver's name is on it." },
+];
+
+const STEPS_BN = [
+  { n: '০১', title: 'আমরা ওদের কাছে যাই।',     body: 'প্রতিটা কাপড়ের শুরু লুমে — মুর্শিদাবাদ, পোচামপল্লি, কচ্ছে। আমরা সরাসরি তাঁতির কাছে।' },
+  { n: '০২', title: 'ওরা বোনে। হাতে।',         body: 'একটা জামদানি তৈরি হতে ১৫–৩০ দিন লাগে। কোনো shortcut নেই। সময়টা কাপড়ে থেকে যায়।' },
+  { n: '০৩', title: 'পরীক্ষা হয়। হাতে।',      body: 'প্রতিটা শাড়ি পাঠানোর আগে দেখা হয়। ঠিক না হলে ফেরত।' },
+  { n: '০৪', title: 'প্যাক। পাঠানো। তোমার।',  body: 'মসলিনে মোড়া। একটা চিরকুটসহ। কার হাতে তৈরি — সেটা লেখা থাকে।' },
+];
 
 export function GlimpsesSection() {
-  const t = useTranslations('glimpses');
   const params = useParams();
-  const isBn = params.locale === 'bn';
+  const locale = params.locale as string;
+  const isBn   = locale === 'bn';
+  const steps  = isBn ? STEPS_BN : STEPS_EN;
 
   return (
-    <section className="bg-bengal-cream px-4 sm:px-6 py-16 md:py-24">
-      <div className="max-w-7xl mx-auto">
+    <section className="bg-bengal-kajal text-bengal-kori py-16 md:py-24 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12 md:mb-16"
+          className="mb-12 md:mb-16"
         >
-          <BengalBadge variant="kansa" className="mb-4">
-            {t('badge')}
-          </BengalBadge>
-          <h2 className={`font-editorial text-3xl md:text-4xl xl:text-5xl text-bengal-kajal mb-3 ${isBn ? 'font-bengali-serif' : ''}`}>
-            {t('title')}
-          </h2>
-          <AlponaDivider className="mx-auto my-4" width={220} />
-          <p className={`text-bengal-kajal/60 text-base md:text-lg max-w-2xl mx-auto ${isBn ? 'font-bengali' : ''}`}>
-            {t('subtitle')}
+          <p className="text-bengal-kansa text-[10px] tracking-[0.3em] uppercase mb-3 font-sans-en">
+            {isBn ? 'এভাবেই তৈরি হয়' : 'How it gets made'}
           </p>
+          <h2 className={`font-editorial text-3xl md:text-5xl leading-tight max-w-lg ${isBn ? 'font-bengali-serif' : ''}`}>
+            {isBn ? 'লুম থেকে তোমার কাছে।' : 'From their hands to yours.'}
+          </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          {items.map(({ key, img }, i) => (
-            <motion.article
-              key={key}
-              initial={{ opacity: 0, y: 24 }}
+        {/* Steps grid */}
+        <div className="grid grid-cols-1 md:grid-cols-4 border-t border-bengal-kansa/20">
+          {steps.map(({ n, title, body }, i) => (
+            <motion.div
+              key={n}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="group"
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="border-b md:border-b-0 md:border-r border-bengal-kansa/20 last:border-0 py-8 md:py-10 md:px-8 first:md:pl-0 last:md:pr-0 flex md:flex-col gap-5 md:gap-5"
             >
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-bengal-mati border border-bengal-kansa/15">
-                <Image
-                  src={img}
-                  alt={t(`${key}_title`)}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-bengal-kajal/70 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
-                  <h3 className={`font-editorial text-xl md:text-2xl text-bengal-kori mb-2 ${isBn ? 'font-bengali-serif' : ''}`}>
-                    {t(`${key}_title`)}
-                  </h3>
-                  <p className={`text-bengal-kori/80 text-sm leading-relaxed ${isBn ? 'font-bengali' : ''}`}>
-                    {t(`${key}_desc`)}
-                  </p>
-                </div>
+              <span className="font-editorial text-3xl text-bengal-kansa/35 flex-shrink-0 w-12 md:w-auto">
+                {n}
+              </span>
+              <div>
+                <h3 className={`font-editorial text-lg text-bengal-kori mb-2 ${isBn ? 'font-bengali-serif' : ''}`}>
+                  {title}
+                </h3>
+                <p className={`text-bengal-kori/50 text-sm leading-relaxed ${isBn ? 'font-bengali' : ''}`}>
+                  {body}
+                </p>
               </div>
-            </motion.article>
+            </motion.div>
           ))}
+        </div>
+
+        <div className="mt-12 flex justify-center">
+          <KanthaStitch color="#C5A059" width={220} rows={2} className="opacity-25" />
         </div>
       </div>
     </section>
