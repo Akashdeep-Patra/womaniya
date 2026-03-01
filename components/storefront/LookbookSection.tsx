@@ -40,6 +40,41 @@ const LOOKBOOK_IMAGES = [
     zIndex: 30,
     title: 'Festive Hues',
   },
+  {
+    src: '/instagram/2026-01-30_12-28-39_UTC_1.jpg',
+    rotation: 2,
+    yOffset: -15,
+    zIndex: 12,
+    title: 'Golden Hour',
+  },
+  {
+    src: '/instagram/2026-01-28_12-45-56_UTC_1.jpg',
+    rotation: -5,
+    yOffset: 25,
+    zIndex: 22,
+    title: 'Earthen Weaves',
+  },
+  {
+    src: '/instagram/2026-02-25_12-56-26_UTC_2.jpg',
+    rotation: 3,
+    yOffset: -5,
+    zIndex: 18,
+    title: 'Intricate Details',
+  },
+  {
+    src: '/instagram/2026-02-23_06-34-00_UTC_3.jpg',
+    rotation: -2,
+    yOffset: 10,
+    zIndex: 28,
+    title: 'Draped Elegance',
+  },
+  {
+    src: '/instagram/2026-02-11_10-27-03_UTC_4.jpg',
+    rotation: 4,
+    yOffset: -25,
+    zIndex: 32,
+    title: 'Timeless Beauty',
+  }
 ];
 
 const VectorFrame = ({ className }: { className?: string }) => (
@@ -81,7 +116,7 @@ export function LookbookSection() {
         </motion.div>
 
         {/* Paper / Polaroid Gallery Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-4 justify-items-center">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-y-16 gap-x-4 justify-items-center">
           {LOOKBOOK_IMAGES.map((img, idx) => (
             <motion.div
               key={idx}
