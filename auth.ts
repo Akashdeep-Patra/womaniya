@@ -33,14 +33,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     strategy: 'jwt',
   },
   callbacks: {
-    authorized({ auth, request }) {
+    authorized({ auth: session, request }) {
       const { pathname } = request.nextUrl;
-      // Only protect admin routes (exclude login)
-      const isAdminRoute = pathname.includes('/admin') && !pathname.includes('/admin/login');
-      if (isAdminRoute) {
-        return !!auth;
-      }
-      return true; // Landing, shop, etc. are public
+
+      const isAdminRoute = pathname.includes('/admin');
+      const isLoginPage  = pathname.includes('/admin/login');
+
+      // All public routes and the login page are always accessible
+      if (!isAdminRoute || isLoginPage) return true;
+
+      // Admin dashboard/add/products require a valid session
+      if (session) return true;
+
+      // Redirect to the locale-correct login page (so /bn/admin → /bn/admin/login)
+      const locale   = pathname.split('/')[1] ?? 'en';
+      const loginUrl = new URL(`/${locale}/admin/login`, request.nextUrl.origin);
+      return Response.redirect(loginUrl);
     },
   },
 });
