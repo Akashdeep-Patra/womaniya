@@ -4,44 +4,227 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { Home, ShoppingBag, BookOpen } from 'lucide-react';
+import { 
+  Home, 
+  ShoppingBag, 
+  BookOpen, 
+  Menu, 
+  X, 
+  ChevronRight, 
+  MessageCircle, 
+  MapPin, 
+  Phone, 
+  Sparkles,
+  Info
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export function BottomNav() {
   const t = useTranslations('nav');
   const pathname = usePathname();
   const params = useParams();
   const locale = params.locale as string;
+  const isBn = locale === 'bn';
 
-  const links = [
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Prevent background scrolling when sheet is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  const closeSheet = () => setIsOpen(false);
+
+  const mainLinks = [
     { href: `/${locale}`,      label: t('home'),  Icon: Home        },
     { href: `/${locale}/shop`, label: t('shop'),  Icon: ShoppingBag },
     { href: `/${locale}#story`,label: t('story'), Icon: BookOpen    },
   ];
 
+  const categories = [
+    { name: isBn ? 'জামদানি' : 'Jamdani', href: `/${locale}/shop?category=jamdani` },
+    { name: isBn ? 'সিল্ক' : 'Silk', href: `/${locale}/shop?category=silk` },
+    { name: isBn ? 'তাঁত' : 'Tant', href: `/${locale}/shop?category=tant` },
+    { name: isBn ? 'ইক্কাট' : 'Ikkat', href: `/${locale}/shop?category=ikkat` },
+    { name: isBn ? 'আজরখ' : 'Ajrakh', href: `/${locale}/shop?category=ajrakh` },
+  ];
+
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-bengal-kori border-t border-bengal-kansa/25 pb-safe">
-      <div className="grid grid-cols-3 h-[3.5rem]">
-        {links.map(({ href, label, Icon }) => {
-          const active = pathname === href;
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                'flex flex-col items-center justify-center gap-0.5 min-h-[44px]',
-                'text-[10px] tracking-wider uppercase font-medium transition-colors',
-                active
-                  ? 'text-bengal-sindoor'
-                  : 'text-bengal-kajal/60 hover:text-bengal-kajal'
-              )}
+    <>
+      <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-bengal-kori/90 backdrop-blur-md border-t border-bengal-kansa/20 pb-safe">
+        <div className="grid grid-cols-4 h-15">
+          {mainLinks.map(({ href, label, Icon }) => {
+            const active = pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={closeSheet}
+                className={cn(
+                  'flex flex-col items-center justify-center gap-1 min-h-[44px] relative',
+                  'text-[10px] tracking-widest uppercase transition-all duration-300',
+                  active
+                    ? 'text-bengal-sindoor font-medium'
+                    : 'text-bengal-kajal/50 hover:text-bengal-kajal font-normal'
+                )}
+              >
+                {active && (
+                  <motion.div 
+                    layoutId="bottom-nav-indicator" 
+                    className="absolute top-0 w-8 h-[2px] bg-bengal-sindoor rounded-b-md" 
+                  />
+                )}
+                <Icon size={20} strokeWidth={active ? 1.5 : 1} />
+                <span className={isBn ? 'font-bengali tracking-wide' : 'font-sans-en'}>{label}</span>
+              </Link>
+            );
+          })}
+          
+          {/* Menu Button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className={cn(
+              'flex flex-col items-center justify-center gap-1 min-h-[44px] relative',
+              'text-[10px] tracking-widest uppercase transition-all duration-300',
+              isOpen
+                ? 'text-bengal-sindoor font-medium'
+                : 'text-bengal-kajal/50 hover:text-bengal-kajal font-normal'
+            )}
+          >
+            {isOpen ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1} />}
+            <span className={isBn ? 'font-bengali tracking-wide' : 'font-sans-en'}>{t('menu')}</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* ── BOTTOM SHEET OVERLAY ── */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-bengal-kajal/40 backdrop-blur-sm z-30 md:hidden"
+              onClick={closeSheet}
+            />
+
+            {/* Sheet */}
+            <motion.div
+              initial={{ y: '100%', opacity: 0.5 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: '100%', opacity: 0.5 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed bottom-15 left-0 right-0 bg-bengal-kori z-30 rounded-t-3xl border-t border-bengal-kansa/30 overflow-hidden shadow-[0_-10px_40px_rgba(0,0,0,0.1)] md:hidden max-h-[80vh] flex flex-col"
+              style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
             >
-              <Icon size={18} strokeWidth={active ? 2 : 1.5} />
-              <span>{label}</span>
-            </Link>
-          );
-        })}
-      </div>
-    </nav>
+              {/* Handle */}
+              <div className="flex justify-center pt-4 pb-2" onClick={closeSheet}>
+                <div className="w-12 h-1 bg-bengal-kansa/40 rounded-full" />
+              </div>
+
+              {/* Scrollable Content */}
+              <div className="overflow-y-auto px-6 pt-4 pb-8 flex-1 custom-scrollbar">
+                
+                {/* Brand Header */}
+                <div className="text-center mb-8">
+                  <h3 className={`text-2xl text-bengal-kajal mb-1 ${isBn ? 'font-bengali-serif' : 'font-editorial italic'}`}>
+                    Womania
+                  </h3>
+                  <p className="text-[9px] tracking-[0.3em] uppercase text-bengal-kansa font-sans-en">
+                    {isBn ? 'খাঁটি হস্তশিল্প' : 'Authentic Handloom'}
+                  </p>
+                </div>
+
+                {/* Main Navigation inside Sheet */}
+                <div className="space-y-4 mb-8">
+                  <Link href={`/${locale}/shop`} onClick={closeSheet} className="flex items-center justify-between group">
+                    <div className="flex items-center gap-3 text-bengal-kajal">
+                      <Sparkles size={18} strokeWidth={1} className="text-bengal-kansa" />
+                      <span className={`text-lg ${isBn ? 'font-bengali' : 'font-sans-en font-light tracking-wide'}`}>
+                        {isBn ? 'নতুন সংগ্রহ' : 'New Arrivals'}
+                      </span>
+                    </div>
+                    <ChevronRight size={16} strokeWidth={1} className="text-bengal-kajal/30 group-hover:text-bengal-kansa transition-colors" />
+                  </Link>
+                  <Link href={`/${locale}#story`} onClick={closeSheet} className="flex items-center justify-between group">
+                    <div className="flex items-center gap-3 text-bengal-kajal">
+                      <Info size={18} strokeWidth={1} className="text-bengal-kansa" />
+                      <span className={`text-lg ${isBn ? 'font-bengali' : 'font-sans-en font-light tracking-wide'}`}>
+                        {isBn ? 'আমাদের কথা' : 'About Us'}
+                      </span>
+                    </div>
+                    <ChevronRight size={16} strokeWidth={1} className="text-bengal-kajal/30 group-hover:text-bengal-kansa transition-colors" />
+                  </Link>
+                </div>
+
+                <div className="w-full h-px bg-bengal-kansa/20 mb-8" />
+
+                {/* Categories */}
+                <div className="mb-8">
+                  <h4 className="text-[10px] tracking-[0.2em] uppercase text-bengal-kajal/50 mb-4 font-sans-en">
+                    {isBn ? 'শাড়ির ধরন' : 'Categories'}
+                  </h4>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                    {categories.map((cat) => (
+                      <Link
+                        key={cat.name}
+                        href={cat.href}
+                        onClick={closeSheet}
+                        className="flex items-center gap-2 text-bengal-kajal/80 hover:text-bengal-sindoor transition-colors"
+                      >
+                        <div className="w-1.5 h-1.5 rounded-full bg-bengal-kansa/40" />
+                        <span className={`text-sm ${isBn ? 'font-bengali' : 'font-sans-en'}`}>
+                          {cat.name}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="w-full h-px bg-bengal-kansa/20 mb-8" />
+
+                {/* Support / Contact */}
+                <div>
+                  <h4 className="text-[10px] tracking-[0.2em] uppercase text-bengal-kajal/50 mb-4 font-sans-en">
+                    {isBn ? 'যোগাযোগ' : 'Support'}
+                  </h4>
+                  <div className="space-y-4">
+                    <a href="https://wa.me/919143161829" target="_blank" rel="noreferrer" className="flex items-center gap-3 text-bengal-kajal/80">
+                      <MessageCircle size={16} strokeWidth={1.2} />
+                      <span className={`text-sm ${isBn ? 'font-bengali' : 'font-sans-en font-light'}`}>
+                        {isBn ? 'হোয়াটসঅ্যাপ করুন' : 'WhatsApp Us'}
+                      </span>
+                    </a>
+                    <div className="flex items-center gap-3 text-bengal-kajal/80">
+                      <Phone size={16} strokeWidth={1.2} />
+                      <span className="text-sm font-sans-en font-light">+91 91431 61829</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-bengal-kajal/80">
+                      <MapPin size={16} strokeWidth={1.2} />
+                      <span className={`text-sm ${isBn ? 'font-bengali' : 'font-sans-en font-light'}`}>
+                        {isBn ? 'কলকাতা, ভারত' : 'Kolkata, India'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

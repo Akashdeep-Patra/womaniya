@@ -24,7 +24,7 @@ export function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-bengal-kori pt-14 md:pt-0 min-h-[100svh] flex flex-col overflow-hidden"
+      className="relative bg-bengal-kori pt-14 md:pt-0 min-h-svh flex flex-col overflow-hidden"
     >
       {/* ── BACKGROUND ARCHITECTURE ─────────────────────────────────── */}
       {/* Intricate Zari (Gold) Lines */}
@@ -45,7 +45,7 @@ export function HeroSection() {
         </div>
 
         {/* Layered Image Composition */}
-        <div className="relative w-full aspect-[4/5] mt-4">
+        <div className="relative w-full aspect-4/5 mt-4">
           <motion.div style={{ y: parallaxMain }} className="absolute inset-x-6 top-0 bottom-12 z-0">
             <Image
               src="/hero-placeholder.svg"
@@ -56,7 +56,7 @@ export function HeroSection() {
             />
           </motion.div>
 
-          <motion.div style={{ y: parallaxOffset1 }} className="absolute -right-4 bottom-4 w-32 aspect-[3/4] z-10 border-4 border-bengal-kori shadow-xl">
+          <motion.div style={{ y: parallaxOffset1 }} className="absolute -right-4 bottom-4 w-32 aspect-3/4 z-10 border-4 border-bengal-kori shadow-xl">
             <Image
               src="/hero-offset-placeholder.svg"
               alt="Fabric Detail"
@@ -67,7 +67,7 @@ export function HeroSection() {
           </motion.div>
 
           {/* Strong fade to page colour */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-bengal-kori z-10 pointer-events-none" />
+          <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-bengal-kori z-10 pointer-events-none" />
         </div>
 
         {/* Copy — intertwining with images */}
@@ -104,7 +104,7 @@ export function HeroSection() {
       </div>
 
       {/* ── DESKTOP ──────────────────────────────────────────── */}
-      <div className="hidden md:flex min-h-[100svh] pt-24 px-[8%] relative items-center justify-between">
+      <div className="hidden md:flex min-h-svh pt-24 px-[8%] relative items-center justify-between">
 
         {/* Rotated Vertical Label */}
         <div className="absolute left-[3%] top-1/2 -translate-y-1/2 -rotate-90 origin-center text-[10px] tracking-[0.4em] uppercase text-bengal-kansa/60 font-sans-en whitespace-nowrap z-20">
@@ -145,7 +145,7 @@ export function HeroSection() {
               href={`/${locale}/shop`}
               className="group relative inline-flex items-center h-14 px-8 bg-bengal-kajal text-bengal-kori text-xs tracking-[0.2em] uppercase font-medium overflow-hidden"
             >
-              <span className="absolute inset-0 w-0 bg-bengal-sindoor transition-all duration-[400ms] ease-out group-hover:w-full" />
+              <span className="absolute inset-0 w-0 bg-bengal-sindoor transition-all duration-400 ease-out group-hover:w-full" />
               <span className="relative z-10">{t('cta_shop')}</span>
             </Link>
             <Link
@@ -177,7 +177,7 @@ export function HeroSection() {
           {/* Floating Offset Image 1 - Bottom Left Intertwined */}
           <motion.div
             style={{ y: parallaxOffset1 }}
-            className="absolute -left-[10%] bottom-[10%] w-[45%] aspect-[3/4] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-8 border-bengal-kori z-20"
+            className="absolute -left-[10%] bottom-[10%] w-[45%] aspect-3/4 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-8 border-bengal-kori z-20"
           >
             <Image
               src="/hero-offset-placeholder.svg"
@@ -215,7 +215,7 @@ export function HeroSection() {
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-            className="w-px h-12 bg-gradient-to-b from-bengal-kansa/50 to-transparent"
+            className="w-px h-12 bg-linear-to-b from-bengal-kansa/50 to-transparent"
           />
         </div>
       </div>

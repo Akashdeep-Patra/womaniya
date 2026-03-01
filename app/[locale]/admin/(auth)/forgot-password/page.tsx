@@ -1,34 +1,36 @@
 'use client';
 
-import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { useParams } from 'next/navigation';
 import { BengalInput, BengalButton } from '@/components/bengal';
 import { useTranslations } from 'next-intl';
-import { forgotPasswordAction } from '@/actions/admin-auth';
 import Link from 'next/link';
+import { requestPasswordReset } from '@/actions/auth';
+import { toast } from 'sonner';
 
 export default function ForgotPasswordPage() {
-  const t      = useTranslations('admin');
+  const t = useTranslations('admin');
   const params = useParams();
   const locale = params.locale as string;
 
-  const [email,    setEmail]    = useState('');
-  const [status,   setStatus]   = useState<{type: 'error'|'success', message: string} | null>(null);
-  const [loading,  setLoading]  = useState(false);
+  const [email, setEmail] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
-  const handleForgot = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setStatus(null);
 
-    const result = await forgotPasswordAction(email);
-    if (result.success) {
-      setStatus({ type: 'success', message: result.message });
-      setEmail('');
-    } else {
-      setStatus({ type: 'error', message: result.message });
-    }
-    setLoading(false);
+    const formData = new FormData();
+    formData.set('email', email);
+
+    startTransition(async () => {
+      try {
+        await requestPasswordReset(formData);
+        setSuccess(true);
+      } catch (err) {
+        toast.error('Failed to request password reset. Please try again.');
+      }
+    });
   };
 
   return (
@@ -48,39 +50,49 @@ export default function ForgotPasswordPage() {
         {/* Divider */}
         <div className="h-px bg-bengal-kansa/30 mb-8" />
 
-        {/* Form */}
-        <form onSubmit={handleForgot} className="flex flex-col gap-4">
-          <BengalInput
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            autoComplete="email"
-          />
-
-          {status && (
-            <p className={`text-sm text-center ${status.type === 'error' ? 'text-bengal-alta' : 'text-green-600'}`}>
-              {status.message}
-            </p>
-          )}
-
-          <BengalButton
-            type="submit"
-            variant="primary"
-            size="touch"
-            loading={loading}
-            className="mt-2"
-          >
-            Send Reset Link
-          </BengalButton>
-          
-          <div className="text-center mt-4">
-            <Link href={`/${locale}/admin/login`} className="text-xs text-bengal-kansa hover:text-bengal-kajal transition-colors">
-              Back to Login
+        {success ? (
+          <div className="text-center">
+            <div className="mb-6 p-4 bg-bengal-kansa/10 border border-bengal-kansa/30 rounded-lg">
+              <p className="text-sm text-bengal-kajal">
+                If an account exists with that email, a password reset link has been sent. Check your terminal logs if you are developing locally without an SMTP server.
+              </p>
+            </div>
+            <Link href={`/${locale}/admin/login`} className="text-xs font-semibold uppercase tracking-wider text-bengal-sindoor hover:text-bengal-alta transition-colors">
+              Return to Login
             </Link>
           </div>
-        </form>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <p className="text-sm text-bengal-kajal/70 text-center mb-2">
+              Enter your email address to receive a password reset link.
+            </p>
+
+            <BengalInput
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+            />
+
+            <BengalButton
+              type="submit"
+              variant="primary"
+              size="touch"
+              loading={isPending}
+              className="mt-2"
+            >
+              Send Reset Link
+            </BengalButton>
+
+            <div className="text-center mt-4">
+              <Link href={`/${locale}/admin/login`} className="text-xs text-bengal-kansa hover:text-bengal-kajal transition-colors">
+                Back to login
+              </Link>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );

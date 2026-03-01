@@ -2,6 +2,7 @@ import { auth } from '@/auth';
 import { AdminSidebar } from './AdminSidebar';
 import { AdminMobileNav } from './AdminMobileNav';
 import { AdminTopBar } from './AdminTopBar';
+import { PageTransition } from './PageTransition';
 
 type AdminShellProps = {
   locale: string;
@@ -16,8 +17,10 @@ export async function AdminShell({ locale, children }: AdminShellProps) {
       <AdminSidebar locale={locale} />
       <div className="flex-1 flex flex-col min-w-0">
         <AdminTopBar userName={session?.user?.name} />
-        <main className="flex-1 px-4 lg:px-8 py-6 pb-[calc(4rem+env(safe-area-inset-bottom))] lg:pb-6">
-          {children}
+        <main className="flex-1 px-4 lg:px-8 py-6 pb-[calc(4rem+env(safe-area-inset-bottom))] lg:pb-6 overflow-hidden">
+          <PageTransition>
+            {children}
+          </PageTransition>
         </main>
       </div>
       <AdminMobileNav locale={locale} />

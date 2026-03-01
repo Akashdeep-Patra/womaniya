@@ -9,12 +9,14 @@ import { cn } from '@/lib/utils';
 interface Props {
   onUpload: (url: string) => void;
   name?:    string;  // form field name
+  initialUrl?: string | null;
+  compact?: boolean;
 }
 
-export function CameraUpload({ onUpload, name = 'image' }: Props) {
+export function CameraUpload({ onUpload, name = 'image', initialUrl, compact }: Props) {
   const t            = useTranslations('admin');
   const inputRef     = useRef<HTMLInputElement>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(initialUrl || null);
   const [uploading, setUploading] = useState(false);
 
   const handleFile = async (file: File) => {

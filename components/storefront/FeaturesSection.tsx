@@ -41,40 +41,41 @@ export function FeaturesSection() {
             {t('title')}
           </span>
           <h2 className={`font-editorial text-4xl md:text-5xl lg:text-6xl text-bengal-kajal mb-6 max-w-2xl leading-tight ${isBn ? 'font-bengali-serif' : ''}`}>
-            Crafted slowly, woven with intention.
+            {isBn ? 'ধীরে তৈরি, যত্নে বোনা।' : 'Crafted slowly, woven with intention.'}
           </h2>
           <AlponaDivider className="mx-auto" width={260} />
         </motion.div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-        {keys.map((key, i) => {
-          const Icon = icons[i];
-          return (
-            <motion.div
-              key={key}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.6, ease: 'easeOut', delay: i * 0.12 }}
-            >
-              <BengalCard variant="bordered" className="h-full">
-                <BengalCardBody className="flex flex-col items-center text-center gap-4 py-6 md:py-8">
-                  <div className="w-14 h-14 rounded-2xl bg-bengal-mati flex items-center justify-center">
-                    <Icon size={42} />
-                  </div>
-                  <div>
-                    <h3 className={`font-semibold text-bengal-kajal text-sm mb-2 ${isBn ? 'font-bengali' : 'font-sans-en'}`}>
-                      {t(key)}
-                    </h3>
-                    <p className={`text-bengal-kajal/55 text-xs leading-relaxed ${isBn ? 'font-bengali' : ''}`}>
-                      {t(`${key}_desc`)}
-                    </p>
-                  </div>
-                </BengalCardBody>
-              </BengalCard>
-            </motion.div>
-          );
-        })}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          {keys.map((key, i) => {
+            const Icon = icons[i];
+            return (
+              <motion.div
+                key={key}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.6, ease: 'easeOut', delay: i * 0.12 }}
+              >
+                <BengalCard variant="bordered" className="h-full">
+                  <BengalCardBody className="flex flex-col items-center text-center gap-4 py-6 md:py-8">
+                    <div className="w-14 h-14 rounded-2xl bg-bengal-mati flex items-center justify-center">
+                      <Icon size={42} />
+                    </div>
+                    <div>
+                      <h3 className={`font-semibold text-bengal-kajal text-sm mb-2 ${isBn ? 'font-bengali' : 'font-sans-en'}`}>
+                        {t(key)}
+                      </h3>
+                      <p className={`text-bengal-kajal/55 text-xs leading-relaxed ${isBn ? 'font-bengali' : ''}`}>
+                        {t(`${key}_desc`)}
+                      </p>
+                    </div>
+                  </BengalCardBody>
+                </BengalCard>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
