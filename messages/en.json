@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "home": "Home",
+    "shop": "Shop",
+    "story": "Our Story",
+    "contact": "Contact",
+    "menu": "Menu",
+    "close": "Close",
+    "cart": "Cart",
+    "search": "Search"
+  },
+  "hero": {
+    "headline_1": "EMBRACE THE",
+    "headline_2": "ELEGANCE",
+    "headline_3": "OF BENGAL.",
+    "subtitle": "Handwoven stories in every thread — authentic Bengali handlooms crafted with generations of artistry.",
+    "cta_shop": "Explore Collection",
+    "cta_story": "Our Story",
+    "badge": "Handcrafted in Bengal"
+  },
+  "shop": {
+    "title": "The Collection",
+    "subtitle": "Each saree is a living heirloom.",
+    "filter_all": "All",
+    "filter_jamdani": "Jamdani",
+    "filter_silk": "Silk",
+    "filter_tant": "Tant",
+    "filter_rtw": "Ready to Wear",
+    "no_products": "No products found in this category.",
+    "view": "View",
+    "from": "From"
+  },
+  "product": {
+    "price": "Price",
+    "category": "Category",
+    "description": "Description",
+    "add_to_cart": "Add to Cart",
+    "whatsapp_order": "Order via WhatsApp",
+    "back": "Back to Shop",
+    "handwoven": "Handwoven",
+    "authentic": "Authentic",
+    "share": "Share"
+  },
+  "story": {
+    "title": "Woven With Love",
+    "body": "Womania is a curated collection of authentic Bengali handlooms — Jamdani, Tant, Silk — each sourced directly from master weavers in Murshidabad and Dhaka."
+  },
+  "admin": {
+    "title": "Womania Admin",
+    "dashboard": "Dashboard",
+    "add_product": "Add Saree",
+    "products": "Products",
+    "settings": "Settings",
+    "logout": "Logout",
+    "photo": "Tap to Photograph",
+    "photo_hint": "Point your camera at the saree",
+    "uploading": "Uploading...",
+    "form_name": "Saree Name",
+    "form_name_bn": "নাম (Bengali)",
+    "form_price": "Price (₹)",
+    "form_category": "Category",
+    "form_description": "Description",
+    "form_featured": "Feature on homepage",
+    "publish": "Publish Saree",
+    "publishing": "Publishing...",
+    "published": "Published!",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "confirm_delete": "Delete this product?",
+    "products_count": "products",
+    "total_products": "Total Sarees",
+    "featured_count": "Featured",
+    "login_title": "Admin Login",
+    "login_email": "Email",
+    "login_password": "Password",
+    "login_button": "Sign In",
+    "login_error": "Invalid credentials"
+  },
+  "footer": {
+    "tagline": "হাতে বোনা, মনে ধরা",
+    "tagline_en": "Hand-woven, Heart-held",
+    "rights": "All rights reserved.",
+    "contact": "Contact",
+    "whatsapp": "WhatsApp",
+    "instagram": "Instagram"
+  },
+  "locale": {
+    "switch_to": "বাংলা",
+    "current": "EN"
+  }
+}

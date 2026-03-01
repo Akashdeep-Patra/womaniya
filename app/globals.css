@@ -1,0 +1,170 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ─── Bengal Design System ─────────────────────────────────────── */
+@theme {
+  /* Bengal Color Palette */
+  --color-bengal-kori:    #F9F6F0;
+  --color-bengal-mati:    #EAE1D8;
+  --color-bengal-sindoor: #8A1C14;
+  --color-bengal-alta:    #B3241C;
+  --color-bengal-kansa:   #C5A059;
+  --color-bengal-kajal:   #1A1918;
+  --color-bengal-cream:   #FDF8F2;
+  --color-bengal-dust:    #D4C5B8;
+
+  /* Typography tokens — resolved from next/font CSS vars */
+  --font-serif-en: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  --font-sans-en:  var(--font-outfit), 'Outfit', system-ui, sans-serif;
+  --font-serif-bn: var(--font-noto-serif-bn), 'Noto Serif Bengali', serif;
+  --font-sans-bn:  var(--font-hind-bn), 'Hind Siliguri', sans-serif;
+
+  /* Shadcn token → CSS var bridge */
+  --color-background:         var(--background);
+  --color-foreground:         var(--foreground);
+  --color-card:               var(--card);
+  --color-card-foreground:    var(--card-foreground);
+  --color-popover:            var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary:            var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary:          var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted:              var(--muted);
+  --color-muted-foreground:   var(--muted-foreground);
+  --color-accent:             var(--accent);
+  --color-accent-foreground:  var(--accent-foreground);
+  --color-destructive:        var(--destructive);
+  --color-border:             var(--border);
+  --color-input:              var(--input);
+  --color-ring:               var(--ring);
+  --radius-sm:  calc(var(--radius) - 4px);
+  --radius-md:  calc(var(--radius) - 2px);
+  --radius-lg:  var(--radius);
+  --radius-xl:  calc(var(--radius) + 4px);
+}
+
+/* ─── Bengal Semantic Palette (overrides shadcn defaults) ──────── */
+:root {
+  --radius: 0.375rem;
+
+  --background:        #F9F6F0;   /* kori  — unbleached cotton */
+  --foreground:        #1A1918;   /* kajal — soft charcoal     */
+
+  --card:              #F9F6F0;
+  --card-foreground:   #1A1918;
+
+  --popover:           #FDF8F2;
+  --popover-foreground:#1A1918;
+
+  --primary:           #8A1C14;   /* sindoor — deep crimson */
+  --primary-foreground:#F9F6F0;
+
+  --secondary:         #EAE1D8;   /* mati — soft clay */
+  --secondary-foreground: #1A1918;
+
+  --muted:             #EAE1D8;
+  --muted-foreground:  #7A6A62;
+
+  --accent:            #C5A059;   /* kansa — antique gold */
+  --accent-foreground: #1A1918;
+
+  --destructive:       #B3241C;   /* alta — bright red */
+
+  --border:            rgba(197, 160, 89, 0.25);
+  --input:             #EAE1D8;
+  --ring:              #8A1C14;
+}
+
+/* ─── Base Styles ───────────────────────────────────────────────── */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-bengal-kori text-bengal-kajal;
+    font-family: var(--font-sans-en);
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  /* Bengali text utility */
+  .font-bengali {
+    font-family: var(--font-sans-bn);
+  }
+  .font-bengali-serif {
+    font-family: var(--font-serif-bn);
+  }
+  .font-editorial {
+    font-family: var(--font-serif-en);
+  }
+
+  /* Touch optimisation */
+  button, a, [role="button"] {
+    @apply touch-manipulation;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #EAE1D8; }
+  ::-webkit-scrollbar-thumb { background: #C5A059; border-radius: 2px; }
+}
+
+/* ─── Utility Classes ───────────────────────────────────────────── */
+@layer utilities {
+  /* Editorial letter-spacing */
+  .tracking-editorial { letter-spacing: 0.18em; }
+  .tracking-wide-xl   { letter-spacing: 0.12em; }
+
+  /* Zari border — gold shimmer */
+  .border-zari {
+    border-color: rgba(197, 160, 89, 0.5);
+  }
+  .ring-zari {
+    --tw-ring-color: rgba(197, 160, 89, 0.6);
+  }
+
+  /* Safe area for mobile bottom nav */
+  .pb-safe {
+    padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+  }
+  .mb-bottom-nav {
+    margin-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+  }
+
+  /* Gradient overlays */
+  .gradient-kori {
+    background: linear-gradient(to bottom, transparent, #F9F6F0);
+  }
+  .gradient-kajal {
+    background: linear-gradient(to bottom, transparent, rgba(26,25,24,0.85));
+  }
+
+  /* Masonry grid */
+  .masonry-grid {
+    columns: 2;
+    column-gap: 0.75rem;
+  }
+  @media (min-width: 768px) {
+    .masonry-grid { columns: 3; column-gap: 1.25rem; }
+  }
+  @media (min-width: 1280px) {
+    .masonry-grid { columns: 4; column-gap: 1.5rem; }
+  }
+  .masonry-item {
+    break-inside: avoid;
+    margin-bottom: 0.75rem;
+  }
+  @media (min-width: 768px) {
+    .masonry-item { margin-bottom: 1.25rem; }
+  }
+}

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#EAE1D8"/>
+  <rect x="320" y="400" width="160" height="200" rx="80" fill="#C5A059" opacity="0.4"/>
+  <text x="400" y="560" font-family="Georgia,serif" font-size="18" fill="#8A1C14" text-anchor="middle" opacity="0.6">Add your saree photo</text>
+</svg>

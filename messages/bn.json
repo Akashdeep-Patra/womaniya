@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "home": "হোম",
+    "shop": "শপ",
+    "story": "আমাদের গল্প",
+    "contact": "যোগাযোগ",
+    "menu": "মেনু",
+    "close": "বন্ধ",
+    "cart": "কার্ট",
+    "search": "খুঁজুন"
+  },
+  "hero": {
+    "headline_1": "আলিঙ্গন করুন",
+    "headline_2": "সৌন্দর্য",
+    "headline_3": "বাংলার।",
+    "subtitle": "প্রতিটি সুতোয় বোনা গল্প — প্রজন্মের দক্ষতায় তৈরি খাঁটি বাংলার হ্যান্ডলুম।",
+    "cta_shop": "কালেকশন দেখুন",
+    "cta_story": "আমাদের গল্প",
+    "badge": "বাংলায় হস্তশিল্প"
+  },
+  "shop": {
+    "title": "কালেকশন",
+    "subtitle": "প্রতিটি শাড়ি একটি জীবন্ত উত্তরাধিকার।",
+    "filter_all": "সব",
+    "filter_jamdani": "জামদানি",
+    "filter_silk": "সিল্ক",
+    "filter_tant": "তাঁত",
+    "filter_rtw": "রেডি টু ওয়্যার",
+    "no_products": "এই বিভাগে কোনো পণ্য নেই।",
+    "view": "দেখুন",
+    "from": "থেকে"
+  },
+  "product": {
+    "price": "দাম",
+    "category": "বিভাগ",
+    "description": "বিবরণ",
+    "add_to_cart": "কার্টে যোগ করুন",
+    "whatsapp_order": "হোয়াটসঅ্যাপে অর্ডার করুন",
+    "back": "শপে ফিরুন",
+    "handwoven": "হাতে বোনা",
+    "authentic": "খাঁটি",
+    "share": "শেয়ার"
+  },
+  "story": {
+    "title": "ভালোবাসায় বোনা",
+    "body": "উওমানিয়া হল খাঁটি বাংলার হ্যান্ডলুমের একটি কিউরেটেড কালেকশন — জামদানি, তাঁত, সিল্ক — মুর্শিদাবাদ ও ঢাকার মাস্টার তাঁতিদের কাছ থেকে সরাসরি সংগ্রহ করা।"
+  },
+  "admin": {
+    "title": "উওমানিয়া অ্যাডমিন",
+    "dashboard": "ড্যাশবোর্ড",
+    "add_product": "শাড়ি যোগ করুন",
+    "products": "পণ্য",
+    "settings": "সেটিংস",
+    "logout": "লগআউট",
+    "photo": "ছবি তুলতে ট্যাপ করুন",
+    "photo_hint": "শাড়ির দিকে ক্যামেরা রাখুন",
+    "uploading": "আপলোড হচ্ছে...",
+    "form_name": "শাড়ির নাম",
+    "form_name_bn": "নাম (বাংলা)",
+    "form_price": "দাম (₹)",
+    "form_category": "বিভাগ",
+    "form_description": "বিবরণ",
+    "form_featured": "হোমপেজে দেখান",
+    "publish": "প্রকাশ করুন",
+    "publishing": "প্রকাশ হচ্ছে...",
+    "published": "প্রকাশিত!",
+    "delete": "মুছুন",
+    "deleting": "মুছে ফেলা হচ্ছে...",
+    "confirm_delete": "এই পণ্যটি মুছবেন?",
+    "products_count": "পণ্য",
+    "total_products": "মোট শাড়ি",
+    "featured_count": "ফিচার্ড",
+    "login_title": "অ্যাডমিন লগইন",
+    "login_email": "ইমেইল",
+    "login_password": "পাসওয়ার্ড",
+    "login_button": "সাইন ইন",
+    "login_error": "ভুল পরিচয়পত্র"
+  },
+  "footer": {
+    "tagline": "হাতে বোনা, মনে ধরা",
+    "tagline_en": "Hand-woven, Heart-held",
+    "rights": "সর্বস্বত্ব সংরক্ষিত।",
+    "contact": "যোগাযোগ",
+    "whatsapp": "হোয়াটসঅ্যাপ",
+    "instagram": "ইনস্টাগ্রাম"
+  },
+  "locale": {
+    "switch_to": "English",
+    "current": "বাং"
+  }
+}
