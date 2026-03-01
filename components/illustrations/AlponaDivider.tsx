@@ -32,8 +32,8 @@ export function AlponaDivider({
         {/* Outer ring of petals — 12 */}
         {Array.from({ length: 12 }).map((_, i) => {
           const angle = (i * 30 * Math.PI) / 180;
-          const x = Math.round(Math.cos(angle) * 18 * 1e4) / 1e4;
-          const y = Math.round(Math.sin(angle) * 18 * 1e4) / 1e4;
+          const x = Number((Math.cos(angle) * 18).toFixed(4));
+          const y = Number((Math.sin(angle) * 18).toFixed(4));
           return (
             <ellipse
               key={i}
@@ -48,8 +48,8 @@ export function AlponaDivider({
         {/* Middle ring — 8 petals */}
         {Array.from({ length: 8 }).map((_, i) => {
           const angle = (i * 45 * Math.PI) / 180;
-          const x = Math.round(Math.cos(angle) * 11 * 1e4) / 1e4;
-          const y = Math.round(Math.sin(angle) * 11 * 1e4) / 1e4;
+          const x = Number((Math.cos(angle) * 11).toFixed(4));
+          const y = Number((Math.sin(angle) * 11).toFixed(4));
           return (
             <ellipse
               key={i}
@@ -64,8 +64,8 @@ export function AlponaDivider({
         {/* Centre flower — 6 petals */}
         {Array.from({ length: 6 }).map((_, i) => {
           const angle = (i * 60 * Math.PI) / 180;
-          const x = Math.round(Math.cos(angle) * 5.5 * 1e4) / 1e4;
-          const y = Math.round(Math.sin(angle) * 5.5 * 1e4) / 1e4;
+          const x = Number((Math.cos(angle) * 5.5).toFixed(4));
+          const y = Number((Math.sin(angle) * 5.5).toFixed(4));
           return (
             <ellipse
               key={i}

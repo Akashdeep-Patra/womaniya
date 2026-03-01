@@ -5,9 +5,10 @@ import Link                    from 'next/link';
 import { useParams }           from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn }                  from '@/lib/utils';
+import { Menu } from 'lucide-react';
 
 /* ─────────────────────────────────────────────────────────────────
-   Locale switcher — hardcoded, no i18n dependency (avoids key bug)
+   Locale switcher — refined aesthetic circular/pill toggle
 ───────────────────────────────────────────────────────────────── */
 function LocaleToggle({ locale }: { locale: string }) {
   const isEn = locale === 'en';
@@ -22,11 +23,11 @@ function LocaleToggle({ locale }: { locale: string }) {
       onClick={handleSwitch}
       aria-label="Switch language"
       className={cn(
-        'h-8 px-3 rounded-full border text-[11px] font-medium tracking-widest uppercase',
-        'border-bengal-kansa/40 text-bengal-kajal/60',
-        'hover:border-bengal-kansa hover:text-bengal-sindoor',
-        'transition-all duration-200 touch-manipulation',
-        !isEn ? 'font-bengali tracking-normal text-sm' : ''
+        'h-8 w-11 md:h-9 md:w-12 rounded-[2rem] border flex items-center justify-center',
+        'border-bengal-kansa/60 text-bengal-kansa bg-transparent',
+        'hover:border-bengal-kajal hover:text-bengal-kajal hover:bg-black/5',
+        'transition-all duration-300 touch-manipulation',
+        !isEn ? 'font-bengali text-sm' : 'font-sans-en text-[11px] md:text-xs tracking-wider font-medium'
       )}
     >
       {isEn ? 'বাং' : 'EN'}
@@ -37,13 +38,16 @@ function LocaleToggle({ locale }: { locale: string }) {
 /* ─────────────────────────────────────────────────────────────────
    Desktop nav link with sliding underline
 ───────────────────────────────────────────────────────────────── */
-function NavLink({ href, label }: { href: string; label: string }) {
+function NavLink({ href, label, isBn }: { href: string; label: string; isBn: boolean }) {
   return (
     <Link href={href} className="relative group py-1">
-      <span className="text-[11px] tracking-[0.2em] uppercase font-medium text-bengal-kajal/55 group-hover:text-bengal-kajal transition-colors duration-200">
+      <span className={cn(
+        "uppercase font-medium text-bengal-kajal/60 group-hover:text-bengal-kajal transition-colors duration-200",
+        isBn ? 'font-bengali text-sm tracking-wide' : 'font-sans-en text-[11px] tracking-[0.2em]'
+      )}>
         {label}
       </span>
-      <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-bengal-kansa group-hover:w-full transition-all duration-300" />
+      <span className="absolute -bottom-1 left-0 h-[1.5px] w-0 bg-bengal-kansa group-hover:w-full transition-all duration-300 rounded-full" />
     </Link>
   );
 }
@@ -54,6 +58,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
 export function Header() {
   const params = useParams();
   const locale = params.locale as string;
+  const isBn   = locale === 'bn';
 
   const [scrolled, setScrolled] = useState(false);
   const [hidden,   setHidden]   = useState(false);
@@ -62,8 +67,8 @@ export function Header() {
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
-      setScrolled(y > 30);
-      setHidden(y > lastScrollYRef.current && y > 120);
+      setScrolled(y > 20);
+      setHidden(y > lastScrollYRef.current && y > 150);
       lastScrollYRef.current = y;
     };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -71,71 +76,89 @@ export function Header() {
   }, []);
 
   const navLinks = [
-    { href: `/${locale}`,       label: locale === 'bn' ? 'হোম'       : 'Home'      },
-    { href: `/${locale}/shop`,  label: locale === 'bn' ? 'শপ'        : 'Shop'      },
-    { href: `/${locale}#story`, label: locale === 'bn' ? 'আমাদের গল্প': 'Our Story' },
+    { href: `/${locale}`,       label: isBn ? 'হোম'       : 'Home'      },
+    { href: `/${locale}/shop`,  label: isBn ? 'শপ'        : 'Shop'      },
+    { href: `/${locale}#story`, label: isBn ? 'আমাদের গল্প': 'Our Story' },
   ];
 
   return (
     <motion.header
-      animate={{ y: hidden ? '-110%' : '0%' }}
-      transition={{ duration: 0.38, ease: [0.32, 0.72, 0, 1] }}
+      animate={{ y: hidden ? '-100%' : '0%' }}
+      transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-colors duration-400',
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
         scrolled
-          ? 'bg-bengal-kori/92 backdrop-blur-lg border-b border-bengal-kansa/15'
-          : 'bg-transparent'
+          ? 'bg-bengal-kori/95 backdrop-blur-md shadow-sm border-b border-bengal-kansa/15 py-1'
+          : 'bg-gradient-to-b from-bengal-kori to-transparent py-2'
       )}
     >
-      {/* Top gold accent line */}
-      <div className="h-px bg-linear-to-r from-transparent via-bengal-kansa/60 to-transparent" />
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-3 md:gap-4 mt-2 mb-2">
+          
+          {/* Main Top Row */}
+          <div className="relative flex items-center justify-between">
+            
+            {/* Left: Mobile Menu / Desktop Nav */}
+            <div className="flex-1 flex items-center">
+              <button className="md:hidden flex items-center justify-center p-2 -ml-2 text-bengal-kajal hover:bg-bengal-kansa/10 rounded-full transition-colors">
+                <Menu strokeWidth={1.5} size={22} />
+              </button>
+              
+              <nav className="hidden md:flex items-center gap-8">
+                {navLinks.map((l) => (
+                  <NavLink key={l.href} href={l.href} label={l.label} isBn={isBn} />
+                ))}
+              </nav>
+            </div>
 
-      <div className="max-w-7xl mx-auto px-5 sm:px-6">
-        <div className="relative flex items-center h-14 md:h-16">
+            {/* Center: Bold Logo */}
+            <div className="absolute left-1/2 -translate-x-1/2">
+              <Link href={`/${locale}`} className="group flex flex-col items-center">
+                <span className="font-sans-en font-extrabold tracking-[0.25em] md:tracking-[0.3em] text-[20px] md:text-[26px] text-bengal-kajal uppercase">
+                  WOMANIA
+                </span>
+              </Link>
+            </div>
 
-          {/* Left: desktop nav links */}
-          <nav className="hidden md:flex items-center gap-8 flex-1">
-            {navLinks.map((l) => (
-              <NavLink key={l.href} href={l.href} label={l.label} />
-            ))}
-          </nav>
+            {/* Right: Locale Toggle */}
+            <div className="flex-1 flex justify-end">
+              <LocaleToggle locale={locale} />
+            </div>
 
-          {/* Mobile: empty left spacer */}
-          <div className="flex-1 md:hidden" />
-
-          {/* Center logo — absolute on md+, in-flow on mobile */}
-          <div className="md:absolute md:left-1/2 md:-translate-x-1/2">
-            <Link href={`/${locale}`} className="group flex items-center">
-              {/* Left ornament */}
-              <span className="hidden md:block w-5 h-px bg-bengal-kansa/40 mr-2.5 transition-all duration-300 group-hover:w-8 group-hover:bg-bengal-kansa" />
-
-              <span className="font-editorial tracking-[0.22em] text-[17px] md:text-[19px] text-bengal-kajal group-hover:text-bengal-sindoor transition-colors duration-300">
-                WOMANIA
-              </span>
-
-              {/* Right ornament */}
-              <span className="hidden md:block w-5 h-px bg-bengal-kansa/40 ml-2.5 transition-all duration-300 group-hover:w-8 group-hover:bg-bengal-kansa" />
-            </Link>
           </div>
 
-          {/* Right: locale toggle */}
-          <div className="flex-1 flex justify-end">
-            <LocaleToggle locale={locale} />
-          </div>
+          {/* Sub Row: Aesthetic Details */}
+          <motion.div 
+            animate={{ opacity: scrolled ? 0 : 1, height: scrolled ? 0 : 'auto', marginTop: scrolled ? 0 : 4 }}
+            className="flex items-center justify-between text-bengal-kansa overflow-hidden"
+          >
+            <span className={cn(
+              "transition-all duration-300",
+              isBn ? 'font-bengali text-[11px] md:text-sm tracking-wide' : 'font-sans-en uppercase text-[9px] md:text-[10px] tracking-[0.2em] md:tracking-[0.3em]'
+            )}>
+              {isBn ? 'ধীর গতির শিল্পের উদযাপন' : 'Celebration of Slow Craft'}
+            </span>
+            <span className={cn(
+              "transition-all duration-300",
+              isBn ? 'font-bengali text-[11px] md:text-sm tracking-wide' : 'font-sans-en uppercase text-[9px] md:text-[10px] tracking-[0.2em] md:tracking-[0.3em]'
+            )}>
+              {isBn ? 'স্থাপিত ২০২৬' : 'Est. 2026'}
+            </span>
+          </motion.div>
 
         </div>
       </div>
 
-      {/* Bottom animated gold rule on scroll */}
+      {/* Scrolled bottom indicator line */}
       <AnimatePresence>
         {scrolled && (
           <motion.div
-            key="rule"
+            key="bottom-rule"
             initial={{ scaleX: 0, opacity: 0 }}
             animate={{ scaleX: 1, opacity: 1 }}
-            exit={{   scaleX: 0, opacity: 0 }}
-            style={{ transformOrigin: 'left' }}
-            className="h-px bg-linear-to-r from-transparent via-bengal-kansa/35 to-transparent"
+            exit={{ scaleX: 0, opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-bengal-kansa/40 to-transparent origin-left"
           />
         )}
       </AnimatePresence>

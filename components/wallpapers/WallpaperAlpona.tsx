@@ -16,8 +16,8 @@ export function WallpaperAlpona({
           <circle cx="30" cy="30" r="16" fill="none" stroke={color} strokeWidth="0.4" opacity={opacity * 8} />
           {Array.from({ length: 8 }).map((_, i) => {
             const a = (i * 45 * Math.PI) / 180;
-            const x = 30 + Math.cos(a) * 20;
-            const y = 30 + Math.sin(a) * 20;
+            const x = Number((30 + Math.cos(a) * 20).toFixed(4));
+            const y = Number((30 + Math.sin(a) * 20).toFixed(4));
             return (
               <ellipse key={i} cx={x} cy={y} rx="1.5" ry="4"
                 transform={`rotate(${i * 45},${x},${y})`}

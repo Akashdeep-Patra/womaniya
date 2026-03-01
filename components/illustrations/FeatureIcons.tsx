@@ -47,8 +47,8 @@ export function ArtisanIcon({ size = 52 }: { size?: number }) {
       {/* Small lotus at centre */}
       {[0, 60, 120, 180, 240, 300].map((deg, i) => {
         const r = (deg * Math.PI) / 180;
-        const x = 26 + Math.cos(r) * 6;
-        const y = 34 + Math.sin(r) * 6;
+        const x = Number((26 + Math.cos(r) * 6).toFixed(4));
+        const y = Number((34 + Math.sin(r) * 6).toFixed(4));
         return <circle key={i} cx={x} cy={y} r="1.2" fill={S} opacity="0.4" />;
       })}
       <circle cx="26" cy="34" r="2" fill={S} opacity="0.6" />
@@ -96,8 +96,8 @@ export function HeritageIcon({ size = 52 }: { size?: number }) {
       {/* Central motif — lotus */}
       {[0, 72, 144, 216, 288].map((deg, i) => {
         const r = (deg * Math.PI) / 180;
-        const x = 26 + Math.cos(r) * 5;
-        const y = 30 + Math.sin(r) * 5;
+        const x = Number((26 + Math.cos(r) * 5).toFixed(4));
+        const y = Number((30 + Math.sin(r) * 5).toFixed(4));
         return <ellipse key={i} cx={x} cy={y} rx="1.5" ry="3"
           transform={`rotate(${deg},${x},${y})`} fill={S} opacity="0.5" />;
       })}
