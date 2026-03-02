@@ -67,7 +67,6 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
     setValue,
     reset,
   } = useForm<CollectionFormValues>({
-    // @ts-expect-error - Zod v4 and @hookform/resolvers have type compatibility issues
     resolver: zodResolver(collectionFormSchema) as Resolver<CollectionFormValues>,
     defaultValues: {
       name_en: initialData?.name_en ?? '',

@@ -59,7 +59,6 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
     handleSubmit: rhfHandleSubmit,
     formState: { errors },
   } = useForm<CampaignFormValues>({
-    // @ts-expect-error - Zod v4 and @hookform/resolvers have type compatibility issues
     resolver: zodResolver(campaignFormSchema) as Resolver<CampaignFormValues>,
     defaultValues: {
       name_en: initialData?.name_en ?? '',

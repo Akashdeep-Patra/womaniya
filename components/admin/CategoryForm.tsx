@@ -50,7 +50,6 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
     formState: { errors },
     setValue,
   } = useForm<CategoryFormValues>({
-    // @ts-expect-error - Zod v4 and @hookform/resolvers have type compatibility issues
     resolver: zodResolver(categoryFormSchema) as Resolver<CategoryFormValues>,
     defaultValues: {
       name_en: category?.name_en ?? '',

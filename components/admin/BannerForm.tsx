@@ -72,7 +72,6 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
     formState: { errors },
     setValue,
   } = useForm<BannerFormValues>({
-    // @ts-expect-error - Zod v4 and @hookform/resolvers have type compatibility issues
     resolver: zodResolver(bannerFormSchema) as Resolver<BannerFormValues>,
     defaultValues: {
       title_en: initialData?.title_en ?? '',

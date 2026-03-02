@@ -79,7 +79,6 @@ export function ProductForm({ initialData, initialImages, categories, collection
     setValue,
     reset,
   } = useForm<ProductFormValues>({
-    // @ts-expect-error - Zod v4 and @hookform/resolvers have type compatibility issues
     resolver: zodResolver(productFormSchema) as Resolver<ProductFormValues>,
     defaultValues: {
       name_en: initialData?.name_en ?? '',

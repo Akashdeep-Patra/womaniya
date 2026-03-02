@@ -61,7 +61,6 @@ export function PageForm({ initialData, locale }: PageFormProps) {
     formState: { errors },
     setValue,
   } = useForm<PageFormValues>({
-    // @ts-expect-error - Zod v4 and @hookform/resolvers have type compatibility issues
     resolver: zodResolver(pageFormSchema) as Resolver<PageFormValues>,
     defaultValues: {
       title_en: initialData?.title_en ?? '',
