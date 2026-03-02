@@ -15,44 +15,34 @@ export function BengalVillage({ className = '' }: { className?: string }) {
         transition={{ duration: 1.2, ease: 'easeOut' }}
       >
         {/* Soft Organic Backdrop (replaces the hard circle) */}
-        <motion.path 
+        <path 
           d="M 50 150 C 100 -20, 300 0, 350 150 C 400 300, 350 450, 200 450 C 50 450, 0 300, 50 150 Z" 
           fill="#EAE1D8" 
           opacity="0.4"
-          animate={{ scale: [1, 1.05, 1], rotate: [0, 2, 0] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          className="animate-bg-breathe"
         />
 
         {/* The Sun / Moon */}
-        <motion.circle
+        <circle
           cx="280"
           cy="120"
           r="60"
           fill="#E63946"
           opacity="0.9"
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 0.9 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
         />
 
         {/* Flowing River Silhouette */}
-        <motion.path
+        <path
           d="M 0 350 Q 100 320, 200 350 T 400 340 L 400 500 L 0 500 Z"
           fill="#A4B5B4"
           opacity="0.5"
-          animate={{ d: [
-            "M 0 350 Q 100 320, 200 350 T 400 340 L 400 500 L 0 500 Z",
-            "M 0 350 Q 100 360, 200 350 T 400 380 L 400 500 L 0 500 Z",
-            "M 0 350 Q 100 320, 200 350 T 400 340 L 400 500 L 0 500 Z"
-          ]}}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          className="animate-pulse-soft"
         />
 
         {/* Elegant Village Woman Walking */}
-        <motion.g 
+        <g 
           transform="translate(160, 280)"
-          animate={{ y: [0, -5, 0] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+          className="animate-float-slow"
         >
           {/* Saree Drape Body (Base) */}
           <path d="M 0 0 C 60 20, 80 100, 40 200 L -40 200 C -80 100, -40 20, 0 0 Z" fill="#D4A017" />
@@ -91,13 +81,12 @@ export function BengalVillage({ className = '' }: { className?: string }) {
           {/* Bangles */}
           <line x1="-35" y1="80" x2="-20" y2="70" stroke="#8A1C14" strokeWidth="5" strokeLinecap="round" />
           <line x1="-32" y1="85" x2="-17" y2="75" stroke="#F9F6F0" strokeWidth="4" strokeLinecap="round" />
-        </motion.g>
+        </g>
 
         {/* Gentle Foreground Reeds/Kash Phool */}
-        <motion.g
-          animate={{ skewX: [0, -5, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          transform="origin-bottom"
+        <g
+          className="animate-sway-slow"
+          style={{ transformOrigin: 'bottom center' }}
         >
           {[300, 330, 360, 390].map((x, i) => (
             <g key={`reed-${i}`} transform={`translate(${x}, 380)`}>
@@ -105,7 +94,7 @@ export function BengalVillage({ className = '' }: { className?: string }) {
               <circle cx="10" cy="0" r="5" fill="#FDF8F2" opacity="0.9" />
             </g>
           ))}
-        </motion.g>
+        </g>
 
       </motion.svg>
     </div>

@@ -24,14 +24,13 @@ export function AlponaCircle({ className = '', width = 200, height = 200 }: { cl
       </defs>
 
       {/* Gentle pulsing background aura */}
-      <motion.circle 
+      <circle 
         cx="100" cy="100" r="95" 
         fill="url(#alponaGlow)" 
-        animate={{ scale: [1, 1.05, 1], opacity: [0.5, 1, 0.5] }} 
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} 
+        className="animate-pulse-soft"
       />
 
-      <motion.g animate={{ rotate: 360 }} transition={{ duration: 120, repeat: Infinity, ease: "linear" }}>
+      <g className="animate-spin-super-slow" style={{ transformOrigin: '100px 100px' }}>
         {/* Outer Connecting Vines/Arches */}
         {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle, i) => (
           <g key={`arch-${angle}`} transform={`rotate(${angle} 100 100)`}>

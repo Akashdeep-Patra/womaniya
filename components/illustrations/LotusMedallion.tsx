@@ -18,10 +18,8 @@ export function LotusMedallion({
       viewBox="0 0 64 64" 
       width={size} 
       height={size} 
-      className={className} 
+      className={`${className} animate-spin-slow`}
       aria-hidden
-      animate={{ rotate: 360 }}
-      transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
     >
       <defs>
         <radialGradient id="lotusGlow" cx="50%" cy="50%" r="50%">
@@ -32,12 +30,11 @@ export function LotusMedallion({
 
       <circle cx={c} cy={c} r="30" fill="url(#lotusGlow)" />
       
-      <motion.circle 
+      <circle 
         cx={c} cy={c} r="28" 
         fill="none" stroke={color} strokeWidth="0.7" opacity="0.4" 
         strokeDasharray="4 4"
-        animate={{ rotate: -360 }}
-        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        className="animate-spin-slow-reverse"
         style={{ transformOrigin: '32px 32px' }}
       />
       <circle cx={c} cy={c} r="24" fill="none" stroke={color} strokeWidth="0.5" opacity="0.3" />
@@ -62,10 +59,7 @@ export function LotusMedallion({
         })}
         
         {/* Inner 8 Petals */}
-        <motion.g
-          animate={{ rotate: [0, 15, 0] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        >
+        <g className="animate-sway-medium">
           {Array.from({ length: 8 }).map((_, i) => {
             const a = (i * 45 * Math.PI) / 180;
             const px = Number((Math.cos(a) * 8).toFixed(4));
@@ -82,15 +76,13 @@ export function LotusMedallion({
               />
             );
           })}
-        </motion.g>
+        </g>
 
         {/* Core */}
-        <motion.circle 
+        <circle 
           r="4" 
           fill={color} 
-          opacity="0.8" 
-          animate={{ scale: [1, 1.1, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          className="animate-pulse-fast"
         />
         <circle r="1.5" fill="#E63946" opacity="0.9" />
         

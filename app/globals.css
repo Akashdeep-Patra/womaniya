@@ -192,6 +192,126 @@
     .masonry-item { margin-bottom: 1.25rem; }
   }
 
+  /* Custom CSS Animations for Zero-Lag SVG Illustrations */
+  @keyframes float-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .animate-float-slow {
+    animation: float-slow 6s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  @keyframes float-medium {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  .animate-float-medium {
+    animation: float-medium 4s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.05); opacity: 1; }
+  }
+  .animate-pulse-soft {
+    animation: pulse-soft 8s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% { transform: scale(1); opacity: 0.15; }
+    50% { transform: scale(1.05); opacity: 0.3; }
+  }
+  .animate-pulse-glow {
+    animation: pulse-glow 8s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  @keyframes sway-slow {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+  .animate-sway-slow {
+    animation: sway-slow 4s ease-in-out infinite;
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  @keyframes spin-super-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .animate-spin-super-slow {
+    animation: spin-super-slow 60s linear infinite;
+    will-change: transform;
+  }
+  
+  @keyframes shuttle-fly {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(200px); }
+  }
+  .animate-shuttle-fly {
+    animation: shuttle-fly 2s ease-in-out infinite;
+    will-change: transform;
+  }
+  
+  @keyframes bg-breathe {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.03) rotate(2deg); }
+  }
+  .animate-bg-breathe {
+    animation: bg-breathe 12s ease-in-out infinite;
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  @keyframes drift-diagonal {
+    from { transform: translate(0, 0); }
+    to { transform: translate(-60px, -60px); }
+  }
+  .animate-drift-diagonal {
+    animation: drift-diagonal 20s linear infinite;
+    will-change: transform;
+  }
+  
+  @keyframes pulse-fast {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 1; }
+  }
+  .animate-pulse-fast {
+    animation: pulse-fast 3s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+  
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .animate-spin-slow {
+    animation: spin-slow 40s linear infinite;
+    will-change: transform;
+  }
+  
+  @keyframes spin-slow-reverse {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+  }
+  .animate-spin-slow-reverse {
+    animation: spin-slow-reverse 30s linear infinite;
+    will-change: transform;
+  }
+  
+  @keyframes sway-medium {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(15deg); }
+  }
+  .animate-sway-medium {
+    animation: sway-medium 10s ease-in-out infinite;
+    will-change: transform;
+  }
+
   /* Hero scroll hint — compositor-friendly (no JS) */
   @keyframes bounce-subtle {
     0%, 100% { transform: translateY(0); }

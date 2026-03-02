@@ -15,28 +15,18 @@ export function BengalWomanHero({ className = '' }: { className?: string }) {
         transition={{ duration: 1.2, ease: 'easeOut' }}
       >
         {/* Abstract organic background shape replacing the box */}
-        <motion.path 
+        <path 
           d="M 50 300 C 80 450, 350 550, 420 400 C 490 250, 380 50, 250 80 C 120 110, 20 150, 50 300 Z" 
           fill="#EAE1D8" 
           opacity="0.5"
-          animate={{ 
-            d: [
-              "M 50 300 C 80 450, 350 550, 420 400 C 490 250, 380 50, 250 80 C 120 110, 20 150, 50 300 Z",
-              "M 60 320 C 100 480, 330 520, 440 380 C 510 230, 360 70, 230 90 C 100 110, 30 180, 60 320 Z",
-              "M 50 300 C 80 450, 350 550, 420 400 C 490 250, 380 50, 250 80 C 120 110, 20 150, 50 300 Z"
-            ]
-          }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+          className="animate-bg-breathe"
         />
 
         {/* Floating Sun/Aura */}
         <circle cx="350" cy="200" r="120" fill="#C5A059" opacity="0.15" />
 
         {/* Woman Figure Composition */}
-        <motion.g 
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-        >
+        <g className="animate-float-slow">
           {/* Back Hair (Khopa/Bun) */}
           <path d="M 180 120 C 240 100, 280 130, 290 190 C 300 250, 260 300, 200 290 C 150 280, 130 200, 180 120 Z" fill="#1A1918" />
           
@@ -90,15 +80,14 @@ export function BengalWomanHero({ className = '' }: { className?: string }) {
           </g>
 
           {/* Hand holding a Lotus */}
-          <motion.g 
+          <g 
             transform="translate(265, 480)"
-            animate={{ rotate: [-3, 3, -3] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            className="animate-sway-slow"
           >
             <path d="M 0 0 C -20 -30, -5 -50, 15 -50 C 35 -50, 50 -30, 30 0 Z" fill="#8A1C14" opacity="0.9" />
             <path d="M 15 0 C -5 -20, 5 -40, 15 -45 C 25 -40, 35 -20, 15 0 Z" fill="#E63946" />
             <path d="M 15 0 C 10 -15, 12 -25, 15 -30 C 18 -25, 20 -15, 15 0 Z" fill="#C5A059" />
-          </motion.g>
+          </g>
 
           {/* Heavy Gold Necklace (Sita Haar) */}
           <path d="M 150 260 C 180 320, 220 320, 250 260" stroke="#C5A059" strokeWidth="8" fill="none" strokeLinecap="round" />
@@ -108,27 +97,25 @@ export function BengalWomanHero({ className = '' }: { className?: string }) {
         </motion.g>
 
         {/* Floating Lotus Petals */}
-        {[
-          { x: 100, y: 150, delay: 0 },
-          { x: 400, y: 250, delay: 1 },
-          { x: 350, y: 500, delay: 2 },
-          { x: 80, y: 450, delay: 0.5 },
-          { x: 450, y: 100, delay: 1.5 }
-        ].map((p, i) => (
-          <motion.path
-            key={`petal-${i}`}
-            d="M 0 0 C -15 -20, 0 -35, 15 -20 C 10 -5, 5 -2, 0 0 Z"
-            fill="#8A1C14"
-            opacity="0.6"
-            initial={{ x: p.x, y: p.y }}
-            animate={{ 
-              y: [p.y, p.y - 40, p.y],
-              rotate: [0, 15, 0],
-              scale: [1, 1.1, 1]
-            }}
-            transition={{ duration: 6 + i, repeat: Infinity, ease: 'easeInOut', delay: p.delay }}
-          />
-        ))}
+        <g className="animate-float-medium" style={{ transformOrigin: 'center' }}>
+          {[
+            { x: 100, y: 150 },
+            { x: 400, y: 250 },
+            { x: 350, y: 500 },
+            { x: 80, y: 450 },
+            { x: 450, y: 100 }
+          ].map((p, i) => (
+            <motion.path
+              key={`petal-${i}`}
+              d="M 0 0 C -15 -20, 0 -35, 15 -20 C 10 -5, 5 -2, 0 0 Z"
+              fill="#8A1C14"
+              opacity="0.6"
+              initial={{ x: p.x, y: p.y, opacity: 0, scale: 0 }}
+              animate={{ x: p.x, y: p.y, opacity: 0.6, scale: 1 }}
+              transition={{ duration: 1.5, delay: 0.5 + i * 0.2 }}
+            />
+          ))}
+        </g>
       </motion.svg>
     </div>
   );

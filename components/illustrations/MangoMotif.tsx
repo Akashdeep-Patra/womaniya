@@ -12,15 +12,14 @@ export function MangoMotif({
   size?: number;
 }) {
   return (
-    <motion.svg 
+    <svg 
       xmlns="http://www.w3.org/2000/svg" 
       viewBox="0 0 64 80" 
       width={size * 0.8} 
       height={size} 
-      className={`${className} drop-shadow-md`}
+      className={`${className} drop-shadow-md animate-float-medium`}
+      style={{ animationDuration: '4s' }}
       aria-hidden
-      animate={{ y: [0, -4, 0] }}
-      transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
     >
       <defs>
         <radialGradient id="mangoGlow" cx="50%" cy="50%" r="50%">
@@ -62,11 +61,10 @@ export function MangoMotif({
         ))}
 
         {/* Central Core/Seed */}
-        <motion.circle 
+        <circle 
           cy="-5" r="3" 
           fill={color} 
-          animate={{ scale: [1, 1.2, 1], opacity: [0.6, 1, 0.6] }}
-          transition={{ duration: 3, repeat: Infinity }}
+          className="animate-pulse-fast"
         />
         <circle cy="-5" r="1.5" fill="#8A1C14" opacity="0.8" />
         
@@ -87,6 +85,6 @@ export function MangoMotif({
           );
         })}
       </motion.g>
-    </motion.svg>
+    </svg>
   );
 }

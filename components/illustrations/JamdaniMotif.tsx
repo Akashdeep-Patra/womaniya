@@ -83,13 +83,12 @@ export function JamdaniMotif({
         </pattern>
       </defs>
       
-      {/* We use framer-motion to slowly drift the pattern across the rect */}
-      <motion.rect 
+      {/* We use CSS animation to slowly drift the pattern across the rect */}
+      <rect 
         width="200%" 
         height="200%" 
         fill="url(#jamdani-tile)" 
-        animate={{ x: [0, -60], y: [0, -60] }}
-        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+        className="animate-drift-diagonal"
       />
     </motion.svg>
   );
