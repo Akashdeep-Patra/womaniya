@@ -50,11 +50,11 @@ export function HeroSection() {
 
         {/* Layered Image Composition */}
         <div className="relative w-full aspect-4/5 mt-4">
-          <motion.div style={{ y: parallaxMain, ...parallaxStyle }} className="absolute inset-x-6 top-0 bottom-12 z-0 bg-bengal-mati rounded-3xl overflow-hidden shadow-sm">
+          <motion.div style={{ y: parallaxMain, ...parallaxStyle }} className="absolute inset-x-6 top-0 bottom-12 z-0 flex items-center justify-center">
             <BengalWomanHero />
           </motion.div>
 
-          <motion.div style={{ y: parallaxOffset1, ...parallaxStyle }} className="absolute -right-4 bottom-4 w-32 aspect-3/4 z-10 border-4 border-bengal-kori shadow-xl rounded-3xl overflow-hidden bg-bengal-cream">
+          <motion.div style={{ y: parallaxOffset1, ...parallaxStyle }} className="absolute -right-4 bottom-4 w-32 aspect-3/4 z-10 flex items-center justify-center">
             <LoomWeaver />
           </motion.div>
 
@@ -155,7 +155,7 @@ export function HeroSection() {
           {/* Main Large Image */}
           <motion.div
             style={{ y: parallaxMain, ...parallaxStyle }}
-            className="absolute right-0 top-[5%] w-[85%] h-[85%] shadow-2xl rounded-3xl overflow-hidden bg-bengal-mati"
+            className="absolute right-0 top-[5%] w-[85%] h-[85%] z-10 flex items-center justify-center"
           >
             <BengalWomanHero />
           </motion.div>
@@ -163,11 +163,11 @@ export function HeroSection() {
           {/* Floating Offset Image 1 - Bottom Left Intertwined */}
           <motion.div
             style={{ y: parallaxOffset1, ...parallaxStyle }}
-            className="absolute -left-[10%] bottom-[10%] w-[45%] aspect-3/4 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-8 border-bengal-kori z-20 rounded-[2.5rem] overflow-hidden bg-bengal-cream"
+            className="absolute -left-[10%] bottom-[10%] w-[45%] aspect-3/4 z-20 flex items-center justify-center"
           >
             <LoomWeaver />
             {/* Subtle overlay text on the small image */}
-            <div className="absolute -right-16 bottom-12 rotate-90 origin-bottom-left text-[9px] tracking-[0.4em] uppercase text-bengal-kansa bg-bengal-kori px-3 py-1">
+            <div className="absolute -right-8 bottom-12 rotate-90 origin-bottom-left text-[9px] tracking-[0.4em] uppercase text-bengal-kansa bg-transparent px-3 py-1">
               {t('intro')}
             </div>
           </motion.div>
@@ -175,7 +175,7 @@ export function HeroSection() {
           {/* Floating Offset Image 2 - Top Right Accent */}
           <motion.div
             style={{ y: parallaxOffset2, ...parallaxStyle }}
-            className="absolute -right-[5%] -top-[2%] w-[25%] aspect-square shadow-xl rounded-3xl border-4 border-bengal-kori z-30 overflow-hidden bg-bengal-kori"
+            className="absolute -right-[5%] -top-[2%] w-[25%] aspect-square z-30 flex items-center justify-center"
           >
             <BengalVillage />
           </motion.div>

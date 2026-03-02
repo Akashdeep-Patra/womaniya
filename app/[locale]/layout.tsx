@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
 import {
-  Playfair_Display,
-  Inter,
-  Noto_Serif_Bengali,
-  Anek_Bangla,
-  Cinzel_Decorative,
+  Yeseva_One,
+  Outfit,
+  Baloo_Da_2,
+  Hind_Siliguri,
 } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { setRequestLocale, getMessages } from 'next-intl/server';
@@ -20,34 +19,33 @@ import { ScrollProgress } from '@/components/layout/ScrollProgress';
 import '@/app/globals.css';
 
 /* ── Google Fonts ─────────────────────────────────────────────── */
-/* Playfair Display — highly elegant, thick, and aesthetic magazine/editorial serif */
-const playfair = Playfair_Display({
-  variable: '--font-playfair',
+/* Yeseva One — very thick, rounded, feminine, modern serif */
+const yesevaOne = Yeseva_One({
+  variable: '--font-playfair', // keep variable name mapping so we don't need to change tailwind and globals
   subsets: ['latin'],
   display: 'swap',
-  weight: ['400', '500', '600', '700', '800', '900'],
-  style: ['normal', 'italic'],
+  weight: ['400'],
 });
-/* Inter — modern, clean, highly performant geometric sans */
-const inter = Inter({
-  variable: '--font-jost', // Keep variable name so we don't have to change tailwind yet
+/* Outfit — clean, thick, slightly rounded geometric sans */
+const outfit = Outfit({
+  variable: '--font-jost',
   subsets: ['latin'],
   display: 'swap',
   weight: ['300', '400', '500', '600', '700'],
 });
-/* Noto Serif Bengali — heritage Bengali display, used as thick and bold */
-const notoSerifBn = Noto_Serif_Bengali({
+/* Baloo Da 2 — thick, extremely rounded, modern Bengali font */
+const balooDa2 = Baloo_Da_2({
   variable: '--font-noto-serif-bn',
   subsets: ['bengali'],
   display: 'swap',
-  weight: ['400', '500', '600', '700', '800', '900'],
+  weight: ['400', '500', '600', '700', '800'],
 });
-/* Anek Bangla — bold, thick magazine-like Bengali sans for punchy body/subheads */
-const anekBangla = Anek_Bangla({
+/* Hind Siliguri — clean, modern Bengali sans */
+const hindSiliguri = Hind_Siliguri({
   variable: '--font-anek-bn',
   subsets: ['bengali'],
   display: 'swap',
-  weight: ['300', '400', '500', '600', '700', '800'],
+  weight: ['300', '400', '500', '600', '700'],
 });
 
 /* Cinzel Decorative — ancient English vibe */
@@ -60,11 +58,10 @@ const cinzelDecorative = Cinzel_Decorative({
 });
 
 const fontVars = [
-  playfair.variable,
-  inter.variable,
-  notoSerifBn.variable,
-  anekBangla.variable,
-  cinzelDecorative.variable,
+  yesevaOne.variable,
+  outfit.variable,
+  balooDa2.variable,
+  hindSiliguri.variable,
 ].join(' ');
 
 /* ── Metadata ─────────────────────────────────────────────────── */
