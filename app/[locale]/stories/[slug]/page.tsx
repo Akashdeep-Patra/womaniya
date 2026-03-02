@@ -76,7 +76,7 @@ export default async function StoryPage({ params }: Props) {
 
         <div className="flex flex-col gap-12 font-editorial text-lg text-bengal-kajal/80 leading-relaxed">
           {page.sections.map((section) => {
-            const content = section.content_json as any;
+            const content = section.content_json as Record<string, string>;
             if (section.section_type === 'richtext') {
               return (
                 <div key={section.id} className="prose prose-stone prose-lg max-w-none font-editorial">

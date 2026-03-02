@@ -15,8 +15,14 @@ export function MagneticCursor() {
 
   useEffect(() => {
     // Disable on touch devices
-    if (window.matchMedia('(pointer: coarse)').matches) return;
-    setIsTouchDevice(false);
+    if (window.matchMedia('(pointer: coarse)').matches) {
+      return;
+    }
+    // Only set to false after checking we are not on a touch device
+    // This avoids setting state on initial render if we don't have to
+    setTimeout(() => {
+      setIsTouchDevice(false);
+    }, 0);
 
     const onMove = (e: MouseEvent) => {
       rawX.set(e.clientX - 8);

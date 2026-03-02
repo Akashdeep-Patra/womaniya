@@ -55,8 +55,12 @@ export default function ResetPasswordClient() {
         setTimeout(() => {
           router.push(`/${locale}/admin/login`);
         }, 2000);
-      } catch (err: any) {
-        toast.error(err.message || 'Failed to reset password. Token may have expired.');
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          toast.error(err.message || 'Failed to reset password. Token may have expired.');
+        } else {
+          toast.error('Failed to reset password. Token may have expired.');
+        }
       }
     });
   };

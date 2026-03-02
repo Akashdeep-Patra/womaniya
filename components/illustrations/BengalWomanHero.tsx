@@ -298,12 +298,12 @@ export function BengalWomanHero({ className = '' }: { className?: string }) {
           <path d="M 40 180 C 30 280, 60 380, 50 450" stroke="#D3C9B8" strokeWidth="12" fill="none" filter="blur(4px)"/>
           <path d="M -80 160 C -60 250, -90 350, -80 450" stroke="#D3C9B8" strokeWidth="6" fill="none" filter="blur(2px)"/>
           
-          {/* Subtle Jamdani Motifs on Saree Body */}
-          <g opacity="0.15" fill="url(#sareeBorder)">
-            {[...Array(6)].map((_, i) => (
-              <polygon key={`jamdani-${i}`} points="0,-10 10,0 0,10 -10,0" transform={`translate(${Math.random() * 120 - 60}, ${250 + i * 40})`} />
-            ))}
-          </g>
+        {/* Subtle Jamdani Motifs on Saree Body */}
+        <g opacity="0.15" fill="url(#sareeBorder)">
+          {[...Array(6)].map((_, i) => (
+            <polygon key={`jamdani-${i}`} points="0,-10 10,0 0,10 -10,0" transform={`translate(${i % 2 === 0 ? 30 : -30}, ${250 + i * 40})`} />
+          ))}
+        </g>
 
         </motion.g>
 
@@ -326,23 +326,33 @@ export function BengalWomanHero({ className = '' }: { className?: string }) {
         ))}
 
         {/* Foreground Dust/Magic Particles */}
-        {[...Array(15)].map((_, i) => (
-          <motion.circle
-            key={`dust-${i}`}
-            cx={Math.random() * 800}
-            cy={Math.random() * 1000}
-            r={Math.random() * 3 + 1}
-            fill="url(#sareeBorder)"
-            filter="url(#glowEffect)"
-            opacity={Math.random() * 0.5 + 0.2}
-            animate={{ 
-              y: [0, -30, 0], 
-              x: [0, Math.random() * 20 - 10, 0],
-              opacity: [0.2, 0.8, 0.2] 
-            }}
-            transition={{ duration: 4 + Math.random() * 3, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        ))}
+        {[...Array(15)].map((_, i) => {
+          // Pre-calculate pseudo-random values based on index to ensure deterministic rendering
+          const cx = (i * 53) % 800;
+          const cy = (i * 67) % 1000;
+          const r = (i % 3) + 1;
+          const opacity = ((i % 5) * 0.1) + 0.2;
+          const xDrift = (i % 20) - 10;
+          const duration = 4 + (i % 3);
+
+          return (
+            <motion.circle
+              key={`dust-${i}`}
+              cx={cx}
+              cy={cy}
+              r={r}
+              fill="url(#sareeBorder)"
+              filter="url(#glowEffect)"
+              opacity={opacity}
+              animate={{ 
+                y: [0, -30, 0], 
+                x: [0, xDrift, 0],
+                opacity: [0.2, 0.8, 0.2] 
+              }}
+              transition={{ duration: duration, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          );
+        })}
 
       </motion.svg>
     </div>

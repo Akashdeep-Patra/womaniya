@@ -11,6 +11,7 @@ export type SectionType = 'hero' | 'richtext' | 'image_text' | 'product_grid' | 
 export type SectionData = {
   id: string; // temp id for drag/drop
   type: SectionType;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: any;
 };
 
@@ -24,7 +25,7 @@ export function SectionComposer({ sections, onChange }: Props) {
 
   const addSection = (type: SectionType) => {
     const newSection: SectionData = {
-      id: Math.random().toString(36).substring(7),
+      id: crypto.randomUUID(),
       type,
       content: getDefaultContent(type),
     };
@@ -36,7 +37,7 @@ export function SectionComposer({ sections, onChange }: Props) {
     onChange(sections.filter(s => s.id !== id));
   };
 
-  const updateSectionContent = (id: string, newContent: any) => {
+  const updateSectionContent = (id: string, newContent: Record<string, unknown>) => {
     onChange(sections.map(s => s.id === id ? { ...s, content: newContent } : s));
   };
 
@@ -126,7 +127,9 @@ function getDefaultContent(type: SectionType) {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function SectionEditor({ section, onChange }: { section: SectionData; onChange: (content: any) => void }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (key: string, value: any) => {
     onChange({ ...section.content, [key]: value });
   };

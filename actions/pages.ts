@@ -77,7 +77,7 @@ export async function createPage(formData: FormData, sectionsJson: string) {
   if (sectionsJson && page) {
     const sections = JSON.parse(sectionsJson);
     if (sections.length > 0) {
-      const sectionValues = sections.map((s: any, idx: number) => ({
+      const sectionValues = sections.map((s: { type: string; content: unknown }, idx: number) => ({
         page_id:      page.id,
         section_type: s.type,
         content_json: s.content,
@@ -128,7 +128,7 @@ export async function updatePage(id: number, formData: FormData, sectionsJson: s
   if (sectionsJson) {
     const sections = JSON.parse(sectionsJson);
     if (sections.length > 0) {
-      const sectionValues = sections.map((s: any, idx: number) => ({
+      const sectionValues = sections.map((s: { type: string; content: unknown }, idx: number) => ({
         page_id:      id,
         section_type: s.type,
         content_json: s.content,

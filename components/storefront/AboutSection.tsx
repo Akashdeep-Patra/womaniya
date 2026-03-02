@@ -10,10 +10,6 @@ import { JamdaniMotif }    from '@/components/illustrations/JamdaniMotif';
 import { BengalButton }    from '@/components/bengal';
 import { BengalBadge }     from '@/components/bengal';
 
-const fadeLeft  = { hidden: { opacity: 0, x: -32 }, show: { opacity: 1, x: 0, transition: { duration: 0.8, ease: 'easeOut' } } } as any;
-const fadeRight = { hidden: { opacity: 0, x:  32 }, show: { opacity: 1, x: 0, transition: { duration: 0.8, ease: 'easeOut' } } } as any;
-const fadeUp    = { hidden: { opacity: 0, y:  28 }, show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } } } as any;
-
 export function AboutSection() {
   const t      = useTranslations('about');
   const ts     = useTranslations('story');
@@ -47,7 +43,7 @@ export function AboutSection() {
               <p>{t('body_3')}</p>
             </div>
             <p className={`font-editorial text-bengal-kansa text-lg mt-6 italic ${isBn ? 'font-bengali-serif' : ''}`}>
-              "{t('closing')}"
+              &quot;{t('closing')}&quot;
             </p>
           </motion.div>
 
@@ -145,7 +141,7 @@ export function AboutSection() {
             </div>
 
             <p className={`font-editorial text-bengal-kansa text-xl italic border-l-2 border-bengal-kansa/40 pl-4 ${isBn ? 'font-bengali-serif' : ''}`}>
-              "{t('closing')}"
+              &quot;{t('closing')}&quot;
             </p>
 
             <Link href={`/${locale}/about`}>

@@ -128,22 +128,31 @@ export function LoomWeaver({ className = '' }: { className?: string }) {
         </motion.g>
 
         {/* Floating Ambient Cotton Dust */}
-        {[...Array(12)].map((_, i) => (
-          <motion.circle
-            key={`dust-${i}`}
-            cx={100 + Math.random() * 300}
-            cy={100 + Math.random() * 300}
-            r={Math.random() * 2 + 1}
-            fill="#FFF"
-            opacity={Math.random() * 0.5 + 0.2}
-            animate={{ 
-              y: [0, -40, 0], 
-              x: [0, Math.random() * 30 - 15, 0],
-              opacity: [0, 0.8, 0] 
-            }}
-            transition={{ duration: 3 + Math.random() * 4, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        ))}
+        {[...Array(12)].map((_, i) => {
+          const cx = 100 + ((i * 71) % 300);
+          const cy = 100 + ((i * 89) % 300);
+          const r = (i % 2) + 1;
+          const opacity = ((i % 5) * 0.1) + 0.2;
+          const xDrift = (i % 30) - 15;
+          const duration = 3 + (i % 4);
+
+          return (
+            <motion.circle
+              key={`dust-${i}`}
+              cx={cx}
+              cy={cy}
+              r={r}
+              fill="#FFF"
+              opacity={opacity}
+              animate={{ 
+                y: [0, -40, 0], 
+                x: [0, xDrift, 0],
+                opacity: [0, 0.8, 0] 
+              }}
+              transition={{ duration: duration, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          );
+        })}
 
         {/* Abstract Elegant Hands of the Artisan */}
         <motion.g
