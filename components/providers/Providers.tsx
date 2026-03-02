@@ -15,7 +15,7 @@ type Props = {
 
 export function Providers({ locale, messages, children }: Props) {
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
+    <NextIntlClientProvider locale={locale} messages={messages} timeZone="Asia/Kolkata">
       <SmoothScrollProvider>
         <MagneticCursor />
         {children}
