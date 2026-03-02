@@ -1,10 +1,34 @@
 'use client';
 
-/**
- * SmoothScrollProvider — Lenis disabled to fix scroll issues.
- * Native scroll + CSS scroll-behavior handles anchor links.
- * Re-enable Lenis later if needed with proper integration.
- */
+import { useEffect } from 'react';
+import Lenis from '@studio-freight/lenis';
+
 export function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    // Sync framer-motion useScroll with Lenis if needed
+    // Framer motion uses native scroll events, so this usually just works.
+    
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
   return <>{children}</>;
 }

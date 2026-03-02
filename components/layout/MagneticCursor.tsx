@@ -37,9 +37,9 @@ export function MagneticCursor() {
       }
     };
 
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseover',  onEnter);
-    window.addEventListener('mouseout',   onLeave);
+    window.addEventListener('mousemove', onMove, { passive: true });
+    window.addEventListener('mouseover',  onEnter, { passive: true });
+    window.addEventListener('mouseout',   onLeave, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', onMove);
