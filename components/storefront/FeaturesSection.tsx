@@ -1,8 +1,7 @@
 'use client';
 
 import { motion }          from 'framer-motion';
-import { useTranslations } from 'next-intl';
-import { useParams }       from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   HandwovenIcon,
   ArtisanIcon,
@@ -17,8 +16,8 @@ const icons = [HandwovenIcon, ArtisanIcon, ConsciousIcon, HeritageIcon];
 
 export function FeaturesSection() {
   const t      = useTranslations('features');
-  const params = useParams();
-  const isBn   = params.locale === 'bn';
+  const locale = useLocale();
+  const isBn   = locale === 'bn';
 
   return (
     <section className="relative px-4 sm:px-6 py-20 md:py-32 max-w-[1400px] mx-auto overflow-hidden">

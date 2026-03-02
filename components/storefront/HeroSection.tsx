@@ -3,16 +3,14 @@
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
-import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
 import { BengalWomanHero } from '@/components/illustrations/BengalWomanHero';
 import { LoomWeaver } from '@/components/illustrations/LoomWeaver';
 import { BengalVillage } from '@/components/illustrations/BengalVillage';
 
 export function HeroSection() {
   const t = useTranslations('hero');
-  const params = useParams();
-  const locale = params.locale as string;
+  const locale = useLocale();
   const isBn = locale === 'bn';
 
   const sectionRef = useRef<HTMLElement>(null);

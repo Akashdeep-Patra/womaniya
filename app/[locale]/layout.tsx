@@ -48,14 +48,6 @@ const hindSiliguri = Hind_Siliguri({
   weight: ['300', '400', '500', '600', '700'],
 });
 
-/* Cinzel Decorative — ancient English vibe */
-const cinzelDecorative = Cinzel_Decorative({
-  variable: '--font-cinzel',
-  subsets: ['latin'],
-  display: 'swap',
-  weight: ['400', '700', '900'],
-  preload: false,
-});
 
 const fontVars = [
   yesevaOne.variable,
