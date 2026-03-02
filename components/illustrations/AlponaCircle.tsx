@@ -76,7 +76,7 @@ export function AlponaCircle({ className = '', width = 200, height = 200 }: { cl
             visible: { opacity: 1, transition: { duration: 1, delay: 1 } }
           }}
         />
-      </motion.g>
+      </g>
 
       {/* The Central Figure - Elegant Bengali Woman Profile (Static inside rotating mandala) */}
       <motion.g

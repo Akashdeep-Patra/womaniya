@@ -2,6 +2,8 @@
   "nav": {
     "home": "Home",
     "shop": "Shop",
+    "collections": "Collections",
+    "categories": "Categories",
     "about": "About",
     "story": "Our Story",
     "contact": "Contact",
@@ -123,6 +125,21 @@
     "step_3_desc": "We collaborate with artisans to adapt traditional motifs for contemporary silhouettes.",
     "step_4": "To You",
     "step_4_desc": "Carefully packed and sent — each piece arrives with the story of its making."
+  },
+  "manifesto": {
+    "title": "We believe in the slow rhythm of the loom.",
+    "subtitle": "In a world of fast fashion, Womaniya stands for the enduring power of human hands. We celebrate the imperfections, the patience, and the profound beauty of authentic Indian handloom.",
+    "cta": "Read Our Philosophy"
+  },
+  "voices": {
+    "title": "Voices of the Craft",
+    "subtitle": "Hear from the master artisans and the women who wear their art.",
+    "quote_1": "Each thread I weave carries a prayer. It is not just cloth; it is my family's legacy.",
+    "author_1": "Master Weaver, Phulia",
+    "quote_2": "Wearing a Womaniya Jamdani feels like wearing a piece of history. The craftsmanship is palpable.",
+    "author_2": "Arundhati M., Kolkata",
+    "quote_3": "We don't rush the loom. The design decides its own time.",
+    "author_3": "Block Printer, Ajrakhpur"
   },
   "admin": {
     "title": "Womaniya Admin",

@@ -94,7 +94,7 @@ export function BengalWomanHero({ className = '' }: { className?: string }) {
           <path d="M 160 270 C 190 350, 230 350, 240 270" stroke="#C5A059" strokeWidth="4" fill="none" strokeLinecap="round" />
           <circle cx="202" cy="335" r="8" fill="#8A1C14" />
           <circle cx="202" cy="335" r="10" stroke="#C5A059" strokeWidth="2" fill="none" />
-        </motion.g>
+        </g>
 
         {/* Floating Lotus Petals */}
         <g className="animate-float-medium" style={{ transformOrigin: 'center' }}>

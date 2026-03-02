@@ -76,9 +76,11 @@ export function Header() {
   }, []);
 
   const navLinks = [
-    { href: `/${locale}`,       label: isBn ? 'হোম'       : 'Home'      },
-    { href: `/${locale}/shop`,  label: isBn ? 'শপ'        : 'Shop'      },
-    { href: `/${locale}#story`, label: isBn ? 'আমাদের গল্প': 'Our Story' },
+    { href: `/${locale}`,             label: isBn ? 'হোম'         : 'Home'        },
+    { href: `/${locale}/shop`,        label: isBn ? 'শপ'          : 'Shop'        },
+    { href: `/${locale}/collections`, label: isBn ? 'সংগ্রহ'       : 'Collections' },
+    { href: `/${locale}/categories`,  label: isBn ? 'ক্যাটাগরি'      : 'Categories'  },
+    { href: `/${locale}#story`,       label: isBn ? 'আমাদের গল্প'  : 'Our Story'   },
   ];
 
   return (

@@ -9,6 +9,7 @@ import { BottomNav }           from '@/components/layout/BottomNav';
 import { HeroSection }         from '@/components/storefront/HeroSection';
 import { getFeaturedProducts } from '@/actions/products';
 import { getPublishedCategories } from '@/actions/categories';
+import { getFeaturedCollections } from '@/actions/collections';
 
 /* Below-fold sections: dynamic import to reduce initial JS and improve LCP */
 const HeritageTicker = dynamic(
@@ -21,8 +22,23 @@ const FeaturesSection = dynamic(
   { ssr: true }
 );
 
+const ManifestoSection = dynamic(
+  () => import('@/components/storefront/ManifestoSection').then((m) => ({ default: m.ManifestoSection })),
+  { ssr: true }
+);
+
+const FeaturedCollectionsSection = dynamic(
+  () => import('@/components/storefront/FeaturedCollectionsSection').then((m) => ({ default: m.FeaturedCollectionsSection })),
+  { ssr: true }
+);
+
 const GlimpsesSection = dynamic(
   () => import('@/components/storefront/GlimpsesSection').then((m) => ({ default: m.GlimpsesSection })),
+  { ssr: true }
+);
+
+const ArtisanVoicesSection = dynamic(
+  () => import('@/components/storefront/ArtisanVoicesSection').then((m) => ({ default: m.ArtisanVoicesSection })),
   { ssr: true }
 );
 
@@ -90,10 +106,12 @@ export default async function HomePage({ params }: Props) {
 
   let featured: Awaited<ReturnType<typeof getFeaturedProducts>> = [];
   let categories: Awaited<ReturnType<typeof getPublishedCategories>> = [];
+  let collections: Awaited<ReturnType<typeof getFeaturedCollections>> = [];
   try {
-    [featured, categories] = await Promise.all([
+    [featured, categories, collections] = await Promise.all([
       getFeaturedProducts(),
       getPublishedCategories(),
+      getFeaturedCollections(),
     ]);
   } catch {
     // DB not yet connected in dev
@@ -128,8 +146,14 @@ export default async function HomePage({ params }: Props) {
       <main className="mb-bottom-nav md:mb-0">
         <HeroSection />
         <HeritageTicker categories={categories} />
+        
+        <ManifestoSection />
+        
         <FeaturesSection />
+        <FeaturedCollectionsSection collections={collections} />
+        
         <GlimpsesSection />
+        <ArtisanVoicesSection />
         <CategoriesSection categories={categories} />
 
         {featured.length > 0 && (

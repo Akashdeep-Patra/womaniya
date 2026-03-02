@@ -15,7 +15,9 @@ import {
   MapPin, 
   Phone, 
   Sparkles,
-  Info
+  Info,
+  LayoutGrid,
+  Layers
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -52,7 +54,8 @@ export function BottomNav({ categories: dbCategories }: BottomNavProps) {
   const mainLinks = [
     { href: `/${locale}`,      label: t('home'),  Icon: Home        },
     { href: `/${locale}/shop`, label: t('shop'),  Icon: ShoppingBag },
-    { href: `/${locale}#story`,label: t('story'), Icon: BookOpen    },
+    { href: `/${locale}/collections`, label: isBn ? 'সংগ্রহ' : 'Collections', Icon: Layers },
+    { href: `/${locale}/categories`,  label: isBn ? 'ক্যাটাগরি' : 'Categories', Icon: LayoutGrid },
   ];
 
   const categories = dbCategories && dbCategories.length > 0
@@ -65,7 +68,7 @@ export function BottomNav({ categories: dbCategories }: BottomNavProps) {
   return (
     <>
       <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-bengal-kori/90 backdrop-blur-md border-t border-bengal-kansa/20 pb-safe">
-        <div className="grid grid-cols-4 h-15">
+        <div className="grid grid-cols-5 h-15">
           {mainLinks.map(({ href, label, Icon }) => {
             const active = pathname === href;
             return (
@@ -75,7 +78,7 @@ export function BottomNav({ categories: dbCategories }: BottomNavProps) {
                 onClick={closeSheet}
                 className={cn(
                   'flex flex-col items-center justify-center gap-1 min-h-[44px] relative',
-                  'text-[10px] tracking-widest uppercase transition-all duration-300',
+                  'text-[9px] tracking-widest uppercase transition-all duration-300',
                   active
                     ? 'text-bengal-sindoor font-medium'
                     : 'text-bengal-kajal/50 hover:text-bengal-kajal font-normal'
@@ -105,7 +108,7 @@ export function BottomNav({ categories: dbCategories }: BottomNavProps) {
             onClick={() => setIsOpen(!isOpen)}
             className={cn(
               'flex flex-col items-center justify-center gap-1 min-h-[44px] relative',
-              'text-[10px] tracking-widest uppercase transition-all duration-300',
+              'text-[9px] tracking-widest uppercase transition-all duration-300',
               isOpen
                 ? 'text-bengal-sindoor font-medium'
                 : 'text-bengal-kajal/50 hover:text-bengal-kajal font-normal'
