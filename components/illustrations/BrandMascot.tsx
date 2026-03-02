@@ -30,13 +30,9 @@ export function BrandMascot({ className = '', size = 48 }: BrandMascotProps) {
           <stop offset="0%" stopColor="currentColor" stopOpacity="0.8" />
           <stop offset="100%" stopColor="currentColor" stopOpacity="0.2" />
         </linearGradient>
-
-        <filter id="mascotGlow">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#3F2E1E" floodOpacity="0.2" />
-        </filter>
       </defs>
 
-      <g filter="url(#mascotGlow)">
+      <g>
         {/* Outer Lotus / "W" Drape with Gradient Fill */}
         <motion.path
           d="M 20 35 C 20 70, 45 90, 50 90 C 55 90, 80 70, 80 35 C 80 15, 65 10, 50 25 C 35 10, 20 15, 20 35 Z"

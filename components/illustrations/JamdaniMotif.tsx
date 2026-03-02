@@ -28,7 +28,7 @@ export function JamdaniMotif({
       <defs>
         <pattern id="jamdani-tile" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
           {/* Glowing Aura around intersection */}
-          <circle cx="30" cy="30" r="15" fill={color} opacity={opacity * 0.5} filter="blur(4px)" />
+          <circle cx="30" cy="30" r="15" fill={color} opacity={opacity * 0.3} />
 
           {/* Diamond frame - animated drawing effect not possible in pure pattern easily, but we give it a rich stroke */}
           <path

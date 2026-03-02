@@ -31,13 +31,9 @@ export function EktaraMotif({ className = '', width = 100, height = 100 }: { cla
           <stop offset="0%" stopColor="#F9F6F0" />
           <stop offset="100%" stopColor="#D3C9B8" />
         </linearGradient>
-
-        <filter id="ektaraShadow">
-          <feDropShadow dx="2" dy="4" stdDeviation="3" floodColor="#3F2E1E" floodOpacity="0.3"/>
-        </filter>
       </defs>
 
-      <g filter="url(#ektaraShadow)">
+      <g>
         {/* The Gourd Base (Lau) */}
         <circle cx="50" cy="75" r="22" fill="url(#ektaraGourd)" />
         <circle cx="50" cy="75" r="20" fill="url(#ektaraSkin)" />

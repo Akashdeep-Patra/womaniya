@@ -31,13 +31,9 @@ export function ShankhaMotif({ className = '', width = 100, height = 100 }: { cl
           <stop offset="50%" stopColor="#E2C980" />
           <stop offset="100%" stopColor="#9B7A3D" />
         </linearGradient>
-
-        <filter id="motifShadow">
-          <feDropShadow dx="3" dy="5" stdDeviation="4" floodColor="#3F2E1E" floodOpacity="0.25"/>
-        </filter>
       </defs>
 
-      <g filter="url(#motifShadow)">
+      <g>
         {/* Main Body of the Conch */}
         <path
           d="M 15 50 Q 5 15, 40 10 T 85 45 Q 95 75, 70 90 T 15 85 Z"

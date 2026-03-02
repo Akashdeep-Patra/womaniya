@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import {
-  Lora,
-  Jost,
+  Playfair_Display,
+  Inter,
   Noto_Serif_Bengali,
   Anek_Bangla,
   Cinzel_Decorative,
@@ -20,22 +20,22 @@ import { ScrollProgress } from '@/components/layout/ScrollProgress';
 import '@/app/globals.css';
 
 /* ── Google Fonts ─────────────────────────────────────────────── */
-/* Lora — highly elegant, thick, and aesthetic magazine/editorial serif */
-const lora = Lora({
-  variable: '--font-playfair', // Keeping the variable name same to avoid refactoring
+/* Playfair Display — highly elegant, thick, and aesthetic magazine/editorial serif */
+const playfair = Playfair_Display({
+  variable: '--font-playfair',
   subsets: ['latin'],
   display: 'swap',
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500', '600', '700', '800', '900'],
   style: ['normal', 'italic'],
 });
-/* Jost — modern, clean, elegant geometric sans */
-const jost = Jost({
-  variable: '--font-jost',
+/* Inter — modern, clean, highly performant geometric sans */
+const inter = Inter({
+  variable: '--font-jost', // Keep variable name so we don't have to change tailwind yet
   subsets: ['latin'],
   display: 'swap',
   weight: ['300', '400', '500', '600', '700'],
 });
-/* Noto Serif Bengali — heritage Bengali display, but we'll use it as thick and bold */
+/* Noto Serif Bengali — heritage Bengali display, used as thick and bold */
 const notoSerifBn = Noto_Serif_Bengali({
   variable: '--font-noto-serif-bn',
   subsets: ['bengali'],
@@ -60,8 +60,8 @@ const cinzelDecorative = Cinzel_Decorative({
 });
 
 const fontVars = [
-  lora.variable,
-  jost.variable,
+  playfair.variable,
+  inter.variable,
   notoSerifBn.variable,
   anekBangla.variable,
   cinzelDecorative.variable,

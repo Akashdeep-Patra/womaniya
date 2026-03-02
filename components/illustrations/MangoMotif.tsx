@@ -17,7 +17,7 @@ export function MangoMotif({
       viewBox="0 0 64 80" 
       width={size * 0.8} 
       height={size} 
-      className={className} 
+      className={`${className} drop-shadow-md`}
       aria-hidden
       animate={{ y: [0, -4, 0] }}
       transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
@@ -27,16 +27,12 @@ export function MangoMotif({
           <stop offset="0%" stopColor={color} stopOpacity="0.3" />
           <stop offset="100%" stopColor={color} stopOpacity="0" />
         </radialGradient>
-        <filter id="mangoShadow">
-          <feDropShadow dx="1" dy="2" stdDeviation="2" floodColor="#3F2E1E" floodOpacity="0.2"/>
-        </filter>
       </defs>
 
       <circle cx="32" cy="40" r="30" fill="url(#mangoGlow)" />
 
       <motion.g 
         transform="translate(32, 45)" 
-        filter="url(#mangoShadow)"
         initial={{ pathLength: 0, opacity: 0 }}
         animate={{ pathLength: 1, opacity: 1 }}
         transition={{ duration: 2, ease: "easeOut" }}

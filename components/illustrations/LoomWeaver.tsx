@@ -4,177 +4,117 @@ import { motion } from 'framer-motion';
 
 export function LoomWeaver({ className = '' }: { className?: string }) {
   return (
-    <div className={`relative w-full h-full flex items-center justify-center ${className}`}>
+    <div className={`relative w-full h-full flex items-center justify-center overflow-visible ${className}`}>
       <motion.svg
         viewBox="0 0 500 500"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full drop-shadow-2xl"
-        initial="hidden"
-        animate="visible"
+        className="w-full h-full drop-shadow-xl"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
       >
         <defs>
-          <linearGradient id="woodGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#8A5A44" />
-            <stop offset="50%" stopColor="#6B4226" />
-            <stop offset="100%" stopColor="#4A2E1B" />
-          </linearGradient>
-          <linearGradient id="woodLight" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#A87B51" />
-            <stop offset="100%" stopColor="#8A5A44" />
+          <linearGradient id="skinBase" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#D4A373" />
+            <stop offset="100%" stopColor="#A86F45" />
           </linearGradient>
           
-          <linearGradient id="sareeRed" x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient id="sareeWeaver" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#9E141E" />
-            <stop offset="50%" stopColor="#E63946" />
-            <stop offset="100%" stopColor="#9E141E" />
+            <stop offset="100%" stopColor="#E63946" />
           </linearGradient>
 
-          <linearGradient id="goldThread" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id="goldThreadWeaver" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#E2C980" />
             <stop offset="100%" stopColor="#C5A059" />
           </linearGradient>
-
-          <filter id="loomShadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#2D1A11" floodOpacity="0.5"/>
-          </filter>
+          
+          <linearGradient id="woodGradientWeaver" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#6B4226" />
+            <stop offset="100%" stopColor="#3E2723" />
+          </linearGradient>
         </defs>
 
-        {/* Background Ambience */}
+        {/* Ambient Circle Background */}
         <circle cx="250" cy="250" r="230" fill="#F9F6F0" opacity="0.8" />
-        <circle cx="250" cy="250" r="230" stroke="url(#goldThread)" strokeWidth="2" strokeDasharray="6 6" fill="none" opacity="0.3" />
+        <circle cx="250" cy="250" r="230" stroke="url(#goldThreadWeaver)" strokeWidth="2" strokeDasharray="6 6" fill="none" opacity="0.3" />
 
-        {/* Detailed Wooden Loom Frame */}
-        <motion.g filter="url(#loomShadow)"
-          variants={{
-            hidden: { opacity: 0, scale: 0.9 },
-            visible: { opacity: 1, scale: 1, transition: { duration: 1.2, ease: "easeOut" } }
-          }}
-        >
-          {/* Back Beams */}
-          <rect x="80" y="80" width="30" height="340" rx="5" fill="url(#woodGradient)" />
-          <rect x="390" y="80" width="30" height="340" rx="5" fill="url(#woodGradient)" />
-          
-          {/* Cross Beams */}
-          <rect x="60" y="100" width="380" height="20" rx="4" fill="url(#woodLight)" />
-          <rect x="60" y="400" width="380" height="25" rx="4" fill="url(#woodLight)" />
-          
-          {/* Roller Beam (Warp Beam) */}
-          <rect x="90" y="140" width="320" height="40" rx="10" fill="url(#woodGradient)" />
-          {/* Woven Fabric on Roller */}
-          <rect x="110" y="135" width="280" height="50" rx="8" fill="url(#sareeRed)" />
-          <path d="M 110 160 L 390 160" stroke="#C5A059" strokeWidth="4" strokeDasharray="8 4" opacity="0.6"/>
-        </motion.g>
+        {/* Abstract Wooden Loom Elements */}
+        <g opacity="0.8">
+          <rect x="80" y="100" width="20" height="300" rx="4" fill="url(#woodGradientWeaver)" />
+          <rect x="400" y="100" width="20" height="300" rx="4" fill="url(#woodGradientWeaver)" />
+          <rect x="60" y="120" width="380" height="15" rx="4" fill="#A87B51" />
+          <rect x="90" y="380" width="320" height="30" rx="8" fill="url(#woodGradientWeaver)" />
+        </g>
 
-        {/* Tightly Packed Warp Threads (Vertical) */}
-        <g opacity="0.7">
-          {[...Array(35)].map((_, i) => (
+        {/* Vertical Threads */}
+        <g opacity="0.5">
+          {[...Array(25)].map((_, i) => (
             <line
               key={`warp-${i}`}
-              x1={120 + i * 8}
-              y1="180"
-              x2={120 + i * 8}
-              y2="400"
+              x1={130 + i * 10}
+              y1="135"
+              x2={130 + i * 10}
+              y2="380"
               stroke="#D3C9B8"
               strokeWidth="1.5"
             />
           ))}
         </g>
 
-        {/* Heddle Frames moving up and down (shedding) */}
+        {/* Woven Fabric Section */}
+        <path d="M 125 320 L 375 320 L 375 380 L 125 380 Z" fill="url(#sareeWeaver)" opacity="0.9" />
+        <path d="M 125 320 L 140 320 L 140 380 L 125 380 Z" fill="url(#goldThreadWeaver)" />
+        <path d="M 360 320 L 375 320 L 375 380 L 360 380 Z" fill="url(#goldThreadWeaver)" />
+
+        {/* Animated Flying Shuttle */}
         <motion.g
-          animate={{ y: [-5, 5, -5] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ x: [130, 340, 130] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
         >
-          <rect x="100" y="240" width="300" height="15" rx="3" fill="url(#woodLight)" />
-          <rect x="100" y="270" width="300" height="15" rx="3" fill="url(#woodLight)" />
-          {/* Vertical Heddle Wires */}
-          {[...Array(15)].map((_, i) => (
-            <line key={`heddle-${i}`} x1={130 + i * 17} y1="240" x2={130 + i * 17} y2="285" stroke="#888" strokeWidth="1" />
-          ))}
+          <path d="M 0 315 L 25 305 L 50 315 L 25 325 Z" fill="#4A2E1B" />
+          <ellipse cx="25" cy="315" rx="6" ry="3" fill="#E63946" />
         </motion.g>
 
-        {/* The Weft / Woven Fabric (Growing) */}
-        <motion.g filter="url(#loomShadow)">
-          <path d="M 115 350 L 385 350 L 385 410 L 115 410 Z" fill="url(#sareeRed)" />
-          {/* Zari Gold Border */}
-          <path d="M 115 350 L 140 350 L 140 410 L 115 410 Z" fill="url(#goldThread)" />
-          <path d="M 360 350 L 385 350 L 385 410 L 360 410 Z" fill="url(#goldThread)" />
+        {/* The Weaver Woman (Elegant Profile) */}
+        <motion.g 
+          transform="translate(250, 260)"
+          animate={{ y: [0, -3, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          {/* Hair Bun */}
+          <path d="M 30 -60 C 60 -70, 70 -30, 50 -10 C 30 10, -10 -10, 30 -60 Z" fill="#1A1A1A" />
           
-          {/* Jamdani Motifs being woven */}
-          {[...Array(3)].map((_, i) => (
-            <polygon key={`motif-${i}`} points="0,-10 10,0 0,10 -10,0" transform={`translate(${200 + i * 50}, 380)`} fill="url(#goldThread)" />
-          ))}
+          {/* Shoulder and Arm */}
+          <path d="M -80 80 C -50 40, -10 20, 20 50 C 40 70, 70 120, 90 120 L -80 120 Z" fill="url(#skinBase)" />
           
-          {/* Animated top edge of fabric */}
-          <motion.line
-            x1="115" y1="350" x2="385" y2="350"
-            stroke="url(#goldThread)" strokeWidth="3"
-            animate={{ opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          />
-        </motion.g>
-
-        {/* The Shuttle (Maku) flying back and forth */}
-        <motion.g
-          animate={{ x: [110, 360, 110] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-        >
-          {/* Shuttle Body */}
-          <path d="M 0 345 L 30 335 L 60 345 L 30 355 Z" fill="url(#woodGradient)" />
-          {/* Thread Spool inside shuttle */}
-          <ellipse cx="30" cy="345" rx="8" ry="4" fill="#E63946" />
-          <line x1="15" y1="345" x2="45" y2="345" stroke="#C5A059" strokeWidth="1" />
-        </motion.g>
-
-        {/* Floating Ambient Cotton Dust */}
-        {[...Array(12)].map((_, i) => {
-          const cx = 100 + ((i * 71) % 300);
-          const cy = 100 + ((i * 89) % 300);
-          const r = (i % 2) + 1;
-          const opacity = ((i % 5) * 0.1) + 0.2;
-          const xDrift = (i % 30) - 15;
-          const duration = 3 + (i % 4);
-
-          return (
-            <motion.circle
-              key={`dust-${i}`}
-              cx={cx}
-              cy={cy}
-              r={r}
-              fill="#FFF"
-              opacity={opacity}
-              animate={{ 
-                y: [0, -40, 0], 
-                x: [0, xDrift, 0],
-                opacity: [0, 0.8, 0] 
-              }}
-              transition={{ duration: duration, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          );
-        })}
-
-        {/* Abstract Elegant Hands of the Artisan */}
-        <motion.g
-          animate={{ y: [0, 10, 0], rotate: [0, -2, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-        >
-          {/* Left Hand */}
-          <path d="M 40 360 C 80 340, 100 345, 110 350 C 115 355, 100 365, 80 370 C 60 375, 40 380, 40 360 Z" fill="#C48B58" filter="url(#loomShadow)" />
-          {/* Right Hand */}
+          {/* Profile Face */}
+          <path d="M -10 -50 C -40 -50, -50 -20, -45 0 C -40 10, -30 20, -10 20 C 10 20, 20 0, 20 -20 C 20 -40, 10 -50, -10 -50 Z" fill="url(#skinBase)" />
+          
+          {/* Elegant Saree Drape over Shoulder */}
+          <path d="M -80 120 C -40 50, 0 30, 40 80 L 90 120 Z" fill="url(#goldThreadWeaver)" opacity="0.9" />
+          <path d="M -70 120 C -30 60, 0 40, 40 80 L 90 120 Z" fill="#C5A059" opacity="0.8" />
+          
+          {/* Hand reaching out to loom */}
           <motion.path 
-            d="M 460 360 C 420 340, 400 345, 390 350 C 385 355, 400 365, 420 370 C 440 375, 460 380, 460 360 Z" 
-            fill="#C48B58" 
-            filter="url(#loomShadow)"
-            animate={{ y: [10, 0, 10], rotate: [2, 0, 2] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.75 }}
+            d="M -30 50 C -60 40, -100 60, -110 80 C -120 100, -100 110, -80 100 C -60 90, -40 70, -30 50 Z" 
+            fill="url(#skinBase)"
+            animate={{ rotate: [0, -5, 0], originX: 0, originY: 0 }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
           />
-          {/* Red Pola & White Shankha Bangles on wrists */}
-          <path d="M 55 353 L 65 373" stroke="#9E141E" strokeWidth="6" strokeLinecap="round" />
-          <path d="M 45 355 L 55 375" stroke="#F9F6F0" strokeWidth="5" strokeLinecap="round" />
           
-          <path d="M 445 353 L 435 373" stroke="#9E141E" strokeWidth="6" strokeLinecap="round" />
-          <path d="M 455 355 L 445 375" stroke="#F9F6F0" strokeWidth="5" strokeLinecap="round" />
+          {/* Bangles */}
+          <motion.g
+            animate={{ rotate: [0, -5, 0], originX: 0, originY: 0 }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <line x1="-90" y1="70" x2="-75" y2="85" stroke="#9E141E" strokeWidth="4" strokeLinecap="round" />
+            <line x1="-85" y1="65" x2="-70" y2="80" stroke="#F9F6F0" strokeWidth="3" strokeLinecap="round" />
+          </motion.g>
+
+          {/* Simple Eye Profile */}
+          <path d="M -35 -20 Q -45 -22, -40 -15" stroke="#111" strokeWidth="2" fill="none" strokeLinecap="round" />
         </motion.g>
 
       </motion.svg>

@@ -100,7 +100,8 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    /* Lenis smooth scrolling handles this, scroll-behavior: smooth causes conflict and weird blocking */
+    /* scroll-behavior: smooth; */
     /* Reserve space for fixed header so #anchor jumps don't hide behind it */
     scroll-padding-top: 4rem;
     -webkit-font-smoothing: antialiased;
