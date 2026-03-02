@@ -20,9 +20,6 @@ export function ShopGrid({ products, categories }: Props) {
     ? products
     : products.filter((p) => p.category === activeCategory);
 
-  const variant = (i: number): 'portrait' | 'square' =>
-    i % 3 === 2 ? 'square' : 'portrait';
-
   return (
     <section className="px-4 sm:px-6 py-8 md:py-12 max-w-7xl mx-auto">
       {/* Header */}
@@ -46,9 +43,11 @@ export function ShopGrid({ products, categories }: Props) {
       {filtered.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="masonry-grid">
-          {filtered.map((product, i) => (
-            <ProductCard key={product.id} product={product} variant={variant(i)} />
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+          {filtered.map((product) => (
+            <div key={product.id} className="break-inside-avoid">
+              <ProductCard product={product} variant="portrait" />
+            </div>
           ))}
         </div>
       )}

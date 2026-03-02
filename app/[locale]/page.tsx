@@ -143,7 +143,7 @@ export default async function HomePage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }} />
       <Header />
 
-      <main className="mb-bottom-nav md:mb-0">
+      <main className="min-h-screen">
         <HeroSection />
         <HeritageTicker categories={categories} />
         

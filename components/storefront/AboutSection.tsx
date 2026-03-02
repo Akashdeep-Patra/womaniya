@@ -6,7 +6,7 @@ import { useParams }       from 'next/navigation';
 import Link                from 'next/link';
 import { AlponaDivider }   from '@/components/illustrations/AlponaDivider';
 import { PaisleyCluster }  from '@/components/illustrations/PaisleyCluster';
-import { JamdaniMotif }    from '@/components/illustrations/JamdaniMotif';
+import { AboutWomanAvatar } from '@/components/illustrations/AboutWomanAvatar';
 import { BengalButton }    from '@/components/bengal';
 import { BengalBadge }     from '@/components/bengal';
 
@@ -77,22 +77,14 @@ export function AboutSection() {
         {/* Desktop layout — editorial split */}
         <div className="hidden md:grid grid-cols-2 gap-16 items-center">
 
-          {/* Left — decorative art panel */}
+          {/* Left — character avatar panel */}
           <motion.div
             initial={{ opacity:0, x:-32 }} whileInView={{ opacity:1, x:0 }} viewport={{ once:true }}
             className="relative"
           >
-            {/* Jamdani pattern tile */}
-            <div className="relative w-full aspect-square rounded-3xl overflow-hidden bg-bengal-kajal border border-bengal-kansa/20">
-              <JamdaniMotif
-                className="absolute inset-0 w-full h-full"
-                opacity={0.12}
-              />
-
-              {/* Central alpona */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <AlponaDivider color="#C5A059" width={300} className="rotate-90 scale-y-[2]" />
-              </div>
+            {/* Avatar container */}
+            <div className="relative w-full aspect-square rounded-[3rem] overflow-hidden bg-bengal-mati border border-bengal-kansa/20">
+              <AboutWomanAvatar className="absolute inset-0" />
 
               {/* Floating stat cards */}
               {[
@@ -106,16 +98,12 @@ export function AboutSection() {
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.3 + i * 0.15, duration: 0.5 }}
                   viewport={{ once: true }}
-                  className={`absolute ${s.pos} bg-bengal-kori/10 backdrop-blur-sm border border-bengal-kansa/25 rounded-2xl px-5 py-4 text-center`}
+                  className={`absolute ${s.pos} bg-bengal-kori/40 backdrop-blur-md border border-bengal-kori/50 rounded-2xl px-5 py-4 text-center shadow-lg shadow-black/5`}
                 >
-                  <p className="font-editorial text-4xl text-bengal-kansa leading-none">{s.num}</p>
-                  <p className="text-[10px] text-bengal-kori/50 tracking-widest uppercase mt-1 font-sans-en">{s.label}</p>
+                  <p className="font-editorial text-4xl text-bengal-kajal leading-none">{s.num}</p>
+                  <p className="text-[10px] text-bengal-kajal/70 tracking-widest uppercase mt-1 font-sans-en">{s.label}</p>
                 </motion.div>
               ))}
-
-              {/* Paisley decorations */}
-              <PaisleyCluster className="absolute bottom-12 right-4 opacity-20" size={70} color="#C5A059" />
-              <PaisleyCluster className="absolute top-12 left-4 opacity-15 rotate-180" size={55} color="#C5A059" />
             </div>
           </motion.div>
 
