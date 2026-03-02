@@ -1,7 +1,6 @@
 import { ImageResponse } from 'next/og';
 
 // App Router uses icon.tsx to generate favicons dynamically
-export const runtime = 'edge';
 export const size = { width: 48, height: 48 };
 export const contentType = 'image/png';
 
