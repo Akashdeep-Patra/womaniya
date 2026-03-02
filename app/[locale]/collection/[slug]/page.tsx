@@ -3,8 +3,43 @@ import { notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const collection = await db.query.collections.findFirst({
+    where: (c, { eq }) => eq(c.slug, slug),
+  });
+  if (!collection || collection.status === 'draft' || collection.status === 'archived') return { title: 'Not Found' };
+
+  const title = (locale === 'bn' && collection.seo_title_bn ? collection.seo_title_bn : collection.seo_title_en) || 
+                (locale === 'bn' && collection.name_bn ? collection.name_bn : collection.name_en);
+  const description = (locale === 'bn' && collection.seo_description_bn ? collection.seo_description_bn : collection.seo_description_en) || 
+                      (locale === 'bn' && collection.description_bn ? collection.description_bn : collection.description_en) ||
+                      `${title} — Authentic Handloom Collection by Womaniya`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: collection.hero_image_url ? [collection.hero_image_url] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: collection.hero_image_url ? [collection.hero_image_url] : undefined,
+    },
+    alternates: {
+      canonical: `/${locale}/collection/${slug}`,
+      languages: { en: `/en/collection/${slug}`, bn: `/bn/collection/${slug}` },
+    },
+  };
+}
 
 export default async function CollectionPage({ params }: Props) {
   const { locale, slug } = await params;

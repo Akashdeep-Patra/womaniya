@@ -34,6 +34,19 @@ export async function getAllCategories() {
   });
 }
 
+export async function getPublishedCategories() {
+  return db.query.categories.findMany({
+    where: (c, { eq }) => eq(c.status, 'published'),
+    orderBy: (c, { asc }) => [asc(c.sort_order), asc(c.name_en)],
+  });
+}
+
+export async function getCategoryBySlug(slug: string) {
+  return db.query.categories.findFirst({
+    where: (c, { eq }) => eq(c.slug, slug),
+  });
+}
+
 export async function getCategoryById(id: number) {
   return db.query.categories.findFirst({
     where: (c, { eq }) => eq(c.id, id),

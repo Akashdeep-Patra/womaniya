@@ -4,7 +4,8 @@ import { Header }           from '@/components/layout/Header';
 import { Footer }           from '@/components/layout/Footer';
 import { BottomNav }        from '@/components/layout/BottomNav';
 import { ShopGrid }         from '@/components/storefront/ShopGrid';
-import { getAllProducts }    from '@/actions/products';
+import { getPublishedProducts } from '@/actions/products';
+import { getPublishedCategories } from '@/actions/categories';
 import type { Metadata }    from 'next';
 
 type Props = { params: Promise<{ locale: string }> };
@@ -15,6 +16,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title:       t('title'),
     description: t('subtitle'),
+    openGraph: {
+      title: t('title'),
+      description: t('subtitle'),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t('title'),
+      description: t('subtitle'),
+    },
+    alternates: {
+      canonical: `/${locale}/shop`,
+      languages: { en: '/en/shop', bn: '/bn/shop' },
+    },
   };
 }
 
@@ -22,9 +36,13 @@ export default async function ShopPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  let allProducts: Awaited<ReturnType<typeof getAllProducts>> = [];
+  let allProducts: Awaited<ReturnType<typeof getPublishedProducts>> = [];
+  let dbCategories: Awaited<ReturnType<typeof getPublishedCategories>> = [];
   try {
-    allProducts = await getAllProducts();
+    [allProducts, dbCategories] = await Promise.all([
+      getPublishedProducts(),
+      getPublishedCategories(),
+    ]);
   } catch {
     // DB not connected in dev
   }
@@ -33,10 +51,10 @@ export default async function ShopPage({ params }: Props) {
     <>
       <Header />
       <main className="pt-14 md:pt-16">
-        <ShopGrid products={allProducts} />
+        <ShopGrid products={allProducts} categories={dbCategories} />
       </main>
       <Footer />
-      <BottomNav />
+      <BottomNav categories={dbCategories} />
     </>
   );
 }

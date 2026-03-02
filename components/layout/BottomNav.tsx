@@ -20,8 +20,14 @@ import {
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { generalEnquiryUrl, WA_HREF } from '@/lib/whatsapp';
+import type { Category } from '@/db/schema';
 
-export function BottomNav() {
+interface BottomNavProps {
+  categories?: Category[];
+}
+
+export function BottomNav({ categories: dbCategories }: BottomNavProps) {
   const t = useTranslations('nav');
   const pathname = usePathname();
   const params = useParams();
@@ -30,7 +36,6 @@ export function BottomNav() {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  // Prevent background scrolling when sheet is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -50,13 +55,12 @@ export function BottomNav() {
     { href: `/${locale}#story`,label: t('story'), Icon: BookOpen    },
   ];
 
-  const categories = [
-    { name: isBn ? 'জামদানি' : 'Jamdani', href: `/${locale}/shop?category=jamdani` },
-    { name: isBn ? 'সিল্ক' : 'Silk', href: `/${locale}/shop?category=silk` },
-    { name: isBn ? 'তাঁত' : 'Tant', href: `/${locale}/shop?category=tant` },
-    { name: isBn ? 'ইক্কাট' : 'Ikkat', href: `/${locale}/shop?category=ikkat` },
-    { name: isBn ? 'আজরখ' : 'Ajrakh', href: `/${locale}/shop?category=ajrakh` },
-  ];
+  const categories = dbCategories && dbCategories.length > 0
+    ? dbCategories.map((c) => ({
+        name: isBn && c.name_bn ? c.name_bn : c.name_en,
+        href: `/${locale}/shop?category=${encodeURIComponent(c.name_en)}`,
+      }))
+    : [];
 
   return (
     <>
@@ -151,7 +155,7 @@ export function BottomNav() {
                 {/* Brand Header */}
                 <div className="text-center mb-8">
                   <h3 className={`text-2xl text-bengal-kajal mb-1 ${isBn ? 'font-bengali-serif' : 'font-editorial italic'}`}>
-                    Womania
+                    Womaniya
                   </h3>
                   <p className="text-[9px] tracking-[0.3em] uppercase text-bengal-kansa font-sans-en">
                     {isBn ? 'খাঁটি হস্তশিল্প' : 'Authentic Handloom'}
@@ -212,7 +216,7 @@ export function BottomNav() {
                     {isBn ? 'যোগাযোগ' : 'Support'}
                   </h4>
                   <div className="space-y-4">
-                    <a href="https://wa.me/919143161829" target="_blank" rel="noreferrer" className="flex items-center gap-3 text-bengal-kajal/80">
+                    <a href={generalEnquiryUrl(locale)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-bengal-kajal/80">
                       <MessageCircle size={18} strokeWidth={2} className="drop-shadow-sm fill-bengal-kajal/5" />
                       <span className={`text-sm ${isBn ? 'font-bengali' : 'font-sans-en font-light'}`}>
                         {isBn ? 'হোয়াটসঅ্যাপ করুন' : 'WhatsApp Us'}

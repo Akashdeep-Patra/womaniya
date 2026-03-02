@@ -2,11 +2,10 @@
 
 import { motion }          from 'framer-motion';
 import { useParams }       from 'next/navigation';
-import Link                from 'next/link';
-import Image               from 'next/image';
 import { generalEnquiryUrl } from '@/lib/whatsapp';
 import { AlponaDivider }   from '@/components/illustrations/AlponaDivider';
 import { PaisleyCluster }  from '@/components/illustrations/PaisleyCluster';
+import { LoomWeaver }      from '@/components/illustrations/LoomWeaver';
 
 // Puja campaign section — doubles as seasonal marketing banner
 export function ProcessSection() {
@@ -31,13 +30,7 @@ export function ProcessSection() {
             className="relative"
           >
             <div className="relative aspect-3/4 rounded-3xl overflow-hidden bg-bengal-mati border border-bengal-kansa/20">
-              <Image
-                src="/instagram/2026-02-09_12-41-33_UTC_1.jpg"
-                alt="Weaver at loom"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
+              <LoomWeaver />
               {/* Overlay label */}
               <div className="absolute bottom-4 left-4 right-4">
                 <div className="bg-bengal-kajal/85 backdrop-blur-sm rounded-3xl px-4 py-3">

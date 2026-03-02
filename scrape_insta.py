@@ -43,5 +43,5 @@ def download_images(username, limit=12):
         print(f"Failed to download from {username}: {e}")
 
 if __name__ == "__main__":
-    target = sys.argv[1] if len(sys.argv) > 1 else "womania"
+    target = sys.argv[1] if len(sys.argv) > 1 else "womaniya2019"
     download_images(target, 12)

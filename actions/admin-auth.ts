@@ -48,9 +48,9 @@ export async function forgotPasswordAction(email: string) {
       });
 
       await transporter.sendMail({
-        from: `"Womania Admin" <${process.env.SMTP_USER}>`,
+        from: `"Womaniya Admin" <${process.env.SMTP_USER}>`,
         to: email,
-        subject: 'Womania - Reset Admin Password',
+        subject: 'Womaniya - Reset Admin Password',
         text: `You requested a password reset. Click the link to reset your password: ${resetUrl}`,
         html: `<p>You requested a password reset. Click the link below to reset your password:</p><p><a href="${resetUrl}">${resetUrl}</a></p><p>This link is valid for 1 hour.</p>`,
       });

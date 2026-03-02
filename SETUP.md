@@ -1,4 +1,4 @@
-# Womania — Developer Setup & Deployment Guide
+# Womaniya — Developer Setup & Deployment Guide
 
 ## Stack at a Glance
 
@@ -28,8 +28,8 @@
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/womania.git
-cd womania
+git clone https://github.com/YOUR_USERNAME/womaniya.git
+cd womaniya
 
 # 2. Install dependencies
 pnpm install
@@ -69,10 +69,10 @@ These are set in Vercel dashboard → Settings → Environment Variables.
 | Variable | Description | Example |
 |---|---|---|
 | `AUTH_SECRET` | Random 32-char secret for NextAuth JWT | `openssl rand -base64 32` |
-| `ADMIN_EMAIL` | Admin login email | `admin@womania.in` |
+| `ADMIN_EMAIL` | Admin login email | `admin@womaniya.in` |
 | `ADMIN_PASSWORD` | Admin login password | `StrongPassword123` |
 | `NEXT_PUBLIC_WHATSAPP_NUMBER` | WhatsApp number with country code, no + | `919143161829` |
-| `NEXT_PUBLIC_APP_URL` | Live site URL (add after first deploy) | `https://womania.vercel.app` |
+| `NEXT_PUBLIC_APP_URL` | Live site URL (add after first deploy) | `https://womaniya.vercel.app` |
 
 ---
 
@@ -90,7 +90,10 @@ products
 ├── description_en text
 ├── description_bn text
 ├── price          numeric(10,2)
-├── category       text                 ← Jamdani | Silk | Tant | Ready to Wear
+├── category       text                 ← Jamdani | Tant | Ikkat | Ajrakh | Blouse | Ready to Wear
+├── sizes          text                 ← comma-separated sizes (S, M, L, XL)
+├── colors         text                 ← comma-separated colors
+├── fabric         text                 ← fabric type (Chanderi, Silk, Cotton, etc.)
 ├── image_url      text                 ← Vercel Blob URL
 ├── is_featured    boolean default false
 └── created_at     timestamp default now()
@@ -98,7 +101,7 @@ products
 
 ### Migration Workflow
 
-Womania uses **file-based migrations** (not `db:push`). This means:
+Womaniya uses **file-based migrations** (not `db:push`). This means:
 1. Every schema change creates a versioned SQL file
 2. Files are committed to git
 3. Migrations run **automatically** on every Vercel deploy
@@ -156,7 +159,7 @@ All server actions in [`actions/products.ts`](actions/products.ts) validate inpu
 | `name_en` | Required, 2–120 chars |
 | `name_bn` | Optional, max 120 chars |
 | `price` | Required, positive number, max 999,999 |
-| `category` | Must be one of: Jamdani, Silk, Tant, Ready to Wear |
+| `category` | Must be one of: Jamdani, Tant, Ikkat, Ajrakh, Blouse, Ready to Wear |
 | `description_en/bn` | Optional, max 1,000 chars |
 | `id` (delete) | Must be positive integer |
 
@@ -259,9 +262,9 @@ git push               # Vercel runs migration automatically before build
 ## Custom Domain (Optional)
 
 In Vercel dashboard → your project → **Domains**:
-1. Add your domain (e.g. `womania.in`)
+1. Add your domain (e.g. `womaniya.in`)
 2. Point your domain's DNS to Vercel (they give you the records)
-3. After adding, update `NEXT_PUBLIC_APP_URL` env var to `https://womania.in`
+3. After adding, update `NEXT_PUBLIC_APP_URL` env var to `https://womaniya.in`
 4. Redeploy: `git commit --allow-empty -m "chore: update app url" && git push`
 
 ---

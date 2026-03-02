@@ -35,6 +35,23 @@ export async function getAllCollections() {
   });
 }
 
+export async function getPublishedCollections() {
+  return db.query.collections.findMany({
+    where: (c, { or, eq }) => or(eq(c.status, 'live'), eq(c.status, 'scheduled')),
+    orderBy: (c, { desc }) => [desc(c.created_at)],
+  });
+}
+
+export async function getFeaturedCollections() {
+  return db.query.collections.findMany({
+    where: (c, { and, or, eq }) => and(
+      or(eq(c.status, 'live'), eq(c.status, 'scheduled')),
+      eq(c.is_featured, true),
+    ),
+    orderBy: (c, { desc }) => [desc(c.created_at)],
+  });
+}
+
 export async function getCollectionById(id: number) {
   return db.query.collections.findFirst({
     where: (c, { eq }) => eq(c.id, id),

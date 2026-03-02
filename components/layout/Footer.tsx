@@ -1,4 +1,7 @@
 import { useTranslations } from 'next-intl';
+import { WA_HREF } from '@/lib/whatsapp';
+
+const INSTAGRAM_URL = 'https://www.instagram.com/womaniya2019/';
 
 export function Footer() {
   const t = useTranslations('footer');
@@ -10,7 +13,7 @@ export function Footer() {
         {/* Logo + tagline */}
         <div className="text-center mb-10">
           <h2 className="font-editorial text-3xl md:text-4xl tracking-widest mb-2">
-            W O M A N I A
+            W O M A N I Y A
           </h2>
           <p className="font-bengali-serif text-bengal-kansa text-lg">{t('tagline')}</p>
           <p className="text-bengal-kori/50 text-xs tracking-widest mt-1 uppercase">{t('tagline_en')}</p>
@@ -21,20 +24,20 @@ export function Footer() {
 
         {/* Links grid */}
         <div className="grid grid-cols-3 gap-4 text-center text-xs tracking-widest uppercase text-bengal-kori/60 mb-10">
-          <a href="#" className="hover:text-bengal-kansa transition-colors min-h-[44px] flex items-center justify-center">
+          <a href={WA_HREF} target="_blank" rel="noopener noreferrer" className="hover:text-bengal-kansa transition-colors min-h-[44px] flex items-center justify-center">
             {t('whatsapp')}
           </a>
-          <a href="#" className="hover:text-bengal-kansa transition-colors min-h-[44px] flex items-center justify-center">
+          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="hover:text-bengal-kansa transition-colors min-h-[44px] flex items-center justify-center">
             {t('instagram')}
           </a>
-          <a href="#" className="hover:text-bengal-kansa transition-colors min-h-[44px] flex items-center justify-center">
+          <a href={WA_HREF} target="_blank" rel="noopener noreferrer" className="hover:text-bengal-kansa transition-colors min-h-[44px] flex items-center justify-center">
             {t('contact')}
           </a>
         </div>
 
         {/* Copyright */}
         <p className="text-center text-bengal-kori/30 text-[10px] tracking-widest uppercase">
-          © {new Date().getFullYear()} Womania. {t('rights')}
+          © {new Date().getFullYear()} Womaniya. {t('rights')}
         </p>
       </div>
     </footer>

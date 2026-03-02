@@ -223,9 +223,22 @@ export async function deleteProduct(id: number) {
 
 export async function getFeaturedProducts() {
   return db.query.products.findMany({
-    where:   (p, { eq }) => eq(p.is_featured, true),
+    where:   (p, { and, eq }) => and(eq(p.is_featured, true), eq(p.status, 'published')),
     orderBy: (p, { desc }) => [desc(p.created_at)],
     limit:   6,
+  });
+}
+
+export async function getPublishedProducts(category?: string) {
+  if (category && category !== 'All') {
+    return db.query.products.findMany({
+      where:   (p, { and, eq }) => and(eq(p.category, category), eq(p.status, 'published')),
+      orderBy: (p, { desc }) => [desc(p.created_at)],
+    });
+  }
+  return db.query.products.findMany({
+    where:   (p, { eq }) => eq(p.status, 'published'),
+    orderBy: (p, { desc }) => [desc(p.created_at)],
   });
 }
 

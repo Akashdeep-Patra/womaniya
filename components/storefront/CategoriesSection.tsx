@@ -1,54 +1,41 @@
 'use client';
 
-import Image         from 'next/image';
 import Link          from 'next/link';
+import Image         from 'next/image';
 import { motion }    from 'framer-motion';
 import { useParams } from 'next/navigation';
 import { useRef }    from 'react';
+import type { Category } from '@/db/schema';
 
-const CATS = [
-  {
-    filter: 'Jamdani',
-    en: { name: 'Dhakai Jamdani', sub: 'UNESCO Heritage' },
-    bn: { name: 'ঢাকাই জামদানি', sub: 'ইউনেস্কো স্বীকৃত' },
-    img: '/instagram/2026-02-02_12-37-01_UTC_1.jpg',
-    color: 'from-bengal-sindoor/60',
-  },
-  {
-    filter: 'Tant',
-    en: { name: 'Bengal Tant', sub: 'Everyday Luxury' },
-    bn: { name: 'বাংলার তাঁত', sub: 'রোজকারের বিলাস' },
-    img: '/instagram/2026-01-30_12-28-39_UTC_1.jpg',
-    color: 'from-bengal-kajal/70',
-  },
-  {
-    filter: 'Ikkat',
-    en: { name: 'Ikkat', sub: 'Pochampally' },
-    bn: { name: 'ইক্কাট', sub: 'পোচামপল্লি' },
-    img: '/instagram/2026-01-28_12-45-56_UTC_1.jpg',
-    color: 'from-bengal-kajal/60',
-  },
-  {
-    filter: 'Ajrakh',
-    en: { name: 'Ajrakh', sub: 'Block Print' },
-    bn: { name: 'আজরখ', sub: 'ব্লক প্রিন্ট' },
-    img: '/instagram/2026-02-25_12-56-26_UTC_2.jpg',
-    color: 'from-bengal-sindoor/50',
-  },
-  {
-    filter: 'Ready to Wear',
-    en: { name: 'Ready to Wear', sub: 'Modern Cut' },
-    bn: { name: 'রেডি টু ওয়্যার', sub: 'আধুনিক কাটছাঁট' },
-    img: '/instagram/2026-02-23_06-34-00_UTC_3.jpg',
-    color: 'from-bengal-kajal/65',
-  },
-] as const;
+const GRADIENT_COLORS = [
+  'from-bengal-sindoor/60',
+  'from-bengal-kajal/65',
+  'from-bengal-kajal/70',
+  'from-bengal-kajal/60',
+  'from-bengal-sindoor/50',
+  'from-bengal-kajal/65',
+];
 
-export function CategoriesSection() {
+const FALLBACK_BGS = [
+  'bg-gradient-to-br from-bengal-sindoor/20 to-bengal-kansa/10',
+  'bg-gradient-to-br from-bengal-kansa/20 to-bengal-sindoor/10',
+  'bg-gradient-to-br from-bengal-mati/40 to-bengal-dust/30',
+  'bg-gradient-to-br from-bengal-kajal/15 to-bengal-mati/20',
+  'bg-gradient-to-br from-bengal-sindoor/15 to-bengal-kajal/10',
+  'bg-gradient-to-br from-bengal-dust/30 to-bengal-kori/20',
+];
+
+interface Props {
+  categories: Category[];
+}
+
+export function CategoriesSection({ categories }: Props) {
   const params      = useParams();
   const locale      = params.locale as string;
   const isBn        = locale === 'bn';
   const scrollRef   = useRef<HTMLDivElement>(null);
+
+  if (categories.length === 0) return null;
 
   return (
     <section className="py-12 md:py-20">
@@ -71,53 +58,66 @@ export function CategoriesSection() {
         </Link>
       </div>
 
-      {/* Carousel — full-bleed, peek next card */}
+      {/* Carousel */}
       <div
         ref={scrollRef}
         className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none pl-4 sm:pl-6 pr-4"
         data-lenis-prevent
       >
-        {CATS.map(({ filter, en, bn, img, color }, i) => {
-          const label = isBn ? bn : en;
+        {categories.map((cat, i) => {
+          const name = isBn && cat.name_bn ? cat.name_bn : cat.name_en;
+          const desc = isBn && cat.description_bn ? cat.description_bn : cat.description_en;
+          const color = GRADIENT_COLORS[i % GRADIENT_COLORS.length];
+          const fallbackBg = FALLBACK_BGS[i % FALLBACK_BGS.length];
+          const hasImage = !!cat.hero_image_url;
+
           return (
             <motion.div
-              key={filter}
+              key={cat.id}
               initial={{ opacity: 0, scale: 0.96 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.06 }}
-              className="flex-shrink-0 snap-start w-[72vw] max-w-[280px] sm:w-[44vw] sm:max-w-[320px] md:w-[28vw] md:max-w-[340px] lg:flex-1 lg:w-auto lg:max-w-none"
+              className="shrink-0 snap-start w-[72vw] max-w-[280px] sm:w-[44vw] sm:max-w-[320px] md:w-[28vw] md:max-w-[340px] lg:flex-1 lg:w-auto lg:max-w-none"
             >
               <Link
-                href={`/${locale}/shop?category=${encodeURIComponent(filter)}`}
-                className="group relative block aspect-[3/4] rounded-3xl overflow-hidden bg-bengal-mati"
+                href={`/${locale}/category/${cat.slug}`}
+                className={`group relative block aspect-3/4 rounded-3xl overflow-hidden ${hasImage ? 'bg-bengal-mati' : fallbackBg}`}
                 data-cursor-expand
               >
-                {/* Image */}
-                <Image
-                  src={img}
-                  alt={label.name}
-                  fill
-                  className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.06]"
-                  sizes="(max-width: 640px) 72vw, (max-width: 1024px) 44vw, 20vw"
-                />
+                {hasImage ? (
+                  <Image
+                    src={cat.hero_image_url!}
+                    alt={name}
+                    fill
+                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                    sizes="(max-width: 640px) 72vw, (max-width: 1024px) 44vw, 20vw"
+                  />
+                ) : (
+                  <div className="absolute inset-0 opacity-10">
+                    <div className="absolute inset-0" style={{
+                      backgroundImage: 'repeating-linear-gradient(45deg, currentColor 0, currentColor 1px, transparent 0, transparent 50%)',
+                      backgroundSize: '20px 20px',
+                    }} />
+                  </div>
+                )}
 
-                {/* Gradient — bottom only, clean */}
+                {/* Gradient overlay */}
                 <div className={`absolute inset-0 bg-linear-to-t ${color} via-transparent to-transparent`} />
 
                 {/* Content pinned to bottom */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5">
-                  {/* Sub-label */}
-                  <p className="text-bengal-kori/60 text-[10px] tracking-widest uppercase font-sans-en mb-1">
-                    {label.sub}
-                  </p>
-                  {/* Name */}
+                  {desc && (
+                    <p className="text-bengal-kori/60 text-[10px] tracking-widest uppercase font-sans-en mb-1 line-clamp-1">
+                      {desc.slice(0, 40)}
+                    </p>
+                  )}
                   <h3 className={`text-bengal-kori text-xl md:text-2xl font-editorial leading-tight ${isBn ? 'font-bengali-serif' : ''}`}>
-                    {label.name}
+                    {name}
                   </h3>
                 </div>
 
-                {/* Hover indicator — kansa dot bottom-right */}
+                {/* Hover indicator */}
                 <div className="absolute bottom-4 right-4 w-8 h-8 rounded-full bg-bengal-kori/0 border border-bengal-kori/0 group-hover:bg-bengal-kori/15 group-hover:border-bengal-kori/30 transition-all duration-300 flex items-center justify-center">
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none" className="text-bengal-kori opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <path d="M1 9L9 1M9 1H3M9 1V7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
@@ -128,15 +128,14 @@ export function CategoriesSection() {
           );
         })}
 
-        {/* Trailing spacer so last card fully snaps */}
-        <div className="flex-shrink-0 w-4 md:w-6" />
+        <div className="shrink-0 w-4 md:w-6" />
       </div>
 
       {/* Scroll dots — mobile only */}
       <div className="flex justify-center gap-1.5 mt-4 md:hidden">
-        {CATS.map((c, i) => (
+        {categories.map((c, i) => (
           <div
-            key={c.filter}
+            key={c.id}
             className={`h-1 rounded-full transition-all duration-300 ${i === 0 ? 'w-5 bg-bengal-sindoor' : 'w-1.5 bg-bengal-kajal/20'}`}
           />
         ))}

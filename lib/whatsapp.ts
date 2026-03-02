@@ -7,7 +7,7 @@ export function whatsappUrl(message: string): string {
 export function productOrderUrl(name: string, price: string | number, locale = 'en'): string {
   const msg =
     locale === 'bn'
-      ? `নমস্কার! আমি "${name}" (₹${price}) অর্ডার করতে চাই। আপনি কি আমাকে সাহায্য করতে পারবেন?`
+      ? `নমস্কার! আমি Womaniya থেকে "${name}" (₹${price}) অর্ডার করতে চাই। আপনি কি সাহায্য করতে পারবেন?`
       : `Hi! I'm interested in ordering "${name}" priced at ₹${price} from Womaniya. Could you help me place an order?`;
   return whatsappUrl(msg);
 }
@@ -15,7 +15,7 @@ export function productOrderUrl(name: string, price: string | number, locale = '
 export function generalEnquiryUrl(locale = 'en'): string {
   const msg =
     locale === 'bn'
-      ? `নমস্কার! আমি উওমানিয়ার সংগ্রহ সম্পর্কে জানতে চাই।`
+      ? `নমস্কার! আমি Womaniya-র হ্যান্ডলুম সংগ্রহ সম্পর্কে জানতে চাই।`
       : `Hi! I'd love to know more about Womaniya's handloom collection.`;
   return whatsappUrl(msg);
 }

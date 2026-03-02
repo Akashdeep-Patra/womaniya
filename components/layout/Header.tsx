@@ -5,6 +5,7 @@ import Link                    from 'next/link';
 import { useParams }           from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn }                  from '@/lib/utils';
+import { BrandMascot }         from '@/components/illustrations/BrandMascot';
 
 /* ─────────────────────────────────────────────────────────────────
    Locale switcher — refined aesthetic circular/pill toggle
@@ -109,8 +110,9 @@ export function Header() {
             {/* Center: Bold Logo */}
             <div className="absolute left-1/2 -translate-x-1/2">
               <Link href={`/${locale}`} className="group flex flex-col items-center">
-                <span className="font-sans-en font-extrabold tracking-[0.25em] md:tracking-[0.3em] text-[20px] md:text-[26px] text-bengal-kajal uppercase">
-                  WOMANIA
+                <BrandMascot size={32} className="mb-1 text-bengal-kajal transition-transform duration-500 group-hover:scale-110" />
+                <span className="font-sans-en font-extrabold tracking-[0.25em] md:tracking-[0.3em] text-[20px] md:text-[26px] text-bengal-kajal uppercase leading-none">
+                  WOMANIYA
                 </span>
               </Link>
             </div>
@@ -137,7 +139,7 @@ export function Header() {
               "transition-all duration-300",
               isBn ? 'font-bengali text-[11px] md:text-sm tracking-wide' : 'font-sans-en uppercase text-[9px] md:text-[10px] tracking-[0.2em] md:tracking-[0.3em]'
             )}>
-              {isBn ? 'স্থাপিত ২০২৬' : 'Est. 2026'}
+              {isBn ? 'স্থাপিত ২০১৯' : 'Est. 2019'}
             </span>
           </motion.div>
 

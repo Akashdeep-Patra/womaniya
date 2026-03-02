@@ -11,29 +11,31 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { X, GripVertical } from 'lucide-react';
 import { Reorder } from 'framer-motion';
 
-type Category = { id: number; name_en: string };
-type Collection = { id: number; name_en: string };
+type CategoryItem = { id: number; name_en: string };
+type CollectionItem = { id: number; name_en: string };
 
 type ProductFormProps = {
   initialData?: any;
   initialImages?: any[];
-  categories: Category[];
-  collections: Collection[];
+  categories: CategoryItem[];
+  collections: CollectionItem[];
 };
 
 export function ProductForm({ initialData, initialImages, categories, collections }: ProductFormProps) {
   const t           = useTranslations('admin');
   const formRef     = useRef<HTMLFormElement>(null);
   
-  // State for images
   const [primaryImage, setPrimaryImage] = useState(initialData?.image_url || '');
   const [additionalImages, setAdditionalImages] = useState<string[]>(
     initialImages?.map((img) => img.image_url) || []
   );
   
-  // State for collections
   const [selectedCollections, setSelectedCollections] = useState<number[]>(
     initialData?.collectionLinks?.map((c: any) => c.collection_id) || []
+  );
+
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | ''>(
+    initialData?.category_id || ''
   );
 
   const [isPending, startTransition] = useTransition();
@@ -239,7 +241,8 @@ export function ProductForm({ initialData, initialImages, categories, collection
           <select
             name="category_id"
             required
-            defaultValue={initialData?.category_id || ''}
+            value={selectedCategoryId}
+            onChange={(e) => setSelectedCategoryId(Number(e.target.value))}
             className="w-full h-12 px-4 rounded-sm border border-bengal-kansa/30 bg-bengal-cream text-bengal-kajal text-sm font-sans-en focus:outline-none focus:ring-2 focus:ring-bengal-sindoor/30 focus:border-bengal-sindoor transition-colors appearance-none"
           >
             <option value="" disabled>Select category…</option>
@@ -247,7 +250,7 @@ export function ProductForm({ initialData, initialImages, categories, collection
               <option key={c.id} value={c.id}>{c.name_en}</option>
             ))}
           </select>
-          <input type="hidden" name="category" value={categories.find(c => c.id === initialData?.category_id)?.name_en || categories[0]?.name_en || 'Uncategorized'} />
+          <input type="hidden" name="category" value={categories.find(c => c.id === selectedCategoryId)?.name_en || ''} />
         </div>
 
         <div className="flex flex-col gap-2">

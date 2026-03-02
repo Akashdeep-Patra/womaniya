@@ -4,6 +4,8 @@ import { db } from '@/lib/db';
 import { admins } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
+import { ratelimit } from '@/lib/ratelimit';
+import { headers } from 'next/headers';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -13,6 +15,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       authorize: async (credentials) => {
+        if (ratelimit) {
+          const headersList = await headers();
+          const ip = headersList.get('x-forwarded-for') ?? '127.0.0.1';
+          const { success } = await ratelimit.limit(`login_${ip}`);
+          if (!success) throw new Error('Too many requests. Please try again later.');
+        }
+
         if (!credentials?.email || !credentials?.password) return null;
 
         const email = credentials.email as string;
@@ -28,7 +37,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             return {
               id:    adminUser.id.toString(),
               email: adminUser.email,
-              name:  'Womania Admin',
+              name:  'Womaniya Admin',
             };
           }
           // If found in DB but wrong password, don't fallback to env
@@ -46,7 +55,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return {
             id:    'env-1',
             email: adminEmail,
-            name:  'Womania Admin',
+            name:  'Womaniya Admin',
           };
         }
         return null;

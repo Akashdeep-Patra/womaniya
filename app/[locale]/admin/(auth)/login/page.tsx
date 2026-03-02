@@ -45,7 +45,7 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="text-center mb-10">
           <h1 className="font-editorial text-4xl text-bengal-kajal tracking-widest mb-2">
-            W O M A N I A
+            W O M A N I Y A
           </h1>
           <p className="text-[10px] tracking-[0.3em] uppercase text-bengal-kajal/40">
             {t('login_title')}

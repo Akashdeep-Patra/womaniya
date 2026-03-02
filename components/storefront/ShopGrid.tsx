@@ -4,13 +4,14 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { CategoryFilter } from './CategoryFilter';
 import { ProductCard }    from './ProductCard';
-import type { Product }   from '@/db/schema';
+import type { Product, Category } from '@/db/schema';
 
 interface Props {
   products: Product[];
+  categories?: Category[];
 }
 
-export function ShopGrid({ products }: Props) {
+export function ShopGrid({ products, categories }: Props) {
   const t = useTranslations('shop');
   const [activeCategory, setActiveCategory] = useState('All');
 
@@ -18,7 +19,6 @@ export function ShopGrid({ products }: Props) {
     ? products
     : products.filter((p) => p.category === activeCategory);
 
-  // Alternate portrait/square for masonry variety
   const variant = (i: number): 'portrait' | 'square' =>
     i % 3 === 2 ? 'square' : 'portrait';
 
@@ -34,7 +34,11 @@ export function ShopGrid({ products }: Props) {
 
       {/* Filters */}
       <div className="mb-6">
-        <CategoryFilter active={activeCategory} onChange={setActiveCategory} />
+        <CategoryFilter
+          active={activeCategory}
+          onChange={setActiveCategory}
+          categories={categories}
+        />
       </div>
 
       {/* Masonry grid */}

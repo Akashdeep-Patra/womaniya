@@ -3,8 +3,43 @@ import { notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const category = await db.query.categories.findFirst({
+    where: (c, { eq }) => eq(c.slug, slug),
+  });
+  if (!category || category.status !== 'published') return { title: 'Not Found' };
+
+  const title = (locale === 'bn' && category.seo_title_bn ? category.seo_title_bn : category.seo_title_en) || 
+                (locale === 'bn' && category.name_bn ? category.name_bn : category.name_en);
+  const description = (locale === 'bn' && category.seo_description_bn ? category.seo_description_bn : category.seo_description_en) || 
+                      (locale === 'bn' && category.description_bn ? category.description_bn : category.description_en) ||
+                      `${title} — Authentic Handloom by Womaniya`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: category.hero_image_url ? [category.hero_image_url] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: category.hero_image_url ? [category.hero_image_url] : undefined,
+    },
+    alternates: {
+      canonical: `/${locale}/category/${slug}`,
+      languages: { en: `/en/category/${slug}`, bn: `/bn/category/${slug}` },
+    },
+  };
+}
 
 export default async function CategoryPage({ params }: Props) {
   const { locale, slug } = await params;

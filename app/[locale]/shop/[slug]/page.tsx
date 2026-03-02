@@ -24,10 +24,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try { product = await getProductBySlug(slug); } catch { /* dev */ }
   if (!product) return { title: 'Product Not Found' };
   const name = locale === 'bn' && product.name_bn ? product.name_bn : product.name_en;
+  const description = product.description_en ?? `${name} — Authentic Handloom by Womaniya`;
+
   return {
-    title:       name,
-    description: product.description_en ?? `${name} — Authentic Handloom by Womaniya`,
-    openGraph: { images: [product.image_url] },
+    title: name,
+    description,
+    openGraph: {
+      title: name,
+      description,
+      images: [product.image_url],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: name,
+      description,
+      images: [product.image_url],
+    },
+    alternates: {
+      canonical: `/${locale}/shop/${slug}`,
+      languages: { en: `/en/shop/${slug}`, bn: `/bn/shop/${slug}` },
+    },
   };
 }
 
@@ -60,9 +76,35 @@ export default async function ProductPage({ params }: Props) {
     },
   };
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: `https://womaniya.in/${locale}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Shop',
+        item: `https://womaniya.in/${locale}/shop`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: name,
+        item: `https://womaniya.in/${locale}/shop/${slug}`,
+      },
+    ],
+  };
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <Header />
 
       <main className="pt-14 md:pt-16 pb-32 md:pb-16 min-h-screen">
