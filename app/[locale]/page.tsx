@@ -1,21 +1,55 @@
 import { setRequestLocale }    from 'next-intl/server';
 import { getTranslations }     from 'next-intl/server';
 import type { Metadata }       from 'next';
+import dynamic from 'next/dynamic';
 
 import { Header }              from '@/components/layout/Header';
 import { Footer }              from '@/components/layout/Footer';
 import { BottomNav }           from '@/components/layout/BottomNav';
 import { HeroSection }         from '@/components/storefront/HeroSection';
-import { HeritageTicker }     from '@/components/storefront/HeritageTicker';
-import { FeaturesSection }    from '@/components/storefront/FeaturesSection';
-import { GlimpsesSection }    from '@/components/storefront/GlimpsesSection';
-import { CategoriesSection }  from '@/components/storefront/CategoriesSection';
-import { ShopGrid }           from '@/components/storefront/ShopGrid';
-import { ProcessSection }     from '@/components/storefront/ProcessSection';
-import { AboutSection }       from '@/components/storefront/AboutSection';
-import { WhatsAppSection }    from '@/components/storefront/WhatsAppSection';
 import { getFeaturedProducts } from '@/actions/products';
 import { getPublishedCategories } from '@/actions/categories';
+
+/* Below-fold sections: dynamic import to reduce initial JS and improve LCP */
+const HeritageTicker = dynamic(
+  () => import('@/components/storefront/HeritageTicker').then((m) => ({ default: m.HeritageTicker })),
+  { ssr: true }
+);
+
+const FeaturesSection = dynamic(
+  () => import('@/components/storefront/FeaturesSection').then((m) => ({ default: m.FeaturesSection })),
+  { ssr: true }
+);
+
+const GlimpsesSection = dynamic(
+  () => import('@/components/storefront/GlimpsesSection').then((m) => ({ default: m.GlimpsesSection })),
+  { ssr: true }
+);
+
+const CategoriesSection = dynamic(
+  () => import('@/components/storefront/CategoriesSection').then((m) => ({ default: m.CategoriesSection })),
+  { ssr: true }
+);
+
+const ShopGrid = dynamic(
+  () => import('@/components/storefront/ShopGrid').then((m) => ({ default: m.ShopGrid })),
+  { ssr: true }
+);
+
+const ProcessSection = dynamic(
+  () => import('@/components/storefront/ProcessSection').then((m) => ({ default: m.ProcessSection })),
+  { ssr: true }
+);
+
+const AboutSection = dynamic(
+  () => import('@/components/storefront/AboutSection').then((m) => ({ default: m.AboutSection })),
+  { ssr: true }
+);
+
+const WhatsAppSection = dynamic(
+  () => import('@/components/storefront/WhatsAppSection').then((m) => ({ default: m.WhatsAppSection })),
+  { ssr: true }
+);
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -28,11 +62,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: 'Womaniya — Authentic Handloom Heritage',
       description: t('subtitle'),
+      images: [
+        {
+          url: '/opengraph-image',
+          width: 1200,
+          height: 630,
+          alt: 'Womaniya — Authentic Handloom Heritage',
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: 'Womaniya — Authentic Handloom Heritage',
       description: t('subtitle'),
+      images: ['/twitter-image'],
     },
     alternates: {
       canonical: `/${locale}`,

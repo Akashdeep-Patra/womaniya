@@ -90,8 +90,9 @@ export function CategoriesSection({ categories }: Props) {
                     src={cat.hero_image_url!}
                     alt={name}
                     fill
-                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                    className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.05]"
                     sizes="(max-width: 640px) 72vw, (max-width: 1024px) 44vw, 20vw"
+                    loading="lazy"
                   />
                 ) : (
                   <div className="absolute inset-0 opacity-10">

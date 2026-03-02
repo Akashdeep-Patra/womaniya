@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 import Image from 'next/image';
 import Link from 'next/link';
+import { EmptyState } from '@/components/storefront/EmptyState';
 import type { Metadata } from 'next';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -83,22 +84,23 @@ export default async function CollectionPage({ params }: Props) {
           {locale === 'bn' ? collection.description_bn || collection.description_en : collection.description_en}
         </p>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map(p => (
-            <Link key={p.id} href={`/${locale}/shop/${p.slug}`} className="group">
-              <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-bengal-mati mb-3">
-                <Image src={p.image_url} alt={p.name_en} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
-              </div>
-              <h3 className="font-medium text-bengal-kajal">{locale === 'bn' ? p.name_bn || p.name_en : p.name_en}</h3>
-              <p className="text-bengal-sindoor font-editorial">₹{p.price}</p>
-            </Link>
-          ))}
-          {products.length === 0 && (
-            <div className="col-span-full py-24 text-center text-bengal-kajal/50">
-              No products available in this collection yet.
-            </div>
-          )}
-        </div>
+        {products.length === 0 ? (
+          <div className="col-span-full">
+            <EmptyState message={locale === 'bn' ? 'এই কালেকশনে এখনো কোনো শাড়ি আসেনি।' : 'No products available in this collection yet.'} />
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {products.map(p => (
+              <Link key={p.id} href={`/${locale}/shop/${p.slug}`} className="group">
+                <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-bengal-mati mb-3">
+                  <Image src={p.image_url} alt={p.name_en} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                </div>
+                <h3 className="font-medium text-bengal-kajal">{locale === 'bn' ? p.name_bn || p.name_en : p.name_en}</h3>
+                <p className="text-bengal-sindoor font-editorial">₹{p.price}</p>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

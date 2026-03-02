@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import {
-  Playfair_Display,
+  Lora,
   Jost,
   Noto_Serif_Bengali,
   Anek_Bangla,
@@ -20,12 +20,12 @@ import { ScrollProgress } from '@/components/layout/ScrollProgress';
 import '@/app/globals.css';
 
 /* ── Google Fonts ─────────────────────────────────────────────── */
-/* Playfair Display — highly elegant magazine/editorial serif */
-const playfair = Playfair_Display({
-  variable: '--font-playfair',
+/* Lora — highly elegant, thick, and aesthetic magazine/editorial serif */
+const lora = Lora({
+  variable: '--font-playfair', // Keeping the variable name same to avoid refactoring
   subsets: ['latin'],
   display: 'swap',
-  weight: ['400', '500', '600', '700', '800', '900'],
+  weight: ['400', '500', '600', '700'],
   style: ['normal', 'italic'],
 });
 /* Jost — modern, clean, elegant geometric sans */
@@ -35,7 +35,7 @@ const jost = Jost({
   display: 'swap',
   weight: ['300', '400', '500', '600', '700'],
 });
-/* Noto Serif Bengali — heritage Bengali display */
+/* Noto Serif Bengali — heritage Bengali display, but we'll use it as thick and bold */
 const notoSerifBn = Noto_Serif_Bengali({
   variable: '--font-noto-serif-bn',
   subsets: ['bengali'],
@@ -60,7 +60,7 @@ const cinzelDecorative = Cinzel_Decorative({
 });
 
 const fontVars = [
-  playfair.variable,
+  lora.variable,
   jost.variable,
   notoSerifBn.variable,
   anekBangla.variable,
@@ -83,12 +83,21 @@ export const metadata: Metadata = {
     title: 'Womaniya — Authentic Handloom Heritage',
     description: 'Discover exquisite handwoven sarees, blouses & more — Jamdani, Tant, Chanderi, Ikkat, Ajrakh — crafted by master artisans in Kolkata.',
     url: '/',
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'Womaniya — Authentic Handloom Heritage',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     site: '@womaniya2019',
     title: 'Womaniya — Authentic Handloom Heritage',
     description: 'Discover exquisite handwoven sarees, blouses & more — Jamdani, Tant, Chanderi, Ikkat, Ajrakh — crafted by master artisans in Kolkata.',
+    images: ['/twitter-image'],
   },
 };
 

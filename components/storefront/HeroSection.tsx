@@ -22,6 +22,9 @@ export function HeroSection() {
   const parallaxOffset2 = useTransform(scrollY, [0, 1000], [0, -40]);
   const textParallax = useTransform(scrollY, [0, 800], [0, -30]);
 
+  /* Parallax elements use will-change for GPU compositing */
+  const parallaxStyle = { willChange: 'transform' as const };
+
   return (
     <section
       ref={sectionRef}
@@ -47,11 +50,11 @@ export function HeroSection() {
 
         {/* Layered Image Composition */}
         <div className="relative w-full aspect-4/5 mt-4">
-          <motion.div style={{ y: parallaxMain }} className="absolute inset-x-6 top-0 bottom-12 z-0 bg-bengal-mati rounded-3xl overflow-hidden shadow-sm">
+          <motion.div style={{ y: parallaxMain, ...parallaxStyle }} className="absolute inset-x-6 top-0 bottom-12 z-0 bg-bengal-mati rounded-3xl overflow-hidden shadow-sm">
             <BengalWomanHero />
           </motion.div>
 
-          <motion.div style={{ y: parallaxOffset1 }} className="absolute -right-4 bottom-4 w-32 aspect-3/4 z-10 border-4 border-bengal-kori shadow-xl rounded-3xl overflow-hidden bg-bengal-cream">
+          <motion.div style={{ y: parallaxOffset1, ...parallaxStyle }} className="absolute -right-4 bottom-4 w-32 aspect-3/4 z-10 border-4 border-bengal-kori shadow-xl rounded-3xl overflow-hidden bg-bengal-cream">
             <LoomWeaver />
           </motion.div>
 
@@ -102,7 +105,7 @@ export function HeroSection() {
 
         {/* 1. Typography Column (Left) */}
         <motion.div
-          style={{ y: textParallax }}
+          style={{ y: textParallax, ...parallaxStyle }}
           className="w-[45%] flex flex-col justify-center relative z-20 pr-10"
         >
           <div className="flex items-center gap-4 mb-8">
@@ -151,7 +154,7 @@ export function HeroSection() {
           
           {/* Main Large Image */}
           <motion.div
-            style={{ y: parallaxMain }}
+            style={{ y: parallaxMain, ...parallaxStyle }}
             className="absolute right-0 top-[5%] w-[85%] h-[85%] shadow-2xl rounded-3xl overflow-hidden bg-bengal-mati"
           >
             <BengalWomanHero />
@@ -159,7 +162,7 @@ export function HeroSection() {
 
           {/* Floating Offset Image 1 - Bottom Left Intertwined */}
           <motion.div
-            style={{ y: parallaxOffset1 }}
+            style={{ y: parallaxOffset1, ...parallaxStyle }}
             className="absolute -left-[10%] bottom-[10%] w-[45%] aspect-3/4 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-8 border-bengal-kori z-20 rounded-[2.5rem] overflow-hidden bg-bengal-cream"
           >
             <LoomWeaver />
@@ -171,23 +174,19 @@ export function HeroSection() {
 
           {/* Floating Offset Image 2 - Top Right Accent */}
           <motion.div
-            style={{ y: parallaxOffset2 }}
+            style={{ y: parallaxOffset2, ...parallaxStyle }}
             className="absolute -right-[5%] -top-[2%] w-[25%] aspect-square shadow-xl rounded-3xl border-4 border-bengal-kori z-30 overflow-hidden bg-bengal-kori"
           >
             <BengalVillage />
           </motion.div>
         </div>
 
-        {/* Scroll hint — absolute bottom center */}
+        {/* Scroll hint — absolute bottom center (CSS animation for compositor) */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-30">
           <span className="text-[9px] tracking-[0.3em] uppercase text-bengal-kajal/40 font-sans-en">
             {t('scroll_hint')}
           </span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-            className="w-px h-12 bg-linear-to-b from-bengal-kansa/50 to-transparent"
-          />
+          <div className="w-px h-12 bg-linear-to-b from-bengal-kansa/50 to-transparent animate-bounce-subtle" />
         </div>
       </div>
     </section>

@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { BengalBadge } from '@/components/bengal';
@@ -28,22 +27,20 @@ export function ProductCard({ product, variant = 'portrait' }: Props) {
       className="block masonry-item group"
       data-cursor-expand
     >
-      <motion.article
-        whileHover={{ scale: 1.01 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-      >
+      <article className="transition-transform duration-300 ease-out group-hover:scale-[1.01]">
         {/* Image */}
         <div
           className={cn(
             'relative overflow-hidden bg-bengal-mati rounded-3xl shadow-sm hover:shadow-lg transition-shadow duration-300',
-            variant === 'portrait' ? 'aspect-[4/5]' : 'aspect-square'
+            variant === 'portrait' ? 'aspect-4/5' : 'aspect-square'
           )}
         >
           <Image
             src={product.image_url}
             alt={name}
             fill
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            loading="lazy"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
           />
 
@@ -75,7 +72,7 @@ export function ProductCard({ product, variant = 'portrait' }: Props) {
             ₹{Number(product.price).toLocaleString('en-IN')}
           </p>
         </div>
-      </motion.article>
+      </article>
     </Link>
   );
 }

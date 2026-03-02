@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { CategoryFilter } from './CategoryFilter';
 import { ProductCard }    from './ProductCard';
+import { EmptyState } from './EmptyState';
 import type { Product, Category } from '@/db/schema';
 
 interface Props {
@@ -43,7 +44,7 @@ export function ShopGrid({ products, categories }: Props) {
 
       {/* Masonry grid */}
       {filtered.length === 0 ? (
-        <p className="text-center text-bengal-kajal/50 py-16 text-sm">{t('no_products')}</p>
+        <EmptyState />
       ) : (
         <div className="masonry-grid">
           {filtered.map((product, i) => (

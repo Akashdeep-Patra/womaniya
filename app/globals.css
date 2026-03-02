@@ -26,7 +26,7 @@
   --color-admin-danger:       #8A1C14;
 
   /* Typography tokens — bold heritage system */
-  --font-serif-en: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  --font-serif-en: var(--font-playfair), 'Lora', Georgia, serif;
   --font-sans-en:  var(--font-jost), 'Jost', system-ui, sans-serif;
   --font-serif-bn: var(--font-noto-serif-bn), 'Noto Serif Bengali', serif;
   --font-sans-bn:  var(--font-anek-bn), 'Anek Bangla', sans-serif;
@@ -189,5 +189,24 @@
   }
   @media (min-width: 768px) {
     .masonry-item { margin-bottom: 1.25rem; }
+  }
+
+  /* Hero scroll hint — compositor-friendly (no JS) */
+  @keyframes bounce-subtle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+  .animate-bounce-subtle {
+    animation: bounce-subtle 2s ease-in-out infinite;
+  }
+
+  /* Heritage ticker marquee — CSS instead of framer-motion */
+  @keyframes ticker-marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .animate-ticker-marquee {
+    animation: ticker-marquee 24s linear infinite;
+    will-change: transform;
   }
 }

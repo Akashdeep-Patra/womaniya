@@ -19,9 +19,9 @@ export function BengalWomanHero({ className = '' }: { className?: string }) {
           d="M 100 1000 L 100 400 C 100 200, 400 50, 400 50 C 400 50, 700 200, 700 400 L 700 1000 Z"
           fill="currentColor"
           className="text-bengal-kansa/5"
-          initial={{ pathLength: 0, opacity: 0 }}
+          initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 2, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         />
         
         {/* Inner Arch Line */}
@@ -32,7 +32,7 @@ export function BengalWomanHero({ className = '' }: { className?: string }) {
           className="text-bengal-kansa/30"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration: 2.5, ease: "easeInOut" }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
         />
 
         {/* Floating Motifs - Left */}
@@ -140,32 +140,30 @@ export function BengalWomanHero({ className = '' }: { className?: string }) {
             transition={{ duration: 2, delay: 1.5 }}
           />
 
-          {/* Zari Border Detail on Pallu */}
-          <motion.path
+          {/* Zari Border Detail on Pallu — static for perf (was infinite animation) */}
+          <path
             d="M -130 5 C -255 105, -305 250, -205 400"
             stroke="currentColor"
             strokeWidth="12"
             strokeDasharray="4 8"
             className="text-bengal-kansa"
-            animate={{ strokeDashoffset: [0, -100] }}
-            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
           />
         </g>
 
-        {/* Ambient Floating Threads (representing loom) */}
-        {[...Array(8)].map((_, i) => (
+        {/* Ambient Floating Threads (representing loom) — reduced from 8 to 4 for perf */}
+        {[...Array(4)].map((_, i) => (
           <motion.line
             key={`thread-${i}`}
             x1={-100}
-            y1={100 + i * 120}
+            y1={100 + i * 240}
             x2={900}
-            y2={100 + i * 120}
+            y2={100 + i * 240}
             stroke="currentColor"
             strokeWidth="1"
             className="text-bengal-kansa/20"
             initial={{ x1: -100, x2: -100 }}
             animate={{ x2: 900 }}
-            transition={{ duration: 2 + i * 0.5, delay: 0.5 + i * 0.2 }}
+            transition={{ duration: 1.5 + i * 0.3, delay: 0.3 + i * 0.15 }}
           />
         ))}
 
