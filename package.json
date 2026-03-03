@@ -12,7 +12,7 @@
     "db:push": "drizzle-kit push",
     "db:seed": "tsx scripts/seed.ts",
     "db:studio": "drizzle-kit studio",
-    "vercel-build": "tsx scripts/migrate.ts && tsc --noEmit && next build"
+    "vercel-build": "tsc --noEmit && next build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
