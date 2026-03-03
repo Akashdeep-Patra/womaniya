@@ -9,6 +9,7 @@ import { notFound } from 'next/navigation';
 import { setRequestLocale, getMessages } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { Providers } from '@/components/providers/Providers';
+import { getSetting } from '@/actions/settings';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
@@ -109,6 +110,7 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   // Must be fetched server-side and passed to the client provider
   const messages = await getMessages();
+  const waNumber = await getSetting('whatsapp_number', '919143161829');
 
   return (
     <html
@@ -120,7 +122,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <CustomCursor />
         <NoiseOverlay />
         <ScrollProgress />
-        <Providers locale={locale} messages={messages}>
+        <Providers locale={locale} messages={messages} waNumber={waNumber}>
           {children}
         </Providers>
         <Analytics />

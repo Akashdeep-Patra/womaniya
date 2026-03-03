@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useEffect } from 'react';
+import { useState, useTransition } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -10,6 +10,8 @@ import { CameraUpload } from './CameraUpload';
 import { BengalButton, BengalInput } from '@/components/bengal';
 import { FormSelect } from './FormField';
 import { createBanner, updateBanner } from '@/actions/banners';
+import { X, GripVertical } from 'lucide-react';
+import { Reorder } from 'framer-motion';
 
 type ReferenceData = {
   campaigns: { id: number; name_en: string }[];
@@ -30,8 +32,6 @@ const bannerFormSchema = z.object({
   collection_id: z.union([z.coerce.number(), z.literal('')]).optional(),
   category_id: z.union([z.coerce.number(), z.literal('')]).optional(),
   status: z.enum(['draft', 'published', 'archived']).default('draft'),
-  image_url: z.string().url('Desktop image is required'),
-  image_url_mobile: z.string().url().optional().or(z.literal('')),
 });
 
 type BannerFormValues = z.infer<typeof bannerFormSchema>;
@@ -51,6 +51,7 @@ type BannerFormProps = {
     collection_id?: number | null;
     category_id?: number | null;
     status?: string | null;
+    images?: string[] | null;
     image_url?: string | null;
     image_url_mobile?: string | null;
   };
@@ -58,19 +59,26 @@ type BannerFormProps = {
   refs: ReferenceData;
 };
 
+function resolveInitialImages(data?: BannerFormProps['initialData']): string[] {
+  if (!data) return [];
+  const fromArray = (data.images as string[] | null) ?? [];
+  if (fromArray.length > 0) return fromArray;
+  const legacy: string[] = [];
+  if (data.image_url) legacy.push(data.image_url);
+  if (data.image_url_mobile) legacy.push(data.image_url_mobile);
+  return legacy;
+}
+
 export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
   const router = useRouter();
-  const [imageUrl, setImageUrl] = useState(initialData?.image_url || '');
-  const [imageUrlMobile, setImageUrlMobile] = useState(initialData?.image_url_mobile || '');
+  const [images, setImages] = useState<string[]>(resolveInitialImages(initialData));
   const [apiError, setApiError] = useState<string | null>(null);
-
   const [isPending, startTransition] = useTransition();
 
   const {
     register,
     handleSubmit: rhfHandleSubmit,
     formState: { errors },
-    setValue,
   } = useForm<BannerFormValues>({
     resolver: zodResolver(bannerFormSchema) as Resolver<BannerFormValues>,
     defaultValues: {
@@ -86,27 +94,19 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
       collection_id: initialData?.collection_id ?? '',
       category_id: initialData?.category_id ?? '',
       status: (initialData?.status as BannerFormValues['status']) ?? 'draft',
-      image_url: initialData?.image_url ?? '',
-      image_url_mobile: initialData?.image_url_mobile ?? '',
     },
   });
 
-  useEffect(() => {
-    setValue('image_url', imageUrl);
-  }, [imageUrl, setValue]);
-
-  useEffect(() => {
-    setValue('image_url_mobile', imageUrlMobile);
-  }, [imageUrlMobile, setValue]);
-
-  const handleUpload = (url: string) => setImageUrl(url);
-  const handleUploadMobile = (url: string) => setImageUrlMobile(url);
-
   const onSubmit = (data: BannerFormValues) => {
+    if (images.length === 0) {
+      setApiError('At least one image is required');
+      toast.error('At least one image is required');
+      return;
+    }
+
     setApiError(null);
     const formData = new FormData();
-    formData.set('image_url', imageUrl);
-    formData.set('image_url_mobile', imageUrlMobile);
+    images.forEach((img) => formData.append('images', img));
     formData.set('placement', data.placement);
     formData.set('status', data.status);
     if (data.title_en) formData.set('title_en', data.title_en);
@@ -139,7 +139,7 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
   };
 
   return (
-    <form onSubmit={rhfHandleSubmit(onSubmit)} className="flex flex-col gap-8 pb-12">
+    <form onSubmit={rhfHandleSubmit(onSubmit)} className="flex flex-col gap-5 md:gap-8 pb-12">
       {apiError && (
         <div
           role="alert"
@@ -149,37 +149,57 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
         </div>
       )}
 
-      {/* ─── Media Section ─── */}
-      <div className="bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-6">
-        <h3 className="font-editorial text-xl text-bengal-kajal">Media (Desktop & Mobile)</h3>
+      {/* ─── Images ─── */}
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
+        <h3 className="font-editorial text-lg md:text-xl mb-1 text-bengal-kajal">Images</h3>
+        <p className="text-bengal-kajal/40 text-xs mb-3 md:mb-4">
+          First image is the cover. Add multiple images for a carousel.
+        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="text-[10px] tracking-widest uppercase font-medium text-bengal-kajal/70 font-sans-en block mb-2">
-              Desktop Image * (16:9 or similar)
-            </label>
-            <CameraUpload onUpload={handleUpload} initialUrl={imageUrl} />
-            {errors.image_url && (
-              <p className="text-bengal-alta text-xs font-medium mt-1">{errors.image_url.message}</p>
-            )}
+        <Reorder.Group
+          axis="x"
+          values={images}
+          onReorder={setImages}
+          className="flex gap-3 overflow-x-auto pb-4"
+        >
+          {images.map((url, i) => (
+            <Reorder.Item
+              key={url}
+              value={url}
+              className="relative w-28 h-20 shrink-0 rounded-lg overflow-hidden bg-bengal-mati border border-bengal-kansa/30 group"
+            >
+              <img src={url} alt={`Image ${i + 1}`} className="object-cover w-full h-full" />
+              {i === 0 && (
+                <span className="absolute top-1 left-1 text-[8px] tracking-wider uppercase bg-bengal-sindoor text-white px-1.5 py-0.5 rounded-sm font-sans-en">
+                  Cover
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => setImages((prev) => prev.filter((_, idx) => idx !== i))}
+                className="absolute -top-0.5 -right-0.5 w-8 h-8 bg-bengal-kajal/80 text-white rounded-full flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-manipulation"
+              >
+                <X size={14} />
+              </button>
+              <div className="absolute bottom-0.5 left-0.5 w-7 h-7 bg-bengal-kajal/50 text-white rounded flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation">
+                <GripVertical size={14} />
+              </div>
+            </Reorder.Item>
+          ))}
+          <div className="w-28 h-20 shrink-0">
+            <CameraUpload
+              onUpload={(url) => { if (url) setImages((prev) => [...prev, url]); }}
+              onUploadMultiple={(urls) => setImages((prev) => [...prev, ...urls])}
+              compact
+              multiple
+            />
           </div>
-          <div>
-            <label className="text-[10px] tracking-widest uppercase font-medium text-bengal-kajal/70 font-sans-en block mb-2">
-              Mobile Image (Optional, 4:5)
-            </label>
-            <CameraUpload onUpload={handleUploadMobile} initialUrl={imageUrlMobile} />
-            {errors.image_url_mobile && (
-              <p className="text-bengal-alta text-xs font-medium mt-1">
-                {errors.image_url_mobile.message}
-              </p>
-            )}
-          </div>
-        </div>
+        </Reorder.Group>
       </div>
 
       {/* ─── Content ─── */}
-      <div className="bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4">
-        <h3 className="font-editorial text-xl text-bengal-kajal">Content</h3>
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4">
+        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Content</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <BengalInput label="Title (EN)" {...register('title_en')} error={errors.title_en?.message} />
@@ -222,8 +242,8 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
       </div>
 
       {/* ─── Placement & Linking ─── */}
-      <div className="bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4">
-        <h3 className="font-editorial text-xl text-bengal-kajal">Placement & Settings</h3>
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4">
+        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Placement & Settings</h3>
 
         <FormSelect label="Placement *" {...register('placement')} error={errors.placement?.message}>
           <option value="hero">Hero (Storefront Top)</option>

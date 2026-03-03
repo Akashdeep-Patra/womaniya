@@ -1,8 +1,5 @@
 import { setRequestLocale } from 'next-intl/server';
 import { getTranslations }  from 'next-intl/server';
-import { Header }           from '@/components/layout/Header';
-import { Footer }           from '@/components/layout/Footer';
-import { BottomNav }        from '@/components/layout/BottomNav';
 import { getPublishedCollections } from '@/actions/collections';
 import type { Metadata }    from 'next';
 import Link from 'next/link';
@@ -10,7 +7,9 @@ import Image from 'next/image';
 
 type Props = { params: Promise<{ locale: string }> };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: Props
+): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'nav' });
   return {
@@ -54,24 +53,25 @@ export default async function CollectionsPage({ params }: Props) {
             {collections.map((collection) => {
               const name = isBn && collection.name_bn ? collection.name_bn : collection.name_en;
               const desc = isBn && collection.description_bn ? collection.description_bn : collection.description_en;
-              
+              const coverImage = ((collection.carousel_images as string[] | null) ?? [])[0] ?? null;
+
               return (
                 <Link
                   key={collection.id}
                   href={`/${locale}/collection/${collection.slug}`}
                   className="group block"
                 >
-                  <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-bengal-mati mb-4">
-                    {collection.hero_image_url ? (
+                  <div className="relative aspect-4/3 rounded-2xl overflow-hidden bg-bengal-mati mb-4">
+                    {coverImage ? (
                       <Image
-                        src={collection.hero_image_url}
+                        src={coverImage}
                         alt={name}
                         fill
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                     ) : (
-                      <div className="absolute inset-0 bg-gradient-to-br from-bengal-sindoor/10 to-bengal-kansa/10 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-linear-to-br from-bengal-sindoor/10 to-bengal-kansa/10 flex items-center justify-center">
                         <span className="text-bengal-kansa/30 font-editorial text-2xl italic">{name}</span>
                       </div>
                     )}

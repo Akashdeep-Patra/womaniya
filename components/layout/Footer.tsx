@@ -1,10 +1,12 @@
-import { useTranslations } from 'next-intl';
-import { WA_HREF } from '@/lib/whatsapp';
+import { getTranslations } from 'next-intl/server';
+import { getWaHref } from '@/lib/whatsapp';
+import { getSetting } from '@/actions/settings';
 
-const INSTAGRAM_URL = 'https://www.instagram.com/womaniya2019/';
-
-export function Footer() {
-  const t = useTranslations('footer');
+export async function Footer() {
+  const t = await getTranslations('footer');
+  const waNumber = await getSetting('whatsapp_number', '919143161829');
+  const instagramUrl = await getSetting('instagram_url', 'https://www.instagram.com/womaniya2019/');
+  const waHref = getWaHref(waNumber);
 
   return (
     <footer className="bg-background text-foreground border-t border-border pb-bottom-nav md:pb-0">
@@ -24,13 +26,13 @@ export function Footer() {
 
         {/* Links grid */}
         <div className="flex flex-wrap justify-center gap-8 md:gap-12 text-center text-xs tracking-widest uppercase text-muted-foreground mb-10">
-          <a href={WA_HREF} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors min-h-[44px] flex items-center justify-center">
+          <a href={waHref} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors min-h-[44px] flex items-center justify-center">
             {t('whatsapp')}
           </a>
-          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors min-h-[44px] flex items-center justify-center">
+          <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors min-h-[44px] flex items-center justify-center">
             {t('instagram')}
           </a>
-          <a href={WA_HREF} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors min-h-[44px] flex items-center justify-center">
+          <a href={waHref} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors min-h-[44px] flex items-center justify-center">
             {t('contact')}
           </a>
         </div>

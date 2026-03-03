@@ -10,10 +10,13 @@ import { AlponaDivider }      from '@/components/illustrations/AlponaDivider';
 import { PaisleyCluster }     from '@/components/illustrations/PaisleyCluster';
 import { JamdaniMotif }       from '@/components/illustrations/JamdaniMotif';
 import { KanthaStitch }       from '@/components/illustrations/KanthaStitch';
+import { getSetting }         from '@/actions/settings';
 
 type Props = { params: Promise<{ locale: string }> };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: Props
+): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'about' });
   return {
@@ -34,6 +37,7 @@ export default async function AboutPage({ params }: Props) {
   const ts = await getTranslations({ locale, namespace: 'story' });
   const tp = await getTranslations({ locale, namespace: 'process' });
   const isBn = locale === 'bn';
+  const waNumber = await getSetting('whatsapp_number', '919143161829');
 
   const stats = [
     { num: t('stat_1_num'), label: t('stat_1_label') },
@@ -132,7 +136,7 @@ export default async function AboutPage({ params }: Props) {
           <KanthaStitch color="#C5A059" width={280} rows={2} className="mx-auto opacity-25 mb-8" />
         </div>
 
-        <WhatsAppSection />
+        <WhatsAppSection waNumber={waNumber} />
       </main>
   );
 }

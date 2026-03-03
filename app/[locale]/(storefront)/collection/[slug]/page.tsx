@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import Image from 'next/image';
 import Link from 'next/link';
 import { EmptyState } from '@/components/storefront/EmptyState';
+import { HeroCarousel } from '@/components/storefront/HeroCarousel';
 import type { Metadata } from 'next';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -20,6 +21,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = (locale === 'bn' && collection.seo_description_bn ? collection.seo_description_bn : collection.seo_description_en) || 
                       (locale === 'bn' && collection.description_bn ? collection.description_bn : collection.description_en) ||
                       `${title} — Authentic Handloom Collection by Womaniya`;
+  const imgs = (collection.carousel_images as string[] | null) ?? [];
+  const ogImage = imgs[0] ?? undefined;
 
   return {
     title,
@@ -27,13 +30,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      images: collection.hero_image_url ? [collection.hero_image_url] : undefined,
+      images: ogImage ? [ogImage] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: collection.hero_image_url ? [collection.hero_image_url] : undefined,
+      images: ogImage ? [ogImage] : undefined,
     },
     alternates: {
       canonical: `/${locale}/collection/${slug}`,
@@ -62,21 +65,38 @@ export default async function CollectionPage({ params }: Props) {
 
   const products = collection.productLinks.map(pl => pl.product).filter(p => p.status === 'published');
 
+  const name = locale === 'bn' ? collection.name_bn || collection.name_en : collection.name_en;
+  const allImages = (collection.carousel_images as string[] | null) ?? [];
+  const hasImages = allImages.length > 0;
+
+  const heroOverlay = (
+    <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent flex items-end justify-center z-10 pb-12 md:pb-16">
+      <h1 className="text-4xl md:text-6xl font-editorial text-white text-center px-4 drop-shadow-lg">
+        {name}
+      </h1>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-bengal-cream pt-24 pb-12">
       <div className="max-w-7xl mx-auto px-4">
-        {collection.hero_image_url && (
-          <div className="relative w-full h-64 md:h-96 rounded-2xl overflow-hidden mb-8">
-            <Image src={collection.hero_image_url} alt={collection.name_en} fill className="object-cover" />
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-              <h1 className="text-4xl md:text-6xl font-editorial text-white">{locale === 'bn' ? collection.name_bn || collection.name_en : collection.name_en}</h1>
-            </div>
+        {hasImages && allImages.length > 1 ? (
+          <div className="relative w-full h-72 md:h-112 rounded-2xl overflow-hidden mb-8">
+            <HeroCarousel
+              images={allImages}
+              alt={name}
+              className="h-full"
+              overlay={heroOverlay}
+            />
           </div>
-        )}
-        
-        {!collection.hero_image_url && (
+        ) : hasImages ? (
+          <div className="relative w-full h-64 md:h-96 rounded-2xl overflow-hidden mb-8">
+            <Image src={allImages[0]} alt={name} fill className="object-cover" />
+            {heroOverlay}
+          </div>
+        ) : (
           <h1 className="text-4xl md:text-6xl font-editorial text-bengal-kajal mb-8 text-center">
-            {locale === 'bn' ? collection.name_bn || collection.name_en : collection.name_en}
+            {name}
           </h1>
         )}
 
@@ -92,7 +112,7 @@ export default async function CollectionPage({ params }: Props) {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map(p => (
               <Link key={p.id} href={`/${locale}/shop/${p.slug}`} className="group">
-                <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-bengal-mati mb-3">
+                <div className="relative aspect-3/4 rounded-xl overflow-hidden bg-bengal-mati mb-3">
                   <Image src={p.image_url} alt={p.name_en} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
                 <h3 className="font-medium text-bengal-kajal">{locale === 'bn' ? p.name_bn || p.name_en : p.name_en}</h3>

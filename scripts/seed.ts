@@ -175,8 +175,8 @@ function generateFakeProduct(catMap: Map<string, any>, categorySlug: string) {
     image_url: '/placeholder-saree.svg',
     is_featured: faker.datatype.boolean(0.3), // 30% chance of being featured
     status: 'published',
-    sizes: ['blouse', 'ready-to-wear'].includes(categorySlug) ? 'S, M, L, XL, XXL' : null,
-    colors: faker.helpers.arrayElements(COLORS, { min: 1, max: 3 }).join(', '),
+    sizes: ['blouse', 'ready-to-wear'].includes(categorySlug) ? ['S', 'M', 'L', 'XL', 'XXL'] : [],
+    colors: faker.helpers.arrayElements(COLORS, { min: 1, max: 3 }),
     fabric: fabric,
   };
 }

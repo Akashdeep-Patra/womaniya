@@ -30,9 +30,19 @@ export default async function EditPage({ params }: Props) {
         Back
       </Link>
 
-      <h1 className="font-editorial text-2xl text-bengal-kajal mb-6">
-        Edit {page.title_en}
-      </h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="font-editorial text-2xl text-bengal-kajal">
+          Edit {page.title_en}
+        </h1>
+        <a
+          href={`/${locale}/pages/${page.slug}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[10px] tracking-widest uppercase text-bengal-sindoor hover:text-bengal-alta transition-colors font-semibold bg-bengal-sindoor/10 px-3 py-1.5 rounded-full"
+        >
+          View Live ↗
+        </a>
+      </div>
 
       <PageForm initialData={page} locale={locale} />
     </div>

@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { BrandMascot } from '@/components/illustrations/BrandMascot';
 import { useTheme } from 'next-themes';
@@ -118,32 +118,14 @@ export function Header() {
   const isBn = locale === 'bn';
 
   const [isScrolled, setIsScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const lastScrollYRef = useRef(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const y = window.scrollY;
-      const prev = lastScrollYRef.current;
+  const { scrollY } = useScroll();
 
-      setIsScrolled(y > SCROLL_THRESHOLD);
-
-      // Only hide if we've scrolled down a reasonable amount AND we are scrolling down
-      if (y > SCROLL_THRESHOLD + 100) {
-        setHidden(y > prev);
-      } else {
-        setHidden(false);
-      }
-
-      lastScrollYRef.current = y;
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    // Initial check
-    handleScroll();
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  useMotionValueEvent(scrollY, 'change', (y) => {
+    setIsScrolled(y > SCROLL_THRESHOLD);
+    lastScrollYRef.current = y;
+  });
 
   const navLinks = [
     { href: `/${locale}`, label: isBn ? 'হোম' : 'Home' },
@@ -157,9 +139,6 @@ export function Header() {
     <>
       {/* ── HEADER ── */}
       <motion.header
-        animate={{ 
-          y: hidden ? -100 : 0
-        }}
         transition={{ duration: 0.4, ease: EASE }}
         className="fixed top-0 left-0 right-0 z-50 flex justify-center pointer-events-none px-4 sm:px-6 lg:px-8 pt-4 md:pt-5"
       >

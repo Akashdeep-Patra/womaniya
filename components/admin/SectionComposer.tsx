@@ -64,9 +64,9 @@ export function SectionComposer({ sections, onChange }: Props) {
                 <button
                   type="button"
                   onClick={() => removeSection(section.id)}
-                  className="p-1.5 text-bengal-kajal/30 hover:text-bengal-alta transition-colors"
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center text-bengal-kajal/30 hover:text-bengal-alta transition-colors touch-manipulation -mr-2"
                 >
-                  <X size={16} />
+                  <X size={18} />
                 </button>
               </div>
 
@@ -93,7 +93,7 @@ export function SectionComposer({ sections, onChange }: Props) {
         <div className="bg-white p-4 rounded-xl border border-bengal-kansa/20 shadow-lg">
           <div className="flex items-center justify-between mb-4">
             <h4 className="text-sm font-medium text-bengal-kajal">Select Section Type</h4>
-            <button type="button" onClick={() => setShowAddMenu(false)} className="text-bengal-kajal/40 hover:text-bengal-kajal"><X size={16} /></button>
+            <button type="button" onClick={() => setShowAddMenu(false)} className="min-w-[44px] min-h-[44px] flex items-center justify-center text-bengal-kajal/40 hover:text-bengal-kajal touch-manipulation -mr-2"><X size={18} /></button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {(['hero', 'richtext', 'image_text', 'product_grid', 'quote', 'cta', 'gallery', 'testimonial'] as SectionType[]).map(type => (
@@ -101,7 +101,7 @@ export function SectionComposer({ sections, onChange }: Props) {
                 key={type}
                 type="button"
                 onClick={() => addSection(type)}
-                className="p-3 text-left border border-bengal-kansa/10 rounded-lg hover:border-bengal-kansa/40 hover:bg-bengal-mati/50 transition-colors"
+                className="p-3 min-h-[44px] text-left border border-bengal-kansa/10 rounded-lg hover:border-bengal-kansa/40 hover:bg-bengal-mati/50 active:bg-bengal-mati transition-colors touch-manipulation"
               >
                 <span className="text-xs capitalize">{type.replace('_', ' ')}</span>
               </button>

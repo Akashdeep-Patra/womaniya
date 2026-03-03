@@ -73,7 +73,9 @@ export function CategoriesSection({ categories, isCompact = false }: Props) {
           const desc = isBn && cat.description_bn ? cat.description_bn : cat.description_en;
           const color = GRADIENT_COLORS[i % GRADIENT_COLORS.length];
           const fallbackBg = FALLBACK_BGS[i % FALLBACK_BGS.length];
-          const hasImage = !!cat.hero_image_url;
+          const imgs = (cat.carousel_images as string[] | null) ?? [];
+          const displayImage = imgs[0] ?? null;
+          const hasImage = !!displayImage;
 
           return (
             <motion.div
@@ -92,7 +94,7 @@ export function CategoriesSection({ categories, isCompact = false }: Props) {
               >
                 {hasImage ? (
                   <Image
-                    src={cat.hero_image_url!}
+                    src={displayImage!}
                     alt={name}
                     fill
                     className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.05]"

@@ -1,8 +1,5 @@
 import { setRequestLocale } from 'next-intl/server';
 import { getTranslations }  from 'next-intl/server';
-import { Header }           from '@/components/layout/Header';
-import { Footer }           from '@/components/layout/Footer';
-import { BottomNav }        from '@/components/layout/BottomNav';
 import { getPublishedCategories } from '@/actions/categories';
 import type { Metadata }    from 'next';
 import Link from 'next/link';
@@ -10,7 +7,9 @@ import Image from 'next/image';
 
 type Props = { params: Promise<{ locale: string }> };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: Props
+): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'nav' });
   return {
@@ -64,17 +63,18 @@ export default async function CategoriesPage({ params }: Props) {
             const name = isBn && category.name_bn ? category.name_bn : category.name_en;
             const desc = isBn && category.description_bn ? category.description_bn : category.description_en;
             const fallbackBg = FALLBACK_BGS[i % FALLBACK_BGS.length];
-            
+            const coverImage = ((category.carousel_images as string[] | null) ?? [])[0] ?? null;
+
             return (
               <Link
                 key={category.id}
                 href={`/${locale}/category/${category.slug}`}
                 className="group block"
               >
-                <div className={`relative aspect-[3/4] rounded-2xl overflow-hidden mb-4 ${category.hero_image_url ? 'bg-bengal-mati' : fallbackBg}`}>
-                  {category.hero_image_url ? (
+                <div className={`relative aspect-3/4 rounded-2xl overflow-hidden mb-4 ${coverImage ? 'bg-bengal-mati' : fallbackBg}`}>
+                  {coverImage ? (
                     <Image
-                      src={category.hero_image_url}
+                      src={coverImage}
                       alt={name}
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -85,7 +85,7 @@ export default async function CategoriesPage({ params }: Props) {
                       <div className="absolute inset-0 bg-hatch-pattern" />
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/0 to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
                   
                   <div className="absolute bottom-0 left-0 right-0 p-5">
                     <h2 className={`text-xl text-white mb-1 group-hover:text-bengal-kori transition-colors ${isBn ? 'font-bengali-serif' : 'font-editorial'}`}>

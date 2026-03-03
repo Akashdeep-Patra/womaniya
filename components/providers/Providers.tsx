@@ -12,16 +12,17 @@ type Props = {
   locale:   string;
   messages: AbstractIntlMessages;
   children: React.ReactNode;
+  waNumber?: string;
 };
 
-export function Providers({ locale, messages, children }: Props) {
+export function Providers({ locale, messages, children, waNumber }: Props) {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
       <NextIntlClientProvider locale={locale} messages={messages} timeZone="Asia/Kolkata">
         <SmoothScrollProvider>
           <MagneticCursor />
           {children}
-          <WhatsAppFloat />
+          <WhatsAppFloat waNumber={waNumber} />
           <Toaster
             position="top-center"
             toastOptions={{

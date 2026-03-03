@@ -48,7 +48,9 @@ export function FeaturedCollectionsSection({ collections, isCompact = false }: P
           {(isCompact ? collections.slice(0, 3) : collections).map((collection, i) => {
             const name = isBn && collection.name_bn ? collection.name_bn : collection.name_en;
             const desc = isBn && collection.description_bn ? collection.description_bn : collection.description_en;
-            
+            const imgs = (collection.carousel_images as string[] | null) ?? [];
+            const displayImage = imgs[0] ?? null;
+
             return (
               <motion.div
                 key={collection.id}
@@ -58,7 +60,7 @@ export function FeaturedCollectionsSection({ collections, isCompact = false }: P
                 transition={{ duration: 0.6, delay: i * 0.1 }}
                 className={`group flex flex-col ${i === 1 ? 'md:mt-12 lg:mt-24' : ''} ${i === 2 ? 'md:hidden lg:flex' : ''}`}
               >
-                <Link href={`/${locale}/collection/${collection.slug}`} prefetch={true} className="block relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-muted mb-8 border-[6px] border-background shadow-sm hover:shadow-md transition-shadow duration-500 ring-1 ring-border/50">
+                <Link href={`/${locale}/collection/${collection.slug}`} prefetch={true} className="block relative aspect-4/5 rounded-4xl overflow-hidden bg-muted mb-8 border-[6px] border-background shadow-sm hover:shadow-md transition-shadow duration-500 ring-1 ring-border/50">
                   {/* Inner editorial border */}
                   <div className="absolute inset-3 z-20 border border-bengal-kansa/30 rounded-[1.25rem] pointer-events-none mix-blend-overlay" />
                   
@@ -68,9 +70,9 @@ export function FeaturedCollectionsSection({ collections, isCompact = false }: P
                   <AlponaCorner className="absolute bottom-4 right-4 z-20 opacity-60 rotate-180" size={32} color="#F9F6F0" />
                   <AlponaCorner className="absolute bottom-4 left-4 z-20 opacity-60 -rotate-90" size={32} color="#F9F6F0" />
 
-                  {collection.hero_image_url ? (
+                  {displayImage ? (
                     <Image
-                      src={collection.hero_image_url}
+                      src={displayImage}
                       alt={name}
                       fill
                       className="object-cover transition-transform duration-1000 group-hover:scale-[1.05]"

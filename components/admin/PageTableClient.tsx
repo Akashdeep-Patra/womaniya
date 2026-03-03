@@ -2,15 +2,15 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Trash2, Edit } from 'lucide-react';
+import { Trash2, Edit, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import { deletePage } from '@/actions/pages';
-import { EntityTable, Column } from './EntityTable';
+import { EntityTable, Column, MobileCardConfig } from './EntityTable';
 import { StatusPill } from './StatusPill';
 import { BengalBadge } from '@/components/bengal';
 import type { Page } from '@/db/schema';
 
-export function PageTableClient({ initialPages, locale }: { initialPages: Page[], locale: string }) {
+export function PageTableClient({ initialPages, locale, basePath = 'pages' }: { initialPages: Page[], locale: string, basePath?: string }) {
   const router = useRouter();
   const [pages, setPages] = useState(initialPages);
   const [pending, setId] = useState<number | null>(null);
@@ -35,7 +35,7 @@ export function PageTableClient({ initialPages, locale }: { initialPages: Page[]
   };
 
   const handleEdit = (id: number) => {
-    router.push(`/${locale}/admin/pages/${id}/edit`);
+    router.push(`/${locale}/admin/${basePath}/${id}/edit`);
   };
 
   const columns: Column<Page>[] = [
@@ -63,20 +63,20 @@ export function PageTableClient({ initialPages, locale }: { initialPages: Page[]
       key: 'actions',
       header: '',
       render: (p) => (
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end gap-1">
           <button
             onClick={(e) => {
               e.stopPropagation();
               handleEdit(p.id);
             }}
-            className="p-2 text-bengal-kajal/40 hover:text-bengal-kajal transition-colors"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center text-bengal-kajal/40 hover:text-bengal-kajal transition-colors"
           >
             <Edit size={16} />
           </button>
           <button
             onClick={(e) => handleDelete(e, p.id)}
             disabled={isPending && pending === p.id}
-            className="p-2 text-bengal-kajal/40 hover:text-bengal-alta transition-colors disabled:opacity-40"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center text-bengal-kajal/40 hover:text-bengal-alta transition-colors disabled:opacity-40"
           >
             {isPending && pending === p.id ? (
               <span className="block w-4 h-4 border-2 border-bengal-alta border-t-transparent rounded-full animate-spin" />
@@ -89,6 +89,45 @@ export function PageTableClient({ initialPages, locale }: { initialPages: Page[]
     },
   ];
 
+  const mobileCard: MobileCardConfig<Page> = {
+    leading: (p) => (
+      <div className="w-11 h-11 rounded-lg bg-bengal-kansa/10 flex items-center justify-center">
+        <FileText size={18} className="text-bengal-kansa" />
+      </div>
+    ),
+    title: (p) => p.title_en,
+    subtitle: (p) => (
+      <div className="flex items-center gap-2">
+        <BengalBadge variant="mati" className="text-[8px]">{p.page_type}</BengalBadge>
+        <StatusPill status={p.status || 'draft'} />
+      </div>
+    ),
+    actions: (p) => (
+      <>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleEdit(p.id);
+          }}
+          className="w-10 h-10 flex items-center justify-center rounded-lg text-bengal-kajal/40 hover:text-bengal-kajal active:bg-bengal-mati transition-colors touch-manipulation"
+        >
+          <Edit size={15} />
+        </button>
+        <button
+          onClick={(e) => handleDelete(e, p.id)}
+          disabled={isPending && pending === p.id}
+          className="w-10 h-10 flex items-center justify-center rounded-lg text-bengal-kajal/40 hover:text-bengal-alta active:bg-bengal-alta/10 transition-colors disabled:opacity-40 touch-manipulation"
+        >
+          {isPending && pending === p.id ? (
+            <span className="block w-4 h-4 border-2 border-bengal-alta border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <Trash2 size={15} />
+          )}
+        </button>
+      </>
+    ),
+  };
+
   return (
     <div className="bg-bengal-kori/50 rounded-2xl border border-bengal-kansa/20 overflow-hidden">
       <EntityTable
@@ -97,6 +136,7 @@ export function PageTableClient({ initialPages, locale }: { initialPages: Page[]
         keyExtractor={(p) => p.id}
         onRowClick={(p) => handleEdit(p.id)}
         emptyMessage="No pages created yet."
+        mobileCard={mobileCard}
       />
     </div>
   );

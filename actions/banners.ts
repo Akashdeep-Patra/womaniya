@@ -11,8 +11,7 @@ const BannerSchema = z.object({
   collection_id:    z.coerce.number().optional(),
   category_id:      z.coerce.number().optional(),
   placement:        z.enum(['hero', 'sidebar', 'inline', 'category_hero', 'collection_hero']),
-  image_url:        z.string().url(),
-  image_url_mobile: z.string().url().optional().or(z.literal('')),
+  images:           z.array(z.string().url()).min(1, 'At least one image is required'),
   title_en:         z.string().max(120).optional(),
   title_bn:         z.string().max(120).optional(),
   subtitle_en:      z.string().max(200).optional(),
@@ -39,13 +38,13 @@ export async function getBannerById(id: number) {
 }
 
 export async function createBanner(formData: FormData) {
+  const imagesRaw = formData.getAll('images') as string[];
   const raw = {
     campaign_id:      formData.get('campaign_id') || undefined,
     collection_id:    formData.get('collection_id') || undefined,
     category_id:      formData.get('category_id') || undefined,
     placement:        formData.get('placement'),
-    image_url:        formData.get('image_url'),
-    image_url_mobile: formData.get('image_url_mobile') || undefined,
+    images:           imagesRaw.filter(Boolean),
     title_en:         formData.get('title_en') || undefined,
     title_bn:         formData.get('title_bn') || undefined,
     subtitle_en:      formData.get('subtitle_en') || undefined,
@@ -71,8 +70,9 @@ export async function createBanner(formData: FormData) {
     collection_id:    data.collection_id ?? null,
     category_id:      data.category_id ?? null,
     placement:        data.placement,
-    image_url:        data.image_url,
-    image_url_mobile: data.image_url_mobile || null,
+    images:           data.images,
+    image_url:        data.images[0] ?? '',
+    image_url_mobile: data.images[1] ?? null,
     title_en:         data.title_en ?? null,
     title_bn:         data.title_bn ?? null,
     subtitle_en:      data.subtitle_en ?? null,
@@ -90,13 +90,13 @@ export async function createBanner(formData: FormData) {
 }
 
 export async function updateBanner(id: number, formData: FormData) {
+  const imagesRaw = formData.getAll('images') as string[];
   const raw = {
     campaign_id:      formData.get('campaign_id') || undefined,
     collection_id:    formData.get('collection_id') || undefined,
     category_id:      formData.get('category_id') || undefined,
     placement:        formData.get('placement'),
-    image_url:        formData.get('image_url'),
-    image_url_mobile: formData.get('image_url_mobile') || undefined,
+    images:           imagesRaw.filter(Boolean),
     title_en:         formData.get('title_en') || undefined,
     title_bn:         formData.get('title_bn') || undefined,
     subtitle_en:      formData.get('subtitle_en') || undefined,
@@ -122,8 +122,9 @@ export async function updateBanner(id: number, formData: FormData) {
     collection_id:    data.collection_id ?? null,
     category_id:      data.category_id ?? null,
     placement:        data.placement,
-    image_url:        data.image_url,
-    image_url_mobile: data.image_url_mobile || null,
+    images:           data.images,
+    image_url:        data.images[0] ?? '',
+    image_url_mobile: data.images[1] ?? null,
     title_en:         data.title_en ?? null,
     title_bn:         data.title_bn ?? null,
     subtitle_en:      data.subtitle_en ?? null,

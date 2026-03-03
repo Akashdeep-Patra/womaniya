@@ -18,19 +18,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = (locale === 'bn' && page.seo_description_bn ? page.seo_description_bn : page.seo_description_en) || 
                       `${title} — Womaniya`;
 
+  const coverImage = ((page.images as string[] | null) ?? [])[0] || page.hero_image_url;
+
   return {
     title,
     description,
     openGraph: {
       title,
       description,
-      images: page.hero_image_url ? [page.hero_image_url] : undefined,
+      images: coverImage ? [coverImage] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: page.hero_image_url ? [page.hero_image_url] : undefined,
+      images: coverImage ? [coverImage] : undefined,
     },
     alternates: {
       canonical: `/${locale}/pages/${slug}`,
@@ -54,11 +56,13 @@ export default async function GenericPage({ params }: Props) {
 
   if (!page || page.status !== 'published') notFound();
 
+  const heroImage = ((page.images as string[] | null) ?? [])[0] || page.hero_image_url;
+
   return (
     <div className="min-h-screen bg-bengal-cream pt-24 pb-12">
-      {page.hero_image_url && (
+      {heroImage && (
         <div className="relative w-full h-[50vh] md:h-[60vh] overflow-hidden mb-12">
-          <Image src={page.hero_image_url} alt={page.title_en} fill className="object-cover" />
+          <Image src={heroImage} alt={page.title_en} fill className="object-cover" />
           <div className="absolute inset-0 bg-black/30 flex flex-col items-center justify-center p-4">
             <h1 className="text-4xl md:text-6xl font-editorial text-white text-center">
               {locale === 'bn' ? page.title_bn || page.title_en : page.title_en}
@@ -68,7 +72,7 @@ export default async function GenericPage({ params }: Props) {
       )}
 
       <div className="max-w-4xl mx-auto px-4">
-        {!page.hero_image_url && (
+        {!heroImage && (
           <h1 className="text-4xl md:text-5xl font-editorial text-bengal-kajal mb-12 text-center">
             {locale === 'bn' ? page.title_bn || page.title_en : page.title_en}
           </h1>

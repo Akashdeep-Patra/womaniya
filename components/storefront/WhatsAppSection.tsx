@@ -5,11 +5,11 @@ import { useParams }       from 'next/navigation';
 import { generalEnquiryUrl } from '@/lib/whatsapp';
 import { MessageCircle }   from 'lucide-react';
 
-export function WhatsAppSection() {
+export function WhatsAppSection({ waNumber }: { waNumber?: string }) {
   const params = useParams();
   const locale = params.locale as string;
   const isBn   = locale === 'bn';
-  const href   = generalEnquiryUrl(locale);
+  const href   = generalEnquiryUrl(locale, waNumber);
 
   const heading = isBn
     ? 'পছন্দের শাড়ি খুঁজে পাচ্ছেন না?'

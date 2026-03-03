@@ -19,6 +19,15 @@ const ProductSchema = z.object({
   status:             z.enum(['draft', 'published', 'archived']).default('draft'),
   seo_title_en:       z.string().max(120).optional(),
   seo_description_en: z.string().max(300).optional(),
+  sizes:              z.array(z.string()).default([]),
+  colors:             z.array(z.string()).default([]),
+  fabric:             z.string().optional(),
+  weight:             z.string().optional(),
+  care_instructions:  z.string().optional(),
+  origin:             z.string().optional(),
+  sku:                z.string().optional(),
+  stock_status:       z.enum(['in_stock', 'low_stock', 'made_to_order', 'out_of_stock']).default('in_stock'),
+  delivery_info:      z.string().optional(),
 });
 
 function slugify(text: string): string {
@@ -51,6 +60,15 @@ export async function createProduct(formData: FormData) {
     status:             (formData.get('status') as string) || 'draft',
     seo_title_en:       formData.get('seo_title_en') || undefined,
     seo_description_en: formData.get('seo_description_en') || undefined,
+    sizes:              formData.getAll('sizes'),
+    colors:             formData.getAll('colors'),
+    fabric:             formData.get('fabric') || undefined,
+    weight:             formData.get('weight') || undefined,
+    care_instructions:  formData.get('care_instructions') || undefined,
+    origin:             formData.get('origin') || undefined,
+    sku:                formData.get('sku') || undefined,
+    stock_status:       formData.get('stock_status') || 'in_stock',
+    delivery_info:      formData.get('delivery_info') || undefined,
   };
 
   const parsed = ProductSchema.safeParse(raw);
@@ -88,6 +106,15 @@ export async function createProduct(formData: FormData) {
     status:             data.status,
     seo_title_en:       data.seo_title_en ?? null,
     seo_description_en: data.seo_description_en ?? null,
+    sizes:              data.sizes,
+    colors:             data.colors,
+    fabric:             data.fabric ?? null,
+    weight:             data.weight ?? null,
+    care_instructions:  data.care_instructions ?? null,
+    origin:             data.origin ?? null,
+    sku:                data.sku ?? null,
+    stock_status:       data.stock_status,
+    delivery_info:      data.delivery_info ?? null,
   }).returning();
 
   // Handle additional images
@@ -140,6 +167,15 @@ export async function updateProduct(id: number, formData: FormData) {
     status:             (formData.get('status') as string) || 'draft',
     seo_title_en:       formData.get('seo_title_en') || undefined,
     seo_description_en: formData.get('seo_description_en') || undefined,
+    sizes:              formData.getAll('sizes'),
+    colors:             formData.getAll('colors'),
+    fabric:             formData.get('fabric') || undefined,
+    weight:             formData.get('weight') || undefined,
+    care_instructions:  formData.get('care_instructions') || undefined,
+    origin:             formData.get('origin') || undefined,
+    sku:                formData.get('sku') || undefined,
+    stock_status:       formData.get('stock_status') || 'in_stock',
+    delivery_info:      formData.get('delivery_info') || undefined,
   };
 
   const parsed = ProductSchema.safeParse(raw);
@@ -162,6 +198,15 @@ export async function updateProduct(id: number, formData: FormData) {
     status:             data.status,
     seo_title_en:       data.seo_title_en ?? null,
     seo_description_en: data.seo_description_en ?? null,
+    sizes:              data.sizes,
+    colors:             data.colors,
+    fabric:             data.fabric ?? null,
+    weight:             data.weight ?? null,
+    care_instructions:  data.care_instructions ?? null,
+    origin:             data.origin ?? null,
+    sku:                data.sku ?? null,
+    stock_status:       data.stock_status,
+    delivery_info:      data.delivery_info ?? null,
     updated_at:         new Date(),
   };
 

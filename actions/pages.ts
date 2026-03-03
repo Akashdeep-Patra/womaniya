@@ -10,7 +10,7 @@ const PageSchema = z.object({
   title_en:           z.string().min(2).max(120),
   title_bn:           z.string().max(120).optional(),
   page_type:          z.enum(['static', 'story', 'landing']).default('static'),
-  hero_image_url:     z.string().url().optional().or(z.literal('')),
+  images:             z.array(z.string().url()).default([]),
   status:             z.enum(['draft', 'published', 'archived']).default('draft'),
   seo_title_en:       z.string().max(120).optional(),
   seo_title_bn:       z.string().max(120).optional(),
@@ -22,8 +22,16 @@ function slugify(text: string): string {
   return text.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/--+/g, '-');
 }
 
-export async function getAllPages() {
+export async function getAllPages(page_type?: 'static' | 'story' | 'landing') {
   return db.query.pages.findMany({
+    where: page_type ? (p, { eq }) => eq(p.page_type, page_type) : undefined,
+    orderBy: (p, { desc }) => [desc(p.created_at)],
+  });
+}
+
+export async function getNonStoryPages() {
+  return db.query.pages.findMany({
+    where: (p, { ne }) => ne(p.page_type, 'story'),
     orderBy: (p, { desc }) => [desc(p.created_at)],
   });
 }
@@ -40,11 +48,12 @@ export async function getPageById(id: number) {
 }
 
 export async function createPage(formData: FormData, sectionsJson: string) {
+  const imagesRaw = formData.getAll('images') as string[];
   const raw = {
     title_en:           formData.get('title_en') as string,
     title_bn:           (formData.get('title_bn') as string) || undefined,
     page_type:          (formData.get('page_type') as string) || 'static',
-    hero_image_url:     (formData.get('hero_image_url') as string) || undefined,
+    images:             imagesRaw.filter(Boolean),
     status:             (formData.get('status') as string) || 'draft',
     seo_title_en:       (formData.get('seo_title_en') as string) || undefined,
     seo_title_bn:       (formData.get('seo_title_bn') as string) || undefined,
@@ -65,7 +74,8 @@ export async function createPage(formData: FormData, sectionsJson: string) {
     title_en:           data.title_en,
     title_bn:           data.title_bn ?? null,
     page_type:          data.page_type,
-    hero_image_url:     data.hero_image_url || null,
+    images:             data.images,
+    hero_image_url:     data.images[0] ?? null,
     seo_title_en:       data.seo_title_en ?? null,
     seo_title_bn:       data.seo_title_bn ?? null,
     seo_description_en: data.seo_description_en ?? null,
@@ -91,11 +101,12 @@ export async function createPage(formData: FormData, sectionsJson: string) {
 }
 
 export async function updatePage(id: number, formData: FormData, sectionsJson: string) {
+  const imagesRaw = formData.getAll('images') as string[];
   const raw = {
     title_en:           formData.get('title_en') as string,
     title_bn:           (formData.get('title_bn') as string) || undefined,
     page_type:          (formData.get('page_type') as string) || 'static',
-    hero_image_url:     (formData.get('hero_image_url') as string) || undefined,
+    images:             imagesRaw.filter(Boolean),
     status:             (formData.get('status') as string) || 'draft',
     seo_title_en:       (formData.get('seo_title_en') as string) || undefined,
     seo_title_bn:       (formData.get('seo_title_bn') as string) || undefined,
@@ -114,7 +125,8 @@ export async function updatePage(id: number, formData: FormData, sectionsJson: s
     title_en:           data.title_en,
     title_bn:           data.title_bn ?? null,
     page_type:          data.page_type,
-    hero_image_url:     data.hero_image_url || null,
+    images:             data.images,
+    hero_image_url:     data.images[0] ?? null,
     seo_title_en:       data.seo_title_en ?? null,
     seo_title_bn:       data.seo_title_bn ?? null,
     seo_description_en: data.seo_description_en ?? null,

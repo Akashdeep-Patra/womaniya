@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 import { Trash2, Edit } from 'lucide-react';
 import { toast } from 'sonner';
 import { deleteProduct } from '@/actions/products';
-import { EntityTable, Column } from './EntityTable';
+import { EntityTable, Column, MobileCardConfig } from './EntityTable';
 import { StatusPill } from './StatusPill';
 import { BengalBadge } from '@/components/bengal';
 import type { Product } from '@/db/schema';
@@ -47,7 +47,7 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
       header: 'Product',
       render: (p) => (
         <div className="flex items-center gap-3">
-          <div className="relative w-12 h-12 flex-shrink-0 rounded-sm overflow-hidden bg-bengal-mati">
+          <div className="relative w-12 h-12 shrink-0 rounded-sm overflow-hidden bg-bengal-mati">
             <Image
               src={p.image_url}
               alt={p.name_en}
@@ -85,20 +85,20 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
       key: 'actions',
       header: '',
       render: (p) => (
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end gap-1">
           <button
             onClick={(e) => {
               e.stopPropagation();
               handleEdit(p.id);
             }}
-            className="p-2 text-bengal-kajal/40 hover:text-bengal-kajal transition-colors"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center text-bengal-kajal/40 hover:text-bengal-kajal transition-colors"
           >
             <Edit size={16} />
           </button>
           <button
             onClick={(e) => handleDelete(e, p.id)}
             disabled={isPending && pending === p.id}
-            className="p-2 text-bengal-kajal/40 hover:text-bengal-alta transition-colors disabled:opacity-40"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center text-bengal-kajal/40 hover:text-bengal-alta transition-colors disabled:opacity-40"
           >
             {isPending && pending === p.id ? (
               <span className="block w-4 h-4 border-2 border-bengal-alta border-t-transparent rounded-full animate-spin" />
@@ -111,6 +111,45 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
     },
   ];
 
+  const mobileCard: MobileCardConfig<Product> = {
+    leading: (p) => (
+      <div className="relative w-11 h-11 rounded-lg overflow-hidden bg-bengal-mati">
+        <Image src={p.image_url} alt={p.name_en} fill className="object-cover" sizes="44px" />
+      </div>
+    ),
+    title: (p) => p.name_en,
+    subtitle: (p) => (
+      <div className="flex items-center gap-2">
+        <span className="font-editorial text-bengal-sindoor text-xs">₹{Number(p.price).toLocaleString('en-IN')}</span>
+        <StatusPill status={p.status || 'draft'} />
+      </div>
+    ),
+    actions: (p) => (
+      <>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleEdit(p.id);
+          }}
+          className="w-10 h-10 flex items-center justify-center rounded-lg text-bengal-kajal/40 hover:text-bengal-kajal active:bg-bengal-mati transition-colors touch-manipulation"
+        >
+          <Edit size={15} />
+        </button>
+        <button
+          onClick={(e) => handleDelete(e, p.id)}
+          disabled={isPending && pending === p.id}
+          className="w-10 h-10 flex items-center justify-center rounded-lg text-bengal-kajal/40 hover:text-bengal-alta active:bg-bengal-alta/10 transition-colors disabled:opacity-40 touch-manipulation"
+        >
+          {isPending && pending === p.id ? (
+            <span className="block w-4 h-4 border-2 border-bengal-alta border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <Trash2 size={15} />
+          )}
+        </button>
+      </>
+    ),
+  };
+
   return (
     <div className="bg-bengal-kori/50 rounded-2xl border border-bengal-kansa/20 overflow-hidden">
       <EntityTable
@@ -119,6 +158,7 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
         keyExtractor={(p) => p.id}
         onRowClick={(p) => handleEdit(p.id)}
         emptyMessage="No products yet. Add your first saree!"
+        mobileCard={mobileCard}
       />
     </div>
   );

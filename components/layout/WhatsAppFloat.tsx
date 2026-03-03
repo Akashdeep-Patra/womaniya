@@ -12,7 +12,7 @@ function WAIcon({ size = 20, className }: { size?: number; className?: string })
   );
 }
 
-export function WhatsAppFloat() {
+export function WhatsAppFloat({ waNumber }: { waNumber?: string }) {
   const params = useParams();
   const locale = params.locale as string;
   const [show, setShow] = useState(false);
@@ -22,7 +22,7 @@ export function WhatsAppFloat() {
     return () => clearTimeout(t);
   }, []);
 
-  const href = generalEnquiryUrl(locale);
+  const href = generalEnquiryUrl(locale, waNumber);
 
   return (
     <AnimatePresence>

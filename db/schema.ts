@@ -20,6 +20,7 @@ export const categories = pgTable('categories', {
   description_en:     text('description_en'),
   description_bn:     text('description_bn'),
   hero_image_url:     text('hero_image_url'),
+  carousel_images:    jsonb('carousel_images').$type<string[]>().default([]),
   seo_title_en:       text('seo_title_en'),
   seo_title_bn:       text('seo_title_bn'),
   seo_description_en: text('seo_description_en'),
@@ -45,9 +46,15 @@ export const products = pgTable('products', {
   category:           text('category').notNull(),
   category_id:        integer('category_id'),
   image_url:          text('image_url').notNull(),
-  sizes:              text('sizes'),
-  colors:             text('colors'),
+  sizes:              jsonb('sizes').$type<string[]>().default([]),
+  colors:             jsonb('colors').$type<string[]>().default([]),
   fabric:             text('fabric'),
+  weight:             text('weight'),
+  care_instructions:  text('care_instructions'),
+  origin:             text('origin'),
+  sku:                text('sku'),
+  stock_status:       text('stock_status').default('in_stock').notNull(),
+  delivery_info:      text('delivery_info'),
   is_featured:        boolean('is_featured').default(false),
   status:             text('status').default('published').notNull(),
   seo_title_en:       text('seo_title_en'),
@@ -82,6 +89,7 @@ export const collections = pgTable('collections', {
   description_en:     text('description_en'),
   description_bn:     text('description_bn'),
   hero_image_url:     text('hero_image_url'),
+  carousel_images:    jsonb('carousel_images').$type<string[]>().default([]),
   launch_date:        timestamp('launch_date'),
   end_date:           timestamp('end_date'),
   status:             text('status').default('draft').notNull(),
@@ -137,7 +145,8 @@ export const banners = pgTable('banners', {
   collection_id:    integer('collection_id'),
   category_id:      integer('category_id'),
   placement:        text('placement').notNull(),
-  image_url:        text('image_url').notNull(),
+  images:           jsonb('images').$type<string[]>().default([]),
+  image_url:        text('image_url'),
   image_url_mobile: text('image_url_mobile'),
   title_en:         text('title_en'),
   title_bn:         text('title_bn'),
@@ -163,6 +172,7 @@ export const pages = pgTable('pages', {
   title_en:           text('title_en').notNull(),
   title_bn:           text('title_bn'),
   page_type:          text('page_type').default('static').notNull(),
+  images:             jsonb('images').$type<string[]>().default([]),
   hero_image_url:     text('hero_image_url'),
   status:             text('status').default('draft').notNull(),
   published_at:       timestamp('published_at'),
@@ -274,6 +284,16 @@ export const pageSectionsRelations = relations(pageSections, ({ one }) => ({
     references: [pages.id],
   }),
 }));
+
+// ─── Settings ──────────────────────────────────────────────────────
+export const settings = pgTable('settings', {
+  key: text('key').primaryKey(),
+  value: text('value').notNull(),
+  updated_at: timestamp('updated_at').defaultNow(),
+});
+
+export type Setting = typeof settings.$inferSelect;
+export type NewSetting = typeof settings.$inferInsert;
 
 // ─── Admins ────────────────────────────────────────────────────────
 export const admins = pgTable('admins', {

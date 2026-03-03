@@ -7,6 +7,7 @@ import { HeroSection }         from '@/components/storefront/HeroSection';
 import { getFeaturedProducts } from '@/actions/products';
 import { getPublishedCategories } from '@/actions/categories';
 import { getFeaturedCollections } from '@/actions/collections';
+import { getSetting } from '@/actions/settings';
 import { AlponaDivider }       from '@/components/illustrations/AlponaDivider';
 
 /* Below-fold sections: dynamic import to reduce initial JS and improve LCP */
@@ -100,11 +101,13 @@ export default async function HomePage({ params }: Props) {
   let featured: Awaited<ReturnType<typeof getFeaturedProducts>> = [];
   let categories: Awaited<ReturnType<typeof getPublishedCategories>> = [];
   let collections: Awaited<ReturnType<typeof getFeaturedCollections>> = [];
+  let waNumber = '919143161829';
   try {
-    [featured, categories, collections] = await Promise.all([
+    [featured, categories, collections, waNumber] = await Promise.all([
       getFeaturedProducts(),
       getPublishedCategories(),
       getFeaturedCollections(),
+      getSetting('whatsapp_number', '919143161829'),
     ]);
   } catch {
     // DB not yet connected in dev
@@ -163,7 +166,7 @@ export default async function HomePage({ params }: Props) {
 
         <ManifestoSection />
         <AboutSection />
-        <WhatsAppSection />
+        <WhatsAppSection waNumber={waNumber} />
       </main>
     </>
   );

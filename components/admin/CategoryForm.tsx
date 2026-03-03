@@ -1,13 +1,15 @@
 'use client';
 
-import { useState, useTransition, useEffect } from 'react';
+import { useState, useTransition } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { ImageUploader } from './ImageUploader';
+import { CameraUpload } from './CameraUpload';
 import { toast } from 'sonner';
+import { X, GripVertical } from 'lucide-react';
+import { Reorder } from 'framer-motion';
 import type { Category } from '@/db/schema';
 
 const categoryFormSchema = z.object({
@@ -20,13 +22,12 @@ const categoryFormSchema = z.object({
   seo_description_en: z.string().max(300).optional().or(z.literal('')),
   seo_description_bn: z.string().max(300).optional().or(z.literal('')),
   status: z.enum(['draft', 'published', 'archived']).default('draft'),
-  hero_image_url: z.string().url().optional().or(z.literal('')),
 });
 
 type CategoryFormValues = z.infer<typeof categoryFormSchema>;
 
 type CategoryFormProps = {
-  category?: Category | null;
+  category?: (Category & { carousel_images?: string[] | null }) | null;
   locale: string;
   action: (formData: FormData) => Promise<void>;
 };
@@ -38,7 +39,9 @@ const inputNormalClasses = 'border-[#C5A059]/15';
 
 export function CategoryForm({ category, locale, action }: CategoryFormProps) {
   const router = useRouter();
-  const [heroImage, setHeroImage] = useState(category?.hero_image_url ?? '');
+  const [images, setImages] = useState<string[]>(
+    category?.carousel_images ?? []
+  );
   const [apiError, setApiError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'en' | 'bn'>('en');
 
@@ -48,7 +51,6 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
     register,
     handleSubmit: rhfHandleSubmit,
     formState: { errors },
-    setValue,
   } = useForm<CategoryFormValues>({
     resolver: zodResolver(categoryFormSchema) as Resolver<CategoryFormValues>,
     defaultValues: {
@@ -61,13 +63,8 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
       seo_description_en: category?.seo_description_en ?? '',
       seo_description_bn: category?.seo_description_bn ?? '',
       status: (category?.status as CategoryFormValues['status']) ?? 'draft',
-      hero_image_url: category?.hero_image_url ?? '',
     },
   });
-
-  useEffect(() => {
-    setValue('hero_image_url', heroImage);
-  }, [heroImage, setValue]);
 
   const onSubmit = (data: CategoryFormValues) => {
     setApiError(null);
@@ -81,7 +78,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
     if (data.seo_description_en) formData.set('seo_description_en', data.seo_description_en);
     if (data.seo_description_bn) formData.set('seo_description_bn', data.seo_description_bn);
     formData.set('status', data.status);
-    formData.set('hero_image_url', heroImage);
+    images.forEach((img) => formData.append('carousel_images', img));
 
     startTransition(async () => {
       try {
@@ -97,7 +94,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
   };
 
   return (
-    <form onSubmit={rhfHandleSubmit(onSubmit)} className="max-w-2xl space-y-8">
+    <form onSubmit={rhfHandleSubmit(onSubmit)} className="max-w-2xl space-y-5 md:space-y-8">
       {apiError && (
         <div
           role="alert"
@@ -107,18 +104,53 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
         </div>
       )}
 
-      {/* Hero Image */}
+      {/* Images */}
       <div>
-        <label className="block text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/50 font-medium mb-2">
-          Hero Image
+        <label className="block text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/50 font-medium mb-1.5">
+          Images
         </label>
-        <ImageUploader
-          value={heroImage}
-          onChange={setHeroImage}
-          onRemove={() => setHeroImage('')}
-          aspect="landscape"
-          className="max-w-md"
-        />
+        <p className="text-[#1A1918]/35 text-xs mb-3">
+          First image is the cover. Multiple images create an auto-sliding carousel.
+        </p>
+        <Reorder.Group
+          axis="x"
+          values={images}
+          onReorder={setImages}
+          className="flex gap-3 overflow-x-auto pb-4"
+        >
+          {images.map((url, i) => (
+            <Reorder.Item
+              key={url}
+              value={url}
+              className="relative w-28 h-20 shrink-0 rounded-lg overflow-hidden bg-[#1A1918]/5 border border-[#C5A059]/15 group"
+            >
+              <img src={url} alt={`Image ${i + 1}`} className="object-cover w-full h-full" />
+              {i === 0 && (
+                <span className="absolute top-1 left-1 text-[8px] tracking-wider uppercase bg-[#8A1C14] text-white px-1.5 py-0.5 rounded-sm">
+                  Cover
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => setImages((prev) => prev.filter((_, idx) => idx !== i))}
+                className="absolute -top-0.5 -right-0.5 w-8 h-8 bg-[#1A1918]/80 text-white rounded-full flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-manipulation"
+              >
+                <X size={14} />
+              </button>
+              <div className="absolute bottom-0.5 left-0.5 w-7 h-7 bg-[#1A1918]/50 text-white rounded flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation">
+                <GripVertical size={14} />
+              </div>
+            </Reorder.Item>
+          ))}
+          <div className="w-28 h-20 shrink-0">
+            <CameraUpload
+              onUpload={(url) => { if (url) setImages((prev) => [...prev, url]); }}
+              onUploadMultiple={(urls) => setImages((prev) => [...prev, ...urls])}
+              compact
+              multiple
+            />
+          </div>
+        </Reorder.Group>
       </div>
 
       {/* Language Tabs */}
@@ -238,7 +270,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
       </div>
 
       {/* SEO */}
-      <div className="border border-[#C5A059]/10 rounded-lg p-5 space-y-4">
+      <div className="border border-[#C5A059]/10 rounded-lg p-4 md:p-5 space-y-4">
         <h3 className="text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/50 font-medium">
           SEO
         </h3>
@@ -367,24 +399,26 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
       </div>
 
       {/* Submit */}
-      <div className="flex flex-wrap items-center gap-3 pt-4">
-        <button
-          type="submit"
-          disabled={isPending}
-          className={cn(
-            'px-6 py-2.5 min-h-[44px] bg-[#8A1C14] text-white text-sm tracking-wider uppercase rounded-md transition-colors',
-            isPending ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#B3241C]'
-          )}
-        >
-          {isPending ? 'Saving...' : category ? 'Update Category' : 'Create Category'}
-        </button>
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="px-6 py-2.5 min-h-[44px] text-sm text-[#1A1918]/50 hover:text-[#1A1918] transition-colors"
-        >
-          Cancel
-        </button>
+      <div className="sticky bottom-[calc(3.5rem+env(safe-area-inset-bottom)+1rem)] md:bottom-6 z-10">
+        <div className="flex gap-3">
+          <button
+            type="submit"
+            disabled={isPending}
+            className={cn(
+              'flex-1 py-3.5 min-h-[44px] bg-[#8A1C14] text-white text-sm tracking-wider uppercase rounded-xl transition-colors shadow-2xl touch-manipulation',
+              isPending ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#B3241C] active:scale-[0.98]'
+            )}
+          >
+            {isPending ? 'Saving...' : category ? 'Update Category' : 'Create Category'}
+          </button>
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="px-5 py-3.5 min-h-[44px] text-sm text-[#1A1918]/50 hover:text-[#1A1918] bg-white/80 backdrop-blur-sm rounded-xl border border-[#C5A059]/20 shadow-lg transition-colors touch-manipulation"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </form>
   );

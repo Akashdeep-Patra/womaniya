@@ -1,8 +1,5 @@
 import { setRequestLocale } from 'next-intl/server';
 import { getTranslations }  from 'next-intl/server';
-import { Header }           from '@/components/layout/Header';
-import { Footer }           from '@/components/layout/Footer';
-import { BottomNav }        from '@/components/layout/BottomNav';
 import { ShopGrid }         from '@/components/storefront/ShopGrid';
 import { getPublishedProducts } from '@/actions/products';
 import { getPublishedCategories } from '@/actions/categories';
@@ -10,7 +7,9 @@ import type { Metadata }    from 'next';
 
 type Props = { params: Promise<{ locale: string }> };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: Props
+): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'shop' });
   return {

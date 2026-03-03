@@ -8,11 +8,11 @@ import { PaisleyCluster }  from '@/components/illustrations/PaisleyCluster';
 import { LoomWeaver }      from '@/components/illustrations/LoomWeaver';
 
 // Puja campaign section — doubles as seasonal marketing banner
-export function ProcessSection() {
+export function ProcessSection({ waNumber }: { waNumber?: string }) {
   const params = useParams();
   const locale = params.locale as string;
   const isBn   = locale === 'bn';
-  const waHref = generalEnquiryUrl(locale);
+  const waHref = generalEnquiryUrl(locale, waNumber);
 
   return (
     <section className="bg-bengal-mati/50 py-16 md:py-24 overflow-hidden">

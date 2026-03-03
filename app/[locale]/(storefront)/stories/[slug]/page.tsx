@@ -18,19 +18,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = (locale === 'bn' && page.seo_description_bn ? page.seo_description_bn : page.seo_description_en) || 
                       `${title} — Womaniya Stories`;
 
+  const coverImage = ((page.images as string[] | null) ?? [])[0] || page.hero_image_url;
+
   return {
     title,
     description,
     openGraph: {
       title,
       description,
-      images: page.hero_image_url ? [page.hero_image_url] : undefined,
+      images: coverImage ? [coverImage] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: page.hero_image_url ? [page.hero_image_url] : undefined,
+      images: coverImage ? [coverImage] : undefined,
     },
     alternates: {
       canonical: `/${locale}/stories/${slug}`,
@@ -54,12 +56,14 @@ export default async function StoryPage({ params }: Props) {
 
   if (!page || page.page_type !== 'story' || page.status !== 'published') notFound();
 
+  const heroImage = ((page.images as string[] | null) ?? [])[0] || page.hero_image_url;
+
   return (
     <div className="min-h-screen bg-bengal-cream pb-12">
-      {page.hero_image_url && (
+      {heroImage && (
         <div className="relative w-full h-[70vh] overflow-hidden mb-16">
-          <Image src={page.hero_image_url} alt={page.title_en} fill className="object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-8 md:p-16">
+          <Image src={heroImage} alt={page.title_en} fill className="object-cover" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-8 md:p-16">
             <h1 className="text-5xl md:text-7xl font-editorial text-white max-w-4xl">
               {locale === 'bn' ? page.title_bn || page.title_en : page.title_en}
             </h1>
@@ -68,7 +72,7 @@ export default async function StoryPage({ params }: Props) {
       )}
 
       <div className="max-w-3xl mx-auto px-4">
-        {!page.hero_image_url && (
+        {!heroImage && (
           <h1 className="text-4xl md:text-6xl font-editorial text-bengal-kajal mb-16 text-center mt-24">
             {locale === 'bn' ? page.title_bn || page.title_en : page.title_en}
           </h1>
@@ -87,7 +91,7 @@ export default async function StoryPage({ params }: Props) {
             if (section.section_type === 'image_text') {
               return (
                 <div key={section.id} className="my-8">
-                  <div className="relative w-full aspect-video md:aspect-[21/9] rounded-2xl overflow-hidden bg-bengal-mati mb-6">
+                  <div className="relative w-full aspect-video md:aspect-21/9 rounded-2xl overflow-hidden bg-bengal-mati mb-6">
                     <Image src={content.image_url} alt={content.title || ''} fill className="object-cover" />
                   </div>
                   {content.title && <h2 className="text-3xl font-editorial text-bengal-kajal mb-4">{content.title}</h2>}

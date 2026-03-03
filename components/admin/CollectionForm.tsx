@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useMemo, useEffect } from 'react';
+import { useState, useTransition, useMemo } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -28,7 +28,6 @@ const collectionFormSchema = z.object({
     .optional()
     .transform((v) => v === true || v === 'on')
     .default(false),
-  hero_image_url: z.string().url().optional().or(z.literal('')),
 });
 
 type CollectionFormValues = z.infer<typeof collectionFormSchema>;
@@ -44,14 +43,16 @@ type CollectionFormProps = {
     seo_description_en?: string | null;
     status?: string | null;
     is_featured?: boolean | null;
-    hero_image_url?: string | null;
+    carousel_images?: string[] | null;
     productLinks?: { product: Product }[];
   };
   allProducts: Product[];
 };
 
 export function CollectionForm({ initialData, allProducts }: CollectionFormProps) {
-  const [heroImage, setHeroImage] = useState(initialData?.hero_image_url || '');
+  const [images, setImages] = useState<string[]>(
+    initialData?.carousel_images ?? []
+  );
   const [apiError, setApiError] = useState<string | null>(null);
 
   const initialProducts = initialData?.productLinks?.map((pl) => pl.product) ?? [];
@@ -64,7 +65,6 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
     register,
     handleSubmit: rhfHandleSubmit,
     formState: { errors },
-    setValue,
     reset,
   } = useForm<CollectionFormValues>({
     resolver: zodResolver(collectionFormSchema) as Resolver<CollectionFormValues>,
@@ -77,15 +77,20 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
       seo_description_en: initialData?.seo_description_en ?? '',
       status: (initialData?.status as CollectionFormValues['status']) ?? 'draft',
       is_featured: initialData?.is_featured ?? false,
-      hero_image_url: initialData?.hero_image_url ?? '',
     },
   });
 
-  useEffect(() => {
-    setValue('hero_image_url', heroImage);
-  }, [heroImage, setValue]);
+  const handleImageUpload = (url: string) => {
+    if (url) setImages((prev) => [...prev, url]);
+  };
 
-  const handleHeroUpload = (url: string) => setHeroImage(url);
+  const handleImageUploadMultiple = (urls: string[]) => {
+    setImages((prev) => [...prev, ...urls]);
+  };
+
+  const removeImage = (index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const availableProducts = useMemo(() => {
     return allProducts
@@ -117,7 +122,7 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
     if (data.seo_description_en) formData.set('seo_description_en', data.seo_description_en);
     formData.set('status', data.status);
     formData.set('is_featured', data.is_featured ? 'on' : '');
-    formData.set('hero_image_url', heroImage);
+    images.forEach((img) => formData.append('carousel_images', img));
 
     selectedProducts.forEach((p) => formData.append('product_ids', p.id.toString()));
 
@@ -138,9 +143,8 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
             seo_description_en: '',
             status: 'draft',
             is_featured: false,
-            hero_image_url: '',
           });
-          setHeroImage('');
+          setImages([]);
           setSelectedProducts([]);
         }
       } catch (err) {
@@ -162,7 +166,7 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
     }`;
 
   return (
-    <form onSubmit={rhfHandleSubmit(onSubmit)} className="flex flex-col gap-8 pb-12">
+    <form onSubmit={rhfHandleSubmit(onSubmit)} className="flex flex-col gap-5 md:gap-8 pb-12">
       {apiError && (
         <div
           role="alert"
@@ -172,19 +176,56 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
         </div>
       )}
 
-      {/* ─── Media Section ─── */}
-      <div className="bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20">
-        <h3 className="font-editorial text-xl mb-4 text-bengal-kajal">Hero Image</h3>
-        <CameraUpload onUpload={handleHeroUpload} initialUrl={heroImage} />
-        {errors.hero_image_url && (
-          <p className="text-bengal-alta text-xs font-medium mt-1">
-            {errors.hero_image_url.message}
-          </p>
-        )}
+      {/* ─── Images ─── */}
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
+        <h3 className="font-editorial text-lg md:text-xl mb-1 text-bengal-kajal">Images</h3>
+        <p className="text-bengal-kajal/40 text-xs mb-3 md:mb-4">
+          First image is the cover. Multiple images create an auto-sliding carousel.
+        </p>
+
+        <Reorder.Group
+          axis="x"
+          values={images}
+          onReorder={setImages}
+          className="flex gap-3 overflow-x-auto pb-4"
+        >
+          {images.map((url, i) => (
+            <Reorder.Item
+              key={url}
+              value={url}
+              className="relative w-28 h-20 shrink-0 rounded-lg overflow-hidden bg-bengal-mati border border-bengal-kansa/30 group"
+            >
+              <img src={url} alt={`Image ${i + 1}`} className="object-cover w-full h-full" />
+              {i === 0 && (
+                <span className="absolute top-1 left-1 text-[8px] tracking-wider uppercase bg-bengal-sindoor text-white px-1.5 py-0.5 rounded-sm font-sans-en">
+                  Cover
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => removeImage(i)}
+                className="absolute -top-0.5 -right-0.5 w-8 h-8 bg-bengal-kajal/80 text-white rounded-full flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-manipulation"
+              >
+                <X size={14} />
+              </button>
+              <div className="absolute bottom-0.5 left-0.5 w-7 h-7 bg-bengal-kajal/50 text-white rounded flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation">
+                <GripVertical size={14} />
+              </div>
+            </Reorder.Item>
+          ))}
+          <div className="w-28 h-20 shrink-0">
+            <CameraUpload
+              onUpload={handleImageUpload}
+              onUploadMultiple={handleImageUploadMultiple}
+              compact
+              multiple
+            />
+          </div>
+        </Reorder.Group>
       </div>
 
       {/* ─── Basic Info (Bilingual) ─── */}
-      <div className="bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20">
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
         <Tabs defaultValue="en" className="w-full">
           <TabsList className="mb-4 bg-bengal-mati">
             <TabsTrigger value="en">English</TabsTrigger>
@@ -242,8 +283,8 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
       </div>
 
       {/* ─── Product Assignment ─── */}
-      <div className="bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-5">
-        <h3 className="font-editorial text-xl text-bengal-kajal">Products</h3>
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4 md:gap-5">
+        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Products</h3>
 
         <div className="relative">
           <div className="relative flex items-center">
@@ -271,7 +312,7 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
                     onClick={() => addProduct(p)}
                     className="w-full text-left flex items-center gap-3 p-3 hover:bg-bengal-mati transition-colors border-b border-bengal-kansa/10 last:border-0"
                   >
-                    <div className="relative w-10 h-10 rounded overflow-hidden flex-shrink-0">
+                    <div                     className="relative w-10 h-10 rounded overflow-hidden shrink-0">
                       <Image src={p.image_url} alt={p.name_en} fill className="object-cover" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -307,14 +348,14 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
                   className="flex items-center gap-3 p-2 bg-white rounded-lg border border-bengal-kansa/20 group cursor-grab active:cursor-grabbing shadow-sm"
                 >
                   <GripVertical size={16} className="text-bengal-kajal/20 ml-2" />
-                  <div className="relative w-10 h-10 rounded overflow-hidden flex-shrink-0">
+                  <div className="relative w-10 h-10 rounded overflow-hidden shrink-0">
                     <Image src={p.image_url} alt={p.name_en} fill className="object-cover" />
                   </div>
                   <p className="text-sm font-medium text-bengal-kajal truncate flex-1">{p.name_en}</p>
                   <button
                     type="button"
                     onClick={() => removeProduct(p.id)}
-                    className="p-2 text-bengal-kajal/30 hover:text-bengal-alta transition-colors"
+                    className="min-w-[44px] min-h-[44px] flex items-center justify-center text-bengal-kajal/30 hover:text-bengal-alta transition-colors touch-manipulation"
                   >
                     <X size={16} />
                   </button>
@@ -326,8 +367,8 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
       </div>
 
       {/* ─── Organization ─── */}
-      <div className="bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-5">
-        <h3 className="font-editorial text-xl text-bengal-kajal">Settings</h3>
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4 md:gap-5">
+        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Settings</h3>
 
         <FormSelect label="Status" {...register('status')}>
           <option value="draft">Draft</option>

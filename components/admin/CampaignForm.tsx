@@ -117,7 +117,7 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
     }`;
 
   return (
-    <form onSubmit={rhfHandleSubmit(onSubmit)} className="flex flex-col gap-8 pb-12">
+    <form onSubmit={rhfHandleSubmit(onSubmit)} className="flex flex-col gap-5 md:gap-8 pb-12">
       {apiError && (
         <div
           role="alert"
@@ -127,7 +127,7 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
         </div>
       )}
 
-      <div className="bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20">
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
         <Tabs defaultValue="en" className="w-full">
           <TabsList className="mb-4 bg-bengal-mati">
             <TabsTrigger value="en">English</TabsTrigger>
@@ -188,8 +188,8 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
         </Tabs>
       </div>
 
-      <div className="bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-5">
-        <h3 className="font-editorial text-xl text-bengal-kajal">Settings & Schedule</h3>
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4 md:gap-5">
+        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Settings & Schedule</h3>
 
         <BengalInput
           label="CTA URL"

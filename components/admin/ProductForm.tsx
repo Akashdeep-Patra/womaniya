@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { CameraUpload } from './CameraUpload';
+import { TagInput } from './TagInput';
 import { BengalButton, BengalInput } from '@/components/bengal';
 import { FormTextarea, FormSelect } from './FormField';
 import { createProduct, updateProduct } from '@/actions/products';
@@ -33,6 +34,13 @@ const productFormSchema = z.object({
     .transform((v) => v === true || v === 'on')
     .default(false),
   image_uploaded_url: z.string().min(1, 'Primary image is required'),
+  fabric: z.string().optional().or(z.literal('')),
+  weight: z.string().optional().or(z.literal('')),
+  care_instructions: z.string().optional().or(z.literal('')),
+  origin: z.string().optional().or(z.literal('')),
+  sku: z.string().optional().or(z.literal('')),
+  stock_status: z.enum(['in_stock', 'low_stock', 'made_to_order', 'out_of_stock']).default('in_stock'),
+  delivery_info: z.string().optional().or(z.literal('')),
 });
 
 type ProductFormValues = z.infer<typeof productFormSchema>;
@@ -51,6 +59,15 @@ type ProductFormProps = {
     status?: string | null;
     is_featured?: boolean | null;
     image_url?: string | null;
+    sizes?: string[] | null;
+    colors?: string[] | null;
+    fabric?: string | null;
+    weight?: string | null;
+    care_instructions?: string | null;
+    origin?: string | null;
+    sku?: string | null;
+    stock_status?: string | null;
+    delivery_info?: string | null;
     collectionLinks?: { collection_id: number }[];
   };
   initialImages?: { image_url: string }[];
@@ -68,6 +85,8 @@ export function ProductForm({ initialData, initialImages, categories, collection
   const [selectedCollections, setSelectedCollections] = useState<number[]>(
     initialData?.collectionLinks?.map((c) => c.collection_id) || []
   );
+  const [sizes, setSizes] = useState<string[]>(initialData?.sizes || []);
+  const [colors, setColors] = useState<string[]>(initialData?.colors || []);
   const [apiError, setApiError] = useState<string | null>(null);
 
   const [isPending, startTransition] = useTransition();
@@ -92,6 +111,13 @@ export function ProductForm({ initialData, initialImages, categories, collection
       status: (initialData?.status as ProductFormValues['status']) ?? 'draft',
       is_featured: initialData?.is_featured ?? false,
       image_uploaded_url: initialData?.image_url ?? '',
+      fabric: initialData?.fabric ?? '',
+      weight: initialData?.weight ?? '',
+      care_instructions: initialData?.care_instructions ?? '',
+      origin: initialData?.origin ?? '',
+      sku: initialData?.sku ?? '',
+      stock_status: (initialData?.stock_status as ProductFormValues['stock_status']) ?? 'in_stock',
+      delivery_info: initialData?.delivery_info ?? '',
     },
   });
 
@@ -104,7 +130,11 @@ export function ProductForm({ initialData, initialImages, categories, collection
   };
 
   const handleAdditionalUpload = (url: string) => {
-    setAdditionalImages((prev) => [...prev, url]);
+    if (url) setAdditionalImages((prev) => [...prev, url]);
+  };
+
+  const handleAdditionalUploadMultiple = (urls: string[]) => {
+    setAdditionalImages((prev) => [...prev, ...urls]);
   };
 
   const removeAdditionalImage = (index: number) => {
@@ -134,6 +164,17 @@ export function ProductForm({ initialData, initialImages, categories, collection
     formData.set('is_featured', data.is_featured ? 'on' : '');
     formData.set('image_uploaded_url', primaryImage);
 
+    if (data.fabric) formData.set('fabric', data.fabric);
+    if (data.weight) formData.set('weight', data.weight);
+    if (data.care_instructions) formData.set('care_instructions', data.care_instructions);
+    if (data.origin) formData.set('origin', data.origin);
+    if (data.sku) formData.set('sku', data.sku);
+    formData.set('stock_status', data.stock_status);
+    if (data.delivery_info) formData.set('delivery_info', data.delivery_info);
+
+    sizes.forEach((s) => formData.append('sizes', s));
+    colors.forEach((c) => formData.append('colors', c));
+
     additionalImages.forEach((img) => formData.append('additional_images', img));
     selectedCollections.forEach((id) => formData.append('collection_ids', id.toString()));
 
@@ -157,10 +198,19 @@ export function ProductForm({ initialData, initialImages, categories, collection
             status: 'draft',
             is_featured: false,
             image_uploaded_url: '',
+            fabric: '',
+            weight: '',
+            care_instructions: '',
+            origin: '',
+            sku: '',
+            stock_status: 'in_stock',
+            delivery_info: '',
           });
           setPrimaryImage('');
           setAdditionalImages([]);
           setSelectedCollections([]);
+          setSizes([]);
+          setColors([]);
         }
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Error publishing';
@@ -176,7 +226,7 @@ export function ProductForm({ initialData, initialImages, categories, collection
     }`;
 
   return (
-    <form onSubmit={rhfHandleSubmit(onSubmit)} className="flex flex-col gap-8 pb-12">
+    <form onSubmit={rhfHandleSubmit(onSubmit)} className="flex flex-col gap-5 md:gap-8 pb-12">
       {apiError && (
         <div
           role="alert"
@@ -187,8 +237,8 @@ export function ProductForm({ initialData, initialImages, categories, collection
       )}
 
       {/* ─── Media Section ─── */}
-      <div className="bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20">
-        <h3 className="font-editorial text-xl mb-4 text-bengal-kajal">Media</h3>
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
+        <h3 className="font-editorial text-lg md:text-xl mb-3 md:mb-4 text-bengal-kajal">Media</h3>
 
         <div className="flex flex-col gap-6">
           <div>
@@ -217,23 +267,28 @@ export function ProductForm({ initialData, initialImages, categories, collection
                 <Reorder.Item
                   key={url}
                   value={url}
-                  className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-bengal-mati border border-bengal-kansa/30 group"
+                  className="relative w-24 h-24 shrink-0 rounded-lg overflow-hidden bg-bengal-mati border border-bengal-kansa/30 group"
                 >
                   <img src={url} alt="Additional" className="object-cover w-full h-full" />
                   <button
                     type="button"
                     onClick={() => removeAdditionalImage(i)}
-                    className="absolute top-1 right-1 w-6 h-6 bg-bengal-kajal/80 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute -top-0.5 -right-0.5 w-8 h-8 bg-bengal-kajal/80 text-white rounded-full flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-manipulation"
                   >
-                    <X size={12} />
+                    <X size={14} />
                   </button>
-                  <div className="absolute bottom-1 left-1 w-6 h-6 bg-bengal-kajal/50 text-white rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-grab">
-                    <GripVertical size={12} />
+                  <div className="absolute bottom-0.5 left-0.5 w-7 h-7 bg-bengal-kajal/50 text-white rounded flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation">
+                    <GripVertical size={14} />
                   </div>
                 </Reorder.Item>
               ))}
-              <div className="w-24 h-24 flex-shrink-0">
-                <CameraUpload onUpload={handleAdditionalUpload} compact />
+              <div className="w-24 h-24 shrink-0">
+                <CameraUpload
+                  onUpload={handleAdditionalUpload}
+                  onUploadMultiple={handleAdditionalUploadMultiple}
+                  compact
+                  multiple
+                />
               </div>
             </Reorder.Group>
           </div>
@@ -241,9 +296,9 @@ export function ProductForm({ initialData, initialImages, categories, collection
       </div>
 
       {/* ─── Basic Info (Bilingual) ─── */}
-      <div className="bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-editorial text-xl text-bengal-kajal">Information</h3>
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
+        <div className="flex items-center justify-between mb-3 md:mb-4">
+          <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Information</h3>
         </div>
 
         <Tabs defaultValue="en" className="w-full">
@@ -306,8 +361,8 @@ export function ProductForm({ initialData, initialImages, categories, collection
       </div>
 
       {/* ─── Organization ─── */}
-      <div className="bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-5">
-        <h3 className="font-editorial text-xl text-bengal-kajal">Organization & Pricing</h3>
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4 md:gap-5">
+        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Organization & Pricing</h3>
 
         <BengalInput
           label={t('form_price')}
@@ -344,7 +399,7 @@ export function ProductForm({ initialData, initialImages, categories, collection
                 key={col.id}
                 type="button"
                 onClick={() => toggleCollection(col.id)}
-                className={`px-3 py-1.5 text-xs rounded-full border transition-colors ${
+                className={`px-4 py-2.5 text-xs rounded-full border transition-colors min-h-[44px] touch-manipulation ${
                   selectedCollections.includes(col.id)
                     ? 'bg-bengal-kansa text-bengal-kori border-bengal-kansa'
                     : 'bg-transparent text-bengal-kajal border-bengal-kansa/30 hover:border-bengal-kansa'
@@ -374,6 +429,74 @@ export function ProductForm({ initialData, initialImages, categories, collection
           </div>
           <span className="text-sm text-bengal-kajal">{t('form_featured')}</span>
         </label>
+      </div>
+
+      {/* ─── Properties ─── */}
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4 md:gap-5">
+        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Properties</h3>
+
+        <TagInput
+          label="Sizes"
+          tags={sizes}
+          onChange={setSizes}
+          placeholder="Type size and press Enter (e.g. S, M, L)"
+        />
+
+        <TagInput
+          label="Colors"
+          tags={colors}
+          onChange={setColors}
+          placeholder="Type color and press Enter (e.g. Red, Gold)"
+        />
+
+        <BengalInput
+          label="Fabric"
+          {...register('fabric')}
+          placeholder="e.g. Pure Silk"
+          error={errors.fabric?.message}
+        />
+
+        <BengalInput
+          label="Weight"
+          {...register('weight')}
+          placeholder="e.g. 450g"
+          error={errors.weight?.message}
+        />
+
+        <BengalInput
+          label="Care Instructions"
+          {...register('care_instructions')}
+          placeholder="e.g. Dry clean only"
+          error={errors.care_instructions?.message}
+        />
+
+        <BengalInput
+          label="Origin"
+          {...register('origin')}
+          placeholder="e.g. Murshidabad, West Bengal"
+          error={errors.origin?.message}
+        />
+
+        <BengalInput
+          label="SKU"
+          {...register('sku')}
+          placeholder="e.g. WMN-DJ-001"
+          error={errors.sku?.message}
+        />
+
+        <FormSelect label="Stock Status" {...register('stock_status')} error={errors.stock_status?.message}>
+          <option value="in_stock">In Stock</option>
+          <option value="low_stock">Low Stock</option>
+          <option value="made_to_order">Made to Order</option>
+          <option value="out_of_stock">Out of Stock</option>
+        </FormSelect>
+
+        <BengalInput
+          label="Delivery Info"
+          {...register('delivery_info')}
+          placeholder="e.g. Ships in 3-5 business days"
+          error={errors.delivery_info?.message}
+        />
       </div>
 
       {/* ─── Submit ─── */}

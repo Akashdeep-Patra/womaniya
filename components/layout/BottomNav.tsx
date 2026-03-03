@@ -29,9 +29,10 @@ import { useTheme } from 'next-themes';
 
 interface BottomNavProps {
   categories?: Category[];
+  waNumber?: string;
 }
 
-export function BottomNav({ categories: dbCategories }: BottomNavProps) {
+export function BottomNav({ categories: dbCategories, waNumber }: BottomNavProps) {
   const t = useTranslations('nav');
   const pathname = usePathname();
   const params = useParams();
@@ -244,7 +245,7 @@ export function BottomNav({ categories: dbCategories }: BottomNavProps) {
                     {isBn ? 'যোগাযোগ' : 'Support'}
                   </h4>
                   <div className="space-y-4">
-                    <a href={generalEnquiryUrl(locale)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-bengal-kajal/80">
+                    <a href={generalEnquiryUrl(locale, waNumber)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-bengal-kajal/80">
                       <MessageCircle size={18} strokeWidth={2} className="drop-shadow-sm fill-bengal-kajal/5" />
                       <span className={`text-sm ${isBn ? 'font-bengali' : 'font-sans-en font-light'}`}>
                         {isBn ? 'হোয়াটসঅ্যাপ করুন' : 'WhatsApp Us'}
@@ -252,7 +253,7 @@ export function BottomNav({ categories: dbCategories }: BottomNavProps) {
                     </a>
                     <div className="flex items-center gap-3 text-bengal-kajal/80">
                       <Phone size={18} strokeWidth={2} className="drop-shadow-sm fill-bengal-kajal/5" />
-                      <span className="text-sm font-sans-en font-light">+91 91431 61829</span>
+                      <span className="text-sm font-sans-en font-light">+{waNumber ?? '919143161829'}</span>
                     </div>
                     <div className="flex items-center gap-3 text-bengal-kajal/80">
                       <MapPin size={18} strokeWidth={2} className="drop-shadow-sm fill-bengal-kajal/5" />

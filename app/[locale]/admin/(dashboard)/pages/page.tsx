@@ -1,6 +1,6 @@
 import { setRequestLocale } from 'next-intl/server';
 import { getTranslations }  from 'next-intl/server';
-import { getAllPages } from '@/actions/pages';
+import { getNonStoryPages } from '@/actions/pages';
 import { PageTableClient } from '@/components/admin/PageTableClient';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
@@ -12,8 +12,8 @@ export default async function PagesIndex({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'admin' });
 
-  let allPages: Awaited<ReturnType<typeof getAllPages>> = [];
-  try { allPages = await getAllPages(); } catch { /* dev */ }
+  let allPages: Awaited<ReturnType<typeof getNonStoryPages>> = [];
+  try { allPages = await getNonStoryPages(); } catch { /* dev */ }
 
   return (
     <div className="px-4 md:px-8 py-8 max-w-7xl mx-auto">

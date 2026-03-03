@@ -23,21 +23,21 @@ export function AdminTopBar({ userName }: { userName?: string | null }) {
         {crumbs.map((crumb, i) => (
           <span key={i} className="flex items-center gap-2">
             <span className="text-[#1A1918]/20">/</span>
-            <span className="text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/70 capitalize">
+            <span className="text-[10px] tracking-[0.15em] text-[#1A1918]/70 capitalize">
               {crumb}
             </span>
           </span>
         ))}
       </div>
 
-      <div className="flex items-center gap-2">
-        <button className="w-9 h-9 flex items-center justify-center rounded-md hover:bg-[#1A1918]/5 text-[#1A1918]/40 transition-colors">
-          <Search size={16} />
+      <div className="flex items-center gap-1">
+        <button className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-[#1A1918]/5 text-[#1A1918]/40 transition-colors touch-manipulation">
+          <Search size={18} />
         </button>
-        <button className="w-9 h-9 flex items-center justify-center rounded-md hover:bg-[#1A1918]/5 text-[#1A1918]/40 transition-colors relative">
-          <Bell size={16} />
+        <button className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-[#1A1918]/5 text-[#1A1918]/40 transition-colors relative touch-manipulation">
+          <Bell size={18} />
         </button>
-        <div className="w-8 h-8 rounded-full bg-[#8A1C14]/15 flex items-center justify-center ml-1">
+        <div className="w-9 h-9 rounded-full bg-[#8A1C14]/15 flex items-center justify-center ml-0.5">
           <span className="font-editorial text-sm text-[#8A1C14]">
             {userName?.[0] ?? 'W'}
           </span>

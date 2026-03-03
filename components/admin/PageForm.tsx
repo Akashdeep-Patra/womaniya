@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useEffect } from 'react';
+import { useState, useTransition } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -12,6 +12,8 @@ import { FormTextarea, FormSelect } from './FormField';
 import { createPage, updatePage } from '@/actions/pages';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SectionComposer, SectionData } from './SectionComposer';
+import { X, GripVertical } from 'lucide-react';
+import { Reorder } from 'framer-motion';
 
 const pageFormSchema = z.object({
   title_en: z.string().min(2, 'Title must be at least 2 characters').max(120),
@@ -20,7 +22,6 @@ const pageFormSchema = z.object({
   seo_description_en: z.string().max(300).optional().or(z.literal('')),
   page_type: z.enum(['static', 'story', 'landing']).default('static'),
   status: z.enum(['draft', 'published', 'archived']).default('draft'),
-  hero_image_url: z.string().optional().or(z.literal('')),
 });
 
 type PageFormValues = z.infer<typeof pageFormSchema>;
@@ -34,15 +35,26 @@ type PageFormProps = {
     seo_description_en?: string | null;
     page_type?: string | null;
     status?: string | null;
+    images?: string[] | null;
     hero_image_url?: string | null;
     sections?: { id: number; section_type: string; content_json: unknown }[];
   };
   locale: string;
+  basePath?: string;
+  defaultPageType?: 'static' | 'story' | 'landing';
 };
 
-export function PageForm({ initialData, locale }: PageFormProps) {
+function resolveInitialImages(data?: PageFormProps['initialData']): string[] {
+  if (!data) return [];
+  const fromArray = (data.images as string[] | null) ?? [];
+  if (fromArray.length > 0) return fromArray;
+  if (data.hero_image_url) return [data.hero_image_url];
+  return [];
+}
+
+export function PageForm({ initialData, locale, basePath = 'pages', defaultPageType = 'static' }: PageFormProps) {
   const router = useRouter();
-  const [heroImage, setHeroImage] = useState(initialData?.hero_image_url || '');
+  const [images, setImages] = useState<string[]>(resolveInitialImages(initialData));
   const [apiError, setApiError] = useState<string | null>(null);
 
   const initialSections: SectionData[] =
@@ -59,7 +71,6 @@ export function PageForm({ initialData, locale }: PageFormProps) {
     register,
     handleSubmit: rhfHandleSubmit,
     formState: { errors },
-    setValue,
   } = useForm<PageFormValues>({
     resolver: zodResolver(pageFormSchema) as Resolver<PageFormValues>,
     defaultValues: {
@@ -67,15 +78,10 @@ export function PageForm({ initialData, locale }: PageFormProps) {
       title_bn: initialData?.title_bn ?? '',
       seo_title_en: initialData?.seo_title_en ?? '',
       seo_description_en: initialData?.seo_description_en ?? '',
-      page_type: (initialData?.page_type as PageFormValues['page_type']) ?? 'static',
+      page_type: (initialData?.page_type as PageFormValues['page_type']) ?? defaultPageType,
       status: (initialData?.status as PageFormValues['status']) ?? 'draft',
-      hero_image_url: initialData?.hero_image_url ?? '',
     },
   });
-
-  useEffect(() => {
-    setValue('hero_image_url', heroImage);
-  }, [heroImage, setValue]);
 
   const onSubmit = (data: PageFormValues) => {
     setApiError(null);
@@ -86,7 +92,7 @@ export function PageForm({ initialData, locale }: PageFormProps) {
     if (data.seo_description_en) formData.set('seo_description_en', data.seo_description_en);
     formData.set('page_type', data.page_type);
     formData.set('status', data.status);
-    formData.set('hero_image_url', heroImage);
+    images.forEach((img) => formData.append('images', img));
 
     const sectionsJson = JSON.stringify(
       sections.map((s) => ({ type: s.type, content: s.content }))
@@ -101,7 +107,7 @@ export function PageForm({ initialData, locale }: PageFormProps) {
           await createPage(formData, sectionsJson);
           toast.success('Page created successfully');
         }
-        router.push(`/${locale}/admin/pages`);
+        router.push(`/${locale}/admin/${basePath}`);
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Error saving page';
         setApiError(message);
@@ -116,7 +122,7 @@ export function PageForm({ initialData, locale }: PageFormProps) {
     }`;
 
   return (
-    <form onSubmit={rhfHandleSubmit(onSubmit)} className="flex flex-col gap-8 pb-12">
+    <form onSubmit={rhfHandleSubmit(onSubmit)} className="flex flex-col gap-5 md:gap-8 pb-12">
       {apiError && (
         <div
           role="alert"
@@ -127,7 +133,7 @@ export function PageForm({ initialData, locale }: PageFormProps) {
       )}
 
       {/* ─── Basic Info ─── */}
-      <div className="bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20">
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
         <Tabs defaultValue="en" className="w-full">
           <TabsList className="mb-4 bg-bengal-mati">
             <TabsTrigger value="en">English</TabsTrigger>
@@ -167,9 +173,9 @@ export function PageForm({ initialData, locale }: PageFormProps) {
         </Tabs>
       </div>
 
-      {/* ─── Layout & Media ─── */}
-      <div className="bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="flex flex-col gap-4">
+      {/* ─── Layout, Media & Settings ─── */}
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormSelect label="Page Type" {...register('page_type')}>
             <option value="static">Static Page</option>
             <option value="story">Story / Editorial</option>
@@ -183,16 +189,55 @@ export function PageForm({ initialData, locale }: PageFormProps) {
         </div>
 
         <div>
-          <label className="text-[10px] tracking-widest uppercase font-medium text-bengal-kajal/70 font-sans-en block mb-2">
-            Featured / Hero Image
-          </label>
-          <CameraUpload onUpload={setHeroImage} initialUrl={heroImage} />
+          <h4 className="font-editorial text-base mb-1 text-bengal-kajal">Images</h4>
+          <p className="text-bengal-kajal/40 text-xs mb-3">
+            First image is the hero/cover. Add more for a carousel.
+          </p>
+          <Reorder.Group
+            axis="x"
+            values={images}
+            onReorder={setImages}
+            className="flex gap-3 overflow-x-auto pb-4"
+          >
+            {images.map((url, i) => (
+              <Reorder.Item
+                key={url}
+                value={url}
+                className="relative w-28 h-20 shrink-0 rounded-lg overflow-hidden bg-bengal-mati border border-bengal-kansa/30 group"
+              >
+                <img src={url} alt={`Image ${i + 1}`} className="object-cover w-full h-full" />
+                {i === 0 && (
+                  <span className="absolute top-1 left-1 text-[8px] tracking-wider uppercase bg-bengal-sindoor text-white px-1.5 py-0.5 rounded-sm font-sans-en">
+                    Cover
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setImages((prev) => prev.filter((_, idx) => idx !== i))}
+                  className="absolute -top-0.5 -right-0.5 w-8 h-8 bg-bengal-kajal/80 text-white rounded-full flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-manipulation"
+                >
+                  <X size={14} />
+                </button>
+                <div className="absolute bottom-0.5 left-0.5 w-7 h-7 bg-bengal-kajal/50 text-white rounded flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation">
+                  <GripVertical size={14} />
+                </div>
+              </Reorder.Item>
+            ))}
+            <div className="w-28 h-20 shrink-0">
+              <CameraUpload
+                onUpload={(url) => { if (url) setImages((prev) => [...prev, url]); }}
+                onUploadMultiple={(urls) => setImages((prev) => [...prev, ...urls])}
+                compact
+                multiple
+              />
+            </div>
+          </Reorder.Group>
         </div>
       </div>
 
       {/* ─── Section Composer ─── */}
-      <div className="bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20">
-        <h3 className="font-editorial text-xl mb-4 text-bengal-kajal">Page Content Blocks</h3>
+      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
+        <h3 className="font-editorial text-lg md:text-xl mb-3 md:mb-4 text-bengal-kajal">Page Content Blocks</h3>
         <SectionComposer sections={sections} onChange={setSections} />
       </div>
 

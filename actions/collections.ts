@@ -11,7 +11,7 @@ const CollectionSchema = z.object({
   name_bn:            z.string().max(120).optional(),
   description_en:     z.string().max(2000).optional(),
   description_bn:     z.string().max(2000).optional(),
-  hero_image_url:     z.string().url().optional().or(z.literal('')),
+  carousel_images:    z.array(z.string().url()).default([]),
   seo_title_en:       z.string().max(120).optional(),
   seo_title_bn:       z.string().max(120).optional(),
   seo_description_en: z.string().max(300).optional(),
@@ -67,12 +67,13 @@ export async function getCollectionById(id: number) {
 }
 
 export async function createCollection(formData: FormData) {
+  const carouselRaw = formData.getAll('carousel_images') as string[];
   const raw = {
     name_en:            formData.get('name_en') as string,
     name_bn:            (formData.get('name_bn') as string) || undefined,
     description_en:     (formData.get('description_en') as string) || undefined,
     description_bn:     (formData.get('description_bn') as string) || undefined,
-    hero_image_url:     (formData.get('hero_image_url') as string) || undefined,
+    carousel_images:    carouselRaw.filter(Boolean),
     seo_title_en:       (formData.get('seo_title_en') as string) || undefined,
     seo_title_bn:       (formData.get('seo_title_bn') as string) || undefined,
     seo_description_en: (formData.get('seo_description_en') as string) || undefined,
@@ -95,7 +96,8 @@ export async function createCollection(formData: FormData) {
     name_bn:            data.name_bn ?? null,
     description_en:     data.description_en ?? null,
     description_bn:     data.description_bn ?? null,
-    hero_image_url:     data.hero_image_url || null,
+    hero_image_url:     data.carousel_images[0] ?? null,
+    carousel_images:    data.carousel_images,
     seo_title_en:       data.seo_title_en ?? null,
     seo_title_bn:       data.seo_title_bn ?? null,
     seo_description_en: data.seo_description_en ?? null,
@@ -124,12 +126,13 @@ export async function createCollection(formData: FormData) {
 }
 
 export async function updateCollection(id: number, formData: FormData) {
+  const carouselRaw = formData.getAll('carousel_images') as string[];
   const raw = {
     name_en:            formData.get('name_en') as string,
     name_bn:            (formData.get('name_bn') as string) || undefined,
     description_en:     (formData.get('description_en') as string) || undefined,
     description_bn:     (formData.get('description_bn') as string) || undefined,
-    hero_image_url:     (formData.get('hero_image_url') as string) || undefined,
+    carousel_images:    carouselRaw.filter(Boolean),
     seo_title_en:       (formData.get('seo_title_en') as string) || undefined,
     seo_title_bn:       (formData.get('seo_title_bn') as string) || undefined,
     seo_description_en: (formData.get('seo_description_en') as string) || undefined,
@@ -150,7 +153,8 @@ export async function updateCollection(id: number, formData: FormData) {
     name_bn:            data.name_bn ?? null,
     description_en:     data.description_en ?? null,
     description_bn:     data.description_bn ?? null,
-    hero_image_url:     data.hero_image_url || null,
+    hero_image_url:     data.carousel_images[0] ?? null,
+    carousel_images:    data.carousel_images,
     seo_title_en:       data.seo_title_en ?? null,
     seo_title_bn:       data.seo_title_bn ?? null,
     seo_description_en: data.seo_description_en ?? null,

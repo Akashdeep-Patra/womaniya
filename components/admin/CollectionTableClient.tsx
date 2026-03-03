@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Trash2, Edit } from 'lucide-react';
 import { toast } from 'sonner';
 import { deleteCollection } from '@/actions/collections';
-import { EntityTable, Column } from './EntityTable';
+import { EntityTable, Column, MobileCardConfig } from './EntityTable';
 import { StatusPill } from './StatusPill';
 import { BengalBadge } from '@/components/bengal';
 import type { Collection } from '@/db/schema';
@@ -39,16 +39,18 @@ export function CollectionTableClient({ initialCollections, locale }: { initialC
     router.push(`/${locale}/admin/collections/${id}/edit`);
   };
 
+  const getImage = (c: Collection) => ((c.carousel_images as string[] | null) ?? [])[0];
+
   const columns: Column<Collection>[] = [
     {
       key: 'image',
       header: 'Collection',
       render: (c) => (
         <div className="flex items-center gap-3">
-          {c.hero_image_url ? (
-            <div className="relative w-16 h-10 flex-shrink-0 rounded-sm overflow-hidden bg-bengal-mati">
+          {getImage(c) ? (
+            <div className="relative w-16 h-10 shrink-0 rounded-sm overflow-hidden bg-bengal-mati">
               <Image
-                src={c.hero_image_url}
+                src={getImage(c)!}
                 alt={c.name_en}
                 fill
                 className="object-cover"
@@ -56,7 +58,7 @@ export function CollectionTableClient({ initialCollections, locale }: { initialC
               />
             </div>
           ) : (
-            <div className="w-16 h-10 flex-shrink-0 rounded-sm bg-bengal-mati border border-bengal-kansa/20 flex items-center justify-center text-[10px] text-bengal-kajal/30 uppercase tracking-widest">
+            <div className="w-16 h-10 shrink-0 rounded-sm bg-bengal-mati border border-bengal-kansa/20 flex items-center justify-center text-[10px] text-bengal-kajal/30 uppercase tracking-widest">
               No Img
             </div>
           )}
@@ -78,20 +80,20 @@ export function CollectionTableClient({ initialCollections, locale }: { initialC
       key: 'actions',
       header: '',
       render: (c) => (
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end gap-1">
           <button
             onClick={(e) => {
               e.stopPropagation();
               handleEdit(c.id);
             }}
-            className="p-2 text-bengal-kajal/40 hover:text-bengal-kajal transition-colors"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center text-bengal-kajal/40 hover:text-bengal-kajal transition-colors"
           >
             <Edit size={16} />
           </button>
           <button
             onClick={(e) => handleDelete(e, c.id)}
             disabled={isPending && pending === c.id}
-            className="p-2 text-bengal-kajal/40 hover:text-bengal-alta transition-colors disabled:opacity-40"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center text-bengal-kajal/40 hover:text-bengal-alta transition-colors disabled:opacity-40"
           >
             {isPending && pending === c.id ? (
               <span className="block w-4 h-4 border-2 border-bengal-alta border-t-transparent rounded-full animate-spin" />
@@ -104,6 +106,52 @@ export function CollectionTableClient({ initialCollections, locale }: { initialC
     },
   ];
 
+  const mobileCard: MobileCardConfig<Collection> = {
+    leading: (c) => {
+      const img = getImage(c);
+      return img ? (
+        <div className="relative w-11 h-11 rounded-lg overflow-hidden bg-bengal-mati">
+          <Image src={img} alt={c.name_en} fill className="object-cover" sizes="44px" />
+        </div>
+      ) : (
+        <div className="w-11 h-11 rounded-lg bg-bengal-mati border border-bengal-kansa/20 flex items-center justify-center text-[8px] text-bengal-kajal/30 uppercase">
+          N/A
+        </div>
+      );
+    },
+    title: (c) => c.name_en,
+    subtitle: (c) => (
+      <div className="flex items-center gap-2">
+        <StatusPill status={c.status || 'draft'} />
+        {c.is_featured && <BengalBadge variant="kansa" className="text-[8px]">Featured</BengalBadge>}
+      </div>
+    ),
+    actions: (c) => (
+      <>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleEdit(c.id);
+          }}
+          className="w-10 h-10 flex items-center justify-center rounded-lg text-bengal-kajal/40 hover:text-bengal-kajal active:bg-bengal-mati transition-colors touch-manipulation"
+        >
+          <Edit size={15} />
+        </button>
+        <button
+          onClick={(e) => handleDelete(e, c.id)}
+          disabled={isPending && pending === c.id}
+          className="w-10 h-10 flex items-center justify-center rounded-lg text-bengal-kajal/40 hover:text-bengal-alta active:bg-bengal-alta/10 transition-colors disabled:opacity-40 touch-manipulation"
+        >
+          {isPending && pending === c.id ? (
+            <span className="block w-4 h-4 border-2 border-bengal-alta border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <Trash2 size={15} />
+          )}
+        </button>
+      </>
+    ),
+  };
+
   return (
     <div className="bg-bengal-kori/50 rounded-2xl border border-bengal-kansa/20 overflow-hidden">
       <EntityTable
@@ -112,6 +160,7 @@ export function CollectionTableClient({ initialCollections, locale }: { initialC
         keyExtractor={(c) => c.id}
         onRowClick={(c) => handleEdit(c.id)}
         emptyMessage="No collections yet. Create your first collection!"
+        mobileCard={mobileCard}
       />
     </div>
   );

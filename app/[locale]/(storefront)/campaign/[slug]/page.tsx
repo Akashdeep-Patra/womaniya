@@ -63,8 +63,8 @@ export default async function CampaignPage({ params }: Props) {
         {campaign.banners && campaign.banners.length > 0 && (
           <div className="grid gap-8">
             {campaign.banners.map(b => (
-              <div key={b.id} className="relative w-full aspect-[21/9] md:aspect-[3/1] rounded-2xl overflow-hidden shadow-lg">
-                <Image src={b.image_url} alt={b.title_en || 'Campaign Banner'} fill className="object-cover" />
+              <div key={b.id} className="relative w-full aspect-21/9 md:aspect-3/1 rounded-2xl overflow-hidden shadow-lg">
+                <Image src={((b.images as string[] | null) ?? [])[0] || b.image_url || ''} alt={b.title_en || 'Campaign Banner'} fill className="object-cover" />
               </div>
             ))}
           </div>
