@@ -49,11 +49,8 @@ export default async function AboutPage({ params }: Props) {
   ];
 
   return (
-    <>
-      <Header />
-
-      <main className="pt-28 md:pt-32 pb-32 md:pb-16 min-h-screen">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+    <main className="pt-28 md:pt-32 pb-32 md:pb-16 min-h-screen">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
 
           {/* Badge */}
           <p className="text-[10px] tracking-[0.3em] uppercase text-bengal-kansa font-sans-en mb-4">
@@ -137,9 +134,5 @@ export default async function AboutPage({ params }: Props) {
 
         <WhatsAppSection />
       </main>
-
-      <Footer />
-      <BottomNav />
-    </>
   );
 }

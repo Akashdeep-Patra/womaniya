@@ -5,6 +5,9 @@ import Lenis from '@studio-freight/lenis';
 
 export function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
+    // Skip Lenis on touch devices — native momentum scroll is smoother
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -18,9 +21,6 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
 
     requestAnimationFrame(raf);
 
-    // Sync framer-motion useScroll with Lenis if needed
-    // Framer motion uses native scroll events, so this usually just works.
-    
     return () => {
       lenis.destroy();
     };

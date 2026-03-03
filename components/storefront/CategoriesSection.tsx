@@ -27,9 +27,10 @@ const FALLBACK_BGS = [
 
 interface Props {
   categories: Category[];
+  isCompact?: boolean;
 }
 
-export function CategoriesSection({ categories }: Props) {
+export function CategoriesSection({ categories, isCompact = false }: Props) {
   const params      = useParams();
   const locale      = params.locale as string;
   const isBn        = locale === 'bn';
@@ -43,19 +44,22 @@ export function CategoriesSection({ categories }: Props) {
       {/* Header */}
       <div className="px-4 sm:px-6 max-w-7xl mx-auto mb-6 md:mb-8 flex items-center justify-between">
         <div>
-          <p className="text-[10px] tracking-[0.28em] uppercase text-bengal-kansa/80 mb-1.5 font-sans-en">
+          <p className="text-[10px] tracking-[0.28em] uppercase text-accent mb-1.5 font-sans-en">
             {isBn ? 'কারুকাজ অনুযায়ী' : 'Browse by craft'}
           </p>
-          <h2 className={`font-editorial text-2xl md:text-3xl text-bengal-kajal ${isBn ? 'font-bengali-serif' : ''}`}>
+          <h2 className={`font-editorial text-2xl md:text-3xl text-foreground ${isBn ? 'font-bengali-serif' : ''}`}>
             {isBn ? 'জীবন্ত কারুকাজ' : 'The Living Crafts'}
           </h2>
         </div>
-        <Link
-          href={`/${locale}/shop`}
-          className="text-[11px] tracking-widest uppercase text-bengal-kajal/40 hover:text-bengal-sindoor transition-colors font-sans-en hidden md:block"
-        >
-          All →
-        </Link>
+        {isCompact && (
+          <Link
+            href={`/${locale}/categories`}
+            prefetch={true}
+            className="text-[11px] tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors font-sans-en hidden md:block"
+          >
+            All →
+          </Link>
+        )}
       </div>
 
       {/* Carousel */}
@@ -64,7 +68,7 @@ export function CategoriesSection({ categories }: Props) {
         className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none pl-4 sm:pl-6 pr-4"
         data-lenis-prevent
       >
-        {categories.map((cat, i) => {
+        {(isCompact ? categories.slice(0, 4) : categories).map((cat, i) => {
           const name = isBn && cat.name_bn ? cat.name_bn : cat.name_en;
           const desc = isBn && cat.description_bn ? cat.description_bn : cat.description_en;
           const color = GRADIENT_COLORS[i % GRADIENT_COLORS.length];
@@ -82,6 +86,7 @@ export function CategoriesSection({ categories }: Props) {
             >
               <Link
                 href={`/${locale}/category/${cat.slug}`}
+                prefetch={true}
                 className={`group relative block aspect-3/4 rounded-3xl overflow-hidden ${hasImage ? 'bg-bengal-mati' : fallbackBg}`}
                 data-cursor-expand
               >
@@ -96,10 +101,7 @@ export function CategoriesSection({ categories }: Props) {
                   />
                 ) : (
                   <div className="absolute inset-0 opacity-10">
-                    <div className="absolute inset-0" style={{
-                      backgroundImage: 'repeating-linear-gradient(45deg, currentColor 0, currentColor 1px, transparent 0, transparent 50%)',
-                      backgroundSize: '20px 20px',
-                    }} />
+                    <div className="absolute inset-0 bg-hatch-pattern" />
                   </div>
                 )}
 
@@ -109,18 +111,18 @@ export function CategoriesSection({ categories }: Props) {
                 {/* Content pinned to bottom */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5">
                   {desc && (
-                    <p className="text-bengal-kori/60 text-[10px] tracking-widest uppercase font-sans-en mb-1 line-clamp-1">
+                    <p className="text-white/80 text-[10px] tracking-widest uppercase font-sans-en mb-1 line-clamp-1">
                       {desc.slice(0, 40)}
                     </p>
                   )}
-                  <h3 className={`text-bengal-kori text-xl md:text-2xl font-editorial leading-tight ${isBn ? 'font-bengali-serif' : ''}`}>
+                  <h3 className={`text-white text-xl md:text-2xl font-editorial leading-tight ${isBn ? 'font-bengali-serif' : ''}`}>
                     {name}
                   </h3>
                 </div>
 
                 {/* Hover indicator */}
-                <div className="absolute bottom-4 right-4 w-8 h-8 rounded-full bg-bengal-kori/0 border border-bengal-kori/0 group-hover:bg-bengal-kori/15 group-hover:border-bengal-kori/30 transition-all duration-300 flex items-center justify-center">
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none" className="text-bengal-kori opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute bottom-4 right-4 w-8 h-8 rounded-full bg-white/0 border border-white/0 group-hover:bg-white/15 group-hover:border-white/30 transition-all duration-300 flex items-center justify-center">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none" className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <path d="M1 9L9 1M9 1H3M9 1V7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </div>
@@ -134,23 +136,26 @@ export function CategoriesSection({ categories }: Props) {
 
       {/* Scroll dots — mobile only */}
       <div className="flex justify-center gap-1.5 mt-4 md:hidden">
-        {categories.map((c, i) => (
+        {(isCompact ? categories.slice(0, 4) : categories).map((c, i) => (
           <div
             key={c.id}
-            className={`h-1 rounded-full transition-all duration-300 ${i === 0 ? 'w-5 bg-bengal-sindoor' : 'w-1.5 bg-bengal-kajal/20'}`}
+            className={`h-1 rounded-full transition-all duration-300 ${i === 0 ? 'w-5 bg-primary' : 'w-1.5 bg-border'}`}
           />
         ))}
       </div>
 
       {/* Mobile view-all */}
-      <div className="flex justify-center mt-5 md:hidden">
-        <Link
-          href={`/${locale}/shop`}
-          className="text-[11px] tracking-widest uppercase text-bengal-kajal/50 hover:text-bengal-kajal transition-colors font-sans-en"
-        >
-          {isBn ? 'সব দেখো →' : 'View all crafts →'}
-        </Link>
-      </div>
+      {isCompact && (
+        <div className="flex justify-center mt-5 md:hidden">
+          <Link
+            href={`/${locale}/categories`}
+            prefetch={true}
+            className="text-[11px] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors font-sans-en"
+          >
+            {isBn ? 'সব দেখো →' : 'View all crafts →'}
+          </Link>
+        </div>
+      )}
     </section>
   );
 }

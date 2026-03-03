@@ -48,13 +48,8 @@ export default async function ShopPage({ params }: Props) {
   }
 
   return (
-    <>
-      <Header />
-      <main className="pt-14 md:pt-16">
-        <ShopGrid products={allProducts} categories={dbCategories} />
-      </main>
-      <Footer />
-      <BottomNav categories={dbCategories} />
-    </>
+    <main className="pt-14 md:pt-16">
+      <ShopGrid products={allProducts} categories={dbCategories} />
+    </main>
   );
 }

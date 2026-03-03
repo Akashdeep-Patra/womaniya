@@ -33,9 +33,7 @@ export default async function CollectionsPage({ params }: Props) {
   const isBn = locale === 'bn';
 
   return (
-    <>
-      <Header />
-      <main className="pt-24 pb-20 md:pt-32 min-h-screen px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <main className="pt-24 pb-20 md:pt-32 min-h-screen px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <header className="mb-12 md:mb-16 text-center">
           <h1 className={`text-4xl md:text-5xl text-bengal-kajal mb-4 ${isBn ? 'font-bengali-serif' : 'font-editorial'}`}>
             {isBn ? 'আমাদের সংগ্রহ' : 'Our Collections'}
@@ -93,8 +91,5 @@ export default async function CollectionsPage({ params }: Props) {
           </div>
         )}
       </main>
-      <Footer />
-      <BottomNav />
-    </>
   );
 }

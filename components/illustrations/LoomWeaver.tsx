@@ -1,77 +1,61 @@
 'use client';
 
-import { motion } from 'framer-motion';
+type LoomWeaverProps = {
+  className?: string;
+};
 
-export function LoomWeaver({ className = '' }: { className?: string }) {
-  // A serene, elegant character portrait of a Bengali female weaver.
+export function LoomWeaver({ className = '' }: LoomWeaverProps) {
+  // A modern, elegant, sensual silhouette of a woman weaving
   return (
-    <div className={`relative w-full h-full flex items-center justify-center overflow-visible ${className}`}>
+    <div className={`relative flex h-full w-full items-center justify-center overflow-visible ${className}`}>
       <svg
-        viewBox="0 0 500 600"
+        viewBox="0 0 500 620"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full object-contain drop-shadow-xl"
+        className="h-full w-full object-contain drop-shadow-[0_24px_34px_rgba(26,25,24,0.18)]"
+        aria-hidden="true"
       >
-        <g className="animate-float-medium" style={{ transformOrigin: 'center' }}>
-          {/* Subtle warm backdrop */}
-          <circle cx="250" cy="250" r="200" fill="#EAE1D8" opacity="0.8" />
-
-          {/* Loom Threads (Abstract background element) */}
-          <g opacity="0.3">
-            {[...Array(20)].map((_, i) => (
-              <path key={`thread-${i}`} d={`M ${100 + i * 15} 50 L ${100 + i * 15} 450`} stroke="#A86F45" strokeWidth="2" />
-            ))}
+        <g className="animate-folk-drift-soft origin-[55%_62%]">
+          
+          {/* Abstract, flowing background shape for depth */}
+          <path d="M100 250C100 120, 250 50, 380 150C480 230, 480 400, 380 500C250 600, 80 550, 100 400Z" fill="#F8F3EB" opacity="0.5" />
+          
+          {/* Loom Threads - sleek, modern aesthetic */}
+          <g opacity="0.6">
+            <path d="M 120 100 L 120 500 M 160 100 L 160 500 M 200 100 L 200 500 M 240 100 L 240 500 M 280 100 L 280 500 M 320 100 L 320 500 M 360 100 L 360 500" stroke="#C5A059" strokeWidth="1.5" strokeDasharray="4 6" />
           </g>
 
-          {/* Saree Drape - Green (Handloom tone) */}
-          <path d="M 80 400 C 80 280, 150 250, 200 250 C 300 250, 350 300, 380 450 L 380 600 L 80 600 Z" fill="#2D7A4F" />
+          {/* Sensual female silhouette sitting/leaning into the loom */}
+          {/* Flowing hair and back curve */}
+          <path d="M 350 150 C 400 200, 450 350, 350 550 C 250 580, 200 550, 150 600 C 300 650, 480 550, 450 300 C 430 150, 380 120, 350 150 Z" fill="#1A1918" />
           
-          {/* Saree Gold Border */}
-          <path d="M 90 400 C 90 290, 155 265, 200 265 C 290 265, 340 310, 365 450 L 365 600" fill="none" stroke="#C5A059" strokeWidth="8" />
-
-          {/* Neck and Torso Blouse (Red) */}
-          <path d="M 180 320 C 180 350, 250 350, 280 320 L 280 260 L 180 260 Z" fill="#8A1C14" />
-          <path d="M 190 260 L 190 320 C 190 340, 240 340, 270 320 L 270 260 Z" fill="#C48B58" />
-
-          {/* Hair (Tied up in a neat bun with a wooden hairpin) */}
-          <path d="M 160 250 C 140 150, 200 80, 250 80 C 300 80, 360 150, 340 250 C 350 300, 330 350, 290 300 C 290 200, 210 200, 210 250 C 180 280, 170 300, 160 250 Z" fill="#1A1918" />
-          {/* Hairpin */}
-          <path d="M 330 220 L 370 190" stroke="#8A1C14" strokeWidth="4" strokeLinecap="round" />
-          <circle cx="370" cy="190" r="4" fill="#C5A059" />
-
-          {/* Face Base */}
-          <path d="M 195 160 C 195 100, 305 100, 305 160 C 305 220, 270 270, 250 275 C 230 270, 195 220, 195 160 Z" fill="#C48B58" />
+          {/* Slender neck, sharp profile, and shoulder */}
+          <path d="M 320 180 C 300 160, 260 170, 240 200 C 220 230, 230 260, 250 280 C 270 300, 300 320, 280 380 C 250 450, 200 480, 150 500 C 120 510, 100 550, 120 600 C 200 550, 300 500, 330 400 C 350 350, 360 250, 320 180 Z" fill="#EAE1D8" />
           
-          {/* Eyebrows focused down on the loom */}
-          <path d="M 210 170 Q 230 165, 245 175" fill="none" stroke="#1A1918" strokeWidth="4" strokeLinecap="round" />
-          <path d="M 290 170 Q 270 165, 255 175" fill="none" stroke="#1A1918" strokeWidth="4" strokeLinecap="round" />
+          {/* Delicate hands weaving */}
+          <path d="M 280 380 C 250 380, 200 350, 150 350 C 120 350, 100 380, 120 400 C 150 390, 200 380, 250 400 C 230 420, 180 430, 150 450 C 130 460, 120 490, 150 490 C 180 480, 250 430, 280 380 Z" fill="#D4C5B8" />
+          <path d="M 120 350 C 100 350, 80 360, 90 380 C 100 370, 120 360, 140 370" fill="none" stroke="#D4C5B8" strokeWidth="4" strokeLinecap="round" />
 
-          {/* Eyes (Looking down, peaceful) */}
-          <path d="M 210 190 Q 225 195, 240 190" fill="none" stroke="#1A1918" strokeWidth="3" strokeLinecap="round" />
-          <path d="M 215 192 L 215 196 M 225 193 L 225 197 M 235 192 L 235 196" fill="none" stroke="#1A1918" strokeWidth="1.5" strokeLinecap="round" /> {/* Lashes */}
-
-          <path d="M 290 190 Q 275 195, 260 190" fill="none" stroke="#1A1918" strokeWidth="3" strokeLinecap="round" />
-          <path d="M 285 192 L 285 196 M 275 193 L 275 197 M 265 192 L 265 196" fill="none" stroke="#1A1918" strokeWidth="1.5" strokeLinecap="round" /> {/* Lashes */}
-
-          {/* Bindi (Small, black) */}
-          <circle cx="250" cy="165" r="4" fill="#1A1918" />
-
-          {/* Nose Contour */}
-          <path d="M 250 170 L 250 215 Q 250 220, 245 220" fill="none" stroke="#A86F45" strokeWidth="2" strokeLinecap="round" />
+          {/* Seductive lips and sharp nose silhouette */}
+          <path d="M 240 200 C 230 210, 225 220, 235 225 C 230 230, 225 240, 240 235 Z" fill="#8A1C14" />
           
-          {/* Lips (Subtle, focused) */}
-          <path d="M 240 240 Q 250 238, 260 240" fill="none" stroke="#8A1C14" strokeWidth="3" strokeLinecap="round" />
-
-          {/* Hands holding the shuttle (Front overlay) */}
-          <path d="M 220 600 C 220 500, 180 450, 240 450 C 260 450, 260 480, 240 480 C 220 480, 240 600, 240 600 Z" fill="#C48B58" />
-          <path d="M 280 600 C 280 500, 320 450, 260 450 C 240 450, 240 480, 260 480 C 280 480, 260 600, 260 600 Z" fill="#C48B58" />
+          {/* Flowing sari drape / garment lines */}
+          <path d="M 330 400 C 280 450, 220 520, 150 580" fill="none" stroke="#2D7A4F" strokeWidth="8" strokeLinecap="round" />
+          <path d="M 350 420 C 300 480, 250 540, 200 600" fill="none" stroke="#C5A059" strokeWidth="3" strokeLinecap="round" />
           
-          {/* The Shuttle (Maku) in hands */}
-          <g className="animate-shuttle-fly">
-            <path d="M 180 460 Q 250 440, 320 460 Q 250 480, 180 460 Z" fill="#8A1C14" />
-            <circle cx="250" cy="460" r="5" fill="#C5A059" />
+          {/* Abstract loom shuttle / magic glow at the fingertips */}
+          <g className="animate-folk-glow">
+            <circle cx="150" cy="400" r="15" fill="#FDF8F2" opacity="0.8" />
+            <path d="M 130 400 L 170 400 M 150 380 L 150 420" stroke="#C5A059" strokeWidth="2" strokeLinecap="round" />
+            <circle cx="150" cy="400" r="4" fill="#8A1C14" />
           </g>
 
+          {/* Delicate Zari thread interlacing */}
+          <g className="animate-folk-weave">
+            <path d="M 100 380 C 150 360, 200 420, 250 380" fill="none" stroke="#C5A059" strokeWidth="4" strokeLinecap="round" />
+            <path d="M 120 420 C 170 400, 220 460, 270 420" fill="none" stroke="#8A1C14" strokeWidth="2" strokeLinecap="round" />
+          </g>
+          
         </g>
       </svg>
     </div>

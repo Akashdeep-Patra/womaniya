@@ -36,10 +36,10 @@ export function WhatsAppFloat() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 12 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="fixed bottom-24 right-4 md:bottom-8 md:right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl bg-bengal-kajal/95 backdrop-blur-md text-bengal-kori border border-bengal-kansa/20 shadow-lg hover:shadow-xl transition-shadow duration-200"
+          className="fixed bottom-24 right-4 md:bottom-8 md:right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl bg-card text-card-foreground border border-border shadow-sm hover:shadow-md transition-shadow duration-200"
         >
-          <div className="w-9 h-9 rounded-full bg-[#25D366] flex items-center justify-center flex-shrink-0">
-            <WAIcon size={18} className="text-white flex-shrink-0" />
+          <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+            <WAIcon size={18} className="text-primary-foreground flex-shrink-0" />
           </div>
           <span className={`text-xs font-semibold tracking-wide hidden sm:inline ${locale === 'bn' ? 'font-bengali' : 'font-sans-en'}`}>
             {locale === 'bn' ? 'চ্যাট করুন' : 'Chat'}

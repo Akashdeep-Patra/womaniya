@@ -1,49 +1,48 @@
 'use client';
 
-import { motion } from 'framer-motion';
+type BengalVillageProps = {
+  className?: string;
+};
 
-export function BengalVillage({ className = '' }: { className?: string }) {
-  // A beautiful avatar of a village woman carrying a Kalash (water pot), side profile
+export function BengalVillage({ className = '' }: BengalVillageProps) {
+  // A modern, elegant, aesthetic floral and abstract architectural motif
+  // Representing the Bengal roots but in a very sensual, stylized manner
   return (
-    <div className={`relative w-full h-full flex items-center justify-center overflow-visible ${className}`}>
+    <div className={`relative flex h-full w-full items-center justify-center overflow-visible ${className}`}>
       <svg
         viewBox="0 0 500 600"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full object-contain drop-shadow-lg"
+        className="h-full w-full object-contain drop-shadow-[0_18px_28px_rgba(26,25,24,0.14)]"
+        aria-hidden="true"
       >
-        <g className="animate-float-slow" style={{ transformOrigin: 'center' }}>
+        <g className="animate-folk-drift-soft origin-[50%_58%]">
           
-          {/* Sun setting backdrop */}
-          <circle cx="250" cy="300" r="180" fill="#E63946" opacity="0.1" />
-
-          {/* Body/Saree Drape (White Tant saree with red border) */}
-          <path d="M 150 600 C 150 400, 200 300, 250 300 C 300 300, 350 400, 350 600 Z" fill="#F9F6F0" />
-          <path d="M 150 600 C 150 400, 200 300, 250 300 C 300 300, 350 400, 350 600" fill="none" stroke="#B3241C" strokeWidth="15" strokeLinecap="round" />
-
-          {/* Profile Face (Right facing) */}
-          <path d="M 230 200 C 230 150, 270 150, 270 200 C 270 230, 290 260, 280 280 C 260 300, 240 300, 240 280 C 220 260, 230 230, 230 200 Z" fill="#A86F45" />
-
-          {/* Bindi (Profile) */}
-          <ellipse cx="275" cy="195" rx="2" ry="5" fill="#8A1C14" />
-
-          {/* Eye (Closed/Looking down) */}
-          <path d="M 260 210 Q 265 208, 270 215" fill="none" stroke="#1A1918" strokeWidth="2.5" strokeLinecap="round" />
-
-          {/* Hair Bun */}
-          <circle cx="210" cy="200" r="35" fill="#1A1918" />
-          <path d="M 230 150 C 210 150, 200 180, 230 200" fill="#1A1918" />
-
-          {/* Kalash (Brass Pot) balanced on hip/waist */}
-          <g transform="translate(140, 350)">
-            <path d="M 30 0 C 80 0, 90 80, 50 100 C 10 80, 20 0, 30 0 Z" fill="#C5A059" />
-            <path d="M 20 0 L 80 0 L 70 15 L 30 15 Z" fill="#8A1C14" />
-            {/* Hand supporting pot */}
-            <path d="M 80 80 C 90 60, 110 50, 140 80" fill="none" stroke="#A86F45" strokeWidth="14" strokeLinecap="round" />
-            {/* Bangles */}
-            <path d="M 125 65 L 115 80 M 120 60 L 110 75" fill="none" stroke="#F9F6F0" strokeWidth="4" />
+          {/* Sensual fluid background drop */}
+          <path d="M250 100 C 400 100, 450 250, 400 400 C 350 550, 150 550, 100 400 C 50 250, 100 100, 250 100 Z" fill="#F8F3EB" opacity="0.4" />
+          
+          {/* Abstract floral / lotus blooming, elegant sharp petals */}
+          <g className="animate-folk-glow">
+            <path d="M 250 450 C 200 400, 150 300, 250 200 C 350 300, 300 400, 250 450 Z" fill="#EAE1D8" stroke="#C5A059" strokeWidth="2" />
+            <path d="M 250 450 C 150 420, 100 350, 180 250 C 220 300, 200 400, 250 450 Z" fill="#D4C5B8" />
+            <path d="M 250 450 C 350 420, 400 350, 320 250 C 280 300, 300 400, 250 450 Z" fill="#D4C5B8" />
+            <path d="M 250 420 C 220 380, 200 320, 250 260 C 300 320, 280 380, 250 420 Z" fill="#C5A059" opacity="0.3" />
           </g>
 
+          {/* Flowing river or drape lines, very elegant and sweeping */}
+          <path d="M 80 480 C 150 420, 300 500, 420 400" fill="none" stroke="#2D7A4F" strokeWidth="4" strokeLinecap="round" />
+          <path d="M 120 520 C 200 480, 350 540, 450 460" fill="none" stroke="#C5A059" strokeWidth="2" strokeLinecap="round" strokeDasharray="6 8" />
+
+          {/* A sharp, beautiful temple archway or village roofline abstraction */}
+          <path d="M 180 250 C 220 180, 250 100, 250 100 C 250 100, 280 180, 320 250" fill="none" stroke="#1A1918" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M 220 230 L 250 150 L 280 230" fill="none" stroke="#C5A059" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+          
+          {/* Central jewel / bindi element */}
+          <circle cx="250" cy="350" r="8" fill="#8A1C14" />
+          
+          {/* Sweeping accent lines (like blowing wind or hair) */}
+          <path d="M 320 150 C 380 180, 420 250, 380 320" fill="none" stroke="#1A1918" strokeWidth="3" strokeLinecap="round" />
+          <path d="M 180 150 C 120 180, 80 250, 120 320" fill="none" stroke="#1A1918" strokeWidth="3" strokeLinecap="round" />
         </g>
       </svg>
     </div>

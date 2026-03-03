@@ -4,11 +4,7 @@ import { motion }          from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useParams }       from 'next/navigation';
 import Link                from 'next/link';
-import { AlponaDivider }   from '@/components/illustrations/AlponaDivider';
-import { PaisleyCluster }  from '@/components/illustrations/PaisleyCluster';
-import { AboutWomanAvatar } from '@/components/illustrations/AboutWomanAvatar';
-import { BengalButton }    from '@/components/bengal';
-import { BengalBadge }     from '@/components/bengal';
+import { KanthaStitch }    from '@/components/illustrations/KanthaStitch';
 
 export function AboutSection() {
   const t      = useTranslations('about');
@@ -17,127 +13,93 @@ export function AboutSection() {
   const locale = params.locale as string;
   const isBn   = locale === 'bn';
 
+  const stats = [
+    { num: t('stat_1_num'), label: t('stat_1_label') },
+    { num: t('stat_2_num'), label: t('stat_2_label') },
+    { num: t('stat_3_num'), label: t('stat_3_label') },
+  ];
+
   return (
-    <section id="story" className="bg-bengal-kajal text-bengal-kori overflow-hidden">
-      {/* Decorative top border */}
-      <div className="h-px bg-linear-to-r from-transparent via-bengal-kansa/50 to-transparent" />
+    <section id="story" className="relative bg-card text-card-foreground overflow-hidden border-y border-border">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-28 lg:py-32">
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 md:py-28">
+        {/* ── Section label ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12 md:mb-16"
+        >
+          <p className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground font-sans-en mb-5">
+            {t('badge')}
+          </p>
+          <h2 className={`font-editorial text-3xl md:text-4xl xl:text-5xl leading-tight max-w-2xl mx-auto ${isBn ? 'font-bengali-serif' : ''}`}>
+            {t('title')}
+          </h2>
+          <div className="flex justify-center mt-6">
+            <KanthaStitch color="var(--primary)" width={140} rows={2} className="opacity-30" />
+          </div>
+        </motion.div>
 
-        {/* Mobile layout */}
-        <div className="md:hidden space-y-8">
-          <motion.div
-            initial="hidden" whileInView="show" viewport={{ once: true }}
-            variants={{ hidden:{ opacity:0, y:28 }, show:{ opacity:1, y:0, transition:{ duration:0.7, ease:"easeOut" } } }}
-          >
-            <BengalBadge variant="kansa" className="mb-5">
-              {t('badge')}
-            </BengalBadge>
-            <h2 className={`font-editorial text-3xl leading-tight mb-6 ${isBn ? 'font-bengali-serif' : ''}`}>
-              {t('title')}
-            </h2>
-            <div className={`space-y-4 text-bengal-kori/70 text-sm leading-relaxed ${isBn ? 'font-bengali' : ''}`}>
-              <p>{t('intro')}</p>
-              <p>{t('body_1')}</p>
-              <p>{t('body_2')}</p>
-              <p>{t('body_3')}</p>
+        {/* ── Body text — two column on desktop ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className={`grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 mb-14 md:mb-18 text-muted-foreground text-[15px] md:text-base leading-relaxed ${isBn ? 'font-bengali' : 'font-sans-en font-light'}`}
+        >
+          <div className="space-y-4">
+            <p>{t('intro')}</p>
+            <p>{t('body_1')}</p>
+          </div>
+          <div className="space-y-4">
+            <p>{t('body_2')}</p>
+            <p>{t('body_3')}</p>
+          </div>
+        </motion.div>
+
+        {/* ── Quote ── */}
+        <motion.blockquote
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className={`relative text-center font-editorial text-xl md:text-2xl lg:text-3xl text-primary italic leading-snug max-w-3xl mx-auto mb-14 md:mb-18 ${isBn ? 'font-bengali-serif' : ''}`}
+        >
+          <span className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-px bg-primary/30" />
+          &ldquo;{t('closing')}&rdquo;
+        </motion.blockquote>
+
+        {/* ── Stats strip ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="grid grid-cols-3 gap-6 md:gap-10 max-w-md md:max-w-xl mx-auto mb-12 md:mb-14"
+        >
+          {stats.map((s, i) => (
+            <div key={i} className="text-center">
+              <p className="font-editorial text-3xl md:text-4xl text-foreground leading-none">{s.num}</p>
+              <p className={`text-[10px] md:text-xs text-muted-foreground tracking-widest uppercase mt-2 ${isBn ? 'font-bengali tracking-normal text-xs' : 'font-sans-en'}`}>
+                {s.label}
+              </p>
             </div>
-            <p className={`font-editorial text-bengal-kansa text-lg mt-6 italic ${isBn ? 'font-bengali-serif' : ''}`}>
-              &quot;{t('closing')}&quot;
-            </p>
-          </motion.div>
+          ))}
+        </motion.div>
 
-          {/* Stats */}
-          <motion.div
-            initial="hidden" whileInView="show" viewport={{ once: true }}
-            variants={{ show: { transition: { staggerChildren: 0.1 } } }}
-            className="grid grid-cols-3 gap-4"
+        {/* ── CTA ── */}
+        <div className="text-center">
+          <Link
+            href={`/${locale}/about`}
+            className="inline-flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-muted-foreground hover:text-foreground transition-colors duration-300 font-sans-en font-medium group"
           >
-            {[
-              { num: t('stat_1_num'), label: t('stat_1_label') },
-              { num: t('stat_2_num'), label: t('stat_2_label') },
-              { num: t('stat_3_num'), label: t('stat_3_label') },
-            ].map((s, i) => (
-              <motion.div key={i} variants={{ hidden:{ opacity:0, y:28 }, show:{ opacity:1, y:0, transition:{ duration:0.7, ease:"easeOut" } } }} className="text-center">
-                <p className="font-editorial text-3xl text-bengal-kansa">{s.num}</p>
-                <p className={`text-[10px] text-bengal-kori/50 tracking-wide mt-1 ${isBn ? 'font-bengali text-xs' : 'font-sans-en'}`}>
-                  {s.label}
-                </p>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <Link href={`/${locale}/about`}>
-            <BengalButton variant="zari" size="touch" isBengali={isBn}>
-              {ts('cta')}
-            </BengalButton>
+            <span className="w-8 h-px bg-border group-hover:bg-foreground group-hover:w-12 transition-all duration-300" />
+            {ts('cta')}
+            <span className="w-8 h-px bg-border group-hover:bg-foreground group-hover:w-12 transition-all duration-300" />
           </Link>
-        </div>
-
-        {/* Desktop layout — editorial split */}
-        <div className="hidden md:grid grid-cols-2 gap-16 items-center">
-
-          {/* Left — character avatar panel */}
-          <motion.div
-            initial={{ opacity:0, x:-32 }} whileInView={{ opacity:1, x:0 }} viewport={{ once:true }}
-            className="relative"
-          >
-            {/* Avatar container */}
-            <div className="relative w-full aspect-square rounded-[3rem] overflow-hidden bg-bengal-mati border border-bengal-kansa/20">
-              <AboutWomanAvatar className="absolute inset-0" />
-
-              {/* Floating stat cards */}
-              {[
-                { num: t('stat_1_num'), label: t('stat_1_label'), pos: 'top-8 left-8' },
-                { num: t('stat_2_num'), label: t('stat_2_label'), pos: 'top-8 right-8' },
-                { num: t('stat_3_num'), label: t('stat_3_label'), pos: 'bottom-8 left-1/2 -translate-x-1/2' },
-              ].map((s, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.3 + i * 0.15, duration: 0.5 }}
-                  viewport={{ once: true }}
-                  className={`absolute ${s.pos} bg-bengal-kori/40 backdrop-blur-md border border-bengal-kori/50 rounded-2xl px-5 py-4 text-center shadow-lg shadow-black/5`}
-                >
-                  <p className="font-editorial text-4xl text-bengal-kajal leading-none">{s.num}</p>
-                  <p className="text-[10px] text-bengal-kajal/70 tracking-widest uppercase mt-1 font-sans-en">{s.label}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Right — text */}
-          <motion.div
-            initial={{ opacity:0, x:32 }} whileInView={{ opacity:1, x:0 }} viewport={{ once:true }}
-            className="space-y-6"
-          >
-            <BengalBadge variant="kansa">
-              {t('badge')}
-            </BengalBadge>
-
-            <h2 className={`font-editorial text-4xl xl:text-5xl leading-tight ${isBn ? 'font-bengali-serif' : ''}`}>
-              {t('title')}
-            </h2>
-
-            <AlponaDivider color="#C5A059" width={200} className="opacity-60" />
-
-            <div className={`space-y-4 text-bengal-kori/65 text-base leading-relaxed ${isBn ? 'font-bengali' : ''}`}>
-              <p>{t('intro')}</p>
-              <p>{t('body_1')}</p>
-              <p>{t('body_3')}</p>
-            </div>
-
-            <p className={`font-editorial text-bengal-kansa text-xl italic border-l-2 border-bengal-kansa/40 pl-4 ${isBn ? 'font-bengali-serif' : ''}`}>
-              &quot;{t('closing')}&quot;
-            </p>
-
-            <Link href={`/${locale}/about`}>
-              <BengalButton variant="zari" size="lg" isBengali={isBn} className="mt-2">
-                {ts('cta')} →
-              </BengalButton>
-            </Link>
-          </motion.div>
         </div>
       </div>
     </section>

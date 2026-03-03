@@ -104,7 +104,7 @@ export function HeritageIcon({ size = 52 }: { size?: number }) {
       <line x1="32" y1="24" x2="32" y2="38" stroke={S} strokeWidth="1.5" opacity="0.6" />
       
       {/* Central motif — lotus */}
-      <motion.g animate={{ rotate: 360, originX: 0.5, originY: 0.5 }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} style={{ transformOrigin: '26px 30px' }}>
+      <motion.g animate={{ rotate: 360, originX: 0.5, originY: 0.5 }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} className="origin-[26px_30px]">
         {[0, 72, 144, 216, 288].map((deg, i) => {
           const r = (deg * Math.PI) / 180;
           const x = Number((26 + Math.cos(r) * 5).toFixed(4));

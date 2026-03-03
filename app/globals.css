@@ -2,28 +2,28 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* ─── Bengal Design System ─────────────────────────────────────── */
 @theme {
   /* Bengal Color Palette */
-  --color-bengal-kori:    #F9F6F0;
-  --color-bengal-mati:    #EAE1D8;
-  --color-bengal-sindoor: #8A1C14;
-  --color-bengal-alta:    #B3241C;
-  --color-bengal-kansa:   #C5A059;
-  --color-bengal-kajal:   #1A1918;
-  --color-bengal-cream:   #FDF8F2;
-  --color-bengal-dust:    #D4C5B8;
+  --color-bengal-kori:    var(--bengal-kori);
+  --color-bengal-mati:    var(--bengal-mati);
+  --color-bengal-sindoor: var(--bengal-sindoor);
+  --color-bengal-alta:    var(--bengal-alta);
+  --color-bengal-kansa:   var(--bengal-kansa);
+  --color-bengal-kajal:   var(--bengal-kajal);
+  --color-bengal-cream:   var(--bengal-cream);
+  --color-bengal-dust:    var(--bengal-dust);
 
   /* Admin design tokens */
-  --color-admin-surface:      #FDFAF5;
-  --color-admin-sidebar:      #1A1918;
-  --color-admin-sidebar-hover:#2A2928;
-  --color-admin-accent:       #C5A059;
+  --color-admin-surface:      var(--background);
+  --color-admin-sidebar:      var(--foreground);
+  --color-admin-sidebar-hover:var(--muted);
+  --color-admin-accent:       var(--accent);
   --color-admin-success:      #2D7A4F;
   --color-admin-warning:      #D4A017;
-  --color-admin-danger:       #8A1C14;
+  --color-admin-danger:       var(--destructive);
 
   /* Typography tokens — bold heritage system */
   --font-serif-en: var(--font-playfair), 'Lora', Georgia, serif;
@@ -61,36 +61,92 @@
   --radius-xl:  calc(var(--radius) + 4px);
 }
 
-/* ─── Bengal Semantic Palette (overrides shadcn defaults) ──────── */
+/* ─── Bengal Semantic Palette ─────────────────────────────────────
+   Light → Crimson-dominant (sindoor leads, gold accents)
+   Dark  → Gold-dominant   (kansa leads, crimson accents)
+──────────────────────────────────────────────────────────────────── */
 :root {
   --radius: 0.375rem;
 
-  --background:        #F9F6F0;   /* kori  — unbleached cotton */
-  --foreground:        #1A1918;   /* kajal — soft charcoal     */
+  /* ── Light Mode Palette ──────────────────────────────────────── */
+  --bengal-kori:    #FBF8F1; /* Warm ivory with a golden whisper */
+  --bengal-mati:    #F2EBE0; /* Soft warm sand — not brown, not grey */
+  --bengal-sindoor: #C0392B; /* Vivid crimson — the hero color in light */
+  --bengal-alta:    #E74C3C; /* Bright alta red for destructive */
+  --bengal-kansa:   #D4A843; /* Rich antique gold — accent in light */
+  --bengal-kajal:   #1C1917; /* Near-black with warm undertone, not brown */
+  --bengal-cream:   #FDF9F3; /* Slightly warmer cream for popovers */
+  --bengal-dust:    #C9BBA8; /* Warm neutral dust */
 
-  --card:              #F9F6F0;
-  --card-foreground:   #1A1918;
+  --background:        var(--bengal-kori);
+  --foreground:        var(--bengal-kajal);
 
-  --popover:           #FDF8F2;
-  --popover-foreground:#1A1918;
+  --card:              #FFFFFF;
+  --card-foreground:   var(--bengal-kajal);
 
-  --primary:           #8A1C14;   /* sindoor — deep crimson */
-  --primary-foreground:#F9F6F0;
+  --popover:           var(--bengal-cream);
+  --popover-foreground:var(--bengal-kajal);
 
-  --secondary:         #EAE1D8;   /* mati — soft clay */
-  --secondary-foreground: #1A1918;
+  --primary:           var(--bengal-sindoor);  /* Crimson leads in light */
+  --primary-foreground:#FFFFFF;
 
-  --muted:             #EAE1D8;
-  --muted-foreground:  #7A6A62;
+  --secondary:         var(--bengal-mati);
+  --secondary-foreground: var(--bengal-kajal);
 
-  --accent:            #C5A059;   /* kansa — antique gold */
-  --accent-foreground: #1A1918;
+  --muted:             var(--bengal-mati);
+  --muted-foreground:  #8A7E72;
 
-  --destructive:       #B3241C;   /* alta — bright red */
+  --accent:            var(--bengal-kansa);    /* Gold accents in light */
+  --accent-foreground: var(--bengal-kajal);
 
-  --border:            rgba(197, 160, 89, 0.25);
-  --input:             #EAE1D8;
-  --ring:              #8A1C14;
+  --destructive:       var(--bengal-alta);
+
+  --border:            rgba(28, 25, 23, 0.08);
+  --input:             var(--bengal-mati);
+  --ring:              var(--bengal-sindoor);
+}
+
+.dark {
+  /* ── Dark Mode Palette ───────────────────────────────────────── 
+     Cool-neutral base. Gold is the dominant hero.
+     Crimson stays vivid, not washed-out pink.
+     Zero brown undertones in backgrounds/text.
+  ──────────────────────────────────────────────────────────────── */
+  --bengal-kori:    #0F0F12; /* Deep ink — cool-neutral, no brown */
+  --bengal-mati:    #1A1A1F; /* Elevated surface — slate-tinted dark */
+  --bengal-sindoor: #FF6B6B; /* Vivid coral-crimson — punchy, not pink/brown */
+  --bengal-alta:    #FF4444; /* Bright red for destructive */
+  --bengal-kansa:   #FFCC44; /* Bold saturated gold — the hero */
+  --bengal-kajal:   #EEEDF0; /* Cool off-white text — no warm/brown cast */
+  --bengal-cream:   #16161B; /* Slightly elevated popover bg */
+  --bengal-dust:    #8B8A92; /* Cool grey for muted text — not brown */
+
+  --background:        var(--bengal-kori);
+  --foreground:        var(--bengal-kajal);
+
+  --card:              var(--bengal-mati);
+  --card-foreground:   var(--bengal-kajal);
+
+  --popover:           var(--bengal-cream);
+  --popover-foreground:var(--bengal-kajal);
+
+  --primary:           var(--bengal-kansa);    /* Gold leads in dark */
+  --primary-foreground:#0F0F12;
+
+  --secondary:         var(--bengal-mati);
+  --secondary-foreground: var(--bengal-kajal);
+
+  --muted:             var(--bengal-mati);
+  --muted-foreground:  var(--bengal-dust);
+
+  --accent:            var(--bengal-sindoor);  /* Crimson accents in dark */
+  --accent-foreground: var(--bengal-kajal);
+
+  --destructive:       var(--bengal-alta);
+
+  --border:            rgba(238, 237, 240, 0.08);
+  --input:             var(--bengal-mati);
+  --ring:              var(--bengal-kansa);
 }
 
 /* ─── Base Styles ───────────────────────────────────────────────── */
@@ -109,21 +165,27 @@
   }
 
   body {
-    @apply bg-bengal-kori text-bengal-kajal;
+    @apply bg-background text-foreground;
     font-family: var(--font-sans-en);
     font-weight: 500;
     font-feature-settings: "kern" 1, "liga" 1;
   }
 
-  /* Touch optimisation */
+  /* Touch optimisation — allow vertical scroll through all motion elements */
   button, a, [role="button"] {
     @apply touch-manipulation;
   }
 
+  /* Framer-motion sets touch-action: none on animated elements, which blocks scrolling.
+     Override to always allow vertical panning (scrolling). */
+  [style*="touch-action"] {
+    touch-action: pan-y pan-x pinch-zoom !important;
+  }
+
   /* Scrollbar */
   ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: #EAE1D8; }
-  ::-webkit-scrollbar-thumb { background: #C5A059; border-radius: 2px; }
+  ::-webkit-scrollbar-track { background: var(--muted); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
 }
 
 /* ─── Utility Classes ───────────────────────────────────────────── */
@@ -167,13 +229,20 @@
 
   /* Gradient overlays */
   .gradient-kori {
-    background: linear-gradient(to bottom, transparent, #F9F6F0);
+    background: linear-gradient(to bottom, transparent, var(--background));
   }
   .gradient-kajal {
-    background: linear-gradient(to bottom, transparent, rgba(26,25,24,0.85));
+    background: linear-gradient(to bottom, transparent, var(--foreground));
   }
 
-  /* Masonry grid */
+  /* Custom Patterns */
+  .bg-hatch-pattern {
+    background-image: repeating-linear-gradient(45deg, currentColor 0, currentColor 1px, transparent 0, transparent 50%);
+    background-size: 20px 20px;
+  }
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
   .masonry-grid {
     columns: 2;
     column-gap: 0.75rem;
@@ -192,23 +261,48 @@
     .masonry-item { margin-bottom: 1.25rem; }
   }
 
-  /* Custom CSS Animations for Zero-Lag SVG Illustrations */
-  @keyframes float-slow {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
+  /* Folk illustration motion: soft and hand-drawn, no jittery oscillation */
+  @keyframes folk-drift {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(-0.3deg); }
+    35% { transform: translate3d(0, -5px, 0) rotate(0.5deg); }
+    70% { transform: translate3d(0, -2px, 0) rotate(-0.15deg); }
   }
-  .animate-float-slow {
-    animation: float-slow 6s ease-in-out infinite;
-    will-change: transform;
+  .animate-folk-drift {
+    animation: folk-drift 8.4s cubic-bezier(0.45, 0.05, 0.35, 1) infinite;
   }
 
-  @keyframes float-medium {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
+  @keyframes folk-drift-soft {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    45% { transform: translate3d(0, -3px, 0) rotate(0.35deg); }
+    78% { transform: translate3d(0, -1px, 0) rotate(-0.2deg); }
+  }
+  .animate-folk-drift-soft {
+    animation: folk-drift-soft 10.2s cubic-bezier(0.45, 0.05, 0.35, 1) infinite;
+  }
+
+  @keyframes folk-glow {
+    0%, 100% { opacity: 0.82; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.03); }
+  }
+  .animate-folk-glow {
+    animation: folk-glow 6s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  @keyframes folk-weave {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(4px); }
+  }
+  .animate-folk-weave {
+    animation: folk-weave 4.8s ease-in-out infinite;
+  }
+
+  /* Backwards-compatible motion aliases used in other illustrations */
+  .animate-float-slow {
+    animation: folk-drift-soft 9.2s cubic-bezier(0.45, 0.05, 0.35, 1) infinite;
   }
   .animate-float-medium {
-    animation: float-medium 4s ease-in-out infinite;
-    will-change: transform;
+    animation: folk-drift 7.8s cubic-bezier(0.45, 0.05, 0.35, 1) infinite;
   }
 
   @keyframes pulse-soft {
@@ -217,16 +311,14 @@
   }
   .animate-pulse-soft {
     animation: pulse-soft 8s ease-in-out infinite;
-    will-change: transform, opacity;
   }
-  
+
   @keyframes pulse-glow {
     0%, 100% { transform: scale(1); opacity: 0.15; }
     50% { transform: scale(1.05); opacity: 0.3; }
   }
   .animate-pulse-glow {
     animation: pulse-glow 8s ease-in-out infinite;
-    will-change: transform, opacity;
   }
 
   @keyframes sway-slow {
@@ -236,7 +328,6 @@
   .animate-sway-slow {
     animation: sway-slow 4s ease-in-out infinite;
     transform-origin: center;
-    will-change: transform;
   }
 
   @keyframes spin-super-slow {
@@ -245,18 +336,16 @@
   }
   .animate-spin-super-slow {
     animation: spin-super-slow 60s linear infinite;
-    will-change: transform;
   }
-  
+
   @keyframes shuttle-fly {
     0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(200px); }
+    50% { transform: translateX(18px); }
   }
   .animate-shuttle-fly {
-    animation: shuttle-fly 2s ease-in-out infinite;
-    will-change: transform;
+    animation: shuttle-fly 5.5s ease-in-out infinite;
   }
-  
+
   @keyframes bg-breathe {
     0%, 100% { transform: scale(1) rotate(0deg); }
     50% { transform: scale(1.03) rotate(2deg); }
@@ -264,7 +353,6 @@
   .animate-bg-breathe {
     animation: bg-breathe 12s ease-in-out infinite;
     transform-origin: center;
-    will-change: transform;
   }
 
   @keyframes drift-diagonal {
@@ -273,43 +361,38 @@
   }
   .animate-drift-diagonal {
     animation: drift-diagonal 20s linear infinite;
-    will-change: transform;
   }
-  
+
   @keyframes pulse-fast {
     0%, 100% { transform: scale(1); opacity: 0.6; }
     50% { transform: scale(1.2); opacity: 1; }
   }
   .animate-pulse-fast {
     animation: pulse-fast 3s ease-in-out infinite;
-    will-change: transform, opacity;
   }
-  
+
   @keyframes spin-slow {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
   }
   .animate-spin-slow {
     animation: spin-slow 40s linear infinite;
-    will-change: transform;
   }
-  
+
   @keyframes spin-slow-reverse {
     from { transform: rotate(0deg); }
     to { transform: rotate(-360deg); }
   }
   .animate-spin-slow-reverse {
     animation: spin-slow-reverse 30s linear infinite;
-    will-change: transform;
   }
-  
+
   @keyframes sway-medium {
     0%, 100% { transform: rotate(0deg); }
     50% { transform: rotate(15deg); }
   }
   .animate-sway-medium {
     animation: sway-medium 10s ease-in-out infinite;
-    will-change: transform;
   }
 
   /* Hero scroll hint — compositor-friendly (no JS) */
@@ -329,5 +412,21 @@
   .animate-ticker-marquee {
     animation: ticker-marquee 24s linear infinite;
     will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-folk-drift,
+    .animate-folk-drift-soft,
+    .animate-folk-glow,
+    .animate-folk-weave,
+    .animate-float-slow,
+    .animate-float-medium,
+    .animate-shuttle-fly,
+    .animate-bounce-subtle,
+    .animate-ticker-marquee {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transform: none !important;
+    }
   }
 }

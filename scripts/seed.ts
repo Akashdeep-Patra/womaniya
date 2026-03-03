@@ -13,6 +13,7 @@ import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { sql } from '@vercel/postgres';
 import * as schema from '../db/schema';
 import { eq } from 'drizzle-orm';
+import { faker } from '@faker-js/faker';
 
 const db = drizzle(sql, { schema });
 
@@ -80,7 +81,7 @@ const COLLECTIONS = [
     name_bn: 'দেবী',
     description_en: 'Embrace the divine elegance — our signature Durga Puja collection featuring Chanderi blouses adorned with golden zari motifs.',
     description_bn: 'দেবীর মতো রাজকীয় — দুর্গা পুজোর জন্য বিশেষ সংগ্রহ। চান্দেরি ব্লাউজে সোনালি জরির কাজ।',
-    status: 'live' as const,
+    status: 'published' as const,
     is_featured: true,
   },
   {
@@ -89,7 +90,7 @@ const COLLECTIONS = [
     name_bn: 'ইনায়া ২০২৫',
     description_en: 'A celebration of grace and heritage — contemporary silhouettes woven with traditional craft.',
     description_bn: 'গ্রেস আর ঐতিহ্যের উদযাপন — ঐতিহ্যবাহী কারুকাজে আধুনিক ডিজাইন।',
-    status: 'live' as const,
+    status: 'published' as const,
     is_featured: true,
   },
   {
@@ -98,7 +99,7 @@ const COLLECTIONS = [
     name_bn: 'ইভারা ২০২৫',
     description_en: 'Timeless elegance meets modern design — handcrafted pieces for the discerning woman.',
     description_bn: 'চিরকালীন সৌন্দর্য আর আধুনিক ডিজাইনের মিলন — বিচক্ষণ নারীর জন্য হাতে তৈরি।',
-    status: 'live' as const,
+    status: 'published' as const,
     is_featured: false,
   },
 ];
@@ -133,164 +134,108 @@ async function seedCollections() {
   }
 }
 
-async function seedSampleProducts() {
-  console.log('Seeding sample products...');
+const INDIAN_FABRICS = ['Pure Silk', 'Chanderi Silk', 'Muslin', 'Cotton-Silk Blend', 'Handloom Cotton', 'Tussar Silk', 'Khadi Cotton', 'Linen'];
+const COLORS = ['Crimson Red', 'Indigo Blue', 'Mustard Yellow', 'Forest Green', 'Ivory', 'Midnight Black', 'Turquoise', 'Maroon', 'Teal', 'Olive'];
+const BENGALI_PREFIXES = ['অপরাজিতা', 'নন্দিনী', 'চিত্রা', 'মৃণালিনী', 'বনলতা', 'মালতী', 'পদ্মা', 'কাদম্বরী', 'শর্মিষ্ঠা', 'চারুলতা'];
+
+function generateFakeProduct(catMap: Map<string, any>, categorySlug: string) {
+  const cat = catMap.get(categorySlug);
+  const color = faker.helpers.arrayElement(COLORS);
+  const fabric = faker.helpers.arrayElement(INDIAN_FABRICS);
+  
+  // Create realistic sounding names based on category
+  let nameEn = '';
+  if (categorySlug === 'blouse') {
+    nameEn = `${faker.person.firstName('female').toUpperCase()} — ${fabric} Blouse`;
+  } else if (categorySlug === 'jamdani') {
+    nameEn = `${color} Dhakai Jamdani`;
+  } else if (categorySlug === 'tant') {
+    nameEn = `Nadia ${color} Tant Saree`;
+  } else if (categorySlug === 'ikkat') {
+    nameEn = `${color} Pochampally Ikkat`;
+  } else if (categorySlug === 'ajrakh') {
+    nameEn = `Kutch ${color} Ajrakh`;
+  } else {
+    nameEn = `${color} Heritage ${faker.helpers.arrayElement(['Kurta Set', 'Dress', 'Tunic'])}`;
+  }
+
+  const nameBn = `${faker.helpers.arrayElement(BENGALI_PREFIXES)} — ${nameEn.split('—')[1] || nameEn}`;
+  const slug = faker.helpers.slugify(nameEn).toLowerCase() + '-' + faker.string.alphanumeric(4);
+  const price = faker.commerce.price({ min: 1500, max: 25000, dec: 0 });
+
+  return {
+    slug,
+    name_en: nameEn,
+    name_bn: nameBn,
+    description_en: `${faker.commerce.productAdjective()} ${fabric} piece. ${faker.lorem.sentences(2)} Handcrafted by master artisans with intricate detailing.`,
+    description_bn: `খুবই সুন্দর এবং ঐতিহ্যবাহী হাতে বোনা কাপড়। ${faker.lorem.sentence()} বাংলার তাঁতিদের নিখুঁত কাজ।`,
+    price: price.toString(),
+    category: cat?.name_en ?? categorySlug,
+    category_id: cat?.id ?? null,
+    image_url: '/placeholder-saree.svg',
+    is_featured: faker.datatype.boolean(0.3), // 30% chance of being featured
+    status: 'published',
+    sizes: ['blouse', 'ready-to-wear'].includes(categorySlug) ? 'S, M, L, XL, XXL' : null,
+    colors: faker.helpers.arrayElements(COLORS, { min: 1, max: 3 }).join(', '),
+    fabric: fabric,
+  };
+}
+
+async function seedFakeProducts() {
+  console.log('Seeding fake products...');
 
   const cats = await db.query.categories.findMany();
   const catMap = new Map(cats.map((c) => [c.slug, c]));
-
-  const PRODUCTS = [
-    {
-      slug: 'crimson-dhakai-jamdani',
-      name_en: 'Crimson Dhakai Jamdani',
-      name_bn: 'ক্রিমসন ঢাকাই জামদানি',
-      description_en: 'A stunning handwoven Dhakai Jamdani in deep crimson with intricate traditional motifs. Each piece takes 15-30 days to weave on a traditional loom.',
-      description_bn: 'গভীর ক্রিমসন রঙে ঐতিহ্যবাহী নকশায় হাতে বোনা ঢাকাই জামদানি। প্রতিটি শাড়ি তৈরি হতে ১৫-৩০ দিন সময় লাগে।',
-      price: '8500',
-      category_slug: 'jamdani',
-      is_featured: true,
-      fabric: 'Cotton-Silk blend',
-    },
-    {
-      slug: 'ivory-gold-jamdani',
-      name_en: 'Ivory & Gold Jamdani',
-      name_bn: 'আইভরি ও গোল্ড জামদানি',
-      description_en: 'Elegant ivory Jamdani with golden zari work, perfect for special occasions. Handwoven by master artisans of Murshidabad.',
-      description_bn: 'সোনালি জরির কাজে আইভরি জামদানি, বিশেষ অনুষ্ঠানের জন্য আদর্শ। মুর্শিদাবাদের ওস্তাদ কারিগরদের হাতে বোনা।',
-      price: '12000',
-      category_slug: 'jamdani',
-      is_featured: true,
-      fabric: 'Muslin',
-    },
-    {
-      slug: 'stuti-chanderi-blouse',
-      name_en: 'STUTI — Chanderi Blouse',
-      name_bn: 'স্তুতি — চান্দেরি ব্লাউজ',
-      description_en: 'From our DEVI collection — exquisite Chanderi blouse adorned with golden zari motifs. Crafted to perfection in Kolkata.',
-      description_bn: 'আমাদের দেবী সংগ্রহ থেকে — সোনালি জরির নকশায় সুন্দর চান্দেরি ব্লাউজ। কলকাতায় নিখুঁতভাবে তৈরি।',
-      price: '3500',
-      category_slug: 'blouse',
-      is_featured: true,
-      fabric: 'Chanderi Silk',
-      sizes: 'S, M, L, XL',
-      colors: 'Gold, Maroon, Ivory',
-    },
-    {
-      slug: 'shloka-silk-blouse',
-      name_en: 'SHLOKA — Silk Blouse',
-      name_bn: 'শ্লোকা — সিল্ক ব্লাউজ',
-      description_en: 'A silk blouse that speaks the language of royalty. Adorned with floral motif zardozi handwork on the back.',
-      description_bn: 'রাজকীয়তার ভাষায় কথা বলা একটি সিল্ক ব্লাউজ। পিছনে ফুলের নকশায় জরদোজি হাতের কাজ।',
-      price: '4200',
-      category_slug: 'blouse',
-      is_featured: true,
-      fabric: 'Pure Silk',
-      sizes: 'S, M, L, XL',
-      colors: 'Red, Navy, Black',
-    },
-    {
-      slug: 'nadia-tant-saree',
-      name_en: 'Nadia Tant Saree',
-      name_bn: 'নদীয়া তাঁত শাড়ি',
-      description_en: 'Light, breathable Bengal Tant from the looms of Nadia. Perfect for everyday elegance in the Bengal heat.',
-      description_bn: 'নদীয়ার তাঁতে বোনা হালকা, আরামদায়ক বাংলার তাঁত শাড়ি। বাংলার গরমে রোজকারের সৌন্দর্যের জন্য আদর্শ।',
-      price: '2800',
-      category_slug: 'tant',
-      is_featured: false,
-      fabric: 'Cotton',
-    },
-    {
-      slug: 'pochampally-ikkat-saree',
-      name_en: 'Pochampally Ikkat Saree',
-      name_bn: 'পোচামপল্লি ইক্কাট শাড়ি',
-      description_en: 'Vibrant geometric patterns created through the ancient resist-dyeing technique of Pochampally.',
-      description_bn: 'পোচামপল্লির প্রাচীন রেজিস্ট-ডাইং কৌশলে তৈরি প্রাণবন্ত জ্যামিতিক নকশা।',
-      price: '5500',
-      category_slug: 'ikkat',
-      is_featured: false,
-      fabric: 'Silk',
-    },
-    {
-      slug: 'kutch-ajrakh-dupatta',
-      name_en: 'Kutch Ajrakh Dupatta',
-      name_bn: 'কচ্ছ আজরখ দুপাট্টা',
-      description_en: 'Hand block-printed with natural indigo and madder dyes. Each piece is a meditation in precision by Kutch artisans.',
-      description_bn: 'প্রাকৃতিক নীল ও মেজেন্টা রঙে হাতে ব্লক প্রিন্ট করা। কচ্ছের কারিগরদের ধৈর্যের ফসল।',
-      price: '1800',
-      category_slug: 'ajrakh',
-      is_featured: false,
-      fabric: 'Cotton',
-    },
-    {
-      slug: 'heritage-kurta-set',
-      name_en: 'Heritage Kurta Set',
-      name_bn: 'হেরিটেজ কুর্তা সেট',
-      description_en: 'A modern kurta set crafted from handloom fabric. Heritage silhouettes designed for everyday comfort.',
-      description_bn: 'হ্যান্ডলুম কাপড়ে তৈরি আধুনিক কুর্তা সেট। রোজকারের আরামের জন্য ঐতিহ্যবাহী ডিজাইন।',
-      price: '3200',
-      category_slug: 'ready-to-wear',
-      is_featured: false,
-      fabric: 'Handloom Cotton',
-      sizes: 'S, M, L, XL, XXL',
-    },
-  ];
-
-  for (const prod of PRODUCTS) {
-    const existing = await db.query.products.findFirst({
-      where: (p, { eq }) => eq(p.slug, prod.slug),
-    });
-    if (existing) {
-      console.log(`  = ${prod.name_en} (already exists)`);
-      continue;
+  
+  // We'll generate 10 products per category
+  const NUM_PER_CATEGORY = 10;
+  
+  for (const cat of CATEGORIES) {
+    for (let i = 0; i < NUM_PER_CATEGORY; i++) {
+      const prod = generateFakeProduct(catMap, cat.slug);
+      
+      const existing = await db.query.products.findFirst({
+        where: (p, { eq }) => eq(p.slug, prod.slug),
+      });
+      
+      if (!existing) {
+        await db.insert(schema.products).values(prod);
+        console.log(`  + [${cat.slug}] ${prod.name_en}`);
+      }
     }
-
-    const cat = catMap.get(prod.category_slug);
-    await db.insert(schema.products).values({
-      slug: prod.slug,
-      name_en: prod.name_en,
-      name_bn: prod.name_bn ?? null,
-      description_en: prod.description_en ?? null,
-      description_bn: prod.description_bn ?? null,
-      price: prod.price,
-      category: cat?.name_en ?? prod.category_slug,
-      category_id: cat?.id ?? null,
-      image_url: '/placeholder-saree.svg',
-      is_featured: prod.is_featured,
-      status: 'published',
-      sizes: prod.sizes ?? null,
-      colors: prod.colors ?? null,
-      fabric: prod.fabric ?? null,
-    });
-    console.log(`  + ${prod.name_en}`);
   }
 }
 
 async function linkProductsToCollections() {
   console.log('Linking products to collections...');
 
-  const deviCol = await db.query.collections.findFirst({
-    where: (c, { eq }) => eq(c.slug, 'devi'),
-  });
-  if (!deviCol) return;
+  const collections = await db.query.collections.findMany();
+  if (collections.length === 0) return;
 
-  const blouseProducts = await db.query.products.findMany({
-    where: (p, { eq }) => eq(p.category, 'Designer Blouse'),
-  });
+  const allProducts = await db.query.products.findMany();
 
-  for (let i = 0; i < blouseProducts.length; i++) {
-    const existing = await db.query.collectionProducts.findFirst({
-      where: (cp, { and, eq }) => and(
-        eq(cp.collection_id, deviCol.id),
-        eq(cp.product_id, blouseProducts[i].id),
-      ),
-    });
-    if (!existing) {
-      await db.insert(schema.collectionProducts).values({
-        collection_id: deviCol.id,
-        product_id: blouseProducts[i].id,
-        sort_order: i,
+  for (const col of collections) {
+    // Pick 5-10 random products for each collection
+    const numProducts = faker.number.int({ min: 5, max: 10 });
+    const selectedProducts = faker.helpers.arrayElements(allProducts, numProducts);
+    
+    for (let i = 0; i < selectedProducts.length; i++) {
+      const prod = selectedProducts[i];
+      const existing = await db.query.collectionProducts.findFirst({
+        where: (cp, { and, eq }) => and(
+          eq(cp.collection_id, col.id),
+          eq(cp.product_id, prod.id),
+        ),
       });
-      console.log(`  + Linked "${blouseProducts[i].name_en}" to DEVI`);
+      
+      if (!existing) {
+        await db.insert(schema.collectionProducts).values({
+          collection_id: col.id,
+          product_id: prod.id,
+          sort_order: i,
+        });
+        console.log(`  + Linked "${prod.name_en}" to ${col.name_en}`);
+      }
     }
   }
 }
@@ -302,7 +247,7 @@ async function main() {
   console.log('');
   await seedCollections();
   console.log('');
-  await seedSampleProducts();
+  await seedFakeProducts();
   console.log('');
   await linkProductsToCollections();
 

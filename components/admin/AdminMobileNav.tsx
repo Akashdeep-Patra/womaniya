@@ -91,7 +91,7 @@ export function AdminMobileNav({ locale }: { locale: string }) {
       </AnimatePresence>
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#1A1918] border-t border-[#C5A059]/15 lg:hidden">
-        <div className="grid grid-cols-5 h-[3.5rem]" style={{ paddingBottom: 'max(0px, env(safe-area-inset-bottom))' }}>
+        <div className="grid grid-cols-5 h-[3.5rem] pb-[max(0px,env(safe-area-inset-bottom))]">
           {mainTabs.map((tab) => {
             const active = isActive(tab.href);
             return (

@@ -27,69 +27,88 @@ export function BrandMascot({ className = '', size = 48 }: BrandMascotProps) {
         </linearGradient>
 
         <linearGradient id="mascotBody" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="currentColor" stopOpacity="0.8" />
-          <stop offset="100%" stopColor="currentColor" stopOpacity="0.2" />
+          <stop offset="0%" stopColor="#8A1C14" stopOpacity="0.9" />
+          <stop offset="100%" stopColor="#1A1918" stopOpacity="0.8" />
         </linearGradient>
       </defs>
 
       <g>
-        {/* Outer Lotus / "W" Drape with Gradient Fill */}
+        {/* Soft elegant drop shape behind */}
         <motion.path
-          d="M 20 35 C 20 70, 45 90, 50 90 C 55 90, 80 70, 80 35 C 80 15, 65 10, 50 25 C 35 10, 20 15, 20 35 Z"
+          d="M 50 15 C 80 15, 90 40, 80 70 C 70 90, 30 90, 20 70 C 10 40, 20 15, 50 15 Z"
           fill="url(#mascotBody)"
-          stroke="currentColor"
-          strokeWidth="1.5"
           initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5, ease: 'easeOut' }}
+          animate={{ opacity: 0.15, scale: 1 }}
+          transition={{ duration: 2, ease: 'easeOut' }}
         />
-        
-        {/* Internal 3D contour lines */}
+
+        {/* Continuous Line - Sharp, Sensual Side Profile */}
         <motion.path
-          d="M 28 38 C 28 65, 45 80, 50 82 C 55 80, 72 65, 72 38"
+          d="M 60 15 C 45 15, 35 25, 35 35 C 35 38, 30 42, 28 45 C 25 48, 25 50, 28 52 C 25 55, 25 58, 32 60 C 40 62, 45 70, 42 80 C 40 88, 48 95, 60 90"
           fill="none"
           stroke="currentColor"
-          strokeWidth="0.5"
-          opacity="0.3"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration: 2, delay: 0.5 }}
+          transition={{ duration: 2, delay: 0.2, ease: 'easeInOut' }}
         />
 
-        {/* Inner Weave/Threads - Top (Represents Loom/Weaving) */}
+        {/* Sultry Eye - Minimalist lash */}
         <motion.path
-          d="M 38 32 L 50 48 L 62 32"
-          stroke="url(#mascotGold)"
-          strokeWidth="3.5"
+          d="M 35 42 C 40 40, 45 42, 48 45"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
           strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 1 }}
-          transition={{ duration: 1.2, delay: 0.8, ease: 'easeOut' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1.5 }}
         />
 
-        {/* Inner Weave/Threads - Bottom */}
+        {/* Plump Red Lip Accent */}
         <motion.path
-          d="M 32 48 L 50 72 L 68 48"
-          stroke="url(#mascotGold)"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 1 }}
-          transition={{ duration: 1.2, delay: 1.2, ease: 'easeOut' }}
+          d="M 28 52 C 32 50, 35 52, 33 54 C 30 54, 28 52, 28 52 Z"
+          fill="#B3241C"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', stiffness: 200, delay: 1.8 }}
         />
 
-        {/* The Bindi / Sindoor dot (Represents Authentic Womanhood) with glowing core */}
-        <motion.g
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: 'spring', stiffness: 200, damping: 10, delay: 1.8 }}
-        >
-          <circle cx="50" cy="55" r="7" fill="#E63946" opacity="0.3" />
-          <circle cx="50" cy="55" r="5" fill="#9E141E" />
-          <circle cx="51" cy="54" r="1.5" fill="#FFF" opacity="0.4" />
-        </motion.g>
+        {/* Sharp Bindi */}
+        <motion.circle
+          cx="30"
+          cy="32"
+          r="2.5"
+          fill="#B3241C"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: 'spring', stiffness: 200, delay: 1.2 }}
+        />
+
+        {/* Elegant Gold Jhumka/Earring */}
+        <motion.path
+          d="M 45 55 L 45 65 M 40 60 C 45 58, 50 62, 50 65"
+          fill="none"
+          stroke="url(#mascotGold)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1.5, delay: 1.8 }}
+        />
+        
+        {/* Tiny gold jewel drop */}
+        <motion.circle
+          cx="45"
+          cy="68"
+          r="2.5"
+          fill="url(#mascotGold)"
+          initial={{ opacity: 0, y: -5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 2.2 }}
+        />
       </g>
     </motion.svg>
   );

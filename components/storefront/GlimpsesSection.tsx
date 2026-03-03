@@ -3,6 +3,7 @@
 import { motion }       from 'framer-motion';
 import { useParams }    from 'next/navigation';
 import { KanthaStitch } from '@/components/illustrations/KanthaStitch';
+import { ZariThread }   from '@/components/illustrations/ZariThread';
 
 const STEPS_EN = [
   { n: '01', title: 'We go to them.',       body: 'Every piece starts at the loom — Murshidabad, Pochampally, Kutch. We visit the weaver, not the middleman.' },
@@ -25,7 +26,7 @@ export function GlimpsesSection() {
   const steps  = isBn ? STEPS_BN : STEPS_EN;
 
   return (
-    <section className="bg-bengal-kajal text-bengal-kori py-16 md:py-24 overflow-hidden">
+    <section className="bg-background text-foreground py-16 md:py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
         {/* Header */}
@@ -34,44 +35,62 @@ export function GlimpsesSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-12 md:mb-16"
+          className="mb-16 md:mb-24 flex flex-col items-center text-center"
         >
-          <p className="text-bengal-kansa text-[10px] tracking-[0.3em] uppercase mb-3 font-sans-en">
+          <p className="text-primary text-[10px] tracking-[0.3em] uppercase mb-4 font-sans-en">
             {isBn ? 'এভাবেই তৈরি হয়' : 'How it gets made'}
           </p>
-          <h2 className={`font-editorial text-3xl md:text-5xl leading-tight max-w-lg ${isBn ? 'font-bengali-serif' : ''}`}>
+          <h2 className={`font-editorial text-4xl md:text-5xl lg:text-6xl leading-tight max-w-2xl ${isBn ? 'font-bengali-serif' : 'italic'}`}>
             {isBn ? 'লুম থেকে তোমার কাছে।' : 'From their hands to yours.'}
           </h2>
         </motion.div>
 
-        {/* Steps grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 border-t border-bengal-kansa/20">
-          {steps.map(({ n, title, body }, i) => (
-            <motion.div
-              key={n}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="border-b md:border-b-0 md:border-r border-bengal-kansa/20 last:border-0 py-8 md:py-10 md:px-8 first:md:pl-0 last:md:pr-0 flex md:flex-col gap-5 md:gap-5"
-            >
-              <span className="font-editorial text-3xl text-bengal-kansa/35 flex-shrink-0 w-12 md:w-auto">
-                {n}
-              </span>
-              <div>
-                <h3 className={`font-editorial text-lg text-bengal-kori mb-2 ${isBn ? 'font-bengali-serif' : ''}`}>
-                  {title}
-                </h3>
-                <p className={`text-bengal-kori/50 text-sm leading-relaxed ${isBn ? 'font-bengali' : ''}`}>
-                  {body}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+        {/* Timeline weaving down */}
+        <div className="relative max-w-4xl mx-auto">
+          {/* Central Thread for desktop */}
+          <div className="absolute left-[27px] md:left-1/2 top-4 bottom-4 w-px bg-border -translate-x-1/2 hidden md:block" />
+          
+          <div className="space-y-12 md:space-y-24">
+            {steps.map(({ n, title, body }, i) => {
+              const isEven = i % 2 === 0;
+              return (
+                <motion.div
+                  key={n}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.7, delay: i * 0.15 }}
+                  className={`relative flex flex-col md:flex-row gap-8 md:gap-16 items-start md:items-center ${isEven ? 'md:flex-row-reverse' : ''}`}
+                >
+                  {/* Decorative Node */}
+                  <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-card border border-border items-center justify-center z-10 shadow-sm">
+                    <span className="font-editorial text-xl text-primary">{n}</span>
+                  </div>
+
+                  {/* Mobile Node */}
+                  <div className="flex md:hidden w-12 h-12 rounded-full border border-border items-center justify-center shrink-0 bg-card">
+                    <span className="font-editorial text-lg text-primary">{n}</span>
+                  </div>
+
+                  <div className={`flex-1 ${isEven ? 'md:text-right' : 'md:text-left'}`}>
+                    <h3 className={`font-editorial text-2xl md:text-3xl text-foreground mb-4 ${isBn ? 'font-bengali-serif' : ''}`}>
+                      {title}
+                    </h3>
+                    <p className={`text-muted-foreground text-base md:text-lg leading-relaxed max-w-sm ${isEven ? 'md:ml-auto' : ''} ${isBn ? 'font-bengali' : 'font-sans-en font-light'}`}>
+                      {body}
+                    </p>
+                  </div>
+                  
+                  {/* Empty div for balancing grid on desktop */}
+                  <div className="hidden md:block flex-1" />
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
 
         <div className="mt-12 flex justify-center">
-          <KanthaStitch color="#C5A059" width={220} rows={2} className="opacity-25" />
+          <KanthaStitch color="var(--primary)" width={220} rows={2} className="opacity-40" />
         </div>
       </div>
     </section>

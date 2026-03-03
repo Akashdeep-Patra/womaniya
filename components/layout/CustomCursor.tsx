@@ -6,6 +6,7 @@ import { motion, useSpring, useMotionValue } from 'framer-motion';
 export function CustomCursor() {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(true);
 
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
@@ -15,8 +16,8 @@ export function CustomCursor() {
   const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
-    // Only show on non-touch devices
     if (window.matchMedia('(hover: none)').matches) return;
+    setIsTouchDevice(false);
 
     const moveCursor = (e: MouseEvent) => {
       if (!isVisible) setIsVisible(true);
@@ -55,9 +56,7 @@ export function CustomCursor() {
     };
   }, [cursorX, cursorY, isVisible]);
 
-  if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) {
-    return null;
-  }
+  if (isTouchDevice) return null;
 
   return (
     <motion.div

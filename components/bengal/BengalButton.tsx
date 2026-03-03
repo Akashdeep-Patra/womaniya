@@ -13,12 +13,12 @@ interface BengalButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement
 }
 
 const variants: Record<Variant, string> = {
-  primary:   'bg-bengal-sindoor text-bengal-kori hover:bg-bengal-alta shadow-sm shadow-bengal-sindoor/20 border border-transparent',
-  secondary: 'bg-bengal-mati text-bengal-kajal hover:bg-bengal-dust border border-bengal-kansa/20 shadow-sm',
-  ghost:     'bg-transparent text-bengal-kajal hover:bg-bengal-mati border border-transparent',
-  zari:      'bg-bengal-kansa text-bengal-kajal hover:opacity-90 shadow-sm shadow-bengal-kansa/25 border border-transparent',
-  outline:   'bg-transparent text-bengal-sindoor hover:bg-bengal-sindoor hover:text-bengal-kori border border-bengal-sindoor/70',
-  whatsapp:  'bg-[#25D366] text-white hover:bg-[#20ba5a] shadow-sm shadow-[#25D366]/25 border border-transparent',
+  primary:   'bg-bengal-sindoor text-bengal-kori hover:bg-bengal-alta shadow-sm border border-transparent active:shadow-none hover:-translate-y-0.5',
+  secondary: 'bg-bengal-mati text-bengal-kajal hover:bg-bengal-dust border border-bengal-kansa/20 shadow-sm active:shadow-none hover:-translate-y-0.5',
+  ghost:     'bg-transparent text-bengal-kajal hover:bg-bengal-mati border border-transparent shadow-none',
+  zari:      'bg-bengal-kansa text-bengal-kajal hover:opacity-90 shadow-sm border border-transparent active:shadow-none hover:-translate-y-0.5',
+  outline:   'bg-transparent text-bengal-sindoor hover:bg-bengal-sindoor hover:text-bengal-kori border border-bengal-sindoor/70 shadow-sm active:shadow-none hover:-translate-y-0.5',
+  whatsapp:  'bg-[#25D366] text-white hover:bg-[#20ba5a] shadow-sm border border-transparent active:shadow-none hover:-translate-y-0.5',
 };
 
 const sizes: Record<Size, string> = {

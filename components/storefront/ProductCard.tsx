@@ -31,7 +31,7 @@ export function ProductCard({ product, variant = 'portrait' }: Props) {
         {/* Image */}
         <div
           className={cn(
-            'relative overflow-hidden bg-bengal-mati rounded-3xl shadow-sm hover:shadow-lg transition-shadow duration-300',
+            'relative overflow-hidden bg-muted rounded-3xl shadow-none ring-1 ring-border/50 hover:shadow-sm transition-shadow duration-300',
             variant === 'portrait' ? 'aspect-4/5' : 'aspect-square'
           )}
         >
@@ -45,7 +45,7 @@ export function ProductCard({ product, variant = 'portrait' }: Props) {
           />
 
           {/* Hover overlay */}
-          <div className="absolute inset-0 bg-bengal-kajal/0 group-hover:bg-bengal-kajal/10 transition-colors duration-300" />
+          <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors duration-300" />
 
           {/* Featured badge */}
           {product.is_featured && (
@@ -59,16 +59,16 @@ export function ProductCard({ product, variant = 'portrait' }: Props) {
 
         {/* Info */}
         <div className="pt-2.5 px-0.5">
-          <p className="text-[9px] tracking-widest uppercase text-bengal-kajal/50 mb-0.5">
+          <p className="text-[9px] tracking-widest uppercase text-muted-foreground mb-0.5">
             {product.category}
           </p>
           <h3 className={cn(
-            'text-sm font-medium text-bengal-kajal leading-snug line-clamp-2',
+            'text-sm font-medium text-foreground leading-snug line-clamp-2',
             isBn ? 'font-bengali' : 'font-sans-en'
           )}>
             {name}
           </h3>
-          <p className="font-editorial text-bengal-sindoor text-base mt-1">
+          <p className="font-editorial text-primary text-base mt-1">
             ₹{Number(product.price).toLocaleString('en-IN')}
           </p>
         </div>

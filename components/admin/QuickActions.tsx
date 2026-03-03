@@ -11,10 +11,10 @@ export function QuickActions({ locale }: { locale: string }) {
   const base = `/${locale}/admin`;
 
   const actions = [
-    { href: `${base}/products/new`,    label: 'Product',    icon: Package,    color: '#8A1C14' },
-    { href: `${base}/categories/new`,  label: 'Category',   icon: Tags,       color: '#C5A059' },
-    { href: `${base}/collections/new`, label: 'Collection', icon: FolderOpen, color: '#2D7A4F' },
-    { href: `${base}/pages/new`,       label: 'Page',       icon: FileText,   color: '#1A1918' },
+    { href: `${base}/products/new`,    label: 'Product',    icon: Package,    colorClass: 'text-bengal-sindoor', bgClass: 'bg-bengal-sindoor/15' },
+    { href: `${base}/categories/new`,  label: 'Category',   icon: Tags,       colorClass: 'text-bengal-kansa', bgClass: 'bg-bengal-kansa/15' },
+    { href: `${base}/collections/new`, label: 'Collection', icon: FolderOpen, colorClass: 'text-admin-success', bgClass: 'bg-admin-success/15' },
+    { href: `${base}/pages/new`,       label: 'Page',       icon: FileText,   colorClass: 'text-bengal-kajal', bgClass: 'bg-bengal-kajal/15' },
   ];
 
   return (
@@ -32,15 +32,14 @@ export function QuickActions({ locale }: { locale: string }) {
                 key={action.href}
                 href={action.href}
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-2.5 bg-white rounded-full pl-3 pr-4 py-2 shadow-lg border border-[#C5A059]/10"
+                className="flex items-center gap-2.5 bg-background rounded-full pl-3 pr-4 py-2 shadow-lg border border-border"
               >
                 <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center"
-                  style={{ backgroundColor: `${action.color}15` }}
+                  className={`w-7 h-7 rounded-full flex items-center justify-center ${action.bgClass}`}
                 >
-                  <action.icon size={14} style={{ color: action.color }} />
+                  <action.icon size={14} className={action.colorClass} />
                 </div>
-                <span className="text-xs font-medium text-[#1A1918]">{action.label}</span>
+                <span className="text-xs font-medium text-foreground">{action.label}</span>
               </Link>
             ))}
           </motion.div>
@@ -50,11 +49,11 @@ export function QuickActions({ locale }: { locale: string }) {
         onClick={() => setOpen(!open)}
         className={cn(
           'w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-colors',
-          open ? 'bg-[#1A1918]' : 'bg-[#8A1C14]',
+          open ? 'bg-bengal-kajal text-bengal-kori' : 'bg-bengal-sindoor text-bengal-kori',
         )}
       >
         <motion.div animate={{ rotate: open ? 45 : 0 }}>
-          {open ? <X size={20} className="text-white" /> : <Plus size={20} className="text-white" />}
+          {open ? <X size={20} className="text-current" /> : <Plus size={20} className="text-current" />}
         </motion.div>
       </button>
     </div>

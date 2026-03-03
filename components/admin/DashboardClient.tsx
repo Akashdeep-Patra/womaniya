@@ -73,26 +73,25 @@ export function DashboardClient({
       {/* Quick actions */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
-          { href: `${base}/products/new`, label: 'Add Product', icon: PlusCircle, color: '#8A1C14' },
-          { href: `${base}/categories/new`, label: 'Add Category', icon: Tags, color: '#C5A059' },
-          { href: `${base}/collections/new`, label: 'New Collection', icon: FolderOpen, color: '#2D7A4F' },
-          { href: `${base}/pages/new`, label: 'New Page', icon: FileText, color: '#1A1918' },
+          { href: `${base}/products/new`, label: 'Add Product', icon: PlusCircle, colorClass: 'text-bengal-sindoor', bgClass: 'bg-bengal-sindoor/10' },
+          { href: `${base}/categories/new`, label: 'Add Category', icon: Tags, colorClass: 'text-bengal-kansa', bgClass: 'bg-bengal-kansa/10' },
+          { href: `${base}/collections/new`, label: 'New Collection', icon: FolderOpen, colorClass: 'text-admin-success', bgClass: 'bg-admin-success/10' },
+          { href: `${base}/pages/new`, label: 'New Page', icon: FileText, colorClass: 'text-bengal-kajal', bgClass: 'bg-bengal-kajal/10' },
         ].map((action) => (
           <Link
             key={action.href}
             href={action.href}
-            className="flex items-center gap-3 rounded-lg border border-[#C5A059]/10 p-4 hover:bg-[#C5A059]/5 transition-colors group"
+            className="flex items-center gap-3 rounded-lg border border-border p-4 hover:bg-muted transition-colors group"
           >
             <div
-              className="w-10 h-10 rounded-md flex items-center justify-center shrink-0"
-              style={{ backgroundColor: `${action.color}10` }}
+              className={`w-10 h-10 rounded-md flex items-center justify-center shrink-0 ${action.bgClass}`}
             >
-              <action.icon size={18} style={{ color: action.color }} />
+              <action.icon size={18} className={action.colorClass} />
             </div>
-            <span className="text-sm font-medium text-[#1A1918]">{action.label}</span>
+            <span className="text-sm font-medium text-foreground">{action.label}</span>
             <ArrowRight
               size={14}
-              className="ml-auto text-[#1A1918]/20 group-hover:text-[#1A1918]/50 transition-colors"
+              className="ml-auto text-muted-foreground group-hover:text-foreground transition-colors"
             />
           </Link>
         ))}
@@ -101,12 +100,12 @@ export function DashboardClient({
       {/* Two column layout: Recent Products + Live Campaigns */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Recent Products */}
-        <div className="bg-white rounded-lg border border-[#C5A059]/10 overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-[#C5A059]/5">
-            <h3 className="text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/50 font-medium">
+        <div className="bg-background rounded-lg border border-border overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+            <h3 className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
               Recent Products
             </h3>
-            <Link href={`${base}/products`} className="text-[10px] tracking-wider uppercase text-[#C5A059] hover:underline">
+            <Link href={`${base}/products`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
               View all
             </Link>
           </div>
@@ -116,27 +115,27 @@ export function DashboardClient({
                 title="No products yet"
                 description="Add your first product to get started."
                 action={
-                  <Link href={`${base}/products/new`} className="text-sm text-[#8A1C14] hover:underline">
+                  <Link href={`${base}/products/new`} className="text-sm text-bengal-sindoor hover:underline">
                     Add Product
                   </Link>
                 }
               />
             </div>
           ) : (
-            <div className="divide-y divide-[#C5A059]/5">
+            <div className="divide-y divide-border">
               {recentProducts.map((product) => (
                 <Link
                   key={product.id}
                   href={`${base}/products/${product.id}/edit`}
-                  className="flex items-center justify-between px-5 py-3.5 hover:bg-[#C5A059]/3 transition-colors"
+                  className="flex items-center justify-between px-5 py-3.5 hover:bg-muted transition-colors"
                 >
                   <div>
-                    <p className="text-sm font-medium text-[#1A1918]">{product.name_en}</p>
-                    <p className="text-xs text-[#1A1918]/40 mt-0.5">{product.category}</p>
+                    <p className="text-sm font-medium text-foreground">{product.name_en}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{product.category}</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <StatusPill status={product.status} />
-                    <span className="font-editorial text-[#8A1C14]">
+                    <span className="font-editorial text-bengal-sindoor">
                       ₹{Number(product.price).toLocaleString('en-IN')}
                     </span>
                   </div>
@@ -148,30 +147,30 @@ export function DashboardClient({
 
         {/* Live Campaigns + Upcoming Collections */}
         <div className="space-y-4">
-          <div className="bg-white rounded-lg border border-[#C5A059]/10 overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-[#C5A059]/5">
-              <h3 className="text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/50 font-medium">
+          <div className="bg-background rounded-lg border border-border overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+              <h3 className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
                 Live Campaigns
               </h3>
-              <Link href={`${base}/campaigns`} className="text-[10px] tracking-wider uppercase text-[#C5A059] hover:underline">
+              <Link href={`${base}/campaigns`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
                 View all
               </Link>
             </div>
             {liveCampaigns.length === 0 ? (
-              <div className="px-5 py-6 text-center text-sm text-[#1A1918]/30">
+              <div className="px-5 py-6 text-center text-sm text-muted-foreground">
                 No active campaigns
               </div>
             ) : (
-              <div className="divide-y divide-[#C5A059]/5">
+              <div className="divide-y divide-border">
                 {liveCampaigns.map((campaign) => (
                   <Link
                     key={campaign.id}
                     href={`${base}/campaigns/${campaign.id}/edit`}
-                    className="flex items-center justify-between px-5 py-3.5 hover:bg-[#C5A059]/3 transition-colors"
+                    className="flex items-center justify-between px-5 py-3.5 hover:bg-muted transition-colors"
                   >
                     <div>
-                      <p className="text-sm font-medium text-[#1A1918]">{campaign.name_en}</p>
-                      <p className="text-xs text-[#1A1918]/40 mt-0.5">
+                      <p className="text-sm font-medium text-foreground">{campaign.name_en}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
                         {campaign.starts_at
                           ? new Date(campaign.starts_at).toLocaleDateString()
                           : ''}{' '}
@@ -188,30 +187,30 @@ export function DashboardClient({
             )}
           </div>
 
-          <div className="bg-white rounded-lg border border-[#C5A059]/10 overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-[#C5A059]/5">
-              <h3 className="text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/50 font-medium">
+          <div className="bg-background rounded-lg border border-border overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+              <h3 className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
                 Upcoming Collections
               </h3>
-              <Link href={`${base}/collections`} className="text-[10px] tracking-wider uppercase text-[#C5A059] hover:underline">
+              <Link href={`${base}/collections`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
                 View all
               </Link>
             </div>
             {upcomingCollections.length === 0 ? (
-              <div className="px-5 py-6 text-center text-sm text-[#1A1918]/30">
+              <div className="px-5 py-6 text-center text-sm text-muted-foreground">
                 No upcoming launches
               </div>
             ) : (
-              <div className="divide-y divide-[#C5A059]/5">
+              <div className="divide-y divide-border">
                 {upcomingCollections.map((col) => (
                   <Link
                     key={col.id}
                     href={`${base}/collections/${col.id}/edit`}
-                    className="flex items-center justify-between px-5 py-3.5 hover:bg-[#C5A059]/3 transition-colors"
+                    className="flex items-center justify-between px-5 py-3.5 hover:bg-muted transition-colors"
                   >
                     <div>
-                      <p className="text-sm font-medium text-[#1A1918]">{col.name_en}</p>
-                      <p className="text-xs text-[#1A1918]/40 mt-0.5">
+                      <p className="text-sm font-medium text-foreground">{col.name_en}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
                         Launches {col.launch_date ? new Date(col.launch_date).toLocaleDateString() : 'TBD'}
                       </p>
                     </div>

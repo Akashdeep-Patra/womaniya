@@ -119,7 +119,6 @@ export default async function ProductPage({ params }: Props) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
-      <Header />
 
       <main className="pt-14 md:pt-24 pb-32 md:pb-24 min-h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -270,9 +269,6 @@ export default async function ProductPage({ params }: Props) {
           </div>
         </div>
       </main>
-
-      <Footer />
-      <BottomNav />
     </>
   );
 }

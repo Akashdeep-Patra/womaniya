@@ -1,37 +1,60 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import Link from 'next/link';
 import { CategoryFilter } from './CategoryFilter';
 import { ProductCard }    from './ProductCard';
 import { EmptyState } from './EmptyState';
 import type { Product, Category } from '@/db/schema';
+import { ArrowRight } from 'lucide-react';
 
 interface Props {
   products: Product[];
   categories?: Category[];
+  isCompact?: boolean;
 }
 
-export function ShopGrid({ products, categories }: Props) {
+export function ShopGrid({ products, categories, isCompact = false }: Props) {
   const t = useTranslations('shop');
+  const locale = useLocale();
   const [activeCategory, setActiveCategory] = useState('All');
 
   const filtered = activeCategory === 'All'
     ? products
     : products.filter((p) => p.category === activeCategory);
 
+  // If compact, limit to 4 or 8 items depending on preference. Let's do 4.
+  const displayLimit = isCompact ? 4 : undefined;
+  const displayProducts = displayLimit ? filtered.slice(0, displayLimit) : filtered;
+
   return (
-    <section className="px-4 sm:px-6 py-8 md:py-12 max-w-7xl mx-auto">
+    <section className="px-4 sm:px-6 py-12 md:py-20 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="mb-6 md:mb-8">
-        <h2 className="font-editorial text-3xl md:text-4xl text-bengal-kajal mb-1">
-          {t('title')}
-        </h2>
-        <p className="text-bengal-kajal/55 text-sm">{t('subtitle')}</p>
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-6">
+        <div>
+          <h2 className="font-ancient text-4xl md:text-5xl text-bengal-kajal mb-2">
+            {isCompact ? t('title') : t('title')}
+          </h2>
+          <p className="text-bengal-kajal/60 text-sm md:text-base max-w-xl font-sans-en">
+            {t('subtitle')}
+          </p>
+        </div>
+        
+        {isCompact && (
+          <Link
+            href={`/${locale}/shop`}
+            prefetch={true}
+            className="hidden md:flex items-center gap-2 text-xs tracking-[0.2em] uppercase font-medium text-bengal-kajal hover:text-bengal-sindoor transition-colors group"
+          >
+            Explore All
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        )}
       </div>
 
       {/* Filters */}
-      <div className="mb-6">
+      <div className="mb-8 md:mb-10">
         <CategoryFilter
           active={activeCategory}
           onChange={setActiveCategory}
@@ -39,16 +62,30 @@ export function ShopGrid({ products, categories }: Props) {
         />
       </div>
 
-      {/* Masonry grid */}
+      {/* Grid */}
       {filtered.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
-          {filtered.map((product) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+          {displayProducts.map((product) => (
             <div key={product.id} className="break-inside-avoid">
               <ProductCard product={product} variant="portrait" />
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Mobile View All Button */}
+      {isCompact && (
+        <div className="mt-10 flex justify-center md:hidden">
+          <Link
+            href={`/${locale}/shop`}
+            prefetch={true}
+            className="flex items-center justify-center gap-2 h-12 px-8 bg-primary text-primary-foreground text-[11px] tracking-[0.2em] uppercase font-medium rounded-full shadow-none ring-1 ring-border/50 hover:shadow-sm transition-all"
+          >
+            Explore All Collection
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       )}
     </section>

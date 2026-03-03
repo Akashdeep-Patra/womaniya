@@ -3,13 +3,11 @@ import { getTranslations }     from 'next-intl/server';
 import type { Metadata }       from 'next';
 import dynamic from 'next/dynamic';
 
-import { Header }              from '@/components/layout/Header';
-import { Footer }              from '@/components/layout/Footer';
-import { BottomNav }           from '@/components/layout/BottomNav';
 import { HeroSection }         from '@/components/storefront/HeroSection';
 import { getFeaturedProducts } from '@/actions/products';
 import { getPublishedCategories } from '@/actions/categories';
 import { getFeaturedCollections } from '@/actions/collections';
+import { AlponaDivider }       from '@/components/illustrations/AlponaDivider';
 
 /* Below-fold sections: dynamic import to reduce initial JS and improve LCP */
 const HeritageTicker = dynamic(
@@ -49,11 +47,6 @@ const CategoriesSection = dynamic(
 
 const ShopGrid = dynamic(
   () => import('@/components/storefront/ShopGrid').then((m) => ({ default: m.ShopGrid })),
-  { ssr: true }
-);
-
-const ProcessSection = dynamic(
-  () => import('@/components/storefront/ProcessSection').then((m) => ({ default: m.ProcessSection })),
   { ssr: true }
 );
 
@@ -141,34 +134,37 @@ export default async function HomePage({ params }: Props) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }} />
-      <Header />
-
+      
       <main className="min-h-screen">
         <HeroSection />
         <HeritageTicker categories={categories} />
         
-        <ManifestoSection />
-        
         <FeaturesSection />
-        <FeaturedCollectionsSection collections={collections} />
+        
+        <div className="flex justify-center py-8 bg-bengal-kori">
+          <AlponaDivider color="#C5A059" width={140} className="opacity-40" />
+        </div>
+        
+        <FeaturedCollectionsSection collections={collections} isCompact={true} />
+        
+        <div className="flex justify-center bg-bengal-kori pb-12 pt-4">
+          <AlponaDivider color="#C5A059" width={140} className="opacity-40" />
+        </div>
         
         <GlimpsesSection />
         <ArtisanVoicesSection />
-        <CategoriesSection categories={categories} />
+        <CategoriesSection categories={categories} isCompact={true} />
 
         {featured.length > 0 && (
-          <div className="bg-bengal-cream">
-            <ShopGrid products={featured} categories={categories} />
+          <div className="bg-bengal-cream pb-12 pt-12">
+            <ShopGrid products={featured} categories={categories} isCompact={true} />
           </div>
         )}
 
-        <ProcessSection />
+        <ManifestoSection />
         <AboutSection />
         <WhatsAppSection />
       </main>
-
-      <Footer />
-      <BottomNav categories={categories} />
     </>
   );
 }

@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 
-type Variant = 'sindoor' | 'kansa' | 'mati' | 'kajal' | 'emerald';
+type Variant = 'sindoor' | 'kansa' | 'kansa-dark' | 'mati' | 'kajal' | 'emerald';
 
 interface BengalBadgeProps {
   variant?:   Variant;
@@ -10,11 +10,12 @@ interface BengalBadgeProps {
 }
 
 const variants: Record<Variant, string> = {
-  sindoor: 'bg-bengal-sindoor/10 text-bengal-sindoor border-bengal-sindoor/20 ring-1 ring-bengal-sindoor/10',
-  kansa:   'bg-bengal-kansa/15  text-bengal-kajal  border-bengal-kansa/30',
-  mati:    'bg-bengal-mati      text-bengal-kajal  border-bengal-kansa/15',
-  kajal:   'bg-bengal-kajal     text-bengal-kori   border-transparent',
-  emerald: 'bg-emerald-50       text-emerald-700   border-emerald-200',
+  sindoor: 'bg-primary/10 text-primary border-primary/20 ring-1 ring-primary/10',
+  kansa:   'bg-secondary text-foreground border-border ring-1 ring-border/50',
+  'kansa-dark': 'bg-secondary text-primary border-border ring-1 ring-border/50',
+  mati:    'bg-muted text-foreground border-border ring-1 ring-border/50',
+  kajal:   'bg-foreground text-background border-transparent',
+  emerald: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800',
 };
 
 export function BengalBadge({
@@ -26,8 +27,8 @@ export function BengalBadge({
   return (
     <span
       className={cn(
-        'inline-flex items-center px-3 py-1 rounded-full border',
-        'text-[10px] tracking-widest uppercase font-medium shadow-sm',
+        'inline-flex items-center px-3 py-1 rounded-full border shadow-none',
+        'text-[10px] tracking-widest uppercase font-medium',
         isBengali ? 'font-bengali tracking-normal text-xs' : 'font-sans-en',
         variants[variant],
         className

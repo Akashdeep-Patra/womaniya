@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import {
-  Yeseva_One,
-  Outfit,
-  Baloo_Da_2,
-  Hind_Siliguri,
+  DM_Serif_Display,
+  Jost,
+  Noto_Serif_Bengali,
+  Anek_Bangla,
 } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { setRequestLocale, getMessages } from 'next-intl/server';
@@ -19,41 +19,39 @@ import { ScrollProgress } from '@/components/layout/ScrollProgress';
 import '@/app/globals.css';
 
 /* ── Google Fonts ─────────────────────────────────────────────── */
-/* Yeseva One — very thick, rounded, feminine, modern serif */
-const yesevaOne = Yeseva_One({
-  variable: '--font-playfair', // keep variable name mapping so we don't need to change tailwind and globals
+/* DM Serif Display — very thick, aesthetic, ancient heritage serif for English */
+const dmSerifDisplay = DM_Serif_Display({
+  variable: '--font-playfair', // keep variable name mapping
   subsets: ['latin'],
   display: 'swap',
   weight: ['400'],
 });
-/* Outfit — clean, thick, slightly rounded geometric sans */
-const outfit = Outfit({
+/* Jost — clean, elegant sans for English */
+const jost = Jost({
   variable: '--font-jost',
   subsets: ['latin'],
   display: 'swap',
-  weight: ['300', '400', '500', '600', '700'],
 });
-/* Baloo Da 2 — thick, extremely rounded, modern Bengali font */
-const balooDa2 = Baloo_Da_2({
+/* Noto Serif Bengali — highly traditional, thick, heritage Bengali serif */
+const notoSerifBn = Noto_Serif_Bengali({
   variable: '--font-noto-serif-bn',
   subsets: ['bengali'],
   display: 'swap',
   weight: ['400', '500', '600', '700', '800'],
 });
-/* Hind Siliguri — clean, modern Bengali sans */
-const hindSiliguri = Hind_Siliguri({
+/* Anek Bangla — clean but solid modern Bengali font */
+const anekBn = Anek_Bangla({
   variable: '--font-anek-bn',
   subsets: ['bengali'],
   display: 'swap',
   weight: ['300', '400', '500', '600', '700'],
 });
 
-
 const fontVars = [
-  yesevaOne.variable,
-  outfit.variable,
-  balooDa2.variable,
-  hindSiliguri.variable,
+  dmSerifDisplay.variable,
+  jost.variable,
+  notoSerifBn.variable,
+  anekBn.variable,
 ].join(' ');
 
 /* ── Metadata ─────────────────────────────────────────────────── */
@@ -118,7 +116,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       suppressHydrationWarning
       className={fontVars}
     >
-      <body className="min-h-screen bg-bengal-kori text-bengal-kajal antialiased">
+      <body className="min-h-screen bg-background text-foreground antialiased">
         <CustomCursor />
         <NoiseOverlay />
         <ScrollProgress />

@@ -7,7 +7,6 @@ import { useParams } from 'next/navigation';
 import { 
   Home, 
   ShoppingBag, 
-  BookOpen, 
   Menu, 
   X, 
   ChevronRight, 
@@ -17,13 +16,16 @@ import {
   Sparkles,
   Info,
   LayoutGrid,
-  Layers
+  Layers,
+  Moon,
+  Sun
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { generalEnquiryUrl, WA_HREF } from '@/lib/whatsapp';
+import { generalEnquiryUrl } from '@/lib/whatsapp';
 import type { Category } from '@/db/schema';
+import { useTheme } from 'next-themes';
 
 interface BottomNavProps {
   categories?: Category[];
@@ -35,8 +37,14 @@ export function BottomNav({ categories: dbCategories }: BottomNavProps) {
   const params = useParams();
   const locale = params.locale as string;
   const isBn = locale === 'bn';
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -67,7 +75,7 @@ export function BottomNav({ categories: dbCategories }: BottomNavProps) {
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-bengal-kori/90 backdrop-blur-md border-t border-bengal-kansa/20 pb-safe">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-background/90 backdrop-blur-md border-t border-border pb-safe">
         <div className="grid grid-cols-5 h-15">
           {mainLinks.map(({ href, label, Icon }) => {
             const active = pathname === href;
@@ -75,6 +83,7 @@ export function BottomNav({ categories: dbCategories }: BottomNavProps) {
               <Link
                 key={href}
                 href={href}
+                prefetch={true}
                 onClick={closeSheet}
                 className={cn(
                   'flex flex-col items-center justify-center gap-1 min-h-[44px] relative',
@@ -144,8 +153,7 @@ export function BottomNav({ categories: dbCategories }: BottomNavProps) {
               animate={{ y: '0%' }}
               exit={{ y: '100%' }}
               transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-              className="fixed bottom-15 left-0 right-0 bg-bengal-kori z-30 rounded-t-3xl border-t border-bengal-kansa/30 overflow-hidden shadow-[0_-10px_40px_rgba(0,0,0,0.1)] md:hidden max-h-[80vh] flex flex-col will-change-transform"
-              style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+              className="fixed bottom-15 left-0 right-0 bg-background z-30 rounded-t-3xl border-t border-border overflow-hidden shadow-lg md:hidden max-h-[80vh] flex flex-col will-change-transform pb-[env(safe-area-inset-bottom)]"
             >
               {/* Handle */}
               <div className="flex justify-center pt-4 pb-2" onClick={closeSheet}>
@@ -156,13 +164,30 @@ export function BottomNav({ categories: dbCategories }: BottomNavProps) {
               <div className="overflow-y-auto px-6 pt-4 pb-8 flex-1 custom-scrollbar">
                 
                 {/* Brand Header */}
-                <div className="text-center mb-8">
-                  <h3 className={`text-2xl text-bengal-kajal mb-1 ${isBn ? 'font-bengali-serif' : 'font-editorial italic'}`}>
-                    Womaniya
-                  </h3>
-                  <p className="text-[9px] tracking-[0.3em] uppercase text-bengal-kansa font-sans-en">
-                    {isBn ? 'খাঁটি হস্তশিল্প' : 'Authentic Handloom'}
-                  </p>
+                <div className="flex items-center justify-between mb-8">
+                  <div>
+                    <h3 className={`text-2xl text-bengal-kajal mb-1 ${isBn ? 'font-bengali-serif' : 'font-editorial italic'}`}>
+                      Womaniya
+                    </h3>
+                    <p className="text-[9px] tracking-[0.3em] uppercase text-bengal-kansa font-sans-en">
+                      {isBn ? 'খাঁটি হস্তশিল্প' : 'Authentic Handloom'}
+                    </p>
+                  </div>
+                  
+                  {/* Theme Toggle within Sheet */}
+                  {mounted && (
+                    <button
+                      onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+                      aria-label="Toggle theme"
+                      className="h-10 w-10 rounded-full border border-bengal-kansa/40 text-bengal-kajal bg-bengal-kansa/5 flex items-center justify-center hover:bg-bengal-kajal hover:text-bengal-kori transition-colors touch-manipulation"
+                    >
+                      {resolvedTheme === 'dark' ? (
+                        <Sun className="w-4 h-4" />
+                      ) : (
+                        <Moon className="w-4 h-4" />
+                      )}
+                    </button>
+                  )}
                 </div>
 
                 {/* Main Navigation inside Sheet */}

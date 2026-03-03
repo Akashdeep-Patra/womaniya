@@ -7,10 +7,10 @@ interface BengalCardProps {
 }
 
 const variants = {
-  default:  'bg-bengal-kori shadow-sm hover:shadow-md transition-shadow duration-300',
-  elevated: 'bg-bengal-kori shadow-xl shadow-bengal-kajal/10 hover:shadow-2xl transition-shadow duration-300',
-  bordered: 'bg-bengal-kori border border-bengal-kansa/25 shadow-md shadow-bengal-kajal/5 hover:shadow-lg transition-shadow duration-300',
-  glass:    'bg-bengal-kori/80 backdrop-blur-md border border-bengal-kansa/20 shadow-md hover:shadow-lg transition-shadow duration-300',
+  default:  'bg-card shadow-sm hover:shadow-md transition-shadow duration-300 ring-1 ring-border/50',
+  elevated: 'bg-card shadow-md hover:shadow-lg transition-shadow duration-300 ring-1 ring-border/50',
+  bordered: 'bg-card border border-border shadow-sm hover:shadow-md transition-shadow duration-300',
+  glass:    'bg-card/80 backdrop-blur-md border border-border/50 shadow-sm hover:shadow-md transition-shadow duration-300',
 };
 
 export function BengalCard({ className, children, variant = 'default' }: BengalCardProps) {

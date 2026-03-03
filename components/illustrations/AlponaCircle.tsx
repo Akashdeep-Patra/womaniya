@@ -30,7 +30,7 @@ export function AlponaCircle({ className = '', width = 200, height = 200 }: { cl
         className="animate-pulse-soft"
       />
 
-      <g className="animate-spin-super-slow" style={{ transformOrigin: '100px 100px' }}>
+      <g className="animate-spin-super-slow origin-[100px_100px]">
         {/* Outer Connecting Vines/Arches */}
         {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle, i) => (
           <g key={`arch-${angle}`} transform={`rotate(${angle} 100 100)`}>
