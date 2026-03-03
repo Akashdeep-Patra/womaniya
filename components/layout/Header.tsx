@@ -1,15 +1,15 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { motion, AnimatePresence, useMotionValueEvent, useScroll } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { BrandMascot } from '@/components/illustrations/BrandMascot';
 import { useTheme } from 'next-themes';
-import { Moon, Sun, Search, ShoppingBag } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 
-const SCROLL_THRESHOLD = 200;
+const SCROLL_THRESHOLD = 150;
 const EASE: [number, number, number, number] = [0.32, 0.72, 0, 1];
 
 /* ─────────────────────────────────────────────────────────────────
@@ -31,7 +31,7 @@ function ThemeToggle() {
       aria-label="Toggle theme"
       className={cn(
         'size-8 rounded-full border flex items-center justify-center',
-        'border-border text-foreground/70 bg-transparent',
+        'border-border/50 text-foreground/70 bg-background/80 backdrop-blur-md',
         'hover:bg-foreground hover:text-background hover:border-foreground',
         'transition-all duration-300 touch-manipulation'
       )}
@@ -62,7 +62,7 @@ function LocaleToggle({ locale }: { locale: string }) {
       aria-label="Switch language"
       className={cn(
         'h-8 px-3 rounded-full border flex items-center justify-center',
-        'border-border text-foreground/70 bg-transparent',
+        'border-border/50 text-foreground/70 bg-background/80 backdrop-blur-md',
         'hover:bg-foreground hover:text-background hover:border-foreground',
         'transition-all duration-300 touch-manipulation',
         !isEn ? 'font-bengali text-sm' : 'font-sans-en text-[10px] tracking-widest font-medium'
@@ -117,25 +117,33 @@ export function Header() {
   const locale = params.locale as string;
   const isBn = locale === 'bn';
 
-  const [phase, setPhase] = useState<'expanded' | 'collapsed'>('expanded');
+  const [isScrolled, setIsScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const lastScrollYRef = useRef(0);
 
-  const { scrollY } = useScroll();
+  useEffect(() => {
+    const handleScroll = () => {
+      const y = window.scrollY;
+      const prev = lastScrollYRef.current;
 
-  useMotionValueEvent(scrollY, 'change', (y) => {
-    const prev = lastScrollYRef.current;
+      setIsScrolled(y > SCROLL_THRESHOLD);
 
-    if (y > SCROLL_THRESHOLD) {
-      setPhase('collapsed');
-      setHidden(y > prev && y > SCROLL_THRESHOLD + 100);
-    } else {
-      setPhase('expanded');
-      setHidden(false);
-    }
+      // Only hide if we've scrolled down a reasonable amount AND we are scrolling down
+      if (y > SCROLL_THRESHOLD + 100) {
+        setHidden(y > prev);
+      } else {
+        setHidden(false);
+      }
 
-    lastScrollYRef.current = y;
-  });
+      lastScrollYRef.current = y;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    // Initial check
+    handleScroll();
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navLinks = [
     { href: `/${locale}`, label: isBn ? 'হোম' : 'Home' },
@@ -145,107 +153,98 @@ export function Header() {
     { href: `/${locale}#story`, label: isBn ? 'আমাদের গল্প' : 'Story' },
   ];
 
-  const isExpanded = phase === 'expanded';
-
   return (
     <>
-      {/* ── PHASE 1: EXPANDED HEADER ── */}
+      {/* ── HEADER ── */}
       <motion.header
-        animate={{
-          opacity: isExpanded ? 1 : 0,
-          y: isExpanded ? 0 : -20,
+        animate={{ 
+          y: hidden ? -100 : 0
         }}
-        transition={{ duration: 0.35, ease: EASE }}
-        className={cn(
-          'fixed top-0 left-0 right-0 z-50 pointer-events-none',
-          isExpanded && 'pointer-events-auto',
-        )}
-        style={{ visibility: isExpanded ? 'visible' : 'hidden' }}
+        transition={{ duration: 0.4, ease: EASE }}
+        className="fixed top-0 left-0 right-0 z-50 flex justify-center pointer-events-none px-4 sm:px-6 lg:px-8 pt-4 md:pt-5"
       >
-        <div className="bg-linear-to-b from-background via-background/80 to-transparent pt-4 pb-8 md:pt-5 md:pb-12 pointer-events-none">
-          <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pointer-events-auto">
-            <div className="flex items-center justify-between h-12 md:h-14">
-
-              {/* Logo */}
-              <Link href={`/${locale}`} className="group flex items-center gap-2.5 shrink-0">
-                <div className="relative size-10 md:size-11 rounded-full bg-secondary border border-border flex items-center justify-center overflow-hidden">
-                  <BrandMascot size={26} className="text-foreground transition-transform duration-500 group-hover:scale-110 translate-y-[2px]" />
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                    className="absolute inset-0 border-[0.5px] border-dashed border-primary/30 rounded-full scale-[0.85]"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-sans-en font-extrabold tracking-[0.2em] md:tracking-[0.25em] text-[17px] md:text-[20px] text-foreground uppercase leading-none">
-                    WOMANIYA
-                  </span>
-                  <span className="text-[8px] md:text-[9px] tracking-[0.3em] uppercase text-primary/80 font-sans-en mt-0.5 hidden sm:block">
-                    {isBn ? 'স্থাপিত ২০১৯' : 'EST. 2019'}
-                  </span>
-                </div>
-              </Link>
-
-              {/* Center Nav */}
-              <nav className="hidden lg:flex items-center gap-1 xl:gap-2 bg-secondary/60 px-5 py-2 rounded-full border border-border/40 transition-all duration-300">
-                {navLinks.map((l) => (
-                  <NavLink key={l.href} href={l.href} label={l.label} isBn={isBn} />
-                ))}
-              </nav>
-
-              {/* Right Actions */}
-              <div className="flex items-center gap-2 shrink-0">
-                <ThemeToggle />
-                <LocaleToggle locale={locale} />
-              </div>
-
-            </div>
+        <motion.div
+          layout
+          initial={false}
+          transition={{ duration: 0.4, ease: EASE }}
+          className={cn(
+            "flex items-center justify-between pointer-events-auto overflow-hidden",
+            isScrolled 
+              ? "bg-background/85 backdrop-blur-xl border border-border/60 shadow-lg rounded-full px-2 pr-4 md:px-3 md:pr-5 py-1.5 gap-4 lg:gap-8 w-max" 
+              : "w-full max-w-7xl bg-transparent gap-4 h-12 md:h-14"
+          )}
+        >
+        {/* Logo */}
+        <Link 
+          href={`/${locale}`} 
+          className={cn(
+            "group flex items-center shrink-0 transition-all duration-300 pointer-events-auto",
+            isScrolled 
+              ? "gap-2 bg-background/50 hover:bg-background/80 p-1.5 pr-3 md:pr-4 rounded-full" 
+              : "gap-2.5"
+          )}
+        >
+          <div className={cn(
+            "relative rounded-full border flex items-center justify-center overflow-hidden transition-all duration-300",
+            isScrolled ? "size-8 md:size-9 bg-secondary border-border" : "size-10 md:size-11 bg-background/80 backdrop-blur-md border-border/50"
+          )}>
+            <BrandMascot 
+              size={isScrolled ? 20 : 26} 
+              className={cn(
+                "text-foreground transition-transform duration-500 group-hover:scale-110",
+                !isScrolled && "translate-y-[2px]"
+              )} 
+            />
+            {!isScrolled && (
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                className="absolute inset-0 border-[0.5px] border-dashed border-primary/30 rounded-full scale-[0.85]"
+              />
+            )}
           </div>
+          <div className="flex flex-col justify-center">
+            <span className={cn(
+              "font-sans-en font-extrabold text-foreground uppercase leading-none transition-all duration-300",
+              isScrolled 
+                ? "tracking-[0.18em] text-[12px] md:text-[14px] hidden sm:block" 
+                : "tracking-[0.2em] md:tracking-[0.25em] text-[17px] md:text-[20px]"
+            )}>
+              WOMANIYA
+            </span>
+            {!isScrolled && (
+              <span className="text-[8px] md:text-[9px] tracking-[0.3em] uppercase text-primary/80 font-sans-en mt-0.5 hidden sm:block">
+                {isBn ? 'স্থাপিত ২০১৯' : 'EST. 2019'}
+              </span>
+            )}
+          </div>
+        </Link>
+
+        {/* Center Nav */}
+        <nav className={cn(
+          "hidden lg:flex items-center transition-all duration-300 pointer-events-auto",
+          isScrolled 
+            ? "gap-1" 
+            : "gap-1 xl:gap-2 px-5 py-2"
+        )}>
+          {navLinks.map((l) => (
+            isScrolled 
+              ? <CompactNavLink key={l.href} href={l.href} label={l.label} isBn={isBn} />
+              : <NavLink key={l.href} href={l.href} label={l.label} isBn={isBn} />
+          ))}
+        </nav>
+
+        {/* Right Actions */}
+        <div className={cn(
+          "flex items-center gap-2 shrink-0 transition-all duration-300 pointer-events-auto",
+          isScrolled ? "border-l border-border/50 pl-4 lg:pl-0 lg:border-none" : "pr-2"
+        )}>
+          <ThemeToggle />
+          <LocaleToggle locale={locale} />
         </div>
+
+        </motion.div>
       </motion.header>
-
-      {/* ── PHASE 2: COLLAPSED STICKY BAR (AIRBNB STYLE PILL) ── */}
-      <AnimatePresence>
-        {!isExpanded && (
-          <motion.div
-            key="sticky-bar"
-            initial={{ y: -80, opacity: 0, scale: 0.95 }}
-            animate={{ y: hidden ? -100 : 0, opacity: hidden ? 0 : 1, scale: 1 }}
-            exit={{ y: -80, opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.4, ease: EASE }}
-            className="fixed top-4 md:top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none"
-          >
-            <div className="bg-background/85 backdrop-blur-xl border border-border/60 shadow-lg rounded-full pointer-events-auto px-2 pr-4 md:px-3 md:pr-5">
-              <div className="flex items-center gap-4 lg:gap-8 h-12 md:h-14">
-
-                {/* Logo compact */}
-                <Link href={`/${locale}`} className="group flex items-center gap-2 shrink-0 bg-background/50 hover:bg-background/80 transition-colors p-1.5 pr-3 md:pr-4 rounded-full">
-                  <div className="relative size-8 md:size-9 rounded-full bg-secondary border border-border flex items-center justify-center overflow-hidden">
-                    <BrandMascot size={20} className="text-foreground translate-y-px transition-transform duration-500 group-hover:scale-110" />
-                  </div>
-                  <span className="font-sans-en font-bold tracking-[0.18em] text-[12px] md:text-[14px] text-foreground uppercase leading-none hidden sm:block">
-                    WOMANIYA
-                  </span>
-                </Link>
-
-                {/* Center: Compact nav */}
-                <nav className="hidden lg:flex items-center gap-1">
-                  {navLinks.map((l) => (
-                    <CompactNavLink key={l.href} href={l.href} label={l.label} isBn={isBn} />
-                  ))}
-                </nav>
-
-                {/* Right: Compact actions */}
-                <div className="flex items-center gap-2 shrink-0 border-l border-border/50 pl-4 lg:pl-0 lg:border-none">
-                  <ThemeToggle />
-                  <LocaleToggle locale={locale} />
-                </div>
-
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 }

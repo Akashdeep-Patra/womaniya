@@ -65,7 +65,7 @@ export function CategoriesSection({ categories, isCompact = false }: Props) {
       {/* Carousel */}
       <div
         ref={scrollRef}
-        className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none pl-4 sm:pl-6 pr-4"
+        className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] pl-4 sm:pl-6 pr-4"
         data-lenis-prevent
       >
         {(isCompact ? categories.slice(0, 4) : categories).map((cat, i) => {

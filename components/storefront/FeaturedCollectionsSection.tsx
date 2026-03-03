@@ -22,7 +22,7 @@ export function FeaturedCollectionsSection({ collections, isCompact = false }: P
   if (!collections || collections.length === 0) return null;
 
   return (
-    <section className="py-20 md:py-32 relative overflow-hidden bg-bengal-kori">
+    <section className="py-20 md:py-32 relative overflow-hidden bg-background">
       <div className="px-4 sm:px-6 max-w-7xl mx-auto mb-12 md:mb-16 flex flex-col items-center text-center">
         <motion.p 
           initial={{ opacity: 0, y: 10 }}
@@ -112,7 +112,7 @@ export function FeaturedCollectionsSection({ collections, isCompact = false }: P
             <Link 
               href={`/${locale}/collections`}
               prefetch={true}
-              className="px-8 py-3 rounded-full border border-bengal-kansa text-bengal-kajal hover:bg-bengal-kansa hover:text-bengal-kori transition-colors duration-300 text-xs tracking-widest uppercase font-sans-en"
+              className="px-8 py-3 rounded-full border border-primary text-foreground hover:bg-primary hover:text-primary-foreground transition-colors duration-300 text-xs tracking-widest uppercase font-sans-en"
             >
               {isBn ? 'সব সংগ্রহ' : 'View All Collections'}
             </Link>

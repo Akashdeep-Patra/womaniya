@@ -20,16 +20,16 @@ export function HeritageTicker({ categories }: Props) {
   const items = [...allItems, ...allItems];
 
   return (
-    <div className="bg-bengal-kajal py-3 overflow-hidden border-y border-bengal-kansa/20">
+    <div className="bg-foreground py-3 overflow-hidden border-y border-primary/20">
       <div className="flex gap-8 whitespace-nowrap animate-ticker-marquee">
         {items.map((item, i) => (
           <span key={i} className="flex items-center gap-8 shrink-0">
-            <span className={`text-[11px] tracking-[0.25em] uppercase font-medium text-bengal-kori/70 ${
+            <span className={`text-[11px] tracking-[0.25em] uppercase font-medium text-background/70 ${
               /[\u0980-\u09FF]/.test(item) ? 'font-bengali tracking-normal text-xs' : 'font-sans-en'
             }`}>
               {item}
             </span>
-            <span className="w-1 h-1 rounded-full bg-bengal-kansa opacity-60 shrink-0" />
+            <span className="w-1 h-1 rounded-full bg-primary opacity-60 shrink-0" />
           </span>
         ))}
       </div>

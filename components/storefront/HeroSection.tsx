@@ -59,7 +59,6 @@ export function HeroSection() {
       ref={containerRef}
       className="relative w-full bg-background overflow-hidden"
     >
-      {/* Ambient atmosphere */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-background to-secondary/10" />
         <div className="absolute left-[8%] top-0 bottom-0 w-px bg-primary/5 hidden lg:block" />
@@ -69,7 +68,7 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 w-full max-w-[1800px] mx-auto px-5 sm:px-6 md:px-8 lg:px-[6%] xl:px-[8%]">
-        <div className="flex flex-col lg:flex-row lg:items-center min-h-svh pt-[140px] sm:pt-[160px] lg:pt-0 pb-12 lg:pb-0 gap-8 lg:gap-0">
+        <div className="flex flex-col lg:flex-row lg:items-center min-h-[100svh] pt-[140px] sm:pt-[160px] lg:pt-[140px] pb-12 lg:pb-0 gap-8 lg:gap-0">
 
           {/* ── TYPOGRAPHY ── */}
           <motion.div
@@ -143,14 +142,14 @@ export function HeroSection() {
             >
               <Link
                 href={`/${locale}/shop`}
-                className="group relative inline-flex items-center justify-center h-12 md:h-14 px-8 md:px-10 bg-foreground text-background text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium rounded-full overflow-hidden transition-all hover:shadow-md hover:-translate-y-0.5"
+                className="group relative inline-flex items-center justify-center h-12 md:h-14 px-8 md:px-10 bg-foreground text-background text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium rounded-full overflow-hidden transition-all hover:shadow-md hover:-translate-y-0.5 pointer-events-auto"
               >
                 <span className="absolute inset-0 bg-primary w-0 group-hover:w-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]" />
                 <span className="relative z-10 group-hover:text-primary-foreground transition-colors duration-500">{t('cta_shop')}</span>
               </Link>
               <Link
                 href={`/${locale}#story`}
-                className="group flex items-center gap-2 text-[10px] md:text-[11px] tracking-[0.2em] uppercase text-foreground/70 hover:text-primary transition-colors font-medium py-2"
+                className="group flex items-center gap-2 text-[10px] md:text-[11px] tracking-[0.2em] uppercase text-foreground/70 hover:text-primary transition-colors font-medium py-2 pointer-events-auto"
               >
                 <span className="relative pb-0.5">
                   {t('cta_story')}

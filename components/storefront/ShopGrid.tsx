@@ -33,10 +33,10 @@ export function ShopGrid({ products, categories, isCompact = false }: Props) {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-6">
         <div>
-          <h2 className="font-ancient text-4xl md:text-5xl text-bengal-kajal mb-2">
+          <h2 className="font-ancient text-4xl md:text-5xl text-foreground mb-2">
             {isCompact ? t('title') : t('title')}
           </h2>
-          <p className="text-bengal-kajal/60 text-sm md:text-base max-w-xl font-sans-en">
+          <p className="text-muted-foreground text-sm md:text-base max-w-xl font-sans-en">
             {t('subtitle')}
           </p>
         </div>
@@ -45,7 +45,7 @@ export function ShopGrid({ products, categories, isCompact = false }: Props) {
           <Link
             href={`/${locale}/shop`}
             prefetch={true}
-            className="hidden md:flex items-center gap-2 text-xs tracking-[0.2em] uppercase font-medium text-bengal-kajal hover:text-bengal-sindoor transition-colors group"
+            className="hidden md:flex items-center gap-2 text-xs tracking-[0.2em] uppercase font-medium text-foreground hover:text-primary transition-colors group"
           >
             Explore All
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

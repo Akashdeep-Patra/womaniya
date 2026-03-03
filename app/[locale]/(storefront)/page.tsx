@@ -141,14 +141,14 @@ export default async function HomePage({ params }: Props) {
         
         <FeaturesSection />
         
-        <div className="flex justify-center py-8 bg-bengal-kori">
-          <AlponaDivider color="#C5A059" width={140} className="opacity-40" />
+        <div className="flex justify-center py-8 bg-background">
+          <AlponaDivider color="currentColor" className="text-primary opacity-40" width={140} />
         </div>
         
         <FeaturedCollectionsSection collections={collections} isCompact={true} />
         
-        <div className="flex justify-center bg-bengal-kori pb-12 pt-4">
-          <AlponaDivider color="#C5A059" width={140} className="opacity-40" />
+        <div className="flex justify-center bg-background pb-12 pt-4">
+          <AlponaDivider color="currentColor" className="text-primary opacity-40" width={140} />
         </div>
         
         <GlimpsesSection />
@@ -156,7 +156,7 @@ export default async function HomePage({ params }: Props) {
         <CategoriesSection categories={categories} isCompact={true} />
 
         {featured.length > 0 && (
-          <div className="bg-bengal-cream pb-12 pt-12">
+          <div className="bg-muted/30 pb-12 pt-12 border-y border-border/50">
             <ShopGrid products={featured} categories={categories} isCompact={true} />
           </div>
         )}
