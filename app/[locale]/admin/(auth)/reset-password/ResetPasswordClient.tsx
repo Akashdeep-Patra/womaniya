@@ -26,7 +26,7 @@ export default function ResetPasswordClient() {
       <div className="min-h-screen bg-bengal-kori flex items-center justify-center px-4">
         <div className="text-center">
           <p className="text-bengal-alta mb-4">Invalid or missing reset token.</p>
-          <Link href={`/${locale}/admin/login`} className="text-sm font-medium text-bengal-kansa hover:underline">
+          <Link prefetch={true} href={`/${locale}/admin/login`} className="text-sm font-medium text-bengal-kansa hover:underline">
             Go back to login
           </Link>
         </div>
@@ -89,7 +89,7 @@ export default function ResetPasswordClient() {
                 Your password has been reset successfully. Redirecting to login...
               </p>
             </div>
-            <Link href={`/${locale}/admin/login`} className="text-xs font-semibold uppercase tracking-wider text-bengal-sindoor hover:text-bengal-alta transition-colors">
+            <Link prefetch={true} href={`/${locale}/admin/login`} className="text-xs font-semibold uppercase tracking-wider text-bengal-sindoor hover:text-bengal-alta transition-colors">
               Go to Login now
             </Link>
           </div>

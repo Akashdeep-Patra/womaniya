@@ -75,7 +75,7 @@ export default function LoginPage() {
               autoComplete="current-password"
             />
             <div className="flex justify-end">
-              <Link href={`/${locale}/admin/forgot-password`} className="text-xs text-bengal-kansa hover:text-bengal-kajal transition-colors">
+              <Link prefetch={true} href={`/${locale}/admin/forgot-password`} className="text-xs text-bengal-kansa hover:text-bengal-kajal transition-colors">
                 Forgot password?
               </Link>
             </div>

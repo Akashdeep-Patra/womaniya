@@ -111,7 +111,7 @@ export default async function CollectionPage({ params }: Props) {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map(p => (
-              <Link key={p.id} href={`/${locale}/shop/${p.slug}`} className="group">
+              <Link prefetch={true} key={p.id} href={`/${locale}/shop/${p.slug}`} className="group">
                 <div className="relative aspect-3/4 rounded-xl overflow-hidden bg-bengal-mati mb-3">
                   <Image src={p.image_url} alt={p.name_en} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>

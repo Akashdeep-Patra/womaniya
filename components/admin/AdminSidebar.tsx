@@ -83,7 +83,7 @@ export function AdminSidebar({ locale }: { locale: string }) {
       {/* Logo area */}
       <div className="h-16 flex items-center px-4 border-b border-[#C5A059]/10">
         {!collapsed && (
-          <Link href={`/${locale}/admin`} className="flex items-center gap-2">
+          <Link prefetch={true} href={`/${locale}/admin`} className="flex items-center gap-2">
             <span className="font-editorial text-xl text-[#C5A059]">W</span>
             <span className="text-[10px] tracking-[0.2em] uppercase text-[#F9F6F0]/60">
               Womaniya
@@ -91,7 +91,7 @@ export function AdminSidebar({ locale }: { locale: string }) {
           </Link>
         )}
         {collapsed && (
-          <Link href={`/${locale}/admin`} className="mx-auto">
+          <Link prefetch={true} href={`/${locale}/admin`} className="mx-auto">
             <span className="font-editorial text-xl text-[#C5A059]">W</span>
           </Link>
         )}

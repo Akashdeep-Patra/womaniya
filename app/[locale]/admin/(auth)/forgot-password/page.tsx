@@ -57,7 +57,7 @@ export default function ForgotPasswordPage() {
                 If an account exists with that email, a password reset link has been sent. Check your terminal logs if you are developing locally without an SMTP server.
               </p>
             </div>
-            <Link href={`/${locale}/admin/login`} className="text-xs font-semibold uppercase tracking-wider text-bengal-sindoor hover:text-bengal-alta transition-colors">
+            <Link prefetch={true} href={`/${locale}/admin/login`} className="text-xs font-semibold uppercase tracking-wider text-bengal-sindoor hover:text-bengal-alta transition-colors">
               Return to Login
             </Link>
           </div>
@@ -87,7 +87,7 @@ export default function ForgotPasswordPage() {
             </BengalButton>
 
             <div className="text-center mt-4">
-              <Link href={`/${locale}/admin/login`} className="text-xs text-bengal-kansa hover:text-bengal-kajal transition-colors">
+              <Link prefetch={true} href={`/${locale}/admin/login`} className="text-xs text-bengal-kansa hover:text-bengal-kajal transition-colors">
                 Back to login
               </Link>
             </div>

@@ -105,7 +105,7 @@ export function DashboardClient({
             <h3 className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
               Recent Products
             </h3>
-            <Link href={`${base}/products`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
+            <Link prefetch={true} href={`${base}/products`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
               View all
             </Link>
           </div>
@@ -115,7 +115,7 @@ export function DashboardClient({
                 title="No products yet"
                 description="Add your first product to get started."
                 action={
-                  <Link href={`${base}/products/new`} className="text-sm text-bengal-sindoor hover:underline">
+                  <Link prefetch={true} href={`${base}/products/new`} className="text-sm text-bengal-sindoor hover:underline">
                     Add Product
                   </Link>
                 }
@@ -152,7 +152,7 @@ export function DashboardClient({
               <h3 className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
                 Live Campaigns
               </h3>
-              <Link href={`${base}/campaigns`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
+              <Link prefetch={true} href={`${base}/campaigns`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
                 View all
               </Link>
             </div>
@@ -192,7 +192,7 @@ export function DashboardClient({
               <h3 className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
                 Upcoming Collections
               </h3>
-              <Link href={`${base}/collections`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
+              <Link prefetch={true} href={`${base}/collections`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
                 View all
               </Link>
             </div>

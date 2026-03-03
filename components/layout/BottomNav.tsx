@@ -193,7 +193,7 @@ export function BottomNav({ categories: dbCategories, waNumber }: BottomNavProps
 
                 {/* Main Navigation inside Sheet */}
                 <div className="space-y-4 mb-8">
-                  <Link href={`/${locale}/shop`} onClick={closeSheet} className="flex items-center justify-between group">
+                  <Link prefetch={true} href={`/${locale}/shop`} onClick={closeSheet} className="flex items-center justify-between group">
                     <div className="flex items-center gap-3 text-bengal-kajal">
                       <Sparkles size={20} strokeWidth={2} className="text-bengal-kansa drop-shadow-sm fill-bengal-kansa/20" />
                       <span className={`text-lg ${isBn ? 'font-bengali' : 'font-sans-en font-light tracking-wide'}`}>
@@ -202,7 +202,7 @@ export function BottomNav({ categories: dbCategories, waNumber }: BottomNavProps
                     </div>
                     <ChevronRight size={18} strokeWidth={2} className="text-bengal-kajal/40 group-hover:text-bengal-kansa transition-colors drop-shadow-sm" />
                   </Link>
-                  <Link href={`/${locale}#story`} onClick={closeSheet} className="flex items-center justify-between group">
+                  <Link prefetch={true} href={`/${locale}#story`} onClick={closeSheet} className="flex items-center justify-between group">
                     <div className="flex items-center gap-3 text-bengal-kajal">
                       <Info size={20} strokeWidth={2} className="text-bengal-kansa drop-shadow-sm fill-bengal-kansa/20" />
                       <span className={`text-lg ${isBn ? 'font-bengali' : 'font-sans-en font-light tracking-wide'}`}>
