@@ -105,18 +105,16 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
       )}
 
       {/* Images */}
-      <div>
-        <label className="block text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium mb-1.5">
-          Images
-        </label>
-        <p className="text-muted-foreground/80 text-xs mb-3">
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl mb-1 text-foreground">Images</h3>
+        <p className="text-muted-foreground text-xs mb-3 md:mb-4">
           First image is the cover. Multiple images create an auto-sliding carousel.
         </p>
         <Reorder.Group
           axis="x"
           values={images}
           onReorder={setImages}
-          className="flex gap-3 overflow-x-auto pb-4"
+          className="flex gap-3 overflow-x-auto pb-4 pt-1 px-1 -mx-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
         >
           {images.map((url, i) => (
             <Reorder.Item
@@ -154,7 +152,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
       </div>
 
       {/* Language Tabs */}
-      <div>
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border">
         <div className="flex gap-1 mb-4">
           {(['en', 'bn'] as const).map((tab) => (
             <button
@@ -270,10 +268,8 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
       </div>
 
       {/* SEO */}
-      <div className="border border-border rounded-lg p-4 md:p-5 space-y-4">
-        <h3 className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
-          SEO
-        </h3>
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-4">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">SEO</h3>
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label
@@ -373,7 +369,8 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
       </div>
 
       {/* Status */}
-      <div>
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-4">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Settings</h3>
         <label
           htmlFor="status"
           className="block text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium mb-1.5"
@@ -405,7 +402,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
             type="submit"
             disabled={isPending}
             className={cn(
-              'flex-1 py-3.5 min-h-[44px] bg-primary text-primary-foreground text-sm tracking-wider uppercase rounded-xl transition-colors shadow-2xl touch-manipulation',
+              'flex-1 py-3.5 min-h-[44px] bg-primary text-primary-foreground font-sans font-semibold tracking-wide rounded-xl transition-colors shadow-2xl touch-manipulation',
               isPending ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/90 active:scale-[0.98]'
             )}
           >
@@ -414,7 +411,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-5 py-3.5 min-h-[44px] text-sm text-muted-foreground hover:text-foreground bg-background/80 backdrop-blur-sm rounded-xl border border-border shadow-lg transition-colors touch-manipulation"
+            className="px-5 py-3.5 min-h-[44px] font-sans font-semibold text-muted-foreground hover:text-foreground bg-card backdrop-blur-sm rounded-xl border border-border shadow-lg transition-colors touch-manipulation"
           >
             Cancel
           </button>
