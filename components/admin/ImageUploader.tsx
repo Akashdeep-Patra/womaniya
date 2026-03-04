@@ -58,15 +58,15 @@ export function ImageUploader({
 
   if (value) {
     return (
-      <div className={cn('relative rounded-lg overflow-hidden border border-[#C5A059]/15 group', aspectClass, className)}>
+      <div className={cn('relative rounded-lg overflow-hidden border border-border group', aspectClass, className)}>
         <Image src={value} alt="" fill className="object-cover" />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
           {onRemove && (
             <button
               onClick={onRemove}
-              className="w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              className="w-9 h-9 rounded-full bg-background/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-foreground"
             >
-              <X size={16} className="text-[#8A1C14]" />
+              <X size={16} className="text-destructive" />
             </button>
           )}
         </div>
@@ -81,7 +81,7 @@ export function ImageUploader({
       onDrop={handleDrop}
       className={cn(
         'flex flex-col items-center justify-center rounded-lg border-2 border-dashed cursor-pointer transition-colors',
-        dragOver ? 'border-[#C5A059] bg-[#C5A059]/5' : 'border-[#C5A059]/20 hover:border-[#C5A059]/40',
+        dragOver ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/40',
         uploading && 'pointer-events-none opacity-50',
         aspectClass,
         className,
@@ -89,14 +89,14 @@ export function ImageUploader({
     >
       <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
       {uploading ? (
-        <div className="w-8 h-8 border-2 border-[#C5A059] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       ) : (
         <>
-          <div className="w-12 h-12 rounded-full bg-[#1A1918]/5 flex items-center justify-center mb-3">
-            <Upload size={20} className="text-foreground/30" />
+          <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
+            <Upload size={20} className="text-muted-foreground" />
           </div>
-          <p className="text-xs text-foreground/40">
-            Drop image or <span className="text-[#C5A059] underline">browse</span>
+          <p className="text-xs text-muted-foreground">
+            Drop image or <span className="text-primary underline">browse</span>
           </p>
         </>
       )}

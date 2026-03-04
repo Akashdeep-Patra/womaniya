@@ -31,13 +31,13 @@ export function DashboardClient({
       {/* KPI cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
         <StatCard
-          icon={<Package size={18} className="text-[#C5A059]" />}
+          icon={<Package size={18} className="text-primary" />}
           label="Total Products"
           value={stats.totalProducts}
           variant="dark"
         />
         <StatCard
-          icon={<Tags size={18} className="text-[#8A1C14]" />}
+          icon={<Tags size={18} className="text-primary" />}
           label="Categories"
           value={stats.totalCategories}
           variant="accent"

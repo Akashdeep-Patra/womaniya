@@ -38,7 +38,7 @@ export default async function EditPage({ params }: Props) {
           href={`/${locale}/pages/${page.slug}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[10px] tracking-widest uppercase text-bengal-sindoor hover:text-bengal-alta transition-colors font-semibold bg-bengal-sindoor/10 px-3 py-1.5 rounded-full"
+          className="text-[10px] tracking-widest uppercase text-primary hover:text-primary/80 transition-colors font-semibold bg-primary/10 px-3 py-1.5 rounded-full"
         >
           View Live ↗
         </a>

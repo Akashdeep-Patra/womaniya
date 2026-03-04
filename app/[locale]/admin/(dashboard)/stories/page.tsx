@@ -26,7 +26,7 @@ export default async function StoriesIndex({ params }: Props) {
         </div>
         <Link prefetch={true}
           href={`/${locale}/admin/stories/new`}
-          className="flex items-center gap-2 bg-bengal-sindoor text-white px-4 py-2 rounded-full text-xs font-semibold tracking-wide hover:bg-bengal-alta transition-colors"
+          className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-full text-xs font-semibold tracking-wide hover:bg-primary/90 transition-colors"
         >
           <Plus size={16} />
           <span className="hidden sm:inline">Create Story</span>

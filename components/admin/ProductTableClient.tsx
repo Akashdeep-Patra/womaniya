@@ -149,7 +149,7 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
       data={products}
       keyExtractor={(p) => p.id}
       getRowHref={(p) => getEditUrl(p.id)}
-      emptyMessage="No products yet. Add your first saree!"
+      emptyMessage="No products yet. Add your first product!"
       mobileCard={mobileCard}
     />
   );

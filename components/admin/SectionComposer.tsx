@@ -44,8 +44,8 @@ export function SectionComposer({ sections, onChange }: Props) {
   return (
     <div className="flex flex-col gap-6">
       {sections.length === 0 ? (
-        <div className="text-center py-12 border border-dashed border-bengal-kansa/30 rounded-2xl bg-white/50">
-          <p className="text-sm text-foreground/50 mb-4">No sections added yet. Build your page by adding sections.</p>
+        <div className="text-center py-12 border border-dashed border-border rounded-2xl bg-card">
+          <p className="text-sm text-muted-foreground mb-4">No sections added yet. Build your page by adding sections.</p>
           <BengalButton type="button" variant="outline" onClick={() => setShowAddMenu(true)}>
             Add First Section
           </BengalButton>
@@ -53,18 +53,18 @@ export function SectionComposer({ sections, onChange }: Props) {
       ) : (
         <Reorder.Group axis="y" values={sections} onReorder={onChange} className="flex flex-col gap-4">
           {sections.map((section) => (
-            <Reorder.Item key={section.id} value={section} className="bg-white rounded-xl border border-bengal-kansa/20 p-4 shadow-sm relative group cursor-grab active:cursor-grabbing">
-              <div className="flex items-center justify-between mb-4 pb-3 border-b border-bengal-kansa/10">
+            <Reorder.Item key={section.id} value={section} className="bg-card rounded-xl border border-border p-4 shadow-sm relative group cursor-grab active:cursor-grabbing">
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
                 <div className="flex items-center gap-2">
-                  <GripVertical size={16} className="text-foreground/20" />
-                  <span className="text-[10px] tracking-widest uppercase font-medium text-foreground/60 bg-bengal-mati px-2 py-1 rounded">
+                  <GripVertical size={16} className="text-muted-foreground" />
+                  <span className="text-[10px] tracking-widest uppercase font-medium text-muted-foreground bg-muted px-2 py-1 rounded">
                     {section.type.replace('_', ' ')}
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => removeSection(section.id)}
-                  className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground/30 hover:text-bengal-alta transition-colors touch-manipulation -mr-2"
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors touch-manipulation -mr-2"
                 >
                   <X size={18} />
                 </button>
@@ -83,17 +83,17 @@ export function SectionComposer({ sections, onChange }: Props) {
         <button
           type="button"
           onClick={() => setShowAddMenu(true)}
-          className="flex items-center justify-center gap-2 w-full py-4 border border-dashed border-bengal-kansa/30 rounded-xl text-foreground/50 hover:bg-bengal-mati/50 hover:text-foreground transition-colors text-sm"
+          className="flex items-center justify-center gap-2 w-full py-4 border border-dashed border-border rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground transition-colors text-sm"
         >
           <Plus size={16} /> Add Section
         </button>
       )}
 
       {showAddMenu && (
-        <div className="bg-white p-4 rounded-xl border border-bengal-kansa/20 shadow-lg">
+        <div className="bg-card p-4 rounded-xl border border-border shadow-lg">
           <div className="flex items-center justify-between mb-4">
             <h4 className="text-sm font-medium text-foreground">Select Section Type</h4>
-            <button type="button" onClick={() => setShowAddMenu(false)} className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground/40 hover:text-foreground touch-manipulation -mr-2"><X size={18} /></button>
+            <button type="button" onClick={() => setShowAddMenu(false)} className="min-w-[44px] min-h-[44px] flex items-center justify-center text-muted-foreground hover:text-foreground touch-manipulation -mr-2"><X size={18} /></button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {(['hero', 'richtext', 'image_text', 'product_grid', 'quote', 'cta', 'gallery', 'testimonial'] as SectionType[]).map(type => (
@@ -101,7 +101,7 @@ export function SectionComposer({ sections, onChange }: Props) {
                 key={type}
                 type="button"
                 onClick={() => addSection(type)}
-                className="p-3 min-h-[44px] text-left border border-bengal-kansa/10 rounded-lg hover:border-bengal-kansa/40 hover:bg-bengal-mati/50 active:bg-bengal-mati transition-colors touch-manipulation"
+                className="p-3 min-h-[44px] text-left border border-border rounded-lg hover:border-primary/40 hover:bg-muted active:bg-muted/80 transition-colors touch-manipulation text-foreground"
               >
                 <span className="text-xs capitalize">{type.replace('_', ' ')}</span>
               </button>
@@ -138,10 +138,10 @@ function SectionEditor({ section, onChange }: { section: SectionData; onChange: 
     case 'hero':
       return (
         <div className="flex flex-col gap-3">
-          <input type="text" placeholder="Hero Title" value={section.content.title || ''} onChange={(e) => handleChange('title', e.target.value)} className="w-full text-lg font-sans font-semibold tracking-tight p-2 border-b border-bengal-kansa/20 focus:outline-none" />
-          <input type="text" placeholder="Subtitle" value={section.content.subtitle || ''} onChange={(e) => handleChange('subtitle', e.target.value)} className="w-full text-sm p-2 border-b border-bengal-kansa/20 focus:outline-none" />
+          <input type="text" placeholder="Hero Title" value={section.content.title || ''} onChange={(e) => handleChange('title', e.target.value)} className="w-full text-lg font-sans font-semibold tracking-tight p-2 border-b border-border bg-transparent focus:outline-none text-foreground" />
+          <input type="text" placeholder="Subtitle" value={section.content.subtitle || ''} onChange={(e) => handleChange('subtitle', e.target.value)} className="w-full text-sm p-2 border-b border-border bg-transparent focus:outline-none text-foreground" />
           <div className="mt-2">
-            <label className="text-[10px] uppercase mb-1 block">Background Image</label>
+            <label className="text-[10px] uppercase mb-1 block text-muted-foreground">Background Image</label>
             <CameraUpload onUpload={(url) => handleChange('image_url', url)} initialUrl={section.content.image_url} />
           </div>
         </div>
@@ -149,27 +149,27 @@ function SectionEditor({ section, onChange }: { section: SectionData; onChange: 
     case 'richtext':
       return (
         <div className="flex flex-col gap-3">
-          <textarea placeholder="Write your content here (Markdown supported)..." value={section.content.content_en || ''} onChange={(e) => handleChange('content_en', e.target.value)} rows={6} className="w-full text-sm p-3 border border-bengal-kansa/20 rounded focus:outline-none resize-y" />
+          <textarea placeholder="Write your content here (Markdown supported)..." value={section.content.content_en || ''} onChange={(e) => handleChange('content_en', e.target.value)} rows={6} className="w-full text-sm p-3 border border-border bg-transparent rounded focus:outline-none resize-y text-foreground" />
         </div>
       );
     case 'image_text':
       return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-[10px] uppercase mb-1 block">Image</label>
+            <label className="text-[10px] uppercase mb-1 block text-muted-foreground">Image</label>
             <CameraUpload onUpload={(url) => handleChange('image_url', url)} initialUrl={section.content.image_url} />
           </div>
           <div className="flex flex-col gap-2">
-            <select value={section.content.layout || 'image_left'} onChange={(e) => handleChange('layout', e.target.value)} className="w-full text-sm p-2 border border-bengal-kansa/20 rounded focus:outline-none">
+            <select value={section.content.layout || 'image_left'} onChange={(e) => handleChange('layout', e.target.value)} className="w-full text-sm p-2 border border-border bg-transparent rounded focus:outline-none text-foreground">
               <option value="image_left">Image Left</option>
               <option value="image_right">Image Right</option>
             </select>
-            <input type="text" placeholder="Title" value={section.content.title || ''} onChange={(e) => handleChange('title', e.target.value)} className="w-full text-sm font-semibold p-2 border-b border-bengal-kansa/20 focus:outline-none" />
-            <textarea placeholder="Text content..." value={section.content.text || ''} onChange={(e) => handleChange('text', e.target.value)} rows={4} className="w-full text-sm p-2 border border-bengal-kansa/20 rounded focus:outline-none resize-none" />
+            <input type="text" placeholder="Title" value={section.content.title || ''} onChange={(e) => handleChange('title', e.target.value)} className="w-full text-sm font-semibold p-2 border-b border-border bg-transparent focus:outline-none text-foreground" />
+            <textarea placeholder="Text content..." value={section.content.text || ''} onChange={(e) => handleChange('text', e.target.value)} rows={4} className="w-full text-sm p-2 border border-border bg-transparent rounded focus:outline-none resize-none text-foreground" />
           </div>
         </div>
       );
     default:
-      return <div className="text-sm text-foreground/50 py-4 italic">Editor for {section.type} coming soon. You can still reorder this block.</div>;
+      return <div className="text-sm text-muted-foreground py-4 italic">Editor for {section.type} coming soon. You can still reorder this block.</div>;
   }
 }

@@ -54,29 +54,29 @@ export function MediaPicker({ open, onClose, onSelect, selected }: MediaPickerPr
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed inset-4 lg:inset-16 z-50 bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden"
+            className="fixed inset-4 lg:inset-16 z-50 bg-card rounded-xl shadow-2xl flex flex-col overflow-hidden"
           >
-            <div className="flex items-center justify-between px-5 py-4 border-b border-[#C5A059]/10">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border">
               <h2 className="font-sans font-semibold tracking-tight text-lg text-foreground">Media Library</h2>
-              <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-[#1A1918]/5">
+              <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground">
                 <X size={18} />
               </button>
             </div>
-            <div className="px-5 py-3 border-b border-[#C5A059]/5">
+            <div className="px-5 py-3 border-b border-border">
               <div className="relative">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground/30" />
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <input
                   type="text"
                   placeholder="Search media..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 text-sm bg-[#1A1918]/5 rounded-md border-0 focus:ring-1 focus:ring-[#C5A059]/30 outline-none"
+                  className="w-full pl-9 pr-4 py-2 text-sm bg-muted rounded-md border-0 focus:ring-1 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground"
                 />
               </div>
             </div>
             <div className="flex-1 overflow-y-auto p-5">
               {filtered.length === 0 ? (
-                <p className="text-sm text-foreground/40 text-center py-12">No media found</p>
+                <p className="text-sm text-muted-foreground text-center py-12">No media found</p>
               ) : (
                 <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
                   {filtered.map((asset) => (
@@ -86,15 +86,15 @@ export function MediaPicker({ open, onClose, onSelect, selected }: MediaPickerPr
                       className={cn(
                         'relative aspect-square rounded-lg overflow-hidden border-2 transition-colors group',
                         selected === asset.url
-                          ? 'border-[#C5A059]'
-                          : 'border-transparent hover:border-[#C5A059]/30',
+                          ? 'border-primary'
+                          : 'border-transparent hover:border-border',
                       )}
                     >
                       <Image src={asset.url} alt={asset.alt_en ?? ''} fill className="object-cover" />
                       {selected === asset.url && (
-                        <div className="absolute inset-0 bg-[#C5A059]/20 flex items-center justify-center">
-                          <div className="w-6 h-6 rounded-full bg-[#C5A059] flex items-center justify-center">
-                            <Check size={14} className="text-white" />
+                        <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                          <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                            <Check size={14} className="text-primary-foreground" />
                           </div>
                         </div>
                       )}

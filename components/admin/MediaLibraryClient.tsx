@@ -96,7 +96,7 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
       
       {/* ─── Grid ─── */}
-      <div className={cn("bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20 transition-all", selectedAsset ? "lg:col-span-3" : "lg:col-span-4")}>
+      <div className={cn("bg-card p-6 rounded-2xl border border-border transition-all", selectedAsset ? "lg:col-span-3" : "lg:col-span-4")}>
         <div className="flex justify-between items-center mb-6">
           <h3 className="font-sans font-semibold tracking-tight text-xl text-foreground">All Media</h3>
           <div className="w-48">
@@ -105,8 +105,8 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
         </div>
 
         {assets.length === 0 ? (
-          <div className="text-center py-20 border border-dashed border-bengal-kansa/30 rounded-xl">
-            <p className="text-foreground/50 text-sm">No media uploaded yet.</p>
+          <div className="text-center py-20 border border-dashed border-border rounded-xl">
+            <p className="text-muted-foreground text-sm">No media uploaded yet.</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
@@ -121,7 +121,7 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
                   onClick={() => setSelectedAsset(asset)}
                   className={cn(
                     "relative aspect-square rounded-lg overflow-hidden border-2 transition-all hover:shadow-md",
-                    selectedAsset?.id === asset.id ? "border-bengal-sindoor shadow-lg" : "border-bengal-kansa/20 border-transparent"
+                    selectedAsset?.id === asset.id ? "border-primary shadow-lg" : "border-border border-transparent"
                   )}
                 >
                   <Image src={asset.url} alt={asset.alt_en || 'Media'} fill className="object-cover" sizes="(max-width: 768px) 50vw, 20vw" />
@@ -134,13 +134,13 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
 
       {/* ─── Sidebar / Detail Panel ─── */}
       {selectedAsset && (
-        <div className="bg-white p-6 rounded-2xl border border-bengal-kansa/20 lg:col-span-1 shadow-sm sticky top-24 h-[calc(100vh-120px)] overflow-y-auto">
+        <div className="bg-card text-card-foreground p-6 rounded-2xl border border-border lg:col-span-1 shadow-sm sticky top-24 h-[calc(100vh-120px)] overflow-y-auto">
           <div className="flex justify-between items-center mb-4">
             <h4 className="font-sans font-semibold tracking-tight text-lg text-foreground">Asset Details</h4>
-            <button onClick={() => setSelectedAsset(null)} className="text-foreground/40 hover:text-foreground"><X size={18} /></button>
+            <button onClick={() => setSelectedAsset(null)} className="text-muted-foreground hover:text-foreground"><X size={18} /></button>
           </div>
           
-          <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-bengal-mati mb-4 border border-bengal-kansa/20">
+          <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-muted mb-4 border border-border">
             <Image src={selectedAsset.url} alt={selectedAsset.alt_en || 'Selected'} fill className="object-contain" />
           </div>
 
