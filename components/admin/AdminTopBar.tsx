@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { Search, Bell } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
 
 function getBreadcrumbs(pathname: string): string[] {
   const parts = pathname.split('/').filter(Boolean);
@@ -37,6 +38,7 @@ export function AdminTopBar({ userName }: { userName?: string | null }) {
         <button className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors relative touch-manipulation">
           <Bell size={18} />
         </button>
+        <ThemeToggle />
         <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center ml-1">
           <span className="font-sans font-bold text-sm text-primary uppercase">
             {userName?.[0] ?? 'W'}
