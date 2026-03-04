@@ -3,8 +3,14 @@ import { put }                       from '@vercel/blob';
 import { auth }                      from '@/auth';
 import { ratelimit }                 from '@/lib/ratelimit';
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
-const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_SIZE = 25 * 1024 * 1024; // 25MB
 
 export async function POST(req: NextRequest) {
   if (ratelimit) {
