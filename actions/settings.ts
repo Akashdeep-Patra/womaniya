@@ -4,22 +4,32 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { settings } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { z } from 'zod';
 
 export async function getSettings() {
-  const allSettings = await db.query.settings.findMany();
-  const settingsMap: Record<string, string> = {};
-  for (const s of allSettings) {
-    settingsMap[s.key] = s.value;
+  try {
+    const allSettings = await db.query.settings.findMany();
+    const settingsMap: Record<string, string> = {};
+    for (const s of allSettings) {
+      settingsMap[s.key] = s.value;
+    }
+    return settingsMap;
+  } catch (error) {
+    console.error('[getSettings] Error:', error);
+    // If the table doesn't exist yet or query fails, return empty gracefully
+    return {};
   }
-  return settingsMap;
 }
 
 export async function getSetting(key: string, defaultValue = '') {
-  const s = await db.query.settings.findFirst({
-    where: (table, { eq }) => eq(table.key, key),
-  });
-  return s?.value ?? defaultValue;
+  try {
+    const s = await db.query.settings.findFirst({
+      where: (table, { eq }) => eq(table.key, key),
+    });
+    return s?.value ?? defaultValue;
+  } catch (error) {
+    console.error(`[getSetting ${key}] Error:`, error);
+    return defaultValue;
+  }
 }
 
 export async function updateSettings(data: Record<string, string>) {

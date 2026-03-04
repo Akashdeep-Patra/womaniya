@@ -30,16 +30,28 @@ function slugify(text: string): string {
 }
 
 export async function getAllCollections() {
-  return db.query.collections.findMany({
-    orderBy: (c, { desc }) => [desc(c.created_at)],
-  });
+  try {
+    const res = await db.query.collections.findMany({
+      orderBy: (c, { desc }) => [desc(c.created_at)],
+    });
+    return res || [];
+  } catch (e) {
+    console.error('[getAllCollections] error:', e);
+    return [];
+  }
 }
 
 export async function getPublishedCollections() {
-  return db.query.collections.findMany({
-    where: (c, { or, eq }) => or(eq(c.status, 'live'), eq(c.status, 'scheduled')),
-    orderBy: (c, { desc }) => [desc(c.created_at)],
-  });
+  try {
+    const res = await db.query.collections.findMany({
+      where: (c, { or, eq }) => or(eq(c.status, 'live'), eq(c.status, 'scheduled')),
+      orderBy: (c, { desc }) => [desc(c.created_at)],
+    });
+    return res || [];
+  } catch (e) {
+    console.error('[getPublishedCollections] error:', e);
+    return [];
+  }
 }
 
 export async function getFeaturedCollections() {

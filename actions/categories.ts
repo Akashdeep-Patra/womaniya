@@ -29,16 +29,28 @@ function slugify(text: string): string {
 }
 
 export async function getAllCategories() {
-  return db.query.categories.findMany({
-    orderBy: (c, { asc }) => [asc(c.sort_order), asc(c.name_en)],
-  });
+  try {
+    const res = await db.query.categories.findMany({
+      orderBy: (c, { asc }) => [asc(c.sort_order), asc(c.name_en)],
+    });
+    return res || [];
+  } catch (e) {
+    console.error('[getAllCategories] error:', e);
+    return [];
+  }
 }
 
 export async function getPublishedCategories() {
-  return db.query.categories.findMany({
-    where: (c, { eq }) => eq(c.status, 'published'),
-    orderBy: (c, { asc }) => [asc(c.sort_order), asc(c.name_en)],
-  });
+  try {
+    const res = await db.query.categories.findMany({
+      where: (c, { eq }) => eq(c.status, 'published'),
+      orderBy: (c, { asc }) => [asc(c.sort_order), asc(c.name_en)],
+    });
+    return res || [];
+  } catch (e) {
+    console.error('[getPublishedCategories] error:', e);
+    return [];
+  }
 }
 
 export async function getCategoryBySlug(slug: string) {
