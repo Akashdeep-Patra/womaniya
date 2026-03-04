@@ -14,7 +14,7 @@ export function QuickActions({ locale }: { locale: string }) {
     { href: `${base}/products/new`,    label: 'Product',    icon: Package,    colorClass: 'text-bengal-sindoor', bgClass: 'bg-bengal-sindoor/15' },
     { href: `${base}/categories/new`,  label: 'Category',   icon: Tags,       colorClass: 'text-bengal-kansa', bgClass: 'bg-bengal-kansa/15' },
     { href: `${base}/collections/new`, label: 'Collection', icon: FolderOpen, colorClass: 'text-admin-success', bgClass: 'bg-admin-success/15' },
-    { href: `${base}/pages/new`,       label: 'Page',       icon: FileText,   colorClass: 'text-bengal-kajal', bgClass: 'bg-bengal-kajal/15' },
+    { href: `${base}/pages/new`,       label: 'Page',       icon: FileText,   colorClass: 'text-foreground', bgClass: 'bg-foreground/15' },
   ];
 
   return (

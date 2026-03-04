@@ -93,9 +93,9 @@ export function ImageUploader({
       ) : (
         <>
           <div className="w-12 h-12 rounded-full bg-[#1A1918]/5 flex items-center justify-center mb-3">
-            <Upload size={20} className="text-[#1A1918]/30" />
+            <Upload size={20} className="text-foreground/30" />
           </div>
-          <p className="text-xs text-[#1A1918]/40">
+          <p className="text-xs text-foreground/40">
             Drop image or <span className="text-[#C5A059] underline">browse</span>
           </p>
         </>

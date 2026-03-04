@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 export type Column<T> = {
   key: string;
@@ -24,6 +25,7 @@ type EntityTableProps<T> = {
   data: T[];
   keyExtractor: (item: T) => string | number;
   onRowClick?: (item: T) => void;
+  getRowHref?: (item: T) => string;
   className?: string;
   emptyMessage?: string;
   mobileCard?: MobileCardConfig<T>;
@@ -34,73 +36,87 @@ export function EntityTable<T>({
   data,
   keyExtractor,
   onRowClick,
+  getRowHref,
   className,
   emptyMessage = 'No items found',
   mobileCard,
 }: EntityTableProps<T>) {
   if (data.length === 0) {
     return (
-      <div className="py-12 text-center text-sm text-[#1A1918]/40">
+      <div className="py-12 text-center text-sm text-muted-foreground bg-card rounded-xl border border-border">
         {emptyMessage}
       </div>
     );
   }
 
   return (
-    <>
+    <div className={cn("bg-card rounded-xl border border-border overflow-hidden", className)}>
       {/* Mobile card list */}
       {mobileCard && (
-        <div className={cn('md:hidden', className)}>
-          {data.map((item, idx) => (
-            <motion.div
-              key={keyExtractor(item)}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.02 }}
-              className="border-b border-[#C5A059]/5"
-            >
+        <div className="md:hidden flex flex-col">
+          {data.map((item, idx) => {
+            const href = getRowHref?.(item);
+            const inner = (
               <div
-                onClick={() => onRowClick?.(item)}
+                onClick={!href ? () => onRowClick?.(item) : undefined}
                 className={cn(
-                  'flex items-center gap-3 px-4 py-3 min-h-[56px]',
-                  'active:bg-[#C5A059]/5 touch-manipulation',
-                  onRowClick && 'cursor-pointer',
+                  'flex items-center gap-3 px-4 py-3 min-h-[56px] transition-colors',
+                  'active:bg-muted/50 hover:bg-muted/50 touch-manipulation',
+                  (onRowClick || href) && 'cursor-pointer',
                 )}
               >
                 {mobileCard.leading && (
                   <div className="shrink-0">{mobileCard.leading(item)}</div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-[#1A1918] truncate">
+                  <div className="text-sm font-medium text-foreground truncate">
                     {mobileCard.title(item)}
                   </div>
                   {mobileCard.subtitle && (
-                    <div className="text-[11px] text-[#1A1918]/45 mt-0.5">
+                    <div className="text-xs text-muted-foreground mt-0.5">
                       {mobileCard.subtitle(item)}
                     </div>
                   )}
                 </div>
                 {mobileCard.actions && (
-                  <div className="shrink-0 flex items-center gap-0.5">
+                  <div className="shrink-0 flex items-center gap-1 z-10" onClick={e => e.stopPropagation()}>
                     {mobileCard.actions(item)}
                   </div>
                 )}
               </div>
-            </motion.div>
-          ))}
+            );
+
+            return (
+              <motion.div
+                key={keyExtractor(item)}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.02 }}
+                className="border-b border-border last:border-0"
+              >
+                {href ? (
+                  <Link href={href} prefetch={true} className="block w-full h-full">
+                    {inner}
+                  </Link>
+                ) : (
+                  inner
+                )}
+              </motion.div>
+            );
+          })}
         </div>
       )}
 
       {/* Desktop table */}
-      <div className={cn(mobileCard ? 'hidden md:block' : '', 'overflow-x-auto', className)}>
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-[#C5A059]/10">
+      <div className={cn(mobileCard ? 'hidden md:block' : '', 'overflow-x-auto')}>
+        <table className="w-full text-sm text-left">
+          <thead className="text-xs text-muted-foreground bg-muted/30 uppercase border-b border-border">
+            <tr>
               {columns.map((col) => (
                 <th
                   key={col.key}
                   className={cn(
-                    'text-left text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/40 font-medium py-3 px-4',
+                    'font-medium py-3 px-4 whitespace-nowrap tracking-wider',
                     col.className,
                   )}
                 >
@@ -109,29 +125,49 @@ export function EntityTable<T>({
               ))}
             </tr>
           </thead>
-          <tbody>
-            {data.map((item, idx) => (
-              <motion.tr
-                key={keyExtractor(item)}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.03 }}
-                onClick={() => onRowClick?.(item)}
-                className={cn(
-                  'border-b border-[#C5A059]/5 transition-colors',
-                  onRowClick && 'cursor-pointer hover:bg-[#C5A059]/5',
-                )}
-              >
-                {columns.map((col) => (
-                  <td key={col.key} className={cn('py-3 px-4 text-sm', col.className)}>
-                    {col.render(item)}
-                  </td>
-                ))}
-              </motion.tr>
-            ))}
+          <tbody className="divide-y divide-border">
+            {data.map((item, idx) => {
+              const href = getRowHref?.(item);
+              return (
+                <motion.tr
+                  key={keyExtractor(item)}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.03 }}
+                  onClick={!href ? () => onRowClick?.(item) : undefined}
+                  className={cn(
+                    'transition-colors bg-card hover:bg-muted/50 group',
+                    (onRowClick || href) && 'cursor-pointer',
+                  )}
+                >
+                  {columns.map((col) => {
+                    const cellContent = col.render(item);
+                    const isInteractive = col.key === 'actions'; // Convention to not wrap actions
+                    
+                    return (
+                      <td key={col.key} className={cn('p-0', col.className)}>
+                        {href && !isInteractive ? (
+                          <Link 
+                            href={href} 
+                            prefetch={true} 
+                            className="flex items-center w-full h-full min-h-[3rem] px-4 py-2"
+                          >
+                            {cellContent}
+                          </Link>
+                        ) : (
+                          <div className="flex items-center w-full h-full min-h-[3rem] px-4 py-2">
+                            {cellContent}
+                          </div>
+                        )}
+                      </td>
+                    );
+                  })}
+                </motion.tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }

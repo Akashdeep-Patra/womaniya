@@ -221,8 +221,8 @@ export function ProductForm({ initialData, initialImages, categories, collection
   };
 
   const inputClassName = (fieldError?: string) =>
-    `w-full px-4 py-3 rounded-sm border bg-bengal-cream text-bengal-kajal text-sm font-sans-en focus:outline-none focus:ring-2 focus:ring-bengal-sindoor/30 focus:border-bengal-sindoor transition-colors resize-none ${
-      fieldError ? 'border-bengal-alta ring-2 ring-bengal-alta/20' : 'border-bengal-kansa/30'
+    `flex min-h-[80px] w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none ${
+      fieldError ? 'border-destructive ring-2 ring-destructive/20' : 'border-input'
     }`;
 
   return (
@@ -230,31 +230,31 @@ export function ProductForm({ initialData, initialImages, categories, collection
       {apiError && (
         <div
           role="alert"
-          className="rounded-xl border border-bengal-alta/50 bg-bengal-alta/10 px-4 py-3 text-sm text-bengal-alta"
+          className="rounded-xl border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive"
         >
           {apiError}
         </div>
       )}
 
       {/* ─── Media Section ─── */}
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
-        <h3 className="font-editorial text-lg md:text-xl mb-3 md:mb-4 text-bengal-kajal">Media</h3>
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl mb-3 md:mb-4 text-foreground">Media</h3>
 
         <div className="flex flex-col gap-6">
           <div>
-            <label className="text-[10px] tracking-widest uppercase font-medium text-bengal-kajal/70 font-sans-en block mb-2">
+            <label className="text-[10px] tracking-widest uppercase font-medium text-muted-foreground font-sans-en block mb-2">
               Primary Image *
             </label>
             <CameraUpload onUpload={handlePrimaryUpload} initialUrl={primaryImage} />
             {errors.image_uploaded_url && (
-              <p className="text-bengal-alta text-xs font-medium mt-1">
+              <p className="text-destructive text-xs font-medium mt-1">
                 {errors.image_uploaded_url.message}
               </p>
             )}
           </div>
 
           <div>
-            <label className="text-[10px] tracking-widest uppercase font-medium text-bengal-kajal/70 font-sans-en block mb-2">
+            <label className="text-[10px] tracking-widest uppercase font-medium text-muted-foreground font-sans-en block mb-2">
               Additional Images
             </label>
             <Reorder.Group
@@ -267,17 +267,17 @@ export function ProductForm({ initialData, initialImages, categories, collection
                 <Reorder.Item
                   key={url}
                   value={url}
-                  className="relative w-24 h-24 shrink-0 rounded-lg overflow-hidden bg-bengal-mati border border-bengal-kansa/30 group"
+                  className="relative w-24 h-24 shrink-0 rounded-lg overflow-hidden bg-muted border border-border group"
                 >
                   <img src={url} alt="Additional" className="object-cover w-full h-full" />
                   <button
                     type="button"
                     onClick={() => removeAdditionalImage(i)}
-                    className="absolute -top-0.5 -right-0.5 w-8 h-8 bg-bengal-kajal/80 text-white rounded-full flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-manipulation"
+                    className="absolute -top-0.5 -right-0.5 w-8 h-8 bg-foreground/80 text-background rounded-full flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-manipulation"
                   >
                     <X size={14} />
                   </button>
-                  <div className="absolute bottom-0.5 left-0.5 w-7 h-7 bg-bengal-kajal/50 text-white rounded flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation">
+                  <div className="absolute bottom-0.5 left-0.5 w-7 h-7 bg-foreground/50 text-background rounded flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation">
                     <GripVertical size={14} />
                   </div>
                 </Reorder.Item>
@@ -296,13 +296,13 @@ export function ProductForm({ initialData, initialImages, categories, collection
       </div>
 
       {/* ─── Basic Info (Bilingual) ─── */}
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border">
         <div className="flex items-center justify-between mb-3 md:mb-4">
-          <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Information</h3>
+          <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Information</h3>
         </div>
 
         <Tabs defaultValue="en" className="w-full">
-          <TabsList className="mb-4 bg-bengal-mati">
+          <TabsList className="mb-4 bg-muted">
             <TabsTrigger value="en">English</TabsTrigger>
             <TabsTrigger value="bn" className="font-bengali">
               বাংলা
@@ -361,8 +361,8 @@ export function ProductForm({ initialData, initialImages, categories, collection
       </div>
 
       {/* ─── Organization ─── */}
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4 md:gap-5">
-        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Organization & Pricing</h3>
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-4 md:gap-5">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Organization & Pricing</h3>
 
         <BengalInput
           label={t('form_price')}
@@ -390,7 +390,7 @@ export function ProductForm({ initialData, initialImages, categories, collection
         </FormSelect>
 
         <div className="flex flex-col gap-2">
-          <label className="text-[10px] tracking-widest uppercase font-medium text-bengal-kajal/70 font-sans-en">
+          <label className="text-[10px] tracking-widest uppercase font-medium text-muted-foreground font-sans-en">
             Collections
           </label>
           <div className="flex flex-wrap gap-2">
@@ -401,8 +401,8 @@ export function ProductForm({ initialData, initialImages, categories, collection
                 onClick={() => toggleCollection(col.id)}
                 className={`px-4 py-2.5 text-xs rounded-full border transition-colors min-h-[44px] touch-manipulation ${
                   selectedCollections.includes(col.id)
-                    ? 'bg-bengal-kansa text-bengal-kori border-bengal-kansa'
-                    : 'bg-transparent text-bengal-kajal border-bengal-kansa/30 hover:border-bengal-kansa'
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'bg-transparent text-foreground border-border hover:border-primary'
                 }`}
               >
                 {col.name_en}
@@ -424,16 +424,16 @@ export function ProductForm({ initialData, initialImages, categories, collection
               {...register('is_featured')}
               className="sr-only peer"
             />
-            <div className="w-11 h-6 bg-bengal-mati rounded-full border border-bengal-kansa/30 peer-checked:bg-bengal-sindoor transition-colors" />
-            <div className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5" />
+            <div className="w-11 h-6 bg-muted rounded-full border border-border peer-checked:bg-primary transition-colors" />
+            <div className="absolute top-0.5 left-0.5 w-5 h-5 bg-background rounded-full shadow transition-transform peer-checked:translate-x-5" />
           </div>
-          <span className="text-sm text-bengal-kajal">{t('form_featured')}</span>
+          <span className="text-sm text-foreground">{t('form_featured')}</span>
         </label>
       </div>
 
       {/* ─── Properties ─── */}
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4 md:gap-5">
-        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Properties</h3>
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-4 md:gap-5">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Properties</h3>
 
         <TagInput
           label="Sizes"

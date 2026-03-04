@@ -4,10 +4,10 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 const inputBaseClasses =
-  'w-full px-4 rounded-sm border bg-bengal-cream text-bengal-kajal text-sm font-sans-en focus:outline-none focus:ring-2 focus:ring-bengal-sindoor/30 focus:border-bengal-sindoor transition-colors';
+  'w-full px-4 rounded-sm border bg-bengal-cream text-foreground text-sm font-sans-en focus:outline-none focus:ring-2 focus:ring-bengal-sindoor/30 focus:border-bengal-sindoor transition-colors';
 const inputErrorClasses = 'border-bengal-alta ring-2 ring-bengal-alta/20';
 const labelClasses =
-  'text-[10px] tracking-widest uppercase font-medium text-bengal-kajal/70 font-sans-en';
+  'text-[10px] tracking-widest uppercase font-medium text-foreground/70 font-sans-en';
 const errorTextClasses = 'text-bengal-alta text-xs font-medium mt-1';
 
 interface FormFieldProps {

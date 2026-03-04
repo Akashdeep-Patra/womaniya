@@ -156,13 +156,13 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
   };
 
   const inputClassName = (fieldError?: string) =>
-    `w-full px-4 py-3 rounded-sm border bg-bengal-cream text-bengal-kajal text-sm font-sans-en focus:outline-none focus:ring-2 focus:ring-bengal-sindoor/30 focus:border-bengal-sindoor transition-colors resize-none ${
-      fieldError ? 'border-bengal-alta ring-2 ring-bengal-alta/20' : 'border-bengal-kansa/30'
+    `flex min-h-[80px] w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none ${
+      fieldError ? 'border-destructive ring-2 ring-destructive/20' : 'border-input'
     }`;
 
   const inputClassNameShort = (fieldError?: string) =>
-    `w-full px-4 py-2 rounded-sm border bg-bengal-cream text-bengal-kajal text-sm font-sans-en focus:outline-none focus:ring-2 focus:ring-bengal-sindoor/30 focus:border-bengal-sindoor transition-colors resize-none ${
-      fieldError ? 'border-bengal-alta ring-2 ring-bengal-alta/20' : 'border-bengal-kansa/30'
+    `flex min-h-[60px] w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none ${
+      fieldError ? 'border-destructive ring-2 ring-destructive/20' : 'border-input'
     }`;
 
   return (
@@ -170,16 +170,16 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
       {apiError && (
         <div
           role="alert"
-          className="rounded-xl border border-bengal-alta/50 bg-bengal-alta/10 px-4 py-3 text-sm text-bengal-alta"
+          className="rounded-xl border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive"
         >
           {apiError}
         </div>
       )}
 
       {/* ─── Images ─── */}
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
-        <h3 className="font-editorial text-lg md:text-xl mb-1 text-bengal-kajal">Images</h3>
-        <p className="text-bengal-kajal/40 text-xs mb-3 md:mb-4">
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl mb-1 text-foreground">Images</h3>
+        <p className="text-muted-foreground text-xs mb-3 md:mb-4">
           First image is the cover. Multiple images create an auto-sliding carousel.
         </p>
 
@@ -193,22 +193,22 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
             <Reorder.Item
               key={url}
               value={url}
-              className="relative w-28 h-20 shrink-0 rounded-lg overflow-hidden bg-bengal-mati border border-bengal-kansa/30 group"
+              className="relative w-28 h-20 shrink-0 rounded-lg overflow-hidden bg-muted border border-border group"
             >
               <img src={url} alt={`Image ${i + 1}`} className="object-cover w-full h-full" />
               {i === 0 && (
-                <span className="absolute top-1 left-1 text-[8px] tracking-wider uppercase bg-bengal-sindoor text-white px-1.5 py-0.5 rounded-sm font-sans-en">
+                <span className="absolute top-1 left-1 text-[8px] tracking-wider uppercase bg-primary text-primary-foreground px-1.5 py-0.5 rounded-sm font-sans-en">
                   Cover
                 </span>
               )}
               <button
                 type="button"
                 onClick={() => removeImage(i)}
-                className="absolute -top-0.5 -right-0.5 w-8 h-8 bg-bengal-kajal/80 text-white rounded-full flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-manipulation"
+                className="absolute -top-0.5 -right-0.5 w-8 h-8 bg-foreground/80 text-background rounded-full flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-manipulation"
               >
                 <X size={14} />
               </button>
-              <div className="absolute bottom-0.5 left-0.5 w-7 h-7 bg-bengal-kajal/50 text-white rounded flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation">
+              <div className="absolute bottom-0.5 left-0.5 w-7 h-7 bg-foreground/50 text-background rounded flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation">
                 <GripVertical size={14} />
               </div>
             </Reorder.Item>
@@ -225,9 +225,9 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
       </div>
 
       {/* ─── Basic Info (Bilingual) ─── */}
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border">
         <Tabs defaultValue="en" className="w-full">
-          <TabsList className="mb-4 bg-bengal-mati">
+          <TabsList className="mb-4 bg-muted">
             <TabsTrigger value="en">English</TabsTrigger>
             <TabsTrigger value="bn" className="font-bengali">
               বাংলা
@@ -283,25 +283,25 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
       </div>
 
       {/* ─── Product Assignment ─── */}
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4 md:gap-5">
-        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Products</h3>
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-4 md:gap-5">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Products</h3>
 
         <div className="relative">
           <div className="relative flex items-center">
-            <Search className="absolute left-3 text-bengal-kajal/40" size={16} />
+            <Search className="absolute left-3 text-muted-foreground" size={16} />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search products to add..."
-              className="w-full h-10 pl-10 pr-4 rounded-full border border-bengal-kansa/30 bg-bengal-cream text-bengal-kajal text-sm font-sans-en focus:outline-none focus:ring-2 focus:ring-bengal-sindoor/30 focus:border-bengal-sindoor transition-colors"
+              className="flex h-10 w-full rounded-md border border-input bg-background pl-10 pr-4 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             />
           </div>
 
           {searchQuery && (
-            <div className="absolute top-full left-0 w-full mt-2 bg-white rounded-lg shadow-xl border border-bengal-kansa/20 z-20 max-h-[300px] overflow-y-auto">
+            <div className="absolute top-full left-0 w-full mt-2 bg-background rounded-lg shadow-xl border border-border z-20 max-h-[300px] overflow-y-auto">
               {availableProducts.length === 0 ? (
-                <div className="p-4 text-center text-sm text-bengal-kajal/40">
+                <div className="p-4 text-center text-sm text-muted-foreground">
                   No matching products found
                 </div>
               ) : (
@@ -310,14 +310,14 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
                     key={p.id}
                     type="button"
                     onClick={() => addProduct(p)}
-                    className="w-full text-left flex items-center gap-3 p-3 hover:bg-bengal-mati transition-colors border-b border-bengal-kansa/10 last:border-0"
+                    className="w-full text-left flex items-center gap-3 p-3 hover:bg-muted transition-colors border-b border-border last:border-0"
                   >
-                    <div                     className="relative w-10 h-10 rounded overflow-hidden shrink-0">
+                    <div className="relative w-10 h-10 rounded overflow-hidden shrink-0">
                       <Image src={p.image_url} alt={p.name_en} fill className="object-cover" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-bengal-kajal truncate">{p.name_en}</p>
-                      <p className="text-[10px] text-bengal-kajal/50">₹{p.price}</p>
+                      <p className="text-sm font-medium text-foreground truncate">{p.name_en}</p>
+                      <p className="text-[10px] text-muted-foreground">₹{p.price}</p>
                     </div>
                   </button>
                 ))
@@ -327,11 +327,11 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
         </div>
 
         <div className="mt-4">
-          <label className="text-[10px] tracking-widest uppercase font-medium text-bengal-kajal/70 font-sans-en block mb-3">
+          <label className="text-[10px] tracking-widest uppercase font-medium text-muted-foreground font-sans-en block mb-3">
             Selected Products ({selectedProducts.length})
           </label>
           {selectedProducts.length === 0 ? (
-            <p className="text-sm text-bengal-kajal/40 text-center py-6 border border-dashed border-bengal-kansa/30 rounded-lg">
+            <p className="text-sm text-muted-foreground text-center py-6 border border-dashed border-border rounded-lg">
               No products added yet
             </p>
           ) : (
@@ -345,17 +345,17 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
                 <Reorder.Item
                   key={p.id}
                   value={p}
-                  className="flex items-center gap-3 p-2 bg-white rounded-lg border border-bengal-kansa/20 group cursor-grab active:cursor-grabbing shadow-sm"
+                  className="flex items-center gap-3 p-2 bg-card rounded-lg border border-border group cursor-grab active:cursor-grabbing shadow-sm"
                 >
-                  <GripVertical size={16} className="text-bengal-kajal/20 ml-2" />
+                  <GripVertical size={16} className="text-muted-foreground ml-2" />
                   <div className="relative w-10 h-10 rounded overflow-hidden shrink-0">
                     <Image src={p.image_url} alt={p.name_en} fill className="object-cover" />
                   </div>
-                  <p className="text-sm font-medium text-bengal-kajal truncate flex-1">{p.name_en}</p>
+                  <p className="text-sm font-medium text-foreground truncate flex-1">{p.name_en}</p>
                   <button
                     type="button"
                     onClick={() => removeProduct(p.id)}
-                    className="min-w-[44px] min-h-[44px] flex items-center justify-center text-bengal-kajal/30 hover:text-bengal-alta transition-colors touch-manipulation"
+                    className="min-w-[44px] min-h-[44px] flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors touch-manipulation"
                   >
                     <X size={16} />
                   </button>
@@ -367,8 +367,8 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
       </div>
 
       {/* ─── Organization ─── */}
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4 md:gap-5">
-        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Settings</h3>
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-4 md:gap-5">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Settings</h3>
 
         <FormSelect label="Status" {...register('status')}>
           <option value="draft">Draft</option>
@@ -381,10 +381,10 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
         <label className="flex items-center gap-3 cursor-pointer min-h-[44px]">
           <div className="relative">
             <input type="checkbox" {...register('is_featured')} className="sr-only peer" />
-            <div className="w-11 h-6 bg-bengal-mati rounded-full border border-bengal-kansa/30 peer-checked:bg-bengal-sindoor transition-colors" />
-            <div className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5" />
+            <div className="w-11 h-6 bg-muted rounded-full border border-border peer-checked:bg-primary transition-colors" />
+            <div className="absolute top-0.5 left-0.5 w-5 h-5 bg-background rounded-full shadow transition-transform peer-checked:translate-x-5" />
           </div>
-          <span className="text-sm text-bengal-kajal">Featured Collection</span>
+          <span className="text-sm text-foreground">Featured Collection</span>
         </label>
       </div>
 

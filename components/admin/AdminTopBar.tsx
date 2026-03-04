@@ -17,13 +17,13 @@ export function AdminTopBar({ userName }: { userName?: string | null }) {
   const crumbs = getBreadcrumbs(pathname);
 
   return (
-    <header className="h-14 lg:h-16 flex items-center justify-between px-4 lg:px-6 border-b border-[#C5A059]/10 bg-[#FDFAF5]/80 backdrop-blur-sm sticky top-0 z-30">
+    <header className="h-14 lg:h-16 flex items-center justify-between px-4 lg:px-6 border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-30">
       <div className="flex items-center gap-2">
-        <span className="text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/40">Admin</span>
+        <span className="text-xs font-medium tracking-wider uppercase text-muted-foreground">Admin</span>
         {crumbs.map((crumb, i) => (
           <span key={i} className="flex items-center gap-2">
-            <span className="text-[#1A1918]/20">/</span>
-            <span className="text-[10px] tracking-[0.15em] text-[#1A1918]/70 capitalize">
+            <span className="text-muted-foreground/50">/</span>
+            <span className="text-xs font-medium tracking-wider uppercase text-foreground capitalize">
               {crumb}
             </span>
           </span>
@@ -31,14 +31,14 @@ export function AdminTopBar({ userName }: { userName?: string | null }) {
       </div>
 
       <div className="flex items-center gap-1">
-        <button className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-[#1A1918]/5 text-[#1A1918]/40 transition-colors touch-manipulation">
+        <button className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors touch-manipulation">
           <Search size={18} />
         </button>
-        <button className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-[#1A1918]/5 text-[#1A1918]/40 transition-colors relative touch-manipulation">
+        <button className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors relative touch-manipulation">
           <Bell size={18} />
         </button>
-        <div className="w-9 h-9 rounded-full bg-[#8A1C14]/15 flex items-center justify-center ml-0.5">
-          <span className="font-editorial text-sm text-[#8A1C14]">
+        <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center ml-1">
+          <span className="font-sans font-bold text-sm text-primary uppercase">
             {userName?.[0] ?? 'W'}
           </span>
         </div>

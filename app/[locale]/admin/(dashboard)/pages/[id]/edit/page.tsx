@@ -24,14 +24,14 @@ export default async function EditPage({ params }: Props) {
     <div className="px-4 pt-6 pb-6 max-w-3xl mx-auto">
       <Link
         href={`/${locale}/admin/pages`}
-        className="inline-flex items-center gap-2 text-xs tracking-widest uppercase text-bengal-kajal/50 hover:text-bengal-sindoor mb-6 transition-colors"
+        className="inline-flex items-center gap-2 text-xs tracking-widest uppercase text-foreground/50 hover:text-bengal-sindoor mb-6 transition-colors"
       >
         <ArrowLeft size={14} />
         Back
       </Link>
 
       <div className="flex items-center justify-between mb-6">
-        <h1 className="font-editorial text-2xl text-bengal-kajal">
+        <h1 className="font-sans font-semibold tracking-tight text-2xl text-foreground">
           Edit {page.title_en}
         </h1>
         <a

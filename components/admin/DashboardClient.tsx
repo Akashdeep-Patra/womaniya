@@ -43,7 +43,7 @@ export function DashboardClient({
           variant="accent"
         />
         <StatCard
-          icon={<FolderOpen size={18} className="text-[#1A1918]/60" />}
+          icon={<FolderOpen size={18} className="text-foreground/60" />}
           label="Collections"
           value={stats.totalCollections}
         />
@@ -57,16 +57,16 @@ export function DashboardClient({
       {/* Secondary stats row */}
       <div className="grid grid-cols-3 gap-3">
         <div className="bg-white border border-[#C5A059]/10 rounded-lg p-4 text-center">
-          <p className="text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/40 mb-1">Published</p>
-          <p className="font-editorial text-2xl text-[#2D7A4F]">{stats.publishedProducts}</p>
+          <p className="text-[10px] tracking-[0.15em] uppercase text-foreground/40 mb-1">Published</p>
+          <p className="font-sans font-semibold tracking-tight text-2xl text-[#2D7A4F]">{stats.publishedProducts}</p>
         </div>
         <div className="bg-white border border-[#C5A059]/10 rounded-lg p-4 text-center">
-          <p className="text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/40 mb-1">Drafts</p>
-          <p className="font-editorial text-2xl text-[#D4A017]">{stats.draftProducts}</p>
+          <p className="text-[10px] tracking-[0.15em] uppercase text-foreground/40 mb-1">Drafts</p>
+          <p className="font-sans font-semibold tracking-tight text-2xl text-[#D4A017]">{stats.draftProducts}</p>
         </div>
         <div className="bg-white border border-[#C5A059]/10 rounded-lg p-4 text-center">
-          <p className="text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/40 mb-1">Pages</p>
-          <p className="font-editorial text-2xl text-[#1A1918]">{stats.totalPages}</p>
+          <p className="text-[10px] tracking-[0.15em] uppercase text-foreground/40 mb-1">Pages</p>
+          <p className="font-sans font-semibold tracking-tight text-2xl text-foreground">{stats.totalPages}</p>
         </div>
       </div>
 
@@ -76,7 +76,7 @@ export function DashboardClient({
           { href: `${base}/products/new`, label: 'Add Product', icon: PlusCircle, colorClass: 'text-bengal-sindoor', bgClass: 'bg-bengal-sindoor/10' },
           { href: `${base}/categories/new`, label: 'Add Category', icon: Tags, colorClass: 'text-bengal-kansa', bgClass: 'bg-bengal-kansa/10' },
           { href: `${base}/collections/new`, label: 'New Collection', icon: FolderOpen, colorClass: 'text-admin-success', bgClass: 'bg-admin-success/10' },
-          { href: `${base}/pages/new`, label: 'New Page', icon: FileText, colorClass: 'text-bengal-kajal', bgClass: 'bg-bengal-kajal/10' },
+          { href: `${base}/pages/new`, label: 'New Page', icon: FileText, colorClass: 'text-foreground', bgClass: 'bg-foreground/10' },
         ].map((action) => (
           <Link
             key={action.href}
@@ -135,7 +135,7 @@ export function DashboardClient({
                   </div>
                   <div className="flex items-center gap-3">
                     <StatusPill status={product.status} />
-                    <span className="font-editorial text-bengal-sindoor">
+                    <span className="font-sans font-semibold tracking-tight text-bengal-sindoor">
                       ₹{Number(product.price).toLocaleString('en-IN')}
                     </span>
                   </div>

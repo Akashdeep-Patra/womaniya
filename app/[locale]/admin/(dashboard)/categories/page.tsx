@@ -49,16 +49,16 @@ export default async function CategoriesPage({ params }: Props) {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-[#C5A059]/10">
-                  <th className="text-left text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/40 font-medium py-3 px-5">
+                  <th className="text-left text-[10px] tracking-[0.15em] uppercase text-foreground/40 font-medium py-3 px-5">
                     Name
                   </th>
-                  <th className="text-left text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/40 font-medium py-3 px-5 hidden sm:table-cell">
+                  <th className="text-left text-[10px] tracking-[0.15em] uppercase text-foreground/40 font-medium py-3 px-5 hidden sm:table-cell">
                     Slug
                   </th>
-                  <th className="text-left text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/40 font-medium py-3 px-5">
+                  <th className="text-left text-[10px] tracking-[0.15em] uppercase text-foreground/40 font-medium py-3 px-5">
                     Status
                   </th>
-                  <th className="text-left text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/40 font-medium py-3 px-5 hidden md:table-cell">
+                  <th className="text-left text-[10px] tracking-[0.15em] uppercase text-foreground/40 font-medium py-3 px-5 hidden md:table-cell">
                     Order
                   </th>
                 </tr>
@@ -69,23 +69,23 @@ export default async function CategoriesPage({ params }: Props) {
                     <td className="py-3 px-5">
                       <Link
                         href={`/${locale}/admin/categories/${cat.id}/edit`}
-                        className="text-sm font-medium text-[#1A1918] hover:text-[#8A1C14] transition-colors"
+                        className="text-sm font-medium text-foreground hover:text-[#8A1C14] transition-colors"
                       >
                         {cat.name_en}
                         {cat.name_bn && (
-                          <span className="text-[#1A1918]/40 ml-2 font-bengali text-xs">
+                          <span className="text-foreground/40 ml-2 font-bengali text-xs">
                             {cat.name_bn}
                           </span>
                         )}
                       </Link>
                     </td>
-                    <td className="py-3 px-5 text-xs text-[#1A1918]/40 hidden sm:table-cell">
+                    <td className="py-3 px-5 text-xs text-foreground/40 hidden sm:table-cell">
                       {cat.slug}
                     </td>
                     <td className="py-3 px-5">
                       <StatusPill status={cat.status} />
                     </td>
-                    <td className="py-3 px-5 text-xs text-[#1A1918]/40 hidden md:table-cell">
+                    <td className="py-3 px-5 text-xs text-foreground/40 hidden md:table-cell">
                       {cat.sort_order}
                     </td>
                   </tr>

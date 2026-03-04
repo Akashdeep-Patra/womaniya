@@ -15,13 +15,13 @@ export default async function AddStory({ params }: Props) {
     <div className="px-4 pt-6 pb-6 max-w-3xl mx-auto">
       <Link
         href={`/${locale}/admin/stories`}
-        className="inline-flex items-center gap-2 text-xs tracking-widest uppercase text-bengal-kajal/50 hover:text-bengal-sindoor mb-6 transition-colors"
+        className="inline-flex items-center gap-2 text-xs tracking-widest uppercase text-foreground/50 hover:text-bengal-sindoor mb-6 transition-colors"
       >
         <ArrowLeft size={14} />
         Back
       </Link>
 
-      <h1 className="font-editorial text-2xl text-bengal-kajal mb-6">
+      <h1 className="font-sans font-semibold tracking-tight text-2xl text-foreground mb-6">
         Create New Story
       </h1>
 

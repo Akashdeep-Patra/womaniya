@@ -143,16 +143,16 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
       {apiError && (
         <div
           role="alert"
-          className="rounded-xl border border-bengal-alta/50 bg-bengal-alta/10 px-4 py-3 text-sm text-bengal-alta"
+          className="rounded-xl border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive"
         >
           {apiError}
         </div>
       )}
 
       {/* ─── Images ─── */}
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
-        <h3 className="font-editorial text-lg md:text-xl mb-1 text-bengal-kajal">Images</h3>
-        <p className="text-bengal-kajal/40 text-xs mb-3 md:mb-4">
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl mb-1 text-foreground">Images</h3>
+        <p className="text-muted-foreground text-xs mb-3 md:mb-4">
           First image is the cover. Add multiple images for a carousel.
         </p>
 
@@ -166,22 +166,22 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
             <Reorder.Item
               key={url}
               value={url}
-              className="relative w-28 h-20 shrink-0 rounded-lg overflow-hidden bg-bengal-mati border border-bengal-kansa/30 group"
+              className="relative w-28 h-20 shrink-0 rounded-lg overflow-hidden bg-muted border border-border group"
             >
               <img src={url} alt={`Image ${i + 1}`} className="object-cover w-full h-full" />
               {i === 0 && (
-                <span className="absolute top-1 left-1 text-[8px] tracking-wider uppercase bg-bengal-sindoor text-white px-1.5 py-0.5 rounded-sm font-sans-en">
+                <span className="absolute top-1 left-1 text-[8px] tracking-wider uppercase bg-primary text-primary-foreground px-1.5 py-0.5 rounded-sm font-sans-en">
                   Cover
                 </span>
               )}
               <button
                 type="button"
                 onClick={() => setImages((prev) => prev.filter((_, idx) => idx !== i))}
-                className="absolute -top-0.5 -right-0.5 w-8 h-8 bg-bengal-kajal/80 text-white rounded-full flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-manipulation"
+                className="absolute -top-0.5 -right-0.5 w-8 h-8 bg-foreground/80 text-background rounded-full flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-manipulation"
               >
                 <X size={14} />
               </button>
-              <div className="absolute bottom-0.5 left-0.5 w-7 h-7 bg-bengal-kajal/50 text-white rounded flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation">
+              <div className="absolute bottom-0.5 left-0.5 w-7 h-7 bg-foreground/50 text-background rounded flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation">
                 <GripVertical size={14} />
               </div>
             </Reorder.Item>
@@ -198,8 +198,8 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
       </div>
 
       {/* ─── Content ─── */}
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4">
-        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Content</h3>
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-4">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Content</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <BengalInput label="Title (EN)" {...register('title_en')} error={errors.title_en?.message} />
@@ -242,8 +242,8 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
       </div>
 
       {/* ─── Placement & Linking ─── */}
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4">
-        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Placement & Settings</h3>
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-4">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Placement & Settings</h3>
 
         <FormSelect label="Placement *" {...register('placement')} error={errors.placement?.message}>
           <option value="hero">Hero (Storefront Top)</option>

@@ -17,8 +17,8 @@ export default async function MediaLibraryPage({ params }: Props) {
     <div className="px-4 md:px-8 py-8 max-w-[1600px] mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="font-editorial text-3xl text-bengal-kajal mb-1">Media Library</h1>
-          <p className="text-sm text-bengal-kajal/60">
+          <h1 className="font-sans font-bold tracking-tight text-3xl text-foreground mb-1">Media Library</h1>
+          <p className="text-sm text-foreground/60">
             {allMedia.length} assets
           </p>
         </div>

@@ -39,8 +39,8 @@ export function SettingsForm({ initialData, locale }: SettingsFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-5">
-        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Contact & Social</h3>
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-5">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Contact & Social</h3>
         
         <BengalInput
           label="WhatsApp Number (with country code)"
@@ -61,8 +61,8 @@ export function SettingsForm({ initialData, locale }: SettingsFormProps) {
         />
       </div>
 
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-5">
-        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Store Details</h3>
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-5">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Store Details</h3>
         
         <BengalInput
           label="Store Name"

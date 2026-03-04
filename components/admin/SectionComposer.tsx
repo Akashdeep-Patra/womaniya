@@ -45,7 +45,7 @@ export function SectionComposer({ sections, onChange }: Props) {
     <div className="flex flex-col gap-6">
       {sections.length === 0 ? (
         <div className="text-center py-12 border border-dashed border-bengal-kansa/30 rounded-2xl bg-white/50">
-          <p className="text-sm text-bengal-kajal/50 mb-4">No sections added yet. Build your page by adding sections.</p>
+          <p className="text-sm text-foreground/50 mb-4">No sections added yet. Build your page by adding sections.</p>
           <BengalButton type="button" variant="outline" onClick={() => setShowAddMenu(true)}>
             Add First Section
           </BengalButton>
@@ -56,15 +56,15 @@ export function SectionComposer({ sections, onChange }: Props) {
             <Reorder.Item key={section.id} value={section} className="bg-white rounded-xl border border-bengal-kansa/20 p-4 shadow-sm relative group cursor-grab active:cursor-grabbing">
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-bengal-kansa/10">
                 <div className="flex items-center gap-2">
-                  <GripVertical size={16} className="text-bengal-kajal/20" />
-                  <span className="text-[10px] tracking-widest uppercase font-medium text-bengal-kajal/60 bg-bengal-mati px-2 py-1 rounded">
+                  <GripVertical size={16} className="text-foreground/20" />
+                  <span className="text-[10px] tracking-widest uppercase font-medium text-foreground/60 bg-bengal-mati px-2 py-1 rounded">
                     {section.type.replace('_', ' ')}
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => removeSection(section.id)}
-                  className="min-w-[44px] min-h-[44px] flex items-center justify-center text-bengal-kajal/30 hover:text-bengal-alta transition-colors touch-manipulation -mr-2"
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground/30 hover:text-bengal-alta transition-colors touch-manipulation -mr-2"
                 >
                   <X size={18} />
                 </button>
@@ -83,7 +83,7 @@ export function SectionComposer({ sections, onChange }: Props) {
         <button
           type="button"
           onClick={() => setShowAddMenu(true)}
-          className="flex items-center justify-center gap-2 w-full py-4 border border-dashed border-bengal-kansa/30 rounded-xl text-bengal-kajal/50 hover:bg-bengal-mati/50 hover:text-bengal-kajal transition-colors text-sm"
+          className="flex items-center justify-center gap-2 w-full py-4 border border-dashed border-bengal-kansa/30 rounded-xl text-foreground/50 hover:bg-bengal-mati/50 hover:text-foreground transition-colors text-sm"
         >
           <Plus size={16} /> Add Section
         </button>
@@ -92,8 +92,8 @@ export function SectionComposer({ sections, onChange }: Props) {
       {showAddMenu && (
         <div className="bg-white p-4 rounded-xl border border-bengal-kansa/20 shadow-lg">
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-sm font-medium text-bengal-kajal">Select Section Type</h4>
-            <button type="button" onClick={() => setShowAddMenu(false)} className="min-w-[44px] min-h-[44px] flex items-center justify-center text-bengal-kajal/40 hover:text-bengal-kajal touch-manipulation -mr-2"><X size={18} /></button>
+            <h4 className="text-sm font-medium text-foreground">Select Section Type</h4>
+            <button type="button" onClick={() => setShowAddMenu(false)} className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground/40 hover:text-foreground touch-manipulation -mr-2"><X size={18} /></button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {(['hero', 'richtext', 'image_text', 'product_grid', 'quote', 'cta', 'gallery', 'testimonial'] as SectionType[]).map(type => (
@@ -138,7 +138,7 @@ function SectionEditor({ section, onChange }: { section: SectionData; onChange: 
     case 'hero':
       return (
         <div className="flex flex-col gap-3">
-          <input type="text" placeholder="Hero Title" value={section.content.title || ''} onChange={(e) => handleChange('title', e.target.value)} className="w-full text-lg font-editorial p-2 border-b border-bengal-kansa/20 focus:outline-none" />
+          <input type="text" placeholder="Hero Title" value={section.content.title || ''} onChange={(e) => handleChange('title', e.target.value)} className="w-full text-lg font-sans font-semibold tracking-tight p-2 border-b border-bengal-kansa/20 focus:outline-none" />
           <input type="text" placeholder="Subtitle" value={section.content.subtitle || ''} onChange={(e) => handleChange('subtitle', e.target.value)} className="w-full text-sm p-2 border-b border-bengal-kansa/20 focus:outline-none" />
           <div className="mt-2">
             <label className="text-[10px] uppercase mb-1 block">Background Image</label>
@@ -170,6 +170,6 @@ function SectionEditor({ section, onChange }: { section: SectionData; onChange: 
         </div>
       );
     default:
-      return <div className="text-sm text-bengal-kajal/50 py-4 italic">Editor for {section.type} coming soon. You can still reorder this block.</div>;
+      return <div className="text-sm text-foreground/50 py-4 italic">Editor for {section.type} coming soon. You can still reorder this block.</div>;
   }
 }

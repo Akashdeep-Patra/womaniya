@@ -15,8 +15,8 @@ export default async function SettingsIndex({ params }: Props) {
   return (
     <div className="px-4 md:px-8 py-8 max-w-3xl mx-auto">
       <div className="mb-8">
-        <h1 className="font-editorial text-3xl text-bengal-kajal mb-1">Settings</h1>
-        <p className="text-sm text-bengal-kajal/60">
+        <h1 className="font-sans font-bold tracking-tight text-3xl text-foreground mb-1">Settings</h1>
+        <p className="text-sm text-foreground/60">
           Manage global store settings and configuration.
         </p>
       </div>

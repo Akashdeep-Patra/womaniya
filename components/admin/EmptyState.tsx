@@ -14,9 +14,9 @@ export function EmptyState({ title, description, action, className }: EmptyState
       <div className="mb-6 opacity-30">
         <JamdaniDiamond size={80} />
       </div>
-      <h3 className="font-editorial text-xl text-[#1A1918] mb-2">{title}</h3>
+      <h3 className="font-sans font-semibold tracking-tight text-xl text-foreground mb-2">{title}</h3>
       {description && (
-        <p className="text-sm text-[#1A1918]/50 max-w-sm mb-6">{description}</p>
+        <p className="text-sm text-foreground/50 max-w-sm mb-6">{description}</p>
       )}
       {action}
     </div>

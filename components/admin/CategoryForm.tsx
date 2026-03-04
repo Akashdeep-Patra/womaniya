@@ -33,9 +33,9 @@ type CategoryFormProps = {
 };
 
 const inputBaseClasses =
-  'w-full px-4 py-2.5 bg-white border rounded-md text-sm focus:ring-1 focus:ring-[#C5A059]/30 outline-none';
-const inputErrorClasses = 'border-red-500 ring-1 ring-red-500/20';
-const inputNormalClasses = 'border-[#C5A059]/15';
+  'flex min-h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50';
+const inputErrorClasses = 'border-destructive ring-2 ring-destructive/20';
+const inputNormalClasses = 'border-input';
 
 export function CategoryForm({ category, locale, action }: CategoryFormProps) {
   const router = useRouter();
@@ -98,7 +98,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
       {apiError && (
         <div
           role="alert"
-          className="rounded-lg border border-red-500/50 bg-red-500/10 px-4 py-3 text-sm text-red-600"
+          className="rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive"
         >
           {apiError}
         </div>
@@ -106,10 +106,10 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
 
       {/* Images */}
       <div>
-        <label className="block text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/50 font-medium mb-1.5">
+        <label className="block text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium mb-1.5">
           Images
         </label>
-        <p className="text-[#1A1918]/35 text-xs mb-3">
+        <p className="text-muted-foreground/80 text-xs mb-3">
           First image is the cover. Multiple images create an auto-sliding carousel.
         </p>
         <Reorder.Group
@@ -122,22 +122,22 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
             <Reorder.Item
               key={url}
               value={url}
-              className="relative w-28 h-20 shrink-0 rounded-lg overflow-hidden bg-[#1A1918]/5 border border-[#C5A059]/15 group"
+              className="relative w-28 h-20 shrink-0 rounded-lg overflow-hidden bg-muted border border-border group"
             >
               <img src={url} alt={`Image ${i + 1}`} className="object-cover w-full h-full" />
               {i === 0 && (
-                <span className="absolute top-1 left-1 text-[8px] tracking-wider uppercase bg-[#8A1C14] text-white px-1.5 py-0.5 rounded-sm">
+                <span className="absolute top-1 left-1 text-[8px] tracking-wider uppercase bg-primary text-primary-foreground px-1.5 py-0.5 rounded-sm">
                   Cover
                 </span>
               )}
               <button
                 type="button"
                 onClick={() => setImages((prev) => prev.filter((_, idx) => idx !== i))}
-                className="absolute -top-0.5 -right-0.5 w-8 h-8 bg-[#1A1918]/80 text-white rounded-full flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-manipulation"
+                className="absolute -top-0.5 -right-0.5 w-8 h-8 bg-foreground/80 text-background rounded-full flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-manipulation"
               >
                 <X size={14} />
               </button>
-              <div className="absolute bottom-0.5 left-0.5 w-7 h-7 bg-[#1A1918]/50 text-white rounded flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation">
+              <div className="absolute bottom-0.5 left-0.5 w-7 h-7 bg-foreground/50 text-background rounded flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation">
                 <GripVertical size={14} />
               </div>
             </Reorder.Item>
@@ -164,8 +164,8 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
               className={cn(
                 'px-4 py-2 text-xs tracking-wider uppercase rounded-md transition-colors min-h-[44px]',
                 activeTab === tab
-                  ? 'bg-[#1A1918] text-[#F9F6F0]'
-                  : 'text-[#1A1918]/50 hover:bg-[#1A1918]/5'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:bg-muted'
               )}
             >
               {tab === 'en' ? 'English' : 'বাংলা'}
@@ -178,7 +178,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
             <div>
               <label
                 htmlFor="name_en"
-                className="block text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/50 font-medium mb-1.5"
+                className="block text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium mb-1.5"
               >
                 Name (English) *
               </label>
@@ -192,13 +192,13 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
                 )}
               />
               {errors.name_en && (
-                <p className="text-red-500 text-xs font-medium mt-1">{errors.name_en.message}</p>
+                <p className="text-destructive text-xs font-medium mt-1">{errors.name_en.message}</p>
               )}
             </div>
             <div>
               <label
                 htmlFor="description_en"
-                className="block text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/50 font-medium mb-1.5"
+                className="block text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium mb-1.5"
               >
                 Description (English)
               </label>
@@ -213,7 +213,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
                 )}
               />
               {errors.description_en && (
-                <p className="text-red-500 text-xs font-medium mt-1">
+                <p className="text-destructive text-xs font-medium mt-1">
                   {errors.description_en.message}
                 </p>
               )}
@@ -224,7 +224,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
             <div>
               <label
                 htmlFor="name_bn"
-                className="block text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/50 font-medium mb-1.5 font-bengali"
+                className="block text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium mb-1.5 font-bengali"
               >
                 নাম (বাংলা)
               </label>
@@ -239,13 +239,13 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
                 )}
               />
               {errors.name_bn && (
-                <p className="text-red-500 text-xs font-medium mt-1">{errors.name_bn.message}</p>
+                <p className="text-destructive text-xs font-medium mt-1">{errors.name_bn.message}</p>
               )}
             </div>
             <div>
               <label
                 htmlFor="description_bn"
-                className="block text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/50 font-medium mb-1.5 font-bengali"
+                className="block text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium mb-1.5 font-bengali"
               >
                 বিবরণ (বাংলা)
               </label>
@@ -260,7 +260,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
                 )}
               />
               {errors.description_bn && (
-                <p className="text-red-500 text-xs font-medium mt-1">
+                <p className="text-destructive text-xs font-medium mt-1">
                   {errors.description_bn.message}
                 </p>
               )}
@@ -270,15 +270,15 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
       </div>
 
       {/* SEO */}
-      <div className="border border-[#C5A059]/10 rounded-lg p-4 md:p-5 space-y-4">
-        <h3 className="text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/50 font-medium">
+      <div className="border border-border rounded-lg p-4 md:p-5 space-y-4">
+        <h3 className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
           SEO
         </h3>
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label
               htmlFor="seo_title_en"
-              className="block text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/40 mb-1"
+              className="block text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1"
             >
               SEO Title (EN)
             </label>
@@ -289,11 +289,11 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
               className={cn(
                 inputBaseClasses,
                 'px-3 py-2',
-                errors.seo_title_en ? inputErrorClasses : 'border-[#C5A059]/10'
+                errors.seo_title_en ? inputErrorClasses : inputNormalClasses
               )}
             />
             {errors.seo_title_en && (
-              <p className="text-red-500 text-xs font-medium mt-1">
+              <p className="text-destructive text-xs font-medium mt-1">
                 {errors.seo_title_en.message}
               </p>
             )}
@@ -301,7 +301,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
           <div>
             <label
               htmlFor="seo_title_bn"
-              className="block text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/40 mb-1"
+              className="block text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1"
             >
               SEO Title (BN)
             </label>
@@ -312,11 +312,11 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
               className={cn(
                 inputBaseClasses,
                 'px-3 py-2 font-bengali',
-                errors.seo_title_bn ? inputErrorClasses : 'border-[#C5A059]/10'
+                errors.seo_title_bn ? inputErrorClasses : inputNormalClasses
               )}
             />
             {errors.seo_title_bn && (
-              <p className="text-red-500 text-xs font-medium mt-1">
+              <p className="text-destructive text-xs font-medium mt-1">
                 {errors.seo_title_bn.message}
               </p>
             )}
@@ -326,7 +326,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
           <div>
             <label
               htmlFor="seo_description_en"
-              className="block text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/40 mb-1"
+              className="block text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1"
             >
               SEO Description (EN)
             </label>
@@ -337,11 +337,11 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
               className={cn(
                 inputBaseClasses,
                 'px-3 py-2 resize-none',
-                errors.seo_description_en ? inputErrorClasses : 'border-[#C5A059]/10'
+                errors.seo_description_en ? inputErrorClasses : inputNormalClasses
               )}
             />
             {errors.seo_description_en && (
-              <p className="text-red-500 text-xs font-medium mt-1">
+              <p className="text-destructive text-xs font-medium mt-1">
                 {errors.seo_description_en.message}
               </p>
             )}
@@ -349,7 +349,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
           <div>
             <label
               htmlFor="seo_description_bn"
-              className="block text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/40 mb-1"
+              className="block text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1"
             >
               SEO Description (BN)
             </label>
@@ -360,11 +360,11 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
               className={cn(
                 inputBaseClasses,
                 'px-3 py-2 font-bengali resize-none',
-                errors.seo_description_bn ? inputErrorClasses : 'border-[#C5A059]/10'
+                errors.seo_description_bn ? inputErrorClasses : inputNormalClasses
               )}
             />
             {errors.seo_description_bn && (
-              <p className="text-red-500 text-xs font-medium mt-1">
+              <p className="text-destructive text-xs font-medium mt-1">
                 {errors.seo_description_bn.message}
               </p>
             )}
@@ -376,7 +376,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
       <div>
         <label
           htmlFor="status"
-          className="block text-[10px] tracking-[0.15em] uppercase text-[#1A1918]/50 font-medium mb-1.5"
+          className="block text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium mb-1.5"
         >
           Status
         </label>
@@ -386,7 +386,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
           className={cn(
             inputBaseClasses,
             'max-w-xs',
-            errors.status ? inputErrorClasses : 'border-[#C5A059]/15'
+            errors.status ? inputErrorClasses : inputNormalClasses
           )}
         >
           <option value="draft">Draft</option>
@@ -394,7 +394,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
           <option value="archived">Archived</option>
         </select>
         {errors.status && (
-          <p className="text-red-500 text-xs font-medium mt-1">{errors.status.message}</p>
+          <p className="text-destructive text-xs font-medium mt-1">{errors.status.message}</p>
         )}
       </div>
 
@@ -405,8 +405,8 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
             type="submit"
             disabled={isPending}
             className={cn(
-              'flex-1 py-3.5 min-h-[44px] bg-[#8A1C14] text-white text-sm tracking-wider uppercase rounded-xl transition-colors shadow-2xl touch-manipulation',
-              isPending ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#B3241C] active:scale-[0.98]'
+              'flex-1 py-3.5 min-h-[44px] bg-primary text-primary-foreground text-sm tracking-wider uppercase rounded-xl transition-colors shadow-2xl touch-manipulation',
+              isPending ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/90 active:scale-[0.98]'
             )}
           >
             {isPending ? 'Saving...' : category ? 'Update Category' : 'Create Category'}
@@ -414,7 +414,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-5 py-3.5 min-h-[44px] text-sm text-[#1A1918]/50 hover:text-[#1A1918] bg-white/80 backdrop-blur-sm rounded-xl border border-[#C5A059]/20 shadow-lg transition-colors touch-manipulation"
+            className="px-5 py-3.5 min-h-[44px] text-sm text-muted-foreground hover:text-foreground bg-background/80 backdrop-blur-sm rounded-xl border border-border shadow-lg transition-colors touch-manipulation"
           >
             Cancel
           </button>

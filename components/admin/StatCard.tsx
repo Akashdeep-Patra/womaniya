@@ -40,13 +40,13 @@ export function StatCard({ icon, label, value, trend, variant = 'default', class
       </div>
       <p className={cn(
         'text-[10px] tracking-[0.15em] uppercase mb-1',
-        variant === 'dark' ? 'text-[#F9F6F0]/40' : 'text-[#1A1918]/40',
+        variant === 'dark' ? 'text-[#F9F6F0]/40' : 'text-foreground/40',
       )}>
         {label}
       </p>
       <p className={cn(
-        'font-editorial text-3xl',
-        variant === 'dark' ? 'text-[#C5A059]' : variant === 'accent' ? 'text-[#8A1C14]' : 'text-[#1A1918]',
+        'font-sans font-bold tracking-tight text-3xl',
+        variant === 'dark' ? 'text-[#C5A059]' : variant === 'accent' ? 'text-[#8A1C14]' : 'text-foreground',
       )}>
         {value}
       </p>

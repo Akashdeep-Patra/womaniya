@@ -107,13 +107,13 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
   };
 
   const inputClassName = (fieldError?: string) =>
-    `w-full px-4 py-3 rounded-sm border bg-bengal-cream text-bengal-kajal text-sm font-sans-en focus:outline-none focus:ring-2 focus:ring-bengal-sindoor/30 focus:border-bengal-sindoor transition-colors resize-none ${
-      fieldError ? 'border-bengal-alta ring-2 ring-bengal-alta/20' : 'border-bengal-kansa/30'
+    `flex min-h-[80px] w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none ${
+      fieldError ? 'border-destructive ring-2 ring-destructive/20' : 'border-input'
     }`;
 
   const inputClassNameShort = (fieldError?: string) =>
-    `w-full h-12 px-4 rounded-sm border bg-bengal-cream text-bengal-kajal text-sm font-sans-en focus:outline-none focus:ring-2 focus:ring-bengal-sindoor/30 focus:border-bengal-sindoor transition-colors ${
-      fieldError ? 'border-bengal-alta ring-2 ring-bengal-alta/20' : 'border-bengal-kansa/30'
+    `flex h-12 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+      fieldError ? 'border-destructive ring-2 ring-destructive/20' : 'border-input'
     }`;
 
   return (
@@ -121,15 +121,15 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
       {apiError && (
         <div
           role="alert"
-          className="rounded-xl border border-bengal-alta/50 bg-bengal-alta/10 px-4 py-3 text-sm text-bengal-alta"
+          className="rounded-xl border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive"
         >
           {apiError}
         </div>
       )}
 
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border">
         <Tabs defaultValue="en" className="w-full">
-          <TabsList className="mb-4 bg-bengal-mati">
+          <TabsList className="mb-4 bg-muted">
             <TabsTrigger value="en">English</TabsTrigger>
             <TabsTrigger value="bn" className="font-bengali">
               বাংলা
@@ -188,8 +188,8 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
         </Tabs>
       </div>
 
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4 md:gap-5">
-        <h3 className="font-editorial text-lg md:text-xl text-bengal-kajal">Settings & Schedule</h3>
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-4 md:gap-5">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Settings & Schedule</h3>
 
         <BengalInput
           label="CTA URL"
@@ -200,7 +200,7 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] tracking-widest uppercase font-medium text-bengal-kajal/70 font-sans-en">
+            <label className="text-[10px] tracking-widest uppercase font-medium text-muted-foreground font-sans-en">
               Start Date
             </label>
             <input
@@ -209,11 +209,11 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
               className={inputClassNameShort(errors.starts_at?.message)}
             />
             {errors.starts_at && (
-              <p className="text-bengal-alta text-xs font-medium mt-1">{errors.starts_at.message}</p>
+              <p className="text-destructive text-xs font-medium mt-1">{errors.starts_at.message}</p>
             )}
           </div>
           <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] tracking-widest uppercase font-medium text-bengal-kajal/70 font-sans-en">
+            <label className="text-[10px] tracking-widest uppercase font-medium text-muted-foreground font-sans-en">
               End Date
             </label>
             <input
@@ -222,7 +222,7 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
               className={inputClassNameShort(errors.ends_at?.message)}
             />
             {errors.ends_at && (
-              <p className="text-bengal-alta text-xs font-medium mt-1">{errors.ends_at.message}</p>
+              <p className="text-destructive text-xs font-medium mt-1">{errors.ends_at.message}</p>
             )}
           </div>
         </div>

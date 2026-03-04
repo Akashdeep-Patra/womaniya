@@ -117,8 +117,8 @@ export function PageForm({ initialData, locale, basePath = 'pages', defaultPageT
   };
 
   const inputClassName = (fieldError?: string) =>
-    `w-full px-4 py-2 rounded-sm border bg-bengal-cream text-bengal-kajal text-sm font-sans-en focus:outline-none focus:ring-2 focus:ring-bengal-sindoor/30 focus:border-bengal-sindoor transition-colors resize-none ${
-      fieldError ? 'border-bengal-alta ring-2 ring-bengal-alta/20' : 'border-bengal-kansa/30'
+    `flex min-h-[60px] w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none ${
+      fieldError ? 'border-destructive ring-2 ring-destructive/20' : 'border-input'
     }`;
 
   return (
@@ -126,16 +126,16 @@ export function PageForm({ initialData, locale, basePath = 'pages', defaultPageT
       {apiError && (
         <div
           role="alert"
-          className="rounded-xl border border-bengal-alta/50 bg-bengal-alta/10 px-4 py-3 text-sm text-bengal-alta"
+          className="rounded-xl border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive"
         >
           {apiError}
         </div>
       )}
 
       {/* ─── Basic Info ─── */}
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border">
         <Tabs defaultValue="en" className="w-full">
-          <TabsList className="mb-4 bg-bengal-mati">
+          <TabsList className="mb-4 bg-muted">
             <TabsTrigger value="en">English</TabsTrigger>
             <TabsTrigger value="bn" className="font-bengali">
               বাংলা
@@ -174,7 +174,7 @@ export function PageForm({ initialData, locale, basePath = 'pages', defaultPageT
       </div>
 
       {/* ─── Layout, Media & Settings ─── */}
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20 flex flex-col gap-4 md:gap-6">
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-4 md:gap-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormSelect label="Page Type" {...register('page_type')}>
             <option value="static">Static Page</option>
@@ -189,8 +189,8 @@ export function PageForm({ initialData, locale, basePath = 'pages', defaultPageT
         </div>
 
         <div>
-          <h4 className="font-editorial text-base mb-1 text-bengal-kajal">Images</h4>
-          <p className="text-bengal-kajal/40 text-xs mb-3">
+          <h4 className="font-sans font-semibold tracking-tight text-base mb-1 text-foreground">Images</h4>
+          <p className="text-muted-foreground text-xs mb-3">
             First image is the hero/cover. Add more for a carousel.
           </p>
           <Reorder.Group
@@ -203,22 +203,22 @@ export function PageForm({ initialData, locale, basePath = 'pages', defaultPageT
               <Reorder.Item
                 key={url}
                 value={url}
-                className="relative w-28 h-20 shrink-0 rounded-lg overflow-hidden bg-bengal-mati border border-bengal-kansa/30 group"
+                className="relative w-28 h-20 shrink-0 rounded-lg overflow-hidden bg-muted border border-border group"
               >
                 <img src={url} alt={`Image ${i + 1}`} className="object-cover w-full h-full" />
                 {i === 0 && (
-                  <span className="absolute top-1 left-1 text-[8px] tracking-wider uppercase bg-bengal-sindoor text-white px-1.5 py-0.5 rounded-sm font-sans-en">
+                  <span className="absolute top-1 left-1 text-[8px] tracking-wider uppercase bg-primary text-primary-foreground px-1.5 py-0.5 rounded-sm font-sans-en">
                     Cover
                   </span>
                 )}
                 <button
                   type="button"
                   onClick={() => setImages((prev) => prev.filter((_, idx) => idx !== i))}
-                  className="absolute -top-0.5 -right-0.5 w-8 h-8 bg-bengal-kajal/80 text-white rounded-full flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-manipulation"
+                  className="absolute -top-0.5 -right-0.5 w-8 h-8 bg-foreground/80 text-background rounded-full flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity touch-manipulation"
                 >
                   <X size={14} />
                 </button>
-                <div className="absolute bottom-0.5 left-0.5 w-7 h-7 bg-bengal-kajal/50 text-white rounded flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation">
+                <div className="absolute bottom-0.5 left-0.5 w-7 h-7 bg-foreground/50 text-background rounded flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation">
                   <GripVertical size={14} />
                 </div>
               </Reorder.Item>
@@ -236,8 +236,8 @@ export function PageForm({ initialData, locale, basePath = 'pages', defaultPageT
       </div>
 
       {/* ─── Section Composer ─── */}
-      <div className="bg-bengal-kori/50 p-4 md:p-6 rounded-2xl border border-bengal-kansa/20">
-        <h3 className="font-editorial text-lg md:text-xl mb-3 md:mb-4 text-bengal-kajal">Page Content Blocks</h3>
+      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border">
+        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl mb-3 md:mb-4 text-foreground">Page Content Blocks</h3>
         <SectionComposer sections={sections} onChange={setSections} />
       </div>
 

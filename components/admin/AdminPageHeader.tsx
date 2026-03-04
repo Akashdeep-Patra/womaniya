@@ -11,11 +11,11 @@ export function AdminPageHeader({ title, description, actions, className }: Admi
   return (
     <div className={cn('flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8', className)}>
       <div>
-        <h1 className="font-editorial text-2xl lg:text-3xl text-[#1A1918]">
+        <h1 className="font-sans font-bold tracking-tight text-2xl lg:text-3xl text-foreground">
           {title}
         </h1>
         {description && (
-          <p className="text-sm text-[#1A1918]/50 mt-1">{description}</p>
+          <p className="text-sm text-foreground/50 mt-1">{description}</p>
         )}
       </div>
       {actions && <div className="flex items-center gap-2">{actions}</div>}

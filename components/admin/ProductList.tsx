@@ -57,14 +57,14 @@ export function ProductList({ initialProducts }: { initialProducts: Product[] })
 
             {/* Info */}
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-bengal-kajal truncate">{product.name_en}</p>
+              <p className="text-sm font-medium text-foreground truncate">{product.name_en}</p>
               <div className="flex items-center gap-2 mt-0.5">
                 <BengalBadge variant="mati" className="text-[9px]">{product.category}</BengalBadge>
                 {product.is_featured && (
                   <BengalBadge variant="kansa" className="text-[9px]">Featured</BengalBadge>
                 )}
               </div>
-              <p className="font-editorial text-bengal-sindoor text-sm mt-0.5">
+              <p className="font-sans font-semibold tracking-tight text-bengal-sindoor text-sm mt-0.5">
                 ₹{Number(product.price).toLocaleString('en-IN')}
               </p>
             </div>
@@ -73,7 +73,7 @@ export function ProductList({ initialProducts }: { initialProducts: Product[] })
             <button
               onClick={() => handleDelete(product.id)}
               disabled={isPending && pending === product.id}
-              className="min-w-[44px] min-h-[44px] flex items-center justify-center text-bengal-kajal/40 hover:text-bengal-alta transition-colors disabled:opacity-40"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center text-foreground/40 hover:text-bengal-alta transition-colors disabled:opacity-40"
               aria-label={t('delete')}
             >
               {isPending && pending === product.id ? (
@@ -87,7 +87,7 @@ export function ProductList({ initialProducts }: { initialProducts: Product[] })
       </AnimatePresence>
 
       {products.length === 0 && (
-        <p className="text-center text-bengal-kajal/40 py-12 text-sm">
+        <p className="text-center text-foreground/40 py-12 text-sm">
           No products yet. Add your first saree!
         </p>
       )}

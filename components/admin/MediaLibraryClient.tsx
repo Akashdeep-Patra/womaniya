@@ -98,7 +98,7 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
       {/* ─── Grid ─── */}
       <div className={cn("bg-bengal-kori/50 p-6 rounded-2xl border border-bengal-kansa/20 transition-all", selectedAsset ? "lg:col-span-3" : "lg:col-span-4")}>
         <div className="flex justify-between items-center mb-6">
-          <h3 className="font-editorial text-xl text-bengal-kajal">All Media</h3>
+          <h3 className="font-sans font-semibold tracking-tight text-xl text-foreground">All Media</h3>
           <div className="w-48">
             <CameraUpload onUpload={handleUpload} compact />
           </div>
@@ -106,7 +106,7 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
 
         {assets.length === 0 ? (
           <div className="text-center py-20 border border-dashed border-bengal-kansa/30 rounded-xl">
-            <p className="text-bengal-kajal/50 text-sm">No media uploaded yet.</p>
+            <p className="text-foreground/50 text-sm">No media uploaded yet.</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
@@ -136,8 +136,8 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
       {selectedAsset && (
         <div className="bg-white p-6 rounded-2xl border border-bengal-kansa/20 lg:col-span-1 shadow-sm sticky top-24 h-[calc(100vh-120px)] overflow-y-auto">
           <div className="flex justify-between items-center mb-4">
-            <h4 className="font-editorial text-lg text-bengal-kajal">Asset Details</h4>
-            <button onClick={() => setSelectedAsset(null)} className="text-bengal-kajal/40 hover:text-bengal-kajal"><X size={18} /></button>
+            <h4 className="font-sans font-semibold tracking-tight text-lg text-foreground">Asset Details</h4>
+            <button onClick={() => setSelectedAsset(null)} className="text-foreground/40 hover:text-foreground"><X size={18} /></button>
           </div>
           
           <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-bengal-mati mb-4 border border-bengal-kansa/20">
@@ -145,8 +145,8 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
           </div>
 
           <div className="flex flex-col gap-2 mb-6">
-            <p className="text-xs text-bengal-kajal/60 break-all">{selectedAsset.filename}</p>
-            <p className="text-[10px] uppercase tracking-widest text-bengal-kajal/40">
+            <p className="text-xs text-foreground/60 break-all">{selectedAsset.filename}</p>
+            <p className="text-[10px] uppercase tracking-widest text-foreground/40">
               {new Date(selectedAsset.created_at || '').toLocaleDateString()}
             </p>
             <div className="flex gap-2 mt-2">
@@ -167,7 +167,7 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
 
           <form onSubmit={handleUpdateMeta} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] tracking-widest uppercase font-medium text-bengal-kajal/70 font-sans-en">Alt Text (SEO)</label>
+              <label className="text-[10px] tracking-widest uppercase font-medium text-foreground/70 font-sans-en">Alt Text (SEO)</label>
               <input 
                 name="alt_en" 
                 defaultValue={selectedAsset.alt_en || ''} 
@@ -177,7 +177,7 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
             </div>
             
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] tracking-widest uppercase font-medium text-bengal-kajal/70 font-sans-en">Tags</label>
+              <label className="text-[10px] tracking-widest uppercase font-medium text-foreground/70 font-sans-en">Tags</label>
               <input 
                 name="tags" 
                 defaultValue={selectedAsset.tags || ''} 

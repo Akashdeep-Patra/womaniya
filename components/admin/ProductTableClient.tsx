@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { useState, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Trash2, Edit } from 'lucide-react';
 import { toast } from 'sonner';
@@ -11,15 +10,16 @@ import { EntityTable, Column, MobileCardConfig } from './EntityTable';
 import { StatusPill } from './StatusPill';
 import { BengalBadge } from '@/components/bengal';
 import type { Product } from '@/db/schema';
+import Link from 'next/link';
 
 export function ProductTableClient({ initialProducts, locale }: { initialProducts: Product[], locale: string }) {
   const t = useTranslations('admin');
-  const router = useRouter();
   const [products, setProducts] = useState(initialProducts);
   const [pending, setId] = useState<number | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = (e: React.MouseEvent, id: number) => {
+    e.preventDefault();
     e.stopPropagation();
     if (!window.confirm(t('confirm_delete') || 'Are you sure you want to delete this product?')) return;
     
@@ -37,9 +37,7 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
     });
   };
 
-  const handleEdit = (id: number) => {
-    router.push(`/${locale}/admin/products/${id}/edit`);
-  };
+  const getEditUrl = (id: number) => `/${locale}/admin/products/${id}/edit`;
 
   const columns: Column<Product>[] = [
     {
@@ -47,7 +45,7 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
       header: 'Product',
       render: (p) => (
         <div className="flex items-center gap-3">
-          <div className="relative w-12 h-12 shrink-0 rounded-sm overflow-hidden bg-bengal-mati">
+          <div className="relative w-12 h-12 shrink-0 rounded-sm overflow-hidden bg-muted">
             <Image
               src={p.image_url}
               alt={p.name_en}
@@ -56,9 +54,9 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
               sizes="48px"
             />
           </div>
-          <div className="min-w-0">
-            <p className="font-medium text-bengal-kajal truncate">{p.name_en}</p>
-            <div className="flex items-center gap-2 mt-1">
+          <div className="min-w-0 flex flex-col items-start justify-center gap-1">
+            <p className="font-medium text-foreground truncate">{p.name_en}</p>
+            <div className="flex items-center gap-2">
               <BengalBadge variant="mati" className="text-[9px]">{p.category}</BengalBadge>
               {p.is_featured && <BengalBadge variant="kansa" className="text-[9px]">Featured</BengalBadge>}
             </div>
@@ -71,7 +69,7 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
       header: 'Price',
       className: 'hidden md:table-cell',
       render: (p) => (
-        <span className="font-editorial text-bengal-sindoor">
+        <span className="font-medium text-foreground">
           ₹{Number(p.price).toLocaleString('en-IN')}
         </span>
       ),
@@ -86,22 +84,20 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
       header: '',
       render: (p) => (
         <div className="flex items-center justify-end gap-1">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleEdit(p.id);
-            }}
-            className="min-w-[44px] min-h-[44px] flex items-center justify-center text-bengal-kajal/40 hover:text-bengal-kajal transition-colors"
+          <Link
+            href={getEditUrl(p.id)}
+            prefetch={true}
+            className="w-9 h-9 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
             <Edit size={16} />
-          </button>
+          </Link>
           <button
             onClick={(e) => handleDelete(e, p.id)}
             disabled={isPending && pending === p.id}
-            className="min-w-[44px] min-h-[44px] flex items-center justify-center text-bengal-kajal/40 hover:text-bengal-alta transition-colors disabled:opacity-40"
+            className="w-9 h-9 flex items-center justify-center rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-40"
           >
             {isPending && pending === p.id ? (
-              <span className="block w-4 h-4 border-2 border-bengal-alta border-t-transparent rounded-full animate-spin" />
+              <span className="block w-4 h-4 border-2 border-destructive border-t-transparent rounded-full animate-spin" />
             ) : (
               <Trash2 size={16} />
             )}
@@ -113,35 +109,34 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
 
   const mobileCard: MobileCardConfig<Product> = {
     leading: (p) => (
-      <div className="relative w-11 h-11 rounded-lg overflow-hidden bg-bengal-mati">
+      <div className="relative w-11 h-11 rounded-md overflow-hidden bg-muted">
         <Image src={p.image_url} alt={p.name_en} fill className="object-cover" sizes="44px" />
       </div>
     ),
     title: (p) => p.name_en,
     subtitle: (p) => (
       <div className="flex items-center gap-2">
-        <span className="font-editorial text-bengal-sindoor text-xs">₹{Number(p.price).toLocaleString('en-IN')}</span>
+        <span className="font-medium text-foreground text-xs">₹{Number(p.price).toLocaleString('en-IN')}</span>
         <StatusPill status={p.status || 'draft'} />
       </div>
     ),
     actions: (p) => (
       <>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleEdit(p.id);
-          }}
-          className="w-10 h-10 flex items-center justify-center rounded-lg text-bengal-kajal/40 hover:text-bengal-kajal active:bg-bengal-mati transition-colors touch-manipulation"
+        <Link
+          href={getEditUrl(p.id)}
+          prefetch={true}
+          onClick={(e) => e.stopPropagation()}
+          className="w-9 h-9 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground active:bg-muted transition-colors touch-manipulation"
         >
           <Edit size={15} />
-        </button>
+        </Link>
         <button
           onClick={(e) => handleDelete(e, p.id)}
           disabled={isPending && pending === p.id}
-          className="w-10 h-10 flex items-center justify-center rounded-lg text-bengal-kajal/40 hover:text-bengal-alta active:bg-bengal-alta/10 transition-colors disabled:opacity-40 touch-manipulation"
+          className="w-9 h-9 flex items-center justify-center rounded-md text-muted-foreground hover:text-destructive active:bg-destructive/10 transition-colors disabled:opacity-40 touch-manipulation"
         >
           {isPending && pending === p.id ? (
-            <span className="block w-4 h-4 border-2 border-bengal-alta border-t-transparent rounded-full animate-spin" />
+            <span className="block w-4 h-4 border-2 border-destructive border-t-transparent rounded-full animate-spin" />
           ) : (
             <Trash2 size={15} />
           )}
@@ -151,15 +146,13 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
   };
 
   return (
-    <div className="bg-bengal-kori/50 rounded-2xl border border-bengal-kansa/20 overflow-hidden">
-      <EntityTable
-        columns={columns}
-        data={products}
-        keyExtractor={(p) => p.id}
-        onRowClick={(p) => handleEdit(p.id)}
-        emptyMessage="No products yet. Add your first saree!"
-        mobileCard={mobileCard}
-      />
-    </div>
+    <EntityTable
+      columns={columns}
+      data={products}
+      keyExtractor={(p) => p.id}
+      getRowHref={(p) => getEditUrl(p.id)}
+      emptyMessage="No products yet. Add your first saree!"
+      mobileCard={mobileCard}
+    />
   );
 }

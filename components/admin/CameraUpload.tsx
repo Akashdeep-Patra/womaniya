@@ -251,11 +251,11 @@ export function CameraUpload({
           <div className="text-center px-4">
             <p className={cn(
               "font-medium text-sm transition-colors",
-              isDragActive ? "text-bengal-sindoor" : "text-bengal-kajal"
+              isDragActive ? "text-bengal-sindoor" : "text-foreground"
             )}>
               {isDragActive ? 'Drop images here' : t('photo')}
             </p>
-            <p className="text-bengal-kajal/50 text-xs mt-1 leading-relaxed">
+            <p className="text-foreground/50 text-xs mt-1 leading-relaxed">
               {multiple ? 'Drag & drop multiple files, or click to select' : t('photo_hint')}
             </p>
           </div>
@@ -272,8 +272,8 @@ export function CameraUpload({
               </div>
               <div className="flex-1 min-w-0 flex flex-col justify-center gap-1.5">
                 <div className="flex justify-between items-center text-[10px] uppercase tracking-wider font-sans-en">
-                  <span className="text-bengal-kajal truncate pr-2">{uf.file.name}</span>
-                  <span className={uf.error ? 'text-bengal-alta' : 'text-bengal-kajal/60 shrink-0'}>
+                  <span className="text-foreground truncate pr-2">{uf.file.name}</span>
+                  <span className={uf.error ? 'text-bengal-alta' : 'text-foreground/60 shrink-0'}>
                     {uf.error ? 'Failed' : `${uf.progress}%`}
                   </span>
                 </div>
