@@ -38,57 +38,62 @@ export function SettingsForm({ initialData, locale }: SettingsFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-5">
-        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Contact & Social</h3>
-        
-        <BengalInput
-          label="WhatsApp Number (with country code)"
-          {...register('whatsapp_number')}
-          placeholder="e.g. 919143161829"
-        />
-
-        <BengalInput
-          label="Instagram URL"
-          {...register('instagram_url')}
-          placeholder="e.g. https://instagram.com/..."
-        />
-
-        <BengalInput
-          label="Facebook URL"
-          {...register('facebook_url')}
-          placeholder="e.g. https://facebook.com/..."
-        />
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <div className="bg-card p-3 md:p-6 rounded-xl border border-border">
+        <h3 className="font-sans font-semibold tracking-tight text-base md:text-lg text-foreground mb-3 md:mb-4">
+          Contact & Social
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
+          <BengalInput
+            label="WhatsApp Number"
+            {...register('whatsapp_number')}
+            placeholder="e.g. 919143161829"
+          />
+          <div className="hidden md:block" /> {/* spacer for grid */}
+          <BengalInput
+            label="Instagram URL"
+            {...register('instagram_url')}
+            placeholder="e.g. https://instagram.com/..."
+          />
+          <BengalInput
+            label="Facebook URL"
+            {...register('facebook_url')}
+            placeholder="e.g. https://facebook.com/..."
+          />
+        </div>
       </div>
 
-      <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-5">
-        <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Store Details</h3>
-        
-        <BengalInput
-          label="Store Name"
-          {...register('store_name')}
-          placeholder="e.g. Womaniya"
-        />
-
-        <BengalInput
-          label="Announcement Bar Text (EN)"
-          {...register('announcement_text_en')}
-        />
-
-        <BengalInput
-          label="Announcement Bar Text (BN)"
-          {...register('announcement_text_bn')}
-          isBengali
-        />
+      <div className="bg-card p-3 md:p-6 rounded-xl border border-border">
+        <h3 className="font-sans font-semibold tracking-tight text-base md:text-lg text-foreground mb-3 md:mb-4">
+          Store Details
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
+          <div className="md:col-span-2">
+            <BengalInput
+              label="Store Name"
+              {...register('store_name')}
+              placeholder="e.g. Womaniya"
+            />
+          </div>
+          <BengalInput
+            label="Announcement Bar (EN)"
+            {...register('announcement_text_en')}
+          />
+          <BengalInput
+            label="Announcement Bar (BN)"
+            {...register('announcement_text_bn')}
+            isBengali
+          />
+        </div>
       </div>
 
-      <div className="sticky bottom-[calc(3.5rem+env(safe-area-inset-bottom)+1rem)] md:bottom-6 z-10">
+      <div className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] md:bottom-6 z-10 mt-2">
         <BengalButton
           type="submit"
           variant="primary"
           size="touch"
           loading={isPending}
-          className="shadow-2xl"
+          className="shadow-xl w-full md:w-auto md:min-w-[200px] font-semibold"
         >
           {isPending ? 'Saving...' : 'Save Settings'}
         </BengalButton>

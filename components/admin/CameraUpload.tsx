@@ -161,18 +161,18 @@ export function CameraUpload({
     const isWorking = currentUpload && currentUpload.progress < 100;
 
     return (
-      <div className="relative w-full aspect-4/5 rounded-sm overflow-hidden bg-bengal-mati border border-bengal-kansa/20">
+      <div className="relative w-full aspect-4/5 rounded-xl overflow-hidden bg-muted border border-border">
         <Image src={singlePreview} alt="Preview" fill className="object-cover" />
 
         {isWorking && (
-          <div className="absolute inset-0 bg-bengal-kajal/60 flex flex-col items-center justify-center gap-4 p-4 backdrop-blur-sm">
-            <div className="w-full max-w-[120px] bg-bengal-kori/20 rounded-full h-1.5 overflow-hidden">
+          <div className="absolute inset-0 bg-background/60 flex flex-col items-center justify-center gap-4 p-4 backdrop-blur-sm">
+            <div className="w-full max-w-[120px] bg-foreground/20 rounded-full h-1.5 overflow-hidden">
               <div 
-                className="bg-bengal-kori h-full transition-all duration-300 ease-out" 
+                className="bg-primary h-full transition-all duration-300 ease-out" 
                 style={{ width: `${currentUpload.progress}%` }} 
               />
             </div>
-            <p className="text-bengal-kori text-[10px] tracking-widest uppercase font-medium">
+            <p className="text-foreground text-[10px] tracking-widest uppercase font-medium">
               {currentUpload.progress}%
             </p>
           </div>
@@ -182,9 +182,9 @@ export function CameraUpload({
           <button
             type="button"
             onClick={clearSingle}
-            className="absolute top-1.5 right-1.5 w-8 h-8 bg-bengal-kajal/80 hover:bg-bengal-alta rounded-full flex items-center justify-center touch-manipulation active:scale-90 transition-all z-10"
+            className="absolute top-1.5 right-1.5 w-8 h-8 bg-foreground/80 hover:bg-destructive rounded-full flex items-center justify-center touch-manipulation active:scale-90 transition-all z-10"
           >
-            <X size={14} className="text-bengal-kori" />
+            <X size={14} className="text-background" />
           </button>
         )}
       </div>
@@ -198,11 +198,11 @@ export function CameraUpload({
         {...getRootProps()}
         className={cn(
           compact ? 'w-full h-full min-h-[96px]' : 'w-full aspect-4/5',
-          'rounded-sm border-2 border-dashed transition-all duration-200 cursor-pointer',
+          'rounded-xl border-2 border-dashed transition-all duration-200 cursor-pointer',
           'flex flex-col items-center justify-center gap-3 relative overflow-hidden',
           isDragActive 
-            ? 'border-bengal-sindoor bg-bengal-sindoor/5' 
-            : 'border-bengal-kansa/40 bg-bengal-mati/40 hover:bg-bengal-mati/80 hover:border-bengal-kansa/60',
+            ? 'border-primary bg-primary/5' 
+            : 'border-border/60 bg-muted/40 hover:bg-muted/80 hover:border-border',
           isUploading && !multiple && 'pointer-events-none opacity-60'
         )}
       >
@@ -211,7 +211,7 @@ export function CameraUpload({
         <div
           className={cn(
             'rounded-full flex items-center justify-center transition-colors',
-            isDragActive ? 'bg-bengal-sindoor text-white' : 'bg-bengal-sindoor/10 text-bengal-sindoor',
+            isDragActive ? 'bg-primary text-primary-foreground' : 'bg-primary/10 text-primary',
             compact ? 'w-10 h-10' : 'w-14 h-14'
           )}
         >
@@ -222,36 +222,41 @@ export function CameraUpload({
           <div className="text-center px-4">
             <p className={cn(
               "font-medium text-sm transition-colors",
-              isDragActive ? "text-bengal-sindoor" : "text-foreground"
+              isDragActive ? "text-primary" : "text-foreground"
             )}>
               {isDragActive ? 'Drop images here' : t('photo')}
             </p>
-            <p className="text-foreground/50 text-xs mt-1 leading-relaxed">
+            <p className="text-muted-foreground text-xs mt-1 leading-relaxed">
               {multiple ? 'Drag & drop multiple files, or click to select' : t('photo_hint')}
             </p>
           </div>
         )}
       </div>
 
-      {/* Progress tracking for MULTIPLE uploads */}
+      {/* Progress tracking for MULTIPLE uploads - Horizontal scroll */}
       {multiple && uploadingFiles.length > 0 && (
-        <div className="flex flex-col gap-2 mt-2">
+        <div className="flex overflow-x-auto gap-3 mt-1 pb-2 w-full snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {uploadingFiles.map((uf) => (
-            <div key={uf.id} className="flex items-center gap-3 p-2 rounded bg-bengal-kori border border-bengal-kansa/20">
-              <div className="w-10 h-10 rounded overflow-hidden bg-bengal-mati relative shrink-0">
+            <div 
+              key={uf.id} 
+              className="flex flex-col gap-2 p-1.5 rounded-lg bg-card border border-border shrink-0 w-28 snap-start shadow-sm"
+            >
+              <div className="w-full aspect-square rounded-md overflow-hidden bg-muted relative">
                 <Image src={uf.preview} alt="preview" fill className="object-cover opacity-80" />
               </div>
-              <div className="flex-1 min-w-0 flex flex-col justify-center gap-1.5">
-                <div className="flex justify-between items-center text-[10px] uppercase tracking-wider font-sans-en">
-                  <span className="text-foreground truncate pr-2">{uf.file.name}</span>
-                  <span className={uf.error ? 'text-bengal-alta' : 'text-foreground/60 shrink-0'}>
-                    {uf.error ? 'Failed' : `${uf.progress}%`}
+              <div className="px-1 pb-1 flex flex-col gap-1.5">
+                <div className="flex justify-between items-center text-[10px] font-sans font-medium">
+                  <span className="text-foreground truncate pr-2" title={uf.file.name}>
+                    {uf.file.name.length > 12 ? uf.file.name.substring(0, 10) + '...' : uf.file.name}
+                  </span>
+                  <span className={uf.error ? 'text-destructive shrink-0 font-bold' : 'text-primary shrink-0 font-bold'}>
+                    {uf.error ? '!' : `${uf.progress}%`}
                   </span>
                 </div>
                 {!uf.error && (
-                  <div className="w-full h-1 bg-bengal-mati rounded-full overflow-hidden">
+                  <div className="w-full h-1 bg-muted rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-bengal-sindoor transition-all duration-300 ease-out"
+                      className="h-full bg-primary transition-all duration-300 ease-out"
                       style={{ width: `${uf.progress}%` }}
                     />
                   </div>
