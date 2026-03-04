@@ -154,7 +154,7 @@ export function Header() {
           )}
         >
         {/* Logo */}
-        <Link 
+        <Link prefetch={true} 
           href={`/${locale}`} 
           className={cn(
             "group flex items-center shrink-0 transition-all duration-300 pointer-events-auto",

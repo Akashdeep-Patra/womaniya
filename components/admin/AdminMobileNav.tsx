@@ -61,7 +61,7 @@ export function AdminMobileNav({ locale }: { locale: string }) {
                 {moreItems.map((item) => {
                   const active = isActive(item.href);
                   return (
-                    <Link
+                    <Link prefetch={true}
                       key={item.href}
                       href={item.href}
                       prefetch={true}
@@ -96,7 +96,7 @@ export function AdminMobileNav({ locale }: { locale: string }) {
           {mainTabs.map((tab) => {
             const active = isActive(tab.href);
             return (
-              <Link
+              <Link prefetch={true}
                 key={tab.href}
                 href={tab.href}
                 prefetch={true}

@@ -20,7 +20,7 @@ export function AdminBottomNav({ locale }: { locale: string }) {
         {links.map(({ href, label, Icon }) => {
           const active = pathname === href;
           return (
-            <Link
+            <Link prefetch={true}
               key={href}
               href={href}
               className={cn(

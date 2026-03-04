@@ -84,7 +84,7 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
       header: '',
       render: (p) => (
         <div className="flex items-center justify-end gap-1">
-          <Link
+          <Link prefetch={true}
             href={getEditUrl(p.id)}
             prefetch={true}
             className="w-9 h-9 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
@@ -122,7 +122,7 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
     ),
     actions: (p) => (
       <>
-        <Link
+        <Link prefetch={true}
           href={getEditUrl(p.id)}
           prefetch={true}
           onClick={(e) => e.stopPropagation()}

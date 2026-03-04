@@ -28,7 +28,7 @@ export function QuickActions({ locale }: { locale: string }) {
             className="flex flex-col gap-2 mb-3"
           >
             {actions.map((action) => (
-              <Link
+              <Link prefetch={true}
                 key={action.href}
                 href={action.href}
                 onClick={() => setOpen(false)}

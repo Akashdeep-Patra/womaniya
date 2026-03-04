@@ -24,7 +24,7 @@ export default async function PagesIndex({ params }: Props) {
             {allPages.length} pages
           </p>
         </div>
-        <Link
+        <Link prefetch={true}
           href={`/${locale}/admin/pages/new`}
           className="flex items-center gap-2 bg-bengal-sindoor text-white px-4 py-2 rounded-full text-xs font-semibold tracking-wide hover:bg-bengal-alta transition-colors"
         >

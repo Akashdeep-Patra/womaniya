@@ -30,7 +30,7 @@ export default async function EditBannerPage({ params }: Props) {
 
   return (
     <div className="px-4 pt-6 pb-6 max-w-2xl mx-auto">
-      <Link
+      <Link prefetch={true}
         href={`/${locale}/admin/banners`}
         className="inline-flex items-center gap-2 text-xs tracking-widest uppercase text-foreground/50 hover:text-bengal-sindoor mb-6 transition-colors"
       >

@@ -20,7 +20,7 @@ export default async function CategoriesPage({ params }: Props) {
         title="Categories"
         description={`${cats.length} categories`}
         actions={
-          <Link
+          <Link prefetch={true}
             href={`/${locale}/admin/categories/new`}
             className="flex items-center gap-2 px-4 py-2.5 bg-[#8A1C14] text-white text-xs tracking-wider uppercase rounded-md hover:bg-[#B3241C] transition-colors"
           >
@@ -35,7 +35,7 @@ export default async function CategoriesPage({ params }: Props) {
           title="No categories yet"
           description="Create your first category to organize your products."
           action={
-            <Link
+            <Link prefetch={true}
               href={`/${locale}/admin/categories/new`}
               className="text-sm text-[#8A1C14] hover:underline"
             >
@@ -67,7 +67,7 @@ export default async function CategoriesPage({ params }: Props) {
                 {cats.map((cat) => (
                   <tr key={cat.id} className="border-b border-[#C5A059]/5 hover:bg-[#C5A059]/3 transition-colors">
                     <td className="py-3 px-5">
-                      <Link
+                      <Link prefetch={true}
                         href={`/${locale}/admin/categories/${cat.id}/edit`}
                         className="text-sm font-medium text-foreground hover:text-[#8A1C14] transition-colors"
                       >

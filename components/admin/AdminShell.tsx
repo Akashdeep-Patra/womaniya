@@ -13,7 +13,7 @@ export async function AdminShell({ locale, children }: AdminShellProps) {
   const session = await auth();
 
   return (
-    <div className="flex min-h-screen bg-[#FDFAF5]">
+    <div className="flex min-h-screen bg-background">
       <AdminSidebar locale={locale} />
       <div className="flex-1 flex flex-col min-w-0">
         <AdminTopBar userName={session?.user?.name} />

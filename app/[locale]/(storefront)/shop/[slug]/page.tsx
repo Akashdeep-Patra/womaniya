@@ -125,7 +125,7 @@ export default async function ProductPage({ params }: Props) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Breadcrumb */}
-          <Link
+          <Link prefetch={true}
             href={`/${locale}/shop`}
             className="inline-flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-bengal-kajal/50 hover:text-bengal-sindoor mb-6 md:mb-10 transition-colors font-sans-en"
           >

@@ -56,16 +56,16 @@ export function DashboardClient({
 
       {/* Secondary stats row */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-white border border-[#C5A059]/10 rounded-lg p-4 text-center">
-          <p className="text-[10px] tracking-[0.15em] uppercase text-foreground/40 mb-1">Published</p>
-          <p className="font-sans font-semibold tracking-tight text-2xl text-[#2D7A4F]">{stats.publishedProducts}</p>
+        <div className="bg-card border border-border rounded-lg p-4 text-center">
+          <p className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Published</p>
+          <p className="font-sans font-semibold tracking-tight text-2xl text-primary">{stats.publishedProducts}</p>
         </div>
-        <div className="bg-white border border-[#C5A059]/10 rounded-lg p-4 text-center">
-          <p className="text-[10px] tracking-[0.15em] uppercase text-foreground/40 mb-1">Drafts</p>
-          <p className="font-sans font-semibold tracking-tight text-2xl text-[#D4A017]">{stats.draftProducts}</p>
+        <div className="bg-card border border-border rounded-lg p-4 text-center">
+          <p className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Drafts</p>
+          <p className="font-sans font-semibold tracking-tight text-2xl text-accent">{stats.draftProducts}</p>
         </div>
-        <div className="bg-white border border-[#C5A059]/10 rounded-lg p-4 text-center">
-          <p className="text-[10px] tracking-[0.15em] uppercase text-foreground/40 mb-1">Pages</p>
+        <div className="bg-card border border-border rounded-lg p-4 text-center">
+          <p className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Pages</p>
           <p className="font-sans font-semibold tracking-tight text-2xl text-foreground">{stats.totalPages}</p>
         </div>
       </div>
@@ -73,15 +73,16 @@ export function DashboardClient({
       {/* Quick actions */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {[
-          { href: `${base}/products/new`, label: 'Add Product', icon: PlusCircle, colorClass: 'text-bengal-sindoor', bgClass: 'bg-bengal-sindoor/10' },
-          { href: `${base}/categories/new`, label: 'Add Category', icon: Tags, colorClass: 'text-bengal-kansa', bgClass: 'bg-bengal-kansa/10' },
-          { href: `${base}/collections/new`, label: 'New Collection', icon: FolderOpen, colorClass: 'text-admin-success', bgClass: 'bg-admin-success/10' },
+          { href: `${base}/products/new`, label: 'Add Product', icon: PlusCircle, colorClass: 'text-primary', bgClass: 'bg-primary/10' },
+          { href: `${base}/categories/new`, label: 'Add Category', icon: Tags, colorClass: 'text-accent', bgClass: 'bg-accent/10' },
+          { href: `${base}/collections/new`, label: 'New Collection', icon: FolderOpen, colorClass: 'text-primary', bgClass: 'bg-primary/10' },
           { href: `${base}/pages/new`, label: 'New Page', icon: FileText, colorClass: 'text-foreground', bgClass: 'bg-foreground/10' },
         ].map((action) => (
-          <Link
+          <Link prefetch={true}
             key={action.href}
+            prefetch={true}
             href={action.href}
-            className="flex items-center gap-3 rounded-lg border border-border p-4 hover:bg-muted transition-colors group"
+            className="flex items-center gap-3 bg-card rounded-lg border border-border p-4 hover:bg-muted transition-colors group"
           >
             <div
               className={`w-10 h-10 rounded-md flex items-center justify-center shrink-0 ${action.bgClass}`}
@@ -124,7 +125,7 @@ export function DashboardClient({
           ) : (
             <div className="divide-y divide-border">
               {recentProducts.map((product) => (
-                <Link
+                <Link prefetch={true}
                   key={product.id}
                   href={`${base}/products/${product.id}/edit`}
                   className="flex items-center justify-between px-5 py-3.5 hover:bg-muted transition-colors"
@@ -163,7 +164,7 @@ export function DashboardClient({
             ) : (
               <div className="divide-y divide-border">
                 {liveCampaigns.map((campaign) => (
-                  <Link
+                  <Link prefetch={true}
                     key={campaign.id}
                     href={`${base}/campaigns/${campaign.id}/edit`}
                     className="flex items-center justify-between px-5 py-3.5 hover:bg-muted transition-colors"
@@ -203,7 +204,7 @@ export function DashboardClient({
             ) : (
               <div className="divide-y divide-border">
                 {upcomingCollections.map((col) => (
-                  <Link
+                  <Link prefetch={true}
                     key={col.id}
                     href={`${base}/collections/${col.id}/edit`}
                     className="flex items-center justify-between px-5 py-3.5 hover:bg-muted transition-colors"

@@ -71,7 +71,7 @@ export function BannerTableClient({ initialBanners, locale }: { initialBanners: 
       header: '',
       render: (b) => (
         <div className="flex items-center justify-end gap-1">
-          <Link
+          <Link prefetch={true}
             href={getEditUrl(b.id)}
             prefetch={true}
             className="w-9 h-9 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
@@ -109,7 +109,7 @@ export function BannerTableClient({ initialBanners, locale }: { initialBanners: 
     ),
     actions: (b) => (
       <>
-        <Link
+        <Link prefetch={true}
           href={getEditUrl(b.id)}
           prefetch={true}
           onClick={(e) => e.stopPropagation()}

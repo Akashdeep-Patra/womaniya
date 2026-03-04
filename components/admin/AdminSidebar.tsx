@@ -112,7 +112,7 @@ export function AdminSidebar({ locale }: { locale: string }) {
             {group.items.map((item) => {
               const active = isActive(item.href);
               return (
-                <Link
+                <Link prefetch={true}
                   key={item.href}
                   href={item.href}
                   prefetch={true}

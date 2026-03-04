@@ -22,7 +22,7 @@ export function ProductCard({ product, variant = 'portrait' }: Props) {
   const name = isBn && product.name_bn ? product.name_bn : product.name_en;
 
   return (
-    <Link
+    <Link prefetch={true}
       href={`/${locale}/shop/${product.slug}`}
       className="block masonry-item group"
       data-cursor-expand

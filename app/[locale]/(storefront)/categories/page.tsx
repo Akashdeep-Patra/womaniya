@@ -66,7 +66,7 @@ export default async function CategoriesPage({ params }: Props) {
             const coverImage = ((category.carousel_images as string[] | null) ?? [])[0] ?? null;
 
             return (
-              <Link
+              <Link prefetch={true}
                 key={category.id}
                 href={`/${locale}/category/${category.slug}`}
                 className="group block"

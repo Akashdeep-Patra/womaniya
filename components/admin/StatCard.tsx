@@ -13,9 +13,9 @@ type StatCardProps = {
 };
 
 const VARIANT_STYLES = {
-  default: 'bg-white border border-[#C5A059]/15',
-  dark:    'bg-[#1A1918] text-[#F9F6F0]',
-  accent:  'bg-[#8A1C14]/10 border border-[#8A1C14]/20',
+  default: 'bg-card border border-border',
+  dark:    'bg-foreground text-background',
+  accent:  'bg-primary/10 border border-primary/20',
 } as const;
 
 export function StatCard({ icon, label, value, trend, variant = 'default', className }: StatCardProps) {
@@ -28,25 +28,25 @@ export function StatCard({ icon, label, value, trend, variant = 'default', class
       <div className="flex items-center justify-between mb-3">
         <div className={cn(
           'w-9 h-9 rounded-md flex items-center justify-center',
-          variant === 'dark' ? 'bg-[#C5A059]/15' : 'bg-[#1A1918]/5',
+          variant === 'dark' ? 'bg-background/20 text-background' : 'bg-foreground/5 text-primary',
         )}>
           {icon}
         </div>
         {trend && (
-          <span className="text-[10px] tracking-wider uppercase text-[#2D7A4F] font-medium">
+          <span className="text-[10px] tracking-wider uppercase text-admin-success font-medium">
             {trend}
           </span>
         )}
       </div>
       <p className={cn(
         'text-[10px] tracking-[0.15em] uppercase mb-1',
-        variant === 'dark' ? 'text-[#F9F6F0]/40' : 'text-foreground/40',
+        variant === 'dark' ? 'text-background/60' : 'text-foreground/50',
       )}>
         {label}
       </p>
       <p className={cn(
         'font-sans font-bold tracking-tight text-3xl',
-        variant === 'dark' ? 'text-[#C5A059]' : variant === 'accent' ? 'text-[#8A1C14]' : 'text-foreground',
+        variant === 'dark' ? 'text-background' : variant === 'accent' ? 'text-primary' : 'text-foreground',
       )}>
         {value}
       </p>

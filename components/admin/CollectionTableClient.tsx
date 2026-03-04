@@ -79,7 +79,7 @@ export function CollectionTableClient({ initialCollections, locale }: { initialC
       header: '',
       render: (c) => (
         <div className="flex items-center justify-end gap-1">
-          <Link
+          <Link prefetch={true}
             href={getEditUrl(c.id)}
             prefetch={true}
             className="w-9 h-9 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
@@ -124,7 +124,7 @@ export function CollectionTableClient({ initialCollections, locale }: { initialC
     ),
     actions: (c) => (
       <>
-        <Link
+        <Link prefetch={true}
           href={getEditUrl(c.id)}
           prefetch={true}
           onClick={(e) => e.stopPropagation()}

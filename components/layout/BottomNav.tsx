@@ -81,7 +81,7 @@ export function BottomNav({ categories: dbCategories, waNumber }: BottomNavProps
           {mainLinks.map(({ href, label, Icon }) => {
             const active = pathname === href;
             return (
-              <Link
+              <Link prefetch={true}
                 key={href}
                 href={href}
                 prefetch={true}
@@ -222,7 +222,7 @@ export function BottomNav({ categories: dbCategories, waNumber }: BottomNavProps
                   </h4>
                   <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                     {categories.map((cat) => (
-                      <Link
+                      <Link prefetch={true}
                         key={cat.name}
                         href={cat.href}
                         onClick={closeSheet}

@@ -56,7 +56,7 @@ export default async function CollectionsPage({ params }: Props) {
               const coverImage = ((collection.carousel_images as string[] | null) ?? [])[0] ?? null;
 
               return (
-                <Link
+                <Link prefetch={true}
                   key={collection.id}
                   href={`/${locale}/collection/${collection.slug}`}
                   className="group block"

@@ -67,7 +67,7 @@ export function ManifestoSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.5 }}
         >
-          <Link
+          <Link prefetch={true}
             href={`/${locale}#story`}
             className="inline-flex items-center gap-4 text-[10px] tracking-[0.25em] uppercase text-primary hover:text-foreground transition-colors duration-300 font-sans-en font-medium group"
           >
