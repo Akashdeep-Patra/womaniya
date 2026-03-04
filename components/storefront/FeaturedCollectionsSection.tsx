@@ -96,9 +96,8 @@ export function FeaturedCollectionsSection({ collections, isCompact = false }: P
                       {desc}
                     </p>
                   )}
-                  <Link prefetch={true} 
-                    href={`/${locale}/collection/${collection.slug}`}
-                    prefetch={true}
+                  <Link prefetch={true} href={`/${locale}/collection/${collection.slug}`}
+                    
                     className="inline-block mt-6 text-[10px] tracking-widest uppercase text-muted-foreground group-hover:text-primary transition-colors font-sans-en pb-1 border-b border-border group-hover:border-primary/50"
                   >
                     {isBn ? 'সংগ্রহ দেখো' : 'Explore Edit'}
@@ -111,9 +110,8 @@ export function FeaturedCollectionsSection({ collections, isCompact = false }: P
         
         {isCompact && collections.length > 3 && (
           <div className="mt-16 flex justify-center">
-            <Link prefetch={true} 
-              href={`/${locale}/collections`}
-              prefetch={true}
+            <Link  href={`/${locale}/collections`}
+              
               className="px-8 py-3 rounded-full border border-primary text-foreground hover:bg-primary hover:text-primary-foreground transition-colors duration-300 text-xs tracking-widest uppercase font-sans-en"
             >
               {isBn ? 'সব সংগ্রহ' : 'View All Collections'}

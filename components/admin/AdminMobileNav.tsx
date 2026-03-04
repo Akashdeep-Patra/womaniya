@@ -61,10 +61,9 @@ export function AdminMobileNav({ locale }: { locale: string }) {
                 {moreItems.map((item) => {
                   const active = isActive(item.href);
                   return (
-                    <Link prefetch={true}
-                      key={item.href}
+                    <Link prefetch={true} key={item.href}
                       href={item.href}
-                      prefetch={true}
+                      
                       onClick={() => setMoreOpen(false)}
                       className={cn(
                         'flex flex-col items-center gap-1.5 py-3 rounded-xl text-[10px] tracking-wider uppercase transition-colors',
@@ -96,10 +95,9 @@ export function AdminMobileNav({ locale }: { locale: string }) {
           {mainTabs.map((tab) => {
             const active = isActive(tab.href);
             return (
-              <Link prefetch={true}
-                key={tab.href}
+              <Link  key={tab.href}
                 href={tab.href}
-                prefetch={true}
+                
                 className={cn(
                   'flex flex-col items-center justify-center gap-0.5 min-h-[44px]',
                   'text-[10px] tracking-wider uppercase font-medium transition-colors',

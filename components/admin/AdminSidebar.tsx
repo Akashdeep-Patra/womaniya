@@ -91,7 +91,7 @@ export function AdminSidebar({ locale }: { locale: string }) {
           </Link>
         )}
         {collapsed && (
-          <Link prefetch={true} href={`/${locale}/admin`} className="mx-auto flex items-center justify-center w-8 h-8 bg-primary/10 rounded-md">
+          <Link  href={`/${locale}/admin`} className="mx-auto flex items-center justify-center w-8 h-8 bg-primary/10 rounded-md">
             <span className="font-sans font-bold text-xl text-primary">W</span>
           </Link>
         )}
@@ -112,10 +112,9 @@ export function AdminSidebar({ locale }: { locale: string }) {
             {group.items.map((item) => {
               const active = isActive(item.href);
               return (
-                <Link prefetch={true}
-                  key={item.href}
+                <Link  key={item.href}
                   href={item.href}
-                  prefetch={true}
+                  
                   className={cn(
                     'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors relative group',
                     collapsed && 'justify-center px-2',

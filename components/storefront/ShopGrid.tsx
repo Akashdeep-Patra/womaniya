@@ -42,9 +42,8 @@ export function ShopGrid({ products, categories, isCompact = false }: Props) {
         </div>
         
         {isCompact && (
-          <Link prefetch={true}
-            href={`/${locale}/shop`}
-            prefetch={true}
+          <Link prefetch={true} href={`/${locale}/shop`}
+            
             className="hidden md:flex items-center gap-2 text-xs tracking-[0.2em] uppercase font-medium text-foreground hover:text-primary transition-colors group"
           >
             Explore All
@@ -78,9 +77,8 @@ export function ShopGrid({ products, categories, isCompact = false }: Props) {
       {/* Mobile View All Button */}
       {isCompact && (
         <div className="mt-10 flex justify-center md:hidden">
-          <Link prefetch={true}
-            href={`/${locale}/shop`}
-            prefetch={true}
+          <Link  href={`/${locale}/shop`}
+            
             className="flex items-center justify-center gap-2 h-12 px-8 bg-primary text-primary-foreground text-[11px] tracking-[0.2em] uppercase font-medium rounded-full shadow-none ring-1 ring-border/50 hover:shadow-sm transition-all"
           >
             Explore All Collection

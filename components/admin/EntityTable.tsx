@@ -147,9 +147,8 @@ export function EntityTable<T>({
                     return (
                       <td key={col.key} className={cn('p-0', col.className)}>
                         {href && !isInteractive ? (
-                          <Link prefetch={true} 
-                            href={href} 
-                            prefetch={true} 
+                          <Link prefetch={true} href={href} 
+                             
                             className="flex items-center w-full h-full min-h-[3rem] px-4 py-2"
                           >
                             {cellContent}

@@ -64,9 +64,8 @@ export function CampaignTableClient({ initialCampaigns, locale }: { initialCampa
       header: '',
       render: (c) => (
         <div className="flex items-center justify-end gap-1">
-          <Link prefetch={true}
-            href={getEditUrl(c.id)}
-            prefetch={true}
+          <Link prefetch={true} href={getEditUrl(c.id)}
+            
             className="w-9 h-9 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
           >
             <Edit size={16} />
@@ -102,9 +101,8 @@ export function CampaignTableClient({ initialCampaigns, locale }: { initialCampa
     ),
     actions: (c) => (
       <>
-        <Link prefetch={true}
-          href={getEditUrl(c.id)}
-          prefetch={true}
+        <Link  href={getEditUrl(c.id)}
+          
           onClick={(e) => e.stopPropagation()}
           className="w-9 h-9 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground active:bg-muted transition-colors touch-manipulation"
         >

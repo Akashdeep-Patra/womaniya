@@ -89,7 +89,7 @@ export default function ResetPasswordClient() {
                 Your password has been reset successfully. Redirecting to login...
               </p>
             </div>
-            <Link prefetch={true} href={`/${locale}/admin/login`} className="text-xs font-semibold uppercase tracking-wider text-bengal-sindoor hover:text-bengal-alta transition-colors">
+            <Link  href={`/${locale}/admin/login`} className="text-xs font-semibold uppercase tracking-wider text-bengal-sindoor hover:text-bengal-alta transition-colors">
               Go to Login now
             </Link>
           </div>

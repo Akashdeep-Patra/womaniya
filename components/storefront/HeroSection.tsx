@@ -140,14 +140,13 @@ export function HeroSection() {
               transition={{ duration: 1, delay: 0.5, ease: EASE }}
               className="flex flex-wrap items-center gap-4 md:gap-7 pl-2 lg:pl-4"
             >
-              <Link prefetch={true}
-                href={`/${locale}/shop`}
+              <Link prefetch={true} href={`/${locale}/shop`}
                 className="group relative inline-flex items-center justify-center h-12 md:h-14 px-8 md:px-10 bg-foreground text-background text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium rounded-full overflow-hidden transition-all hover:shadow-md hover:-translate-y-0.5 pointer-events-auto"
               >
                 <span className="absolute inset-0 bg-primary w-0 group-hover:w-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]" />
                 <span className="relative z-10 group-hover:text-primary-foreground transition-colors duration-500">{t('cta_shop')}</span>
               </Link>
-              <Link prefetch={true}
+              <Link 
                 href={`/${locale}#story`}
                 className="group flex items-center gap-2 text-[10px] md:text-[11px] tracking-[0.2em] uppercase text-foreground/70 hover:text-primary transition-colors font-medium py-2 pointer-events-auto"
               >

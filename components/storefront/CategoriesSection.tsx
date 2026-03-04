@@ -52,9 +52,8 @@ export function CategoriesSection({ categories, isCompact = false }: Props) {
           </h2>
         </div>
         {isCompact && (
-          <Link prefetch={true}
-            href={`/${locale}/categories`}
-            prefetch={true}
+          <Link prefetch={true} href={`/${locale}/categories`}
+            
             className="text-[11px] tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors font-sans-en hidden md:block"
           >
             All →
@@ -86,9 +85,8 @@ export function CategoriesSection({ categories, isCompact = false }: Props) {
               transition={{ duration: 0.4, delay: i * 0.06 }}
               className="shrink-0 snap-start w-[72vw] max-w-[280px] sm:w-[44vw] sm:max-w-[320px] md:w-[28vw] md:max-w-[340px] lg:flex-1 lg:w-auto lg:max-w-none"
             >
-              <Link prefetch={true}
-                href={`/${locale}/category/${cat.slug}`}
-                prefetch={true}
+              <Link  href={`/${locale}/category/${cat.slug}`}
+                
                 className={`group relative block aspect-3/4 rounded-3xl overflow-hidden ${hasImage ? 'bg-bengal-mati' : fallbackBg}`}
                 data-cursor-expand
               >
@@ -149,9 +147,8 @@ export function CategoriesSection({ categories, isCompact = false }: Props) {
       {/* Mobile view-all */}
       {isCompact && (
         <div className="flex justify-center mt-5 md:hidden">
-          <Link prefetch={true}
-            href={`/${locale}/categories`}
-            prefetch={true}
+          <Link prefetch={true} href={`/${locale}/categories`}
+            
             className="text-[11px] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors font-sans-en"
           >
             {isBn ? 'সব দেখো →' : 'View all crafts →'}

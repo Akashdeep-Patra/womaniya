@@ -78,9 +78,8 @@ export function DashboardClient({
           { href: `${base}/collections/new`, label: 'New Collection', icon: FolderOpen, colorClass: 'text-primary', bgClass: 'bg-primary/10' },
           { href: `${base}/pages/new`, label: 'New Page', icon: FileText, colorClass: 'text-foreground', bgClass: 'bg-foreground/10' },
         ].map((action) => (
-          <Link prefetch={true}
-            key={action.href}
-            prefetch={true}
+          <Link prefetch={true} key={action.href}
+            
             href={action.href}
             className="flex items-center gap-3 bg-card rounded-lg border border-border p-4 hover:bg-muted transition-colors group"
           >
@@ -106,7 +105,7 @@ export function DashboardClient({
             <h3 className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
               Recent Products
             </h3>
-            <Link prefetch={true} href={`${base}/products`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
+            <Link  href={`${base}/products`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
               View all
             </Link>
           </div>
@@ -116,7 +115,7 @@ export function DashboardClient({
                 title="No products yet"
                 description="Add your first product to get started."
                 action={
-                  <Link prefetch={true} href={`${base}/products/new`} className="text-sm text-bengal-sindoor hover:underline">
+                  <Link  href={`${base}/products/new`} className="text-sm text-bengal-sindoor hover:underline">
                     Add Product
                   </Link>
                 }
@@ -125,8 +124,7 @@ export function DashboardClient({
           ) : (
             <div className="divide-y divide-border">
               {recentProducts.map((product) => (
-                <Link prefetch={true}
-                  key={product.id}
+                <Link prefetch={true} key={product.id}
                   href={`${base}/products/${product.id}/edit`}
                   className="flex items-center justify-between px-5 py-3.5 hover:bg-muted transition-colors"
                 >
@@ -153,7 +151,7 @@ export function DashboardClient({
               <h3 className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
                 Live Campaigns
               </h3>
-              <Link prefetch={true} href={`${base}/campaigns`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
+              <Link  href={`${base}/campaigns`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
                 View all
               </Link>
             </div>
@@ -164,8 +162,7 @@ export function DashboardClient({
             ) : (
               <div className="divide-y divide-border">
                 {liveCampaigns.map((campaign) => (
-                  <Link prefetch={true}
-                    key={campaign.id}
+                  <Link  key={campaign.id}
                     href={`${base}/campaigns/${campaign.id}/edit`}
                     className="flex items-center justify-between px-5 py-3.5 hover:bg-muted transition-colors"
                   >
@@ -193,7 +190,7 @@ export function DashboardClient({
               <h3 className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
                 Upcoming Collections
               </h3>
-              <Link prefetch={true} href={`${base}/collections`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
+              <Link  href={`${base}/collections`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
                 View all
               </Link>
             </div>
