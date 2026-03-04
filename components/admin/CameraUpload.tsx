@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { useDropzone } from 'react-dropzone';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { upload } from '@vercel/blob/client';
 
 interface Props {
   onUpload: (url: string) => void;
@@ -23,47 +24,6 @@ interface UploadingFile {
   progress: number;
   preview: string;
   error?: string;
-}
-
-// XHR upload utility with progress tracking
-function uploadWithProgress(
-  file: File,
-  onProgress: (pct: number) => void
-): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', '/api/upload', true);
-
-    xhr.upload.onprogress = (e) => {
-      if (e.lengthComputable) {
-        const percentComplete = Math.round((e.loaded / e.total) * 100);
-        onProgress(percentComplete);
-      }
-    };
-
-    xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        try {
-          const res = JSON.parse(xhr.responseText);
-          if (res.url) {
-            resolve(res.url);
-          } else {
-            reject(new Error(res.error || 'Upload failed'));
-          }
-        } catch (err) {
-          reject(new Error('Invalid response'));
-        }
-      } else {
-        reject(new Error(`Upload failed with status ${xhr.status}`));
-      }
-    };
-
-    xhr.onerror = () => reject(new Error('Network error during upload'));
-
-    const formData = new FormData();
-    formData.append('file', file);
-    xhr.send(formData);
-  });
 }
 
 export function CameraUpload({
@@ -102,16 +62,22 @@ export function CameraUpload({
         
         const urls: string[] = [];
         
-        // Upload concurrently but track progress individually
+        // Upload concurrently but track progress individually via @vercel/blob/client
         await Promise.all(
           newUploads.map(async (uploadItem) => {
             try {
-              const url = await uploadWithProgress(uploadItem.file, (pct) => {
-                setUploadingFiles((prev) =>
-                  prev.map((p) => (p.id === uploadItem.id ? { ...p, progress: pct } : p))
-                );
+              const newBlob = await upload(uploadItem.file.name, uploadItem.file, {
+                access: 'public',
+                handleUploadUrl: '/api/upload',
+                onUploadProgress: (progressEvent) => {
+                  const pct = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+                  setUploadingFiles((prev) =>
+                    prev.map((p) => (p.id === uploadItem.id ? { ...p, progress: pct } : p))
+                  );
+                },
               });
-              urls.push(url);
+              
+              urls.push(newBlob.url);
               // Mark as complete by setting progress to 100
               setUploadingFiles((prev) =>
                 prev.map((p) => (p.id === uploadItem.id ? { ...p, progress: 100 } : p))
@@ -148,10 +114,15 @@ export function CameraUpload({
         setUploadingFiles([newUploads[0]]);
 
         try {
-          const url = await uploadWithProgress(file, (pct) => {
-            setUploadingFiles([{ ...newUploads[0], progress: pct }]);
+          const newBlob = await upload(file.name, file, {
+            access: 'public',
+            handleUploadUrl: '/api/upload',
+            onUploadProgress: (progressEvent) => {
+              const pct = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+              setUploadingFiles([{ ...newUploads[0], progress: pct }]);
+            },
           });
-          onUpload(url);
+          onUpload(newBlob.url);
         } catch (err) {
           const msg = err instanceof Error ? err.message : 'Upload failed';
           toast.error(msg);
