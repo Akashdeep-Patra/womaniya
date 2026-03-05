@@ -12,7 +12,10 @@
     "db:push": "drizzle-kit push",
     "db:seed": "tsx scripts/seed.ts",
     "db:studio": "drizzle-kit studio",
-    "vercel-build": "tsc --noEmit && next build"
+    "vercel-build": "tsc --noEmit && next build",
+    "perf": "pnpm build && pnpm dlx @lhci/cli autorun",
+    "perf:collect": "pnpm build && pnpm dlx @lhci/cli collect",
+    "analyze": "ANALYZE=true pnpm build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

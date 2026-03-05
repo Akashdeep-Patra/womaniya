@@ -12,6 +12,13 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '25mb',
     },
+    optimizePackageImports: [
+      'lucide-react',
+      'framer-motion',
+      'radix-ui',
+      'sonner',
+      'class-variance-authority',
+    ],
   },
   headers: async () => [
     {

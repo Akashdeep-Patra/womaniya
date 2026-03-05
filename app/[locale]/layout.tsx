@@ -13,6 +13,7 @@ import { getSetting } from '@/actions/settings';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { VercelToolbar } from '@vercel/toolbar/next';
+import { WebVitalsReporter } from '@/components/providers/WebVitalsReporter';
 
 import { CustomCursor } from '@/components/layout/CustomCursor';
 import { NoiseOverlay } from '@/components/layout/NoiseOverlay';
@@ -126,6 +127,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <Providers locale={locale} messages={messages} waNumber={waNumber}>
           {children}
         </Providers>
+        <WebVitalsReporter />
         <Analytics />
         <SpeedInsights />
         {process.env.NODE_ENV === 'development' && <VercelToolbar />}
