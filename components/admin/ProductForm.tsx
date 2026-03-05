@@ -282,7 +282,7 @@ export function ProductForm({ initialData, initialImages, categories, collection
                   </div>
                 </Reorder.Item>
               ))}
-              <div className="w-24 h-24 shrink-0">
+              <div className="flex shrink-0">
                 <CameraUpload
                   onUpload={handleAdditionalUpload}
                   onUploadMultiple={handleAdditionalUploadMultiple}

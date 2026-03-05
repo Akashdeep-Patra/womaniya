@@ -104,7 +104,7 @@ export function CameraUpload({
       }));
 
       if (multiple) {
-        setUploadingFiles((prev) => [...prev, ...newUploads]);
+        setUploadingFiles((prev) => [...newUploads, ...prev]);
         
         const urls: string[] = [];
         
@@ -263,11 +263,11 @@ export function CameraUpload({
 
   // MULTIPLE mode OR empty SINGLE mode
   return (
-    <div className="w-full flex flex-col gap-3">
+    <div className={cn("flex gap-3", compact ? "flex-row-reverse" : "flex-col w-full")}>
       <div
         {...getRootProps()}
         className={cn(
-          compact ? 'w-full h-full min-h-[96px]' : 'w-full aspect-4/5',
+          compact ? 'w-24 h-24 shrink-0' : 'w-full aspect-4/5',
           'rounded-xl border-2 border-dashed transition-all duration-200 cursor-pointer',
           'flex flex-col items-center justify-center gap-3 relative overflow-hidden',
           isDragActive 
@@ -319,33 +319,46 @@ export function CameraUpload({
 
       {/* Progress tracking for MULTIPLE uploads - Horizontal scroll */}
       {multiple && uploadingFiles.length > 0 && (
-        <div className="flex overflow-x-auto gap-3 mt-1 pb-2 w-full snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div className={cn(
+          "flex overflow-x-auto gap-3 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]",
+          compact ? "items-center" : "w-full mt-1 pb-2"
+        )}>
           {uploadingFiles.map((uf) => (
             <div
               key={uf.id}
-              className="flex flex-col gap-2 p-1.5 rounded-lg bg-card border border-border shrink-0 w-28 snap-start shadow-sm"
+              className={cn(
+                "flex flex-col gap-2 p-1.5 rounded-lg bg-card border border-border shrink-0 snap-start shadow-sm",
+                compact ? "w-24 h-24" : "w-28"
+              )}
             >
-              <div className="w-full aspect-square rounded-md overflow-hidden bg-muted relative">
+              <div className="w-full h-full rounded-md overflow-hidden bg-muted relative">
                 <Image src={uf.preview} alt="preview" fill className="object-cover opacity-80" />
-              </div>
-              <div className="px-1 pb-1 flex flex-col gap-1.5">
-                <div className="flex justify-between items-center text-[10px] font-sans font-medium">
-                  <span className="text-foreground truncate pr-2" title={uf.file.name}>
-                    {uf.file.name.length > 12 ? uf.file.name.substring(0, 10) + '...' : uf.file.name}
+                
+                {/* Overlay Progress */}
+                <div className="absolute inset-0 bg-background/60 flex flex-col items-center justify-center gap-2 p-2 backdrop-blur-sm">
+                  <span className={cn("font-medium", uf.error ? "text-destructive text-xs" : "text-foreground text-[10px] tracking-widest")}>
+                    {uf.error ? 'Failed' : `${uf.progress}%`}
                   </span>
-                  <span className={uf.error ? 'text-destructive shrink-0 font-bold' : 'text-primary shrink-0 font-bold'}>
-                    {uf.error ? '!' : `${uf.progress}%`}
-                  </span>
+                  {!uf.error && (
+                    <div className="w-full bg-foreground/20 rounded-full h-1 overflow-hidden">
+                      <div
+                        className="h-full bg-primary transition-all duration-300 ease-out"
+                        style={{ width: `${uf.progress}%` }}
+                      />
+                    </div>
+                  )}
                 </div>
-                {!uf.error && (
-                  <div className="w-full h-1 bg-muted rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary transition-all duration-300 ease-out"
-                      style={{ width: `${uf.progress}%` }}
-                    />
-                  </div>
-                )}
               </div>
+              
+              {!compact && (
+                <div className="px-1 pb-1 flex flex-col gap-1.5">
+                  <div className="flex justify-between items-center text-[10px] font-sans font-medium">
+                    <span className="text-foreground truncate pr-2" title={uf.file.name}>
+                      {uf.file.name.length > 12 ? uf.file.name.substring(0, 10) + '...' : uf.file.name}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
