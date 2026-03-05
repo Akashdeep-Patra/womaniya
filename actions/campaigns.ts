@@ -5,6 +5,7 @@ import { db }             from '@/lib/db';
 import { campaigns }      from '@/db/schema';
 import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
+import { CAMPAIGN_STATUSES } from '@/db/enums';
 
 const CampaignSchema = z.object({
   name_en:              z.string().min(2).max(120),
@@ -13,7 +14,7 @@ const CampaignSchema = z.object({
   description_bn:       z.string().max(2000).optional(),
   starts_at:            z.string().optional(), // Expected format YYYY-MM-DDTHH:mm
   ends_at:              z.string().optional(),
-  status:               z.enum(['draft', 'scheduled', 'live', 'ended', 'archived']).default('draft'),
+  status:               z.enum([...CAMPAIGN_STATUSES]).default('draft'),
   announcement_text_en: z.string().max(300).optional(),
   announcement_text_bn: z.string().max(300).optional(),
   cta_url:              z.string().optional(),

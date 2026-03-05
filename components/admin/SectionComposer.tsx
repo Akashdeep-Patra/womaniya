@@ -5,8 +5,10 @@ import { Reorder } from 'framer-motion';
 import { GripVertical, X, Plus } from 'lucide-react';
 import { BengalButton } from '@/components/bengal';
 import { CameraUpload } from './CameraUpload';
+import type { SectionType } from '@/db/enums';
+import { SECTION_TYPES, IMAGE_TEXT_LAYOUTS } from '@/db/enums';
 
-export type SectionType = 'hero' | 'richtext' | 'image_text' | 'product_grid' | 'quote' | 'cta' | 'gallery' | 'testimonial';
+export type { SectionType } from '@/db/enums';
 
 export type SectionData = {
   id: string; // temp id for drag/drop
@@ -96,7 +98,7 @@ export function SectionComposer({ sections, onChange }: Props) {
             <button type="button" onClick={() => setShowAddMenu(false)} className="min-w-[44px] min-h-[44px] flex items-center justify-center text-muted-foreground hover:text-foreground touch-manipulation -mr-2"><X size={18} /></button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {(['hero', 'richtext', 'image_text', 'product_grid', 'quote', 'cta', 'gallery', 'testimonial'] as SectionType[]).map(type => (
+            {SECTION_TYPES.map((type) => (
               <button
                 key={type}
                 type="button"
@@ -117,7 +119,7 @@ function getDefaultContent(type: SectionType) {
   switch (type) {
     case 'hero': return { title: '', subtitle: '', image_url: '', cta_text: '', cta_url: '' };
     case 'richtext': return { content_en: '', content_bn: '' };
-    case 'image_text': return { layout: 'image_left', title: '', text: '', image_url: '' };
+    case 'image_text': return { layout: IMAGE_TEXT_LAYOUTS[0], title: '', text: '', image_url: '' };
     case 'product_grid': return { title: '', collection_id: '' };
     case 'quote': return { text: '', author: '' };
     case 'cta': return { title: '', text: '', button_text: '', button_url: '' };
@@ -160,9 +162,10 @@ function SectionEditor({ section, onChange }: { section: SectionData; onChange: 
             <CameraUpload onUpload={(url) => handleChange('image_url', url)} initialUrl={section.content.image_url} />
           </div>
           <div className="flex flex-col gap-2">
-            <select value={section.content.layout || 'image_left'} onChange={(e) => handleChange('layout', e.target.value)} className="w-full text-sm p-2 border border-border bg-transparent rounded focus:outline-none text-foreground">
-              <option value="image_left">Image Left</option>
-              <option value="image_right">Image Right</option>
+            <select value={section.content.layout || IMAGE_TEXT_LAYOUTS[0]} onChange={(e) => handleChange('layout', e.target.value)} className="w-full text-sm p-2 border border-border bg-transparent rounded focus:outline-none text-foreground">
+              {IMAGE_TEXT_LAYOUTS.map((v) => (
+                <option key={v} value={v}>{v.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}</option>
+              ))}
             </select>
             <input type="text" placeholder="Title" value={section.content.title || ''} onChange={(e) => handleChange('title', e.target.value)} className="w-full text-sm font-semibold p-2 border-b border-border bg-transparent focus:outline-none text-foreground" />
             <textarea placeholder="Text content..." value={section.content.text || ''} onChange={(e) => handleChange('text', e.target.value)} rows={4} className="w-full text-sm p-2 border border-border bg-transparent rounded focus:outline-none resize-none text-foreground" />

@@ -5,6 +5,7 @@ import { db }             from '@/lib/db';
 import { products, productImages, collectionProducts } from '@/db/schema';
 import { eq, desc, and, inArray } from 'drizzle-orm';
 import { z }              from 'zod';
+import { PRODUCT_STATUSES, STOCK_STATUSES } from '@/db/enums';
 import { uploadImageToBlob } from './upload';
 
 const ProductSchema = z.object({
@@ -16,7 +17,7 @@ const ProductSchema = z.object({
   description_en:     z.string().max(5000).optional(),
   description_bn:     z.string().max(5000).optional(),
   is_featured:        z.boolean().optional().default(false),
-  status:             z.enum(['draft', 'published', 'archived']).default('draft'),
+  status:             z.enum([...PRODUCT_STATUSES]).default('draft'),
   seo_title_en:       z.string().max(120).optional(),
   seo_description_en: z.string().max(300).optional(),
   sizes:              z.array(z.string()).default([]),
@@ -26,7 +27,7 @@ const ProductSchema = z.object({
   care_instructions:  z.string().optional(),
   origin:             z.string().optional(),
   sku:                z.string().optional(),
-  stock_status:       z.enum(['in_stock', 'low_stock', 'made_to_order', 'out_of_stock']).default('in_stock'),
+  stock_status:       z.enum([...STOCK_STATUSES]).default('in_stock'),
   delivery_info:      z.string().optional(),
 });
 

@@ -12,6 +12,7 @@ import { FormSelect } from './FormField';
 import { createBanner, updateBanner } from '@/actions/banners';
 import { X, GripVertical } from 'lucide-react';
 import { Reorder } from 'framer-motion';
+import { BANNER_STATUSES, BANNER_PLACEMENTS, STATUS_LABELS, BANNER_PLACEMENT_LABELS } from '@/db/enums';
 
 type ReferenceData = {
   campaigns: { id: number; name_en: string }[];
@@ -27,11 +28,11 @@ const bannerFormSchema = z.object({
   cta_text_en: z.string().max(50).optional().or(z.literal('')),
   cta_text_bn: z.string().max(50).optional().or(z.literal('')),
   cta_url: z.string().optional().or(z.literal('')),
-  placement: z.enum(['hero', 'sidebar', 'inline', 'category_hero', 'collection_hero']),
+  placement: z.enum([...BANNER_PLACEMENTS]),
   campaign_id: z.union([z.coerce.number(), z.literal('')]).optional(),
   collection_id: z.union([z.coerce.number(), z.literal('')]).optional(),
   category_id: z.union([z.coerce.number(), z.literal('')]).optional(),
-  status: z.enum(['draft', 'published', 'archived']).default('draft'),
+  status: z.enum([...BANNER_STATUSES]).default('draft'),
 });
 
 type BannerFormValues = z.infer<typeof bannerFormSchema>;
@@ -253,11 +254,9 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
           onValueChange={(v) => setValue('placement', v as any)}
           error={errors.placement?.message}
         >
-          <option value="hero">Hero (Storefront Top)</option>
-          <option value="inline">Inline (Middle of page)</option>
-          <option value="sidebar">Sidebar</option>
-          <option value="category_hero">Category Hero</option>
-          <option value="collection_hero">Collection Hero</option>
+          {BANNER_PLACEMENTS.map((v) => (
+            <option key={v} value={v}>{BANNER_PLACEMENT_LABELS[v]}</option>
+          ))}
         </FormSelect>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -304,9 +303,9 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
           value={watch('status')}
           onValueChange={(v) => setValue('status', v as any)}
         >
-          <option value="draft">Draft</option>
-          <option value="published">Published</option>
-          <option value="archived">Archived</option>
+          {BANNER_STATUSES.map((v) => (
+            <option key={v} value={v}>{STATUS_LABELS[v]}</option>
+          ))}
         </FormSelect>
       </div>
 

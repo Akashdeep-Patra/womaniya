@@ -13,6 +13,7 @@ import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { sql } from '@vercel/postgres';
 import * as schema from '../db/schema';
 import { eq } from 'drizzle-orm';
+import type { SimpleStatus, LifecycleStatus, TestimonialSource, BannerPlacement, PageType } from '../db/enums';
 
 const db = drizzle(sql, { schema });
 

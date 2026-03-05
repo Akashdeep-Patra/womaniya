@@ -5,13 +5,14 @@ import { db }             from '@/lib/db';
 import { pages, pageSections } from '@/db/schema';
 import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
+import { PAGE_STATUSES, PAGE_TYPES } from '@/db/enums';
 
 const PageSchema = z.object({
   title_en:           z.string().min(2).max(120),
   title_bn:           z.string().max(120).optional(),
-  page_type:          z.enum(['static', 'story', 'landing']).default('static'),
+  page_type:          z.enum([...PAGE_TYPES]).default('static'),
   images:             z.array(z.string().url()).default([]),
-  status:             z.enum(['draft', 'published', 'archived']).default('draft'),
+  status:             z.enum([...PAGE_STATUSES]).default('draft'),
   seo_title_en:       z.string().max(120).optional(),
   seo_title_bn:       z.string().max(120).optional(),
   seo_description_en: z.string().max(300).optional(),

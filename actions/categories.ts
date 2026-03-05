@@ -5,6 +5,7 @@ import { db }             from '@/lib/db';
 import { categories }     from '@/db/schema';
 import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
+import { CATEGORY_STATUSES } from '@/db/enums';
 
 const CategorySchema = z.object({
   name_en:            z.string().min(2).max(120),
@@ -16,7 +17,7 @@ const CategorySchema = z.object({
   seo_title_bn:       z.string().max(120).optional(),
   seo_description_en: z.string().max(300).optional(),
   seo_description_bn: z.string().max(300).optional(),
-  status:             z.enum(['draft', 'published', 'archived']).default('draft'),
+  status:             z.enum([...CATEGORY_STATUSES]).default('draft'),
 });
 
 function slugify(text: string): string {

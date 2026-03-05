@@ -5,7 +5,7 @@ import { db }             from '@/lib/db';
 import { testimonials }   from '@/db/schema';
 import { eq, asc }        from 'drizzle-orm';
 import { z }              from 'zod';
-import { TESTIMONIAL_SOURCES } from '@/lib/testimonial-sources';
+import { TESTIMONIAL_SOURCES, TESTIMONIAL_STATUSES } from '@/db/enums';
 
 const TestimonialSchema = z.object({
   quote_en:         z.string().min(1, 'Quote (EN) is required').max(1000),
@@ -13,11 +13,11 @@ const TestimonialSchema = z.object({
   author_name:      z.string().min(1, 'Author name is required').max(120),
   author_title:     z.string().max(200).optional().or(z.literal('')),
   author_image_url: z.string().url().optional().or(z.literal('')),
-  source:           z.enum(TESTIMONIAL_SOURCES).default('anecdotal'),
+  source:           z.enum([...TESTIMONIAL_SOURCES]).default('anecdotal'),
   source_url:       z.string().url().optional().or(z.literal('')),
   rating:           z.coerce.number().min(1).max(5).optional(),
   sort_order:       z.coerce.number().default(0),
-  status:           z.enum(['draft', 'published', 'archived']).default('published'),
+  status:           z.enum([...TESTIMONIAL_STATUSES]).default('published'),
 });
 
 export async function getAllTestimonials() {

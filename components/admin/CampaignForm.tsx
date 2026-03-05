@@ -10,6 +10,7 @@ import { BengalButton, BengalInput } from '@/components/bengal';
 import { FormTextarea, FormSelect } from './FormField';
 import { createCampaign, updateCampaign } from '@/actions/campaigns';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CAMPAIGN_STATUSES, STATUS_LABELS } from '@/db/enums';
 
 const campaignFormSchema = z.object({
   name_en: z.string().min(2, 'Name must be at least 2 characters').max(120),
@@ -21,7 +22,7 @@ const campaignFormSchema = z.object({
   cta_url: z.string().optional().or(z.literal('')),
   starts_at: z.string().optional().or(z.literal('')),
   ends_at: z.string().optional().or(z.literal('')),
-  status: z.enum(['draft', 'scheduled', 'live', 'ended', 'archived']).default('draft'),
+  status: z.enum([...CAMPAIGN_STATUSES]).default('draft'),
 });
 
 type CampaignFormValues = z.infer<typeof campaignFormSchema>;
@@ -234,11 +235,9 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
           value={watch('status')}
           onValueChange={(v) => setValue('status', v as any)}
         >
-          <option value="draft">Draft</option>
-          <option value="scheduled">Scheduled</option>
-          <option value="live">Live</option>
-          <option value="ended">Ended</option>
-          <option value="archived">Archived</option>
+          {CAMPAIGN_STATUSES.map((v) => (
+            <option key={v} value={v}>{STATUS_LABELS[v]}</option>
+          ))}
         </FormSelect>
       </div>
 

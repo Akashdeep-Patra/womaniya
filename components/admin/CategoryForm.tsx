@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { X, GripVertical } from 'lucide-react';
 import { Reorder } from 'framer-motion';
 import type { Category } from '@/db/schema';
+import { CATEGORY_STATUSES, STATUS_LABELS } from '@/db/enums';
 
 const categoryFormSchema = z.object({
   name_en: z.string().min(2, 'Name must be at least 2 characters').max(120),
@@ -22,7 +23,7 @@ const categoryFormSchema = z.object({
   seo_title_bn: z.string().max(120).optional().or(z.literal('')),
   seo_description_en: z.string().max(300).optional().or(z.literal('')),
   seo_description_bn: z.string().max(300).optional().or(z.literal('')),
-  status: z.enum(['draft', 'published', 'archived']).default('draft'),
+  status: z.enum([...CATEGORY_STATUSES]).default('draft'),
 });
 
 type CategoryFormValues = z.infer<typeof categoryFormSchema>;
@@ -380,9 +381,9 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
           onValueChange={(v) => setValue('status', v as any)}
           error={errors.status?.message}
         >
-          <option value="draft">Draft</option>
-          <option value="published">Published</option>
-          <option value="archived">Archived</option>
+          {CATEGORY_STATUSES.map((v) => (
+            <option key={v} value={v}>{STATUS_LABELS[v]}</option>
+          ))}
         </FormSelect>
       </div>
 

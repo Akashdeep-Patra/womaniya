@@ -14,14 +14,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SectionComposer, SectionData } from './SectionComposer';
 import { X, GripVertical } from 'lucide-react';
 import { Reorder } from 'framer-motion';
+import { PAGE_STATUSES, PAGE_TYPES, STATUS_LABELS, PAGE_TYPE_LABELS } from '@/db/enums';
 
 const pageFormSchema = z.object({
   title_en: z.string().min(2, 'Title must be at least 2 characters').max(120),
   title_bn: z.string().max(120).optional().or(z.literal('')),
   seo_title_en: z.string().max(120).optional().or(z.literal('')),
   seo_description_en: z.string().max(300).optional().or(z.literal('')),
-  page_type: z.enum(['static', 'story', 'landing']).default('static'),
-  status: z.enum(['draft', 'published', 'archived']).default('draft'),
+  page_type: z.enum([...PAGE_TYPES]).default('static'),
+  status: z.enum([...PAGE_STATUSES]).default('draft'),
 });
 
 type PageFormValues = z.infer<typeof pageFormSchema>;
@@ -183,18 +184,18 @@ export function PageForm({ initialData, locale, basePath = 'pages', defaultPageT
             value={watch('page_type')}
             onValueChange={(v) => setValue('page_type', v as any)}
           >
-            <option value="static">Static Page</option>
-            <option value="story">Story / Editorial</option>
-            <option value="landing">Landing Page</option>
+            {PAGE_TYPES.map((v) => (
+              <option key={v} value={v}>{PAGE_TYPE_LABELS[v]}</option>
+            ))}
           </FormSelect>
           <FormSelect 
             label="Status" 
             value={watch('status')}
             onValueChange={(v) => setValue('status', v as any)}
           >
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-            <option value="archived">Archived</option>
+            {PAGE_STATUSES.map((v) => (
+              <option key={v} value={v}>{STATUS_LABELS[v]}</option>
+            ))}
           </FormSelect>
         </div>
 

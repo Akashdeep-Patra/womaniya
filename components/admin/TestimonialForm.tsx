@@ -10,31 +10,20 @@ import { CameraUpload } from './CameraUpload';
 import { BengalButton, BengalInput } from '@/components/bengal';
 import { FormSelect, FormTextarea } from './FormField';
 import { createTestimonial, updateTestimonial } from '@/actions/testimonials';
-import { TESTIMONIAL_SOURCES } from '@/lib/testimonial-sources';
+import { TESTIMONIAL_SOURCES, TESTIMONIAL_SOURCE_LABELS, TESTIMONIAL_STATUSES, STATUS_LABELS } from '@/db/enums';
 import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-const SOURCE_LABELS: Record<string, string> = {
-  anecdotal:   'Anecdotal (Admin)',
-  google:      'Google Reviews',
-  instagram:   'Instagram',
-  facebook:    'Facebook',
-  whatsapp:    'WhatsApp',
-  email:       'Email',
-  youtube:     'YouTube',
-  trustpilot:  'Trustpilot',
-};
 
 const testimonialFormSchema = z.object({
   quote_en:         z.string().min(1, 'Quote (EN) is required').max(1000),
   quote_bn:         z.string().max(1000).default(''),
   author_name:      z.string().min(1, 'Author name is required').max(120),
   author_title:     z.string().max(200).default(''),
-  source:           z.enum(TESTIMONIAL_SOURCES).default('anecdotal'),
+  source:           z.enum([...TESTIMONIAL_SOURCES]).default('anecdotal'),
   source_url:       z.string().default(''),
   rating:           z.coerce.number().min(0).max(5).default(0),
   sort_order:       z.coerce.number().default(0),
-  status:           z.enum(['draft', 'published', 'archived']).default('published'),
+  status:           z.enum([...TESTIMONIAL_STATUSES]).default('published'),
 });
 
 type TestimonialFormValues = z.infer<typeof testimonialFormSchema>;
@@ -207,7 +196,7 @@ export function TestimonialForm({ initialData, locale }: TestimonialFormProps) {
             error={errors.source?.message}
           >
             {TESTIMONIAL_SOURCES.map((src) => (
-              <option key={src} value={src}>{SOURCE_LABELS[src] ?? src}</option>
+              <option key={src} value={src}>{TESTIMONIAL_SOURCE_LABELS[src]}</option>
             ))}
           </FormSelect>
 
@@ -265,9 +254,9 @@ export function TestimonialForm({ initialData, locale }: TestimonialFormProps) {
             value={watch('status')}
             onValueChange={(v) => setValue('status', v as TestimonialFormValues['status'])}
           >
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-            <option value="archived">Archived</option>
+            {TESTIMONIAL_STATUSES.map((v) => (
+              <option key={v} value={v}>{STATUS_LABELS[v]}</option>
+            ))}
           </FormSelect>
         </div>
       </div>

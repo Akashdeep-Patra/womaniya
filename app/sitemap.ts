@@ -1,13 +1,13 @@
 import { MetadataRoute } from 'next';
 import { db } from '@/lib/db';
 import { products, categories, collections, campaigns, pages } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, or } from 'drizzle-orm';
 import { routing } from '@/i18n/routing';
+import { VISIBLE_LIFECYCLE_STATUSES } from '@/db/enums';
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://womaniya.in';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Fetch data
   const allProducts = await db.query.products.findMany({
     where: eq(products.status, 'published'),
     columns: { slug: true, updated_at: true },
@@ -19,12 +19,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   });
 
   const allCollections = await db.query.collections.findMany({
-    where: eq(collections.status, 'published'),
+    where: or(...VISIBLE_LIFECYCLE_STATUSES.map((s) => eq(collections.status, s))),
     columns: { slug: true, updated_at: true },
   });
 
   const allCampaigns = await db.query.campaigns.findMany({
-    where: eq(campaigns.status, 'published'),
+    where: or(...VISIBLE_LIFECYCLE_STATUSES.map((s) => eq(campaigns.status, s))),
     columns: { slug: true, updated_at: true },
   });
 

@@ -14,6 +14,7 @@ import { createProduct, updateProduct } from '@/actions/products';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { X, GripVertical } from 'lucide-react';
 import { Reorder } from 'framer-motion';
+import { PRODUCT_STATUSES, STOCK_STATUSES, STATUS_LABELS, STOCK_STATUS_LABELS } from '@/db/enums';
 
 type CategoryItem = { id: number; name_en: string };
 type CollectionItem = { id: number; name_en: string };
@@ -27,7 +28,7 @@ const productFormSchema = z.object({
   seo_description_en: z.string().max(300).optional().or(z.literal('')),
   price: z.coerce.number().positive('Price must be positive').max(999999),
   category_id: z.coerce.number().refine((n) => n > 0, 'Please select a category'),
-  status: z.enum(['draft', 'published', 'archived']).default('draft'),
+  status: z.enum([...PRODUCT_STATUSES]).default('draft'),
   is_featured: z
     .union([z.boolean(), z.literal('on')])
     .optional()
@@ -39,7 +40,7 @@ const productFormSchema = z.object({
   care_instructions: z.string().optional().or(z.literal('')),
   origin: z.string().optional().or(z.literal('')),
   sku: z.string().optional().or(z.literal('')),
-  stock_status: z.enum(['in_stock', 'low_stock', 'made_to_order', 'out_of_stock']).default('in_stock'),
+  stock_status: z.enum([...STOCK_STATUSES]).default('in_stock'),
   delivery_info: z.string().optional().or(z.literal('')),
 });
 
@@ -418,9 +419,9 @@ export function ProductForm({ initialData, initialImages, categories, collection
           value={watch('status')}
           onValueChange={(v) => setValue('status', v as any)}
         >
-          <option value="draft">Draft</option>
-          <option value="published">Published</option>
-          <option value="archived">Archived</option>
+          {PRODUCT_STATUSES.map((v) => (
+            <option key={v} value={v}>{STATUS_LABELS[v]}</option>
+          ))}
         </FormSelect>
 
         <label className="flex items-center gap-3 cursor-pointer min-h-[44px] mt-2">
@@ -496,10 +497,9 @@ export function ProductForm({ initialData, initialImages, categories, collection
           onValueChange={(v) => setValue('stock_status', v as any)}
           error={errors.stock_status?.message}
         >
-          <option value="in_stock">In Stock</option>
-          <option value="low_stock">Low Stock</option>
-          <option value="made_to_order">Made to Order</option>
-          <option value="out_of_stock">Out of Stock</option>
+          {STOCK_STATUSES.map((v) => (
+            <option key={v} value={v}>{STOCK_STATUS_LABELS[v]}</option>
+          ))}
         </FormSelect>
 
         <BengalInput

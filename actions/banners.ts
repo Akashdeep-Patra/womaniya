@@ -5,12 +5,13 @@ import { db }             from '@/lib/db';
 import { banners }        from '@/db/schema';
 import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
+import { BANNER_STATUSES, BANNER_PLACEMENTS } from '@/db/enums';
 
 const BannerSchema = z.object({
   campaign_id:      z.coerce.number().optional(),
   collection_id:    z.coerce.number().optional(),
   category_id:      z.coerce.number().optional(),
-  placement:        z.enum(['hero', 'sidebar', 'inline', 'category_hero', 'collection_hero']),
+  placement:        z.enum([...BANNER_PLACEMENTS]),
   images:           z.array(z.string().url()).min(1, 'At least one image is required'),
   title_en:         z.string().max(120).optional(),
   title_bn:         z.string().max(120).optional(),
@@ -20,7 +21,7 @@ const BannerSchema = z.object({
   cta_text_bn:      z.string().max(50).optional(),
   cta_url:          z.string().optional(),
   sort_order:       z.coerce.number().default(0),
-  status:           z.enum(['draft', 'published', 'archived']).default('draft'),
+  status:           z.enum([...BANNER_STATUSES]).default('draft'),
   starts_at:        z.string().optional(),
   ends_at:          z.string().optional(),
 });

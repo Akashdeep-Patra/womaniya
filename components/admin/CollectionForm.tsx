@@ -14,6 +14,7 @@ import { Search, X, GripVertical } from 'lucide-react';
 import { Reorder } from 'framer-motion';
 import type { Product } from '@/db/schema';
 import Image from 'next/image';
+import { COLLECTION_STATUSES, STATUS_LABELS } from '@/db/enums';
 
 const collectionFormSchema = z.object({
   name_en: z.string().min(2, 'Name must be at least 2 characters').max(120),
@@ -22,7 +23,7 @@ const collectionFormSchema = z.object({
   description_bn: z.string().max(2000).optional().or(z.literal('')),
   seo_title_en: z.string().max(120).optional().or(z.literal('')),
   seo_description_en: z.string().max(300).optional().or(z.literal('')),
-  status: z.enum(['draft', 'scheduled', 'live', 'ended', 'archived']).default('draft'),
+  status: z.enum([...COLLECTION_STATUSES]).default('draft'),
   is_featured: z
     .union([z.boolean(), z.literal('on')])
     .optional()
@@ -377,11 +378,9 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
           value={watch('status')}
           onValueChange={(v) => setValue('status', v as any)}
         >
-          <option value="draft">Draft</option>
-          <option value="scheduled">Scheduled</option>
-          <option value="live">Live</option>
-          <option value="ended">Ended</option>
-          <option value="archived">Archived</option>
+          {COLLECTION_STATUSES.map((v) => (
+            <option key={v} value={v}>{STATUS_LABELS[v]}</option>
+          ))}
         </FormSelect>
 
         <label className="flex items-center gap-3 cursor-pointer min-h-[44px]">
