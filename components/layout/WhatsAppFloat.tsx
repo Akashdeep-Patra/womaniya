@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { useParams }               from 'next/navigation';
+import { useParams, usePathname }               from 'next/navigation';
 import { generalEnquiryUrl }       from '@/lib/whatsapp';
 function WAIcon({ size = 20, className }: { size?: number; className?: string }) {
   return (
@@ -14,6 +14,7 @@ function WAIcon({ size = 20, className }: { size?: number; className?: string })
 
 export function WhatsAppFloat({ waNumber }: { waNumber?: string }) {
   const params = useParams();
+  const pathname = usePathname();
   const locale = params.locale as string;
   const [show, setShow] = useState(false);
 
@@ -21,6 +22,8 @@ export function WhatsAppFloat({ waNumber }: { waNumber?: string }) {
     const t = setTimeout(() => setShow(true), 1500);
     return () => clearTimeout(t);
   }, []);
+
+  if (pathname?.includes('/admin')) return null;
 
   const href = generalEnquiryUrl(locale, waNumber);
 

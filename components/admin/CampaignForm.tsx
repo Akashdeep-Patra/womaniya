@@ -119,7 +119,7 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
     }`;
 
   return (
-    <form onSubmit={rhfHandleSubmit(onSubmit)} className="flex flex-col gap-5 md:gap-8 pb-12">
+    <form onSubmit={rhfHandleSubmit(onSubmit)} className="flex flex-col gap-5 md:gap-8 pb-24 md:pb-12">
       {apiError && (
         <div
           role="alert"
@@ -242,7 +242,7 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
         </FormSelect>
       </div>
 
-      <div className="sticky bottom-[calc(3.5rem+env(safe-area-inset-bottom)+1rem)] md:bottom-6 z-10">
+      <div className="sticky bottom-[calc(3.5rem+env(safe-area-inset-bottom)+1rem)] md:bottom-6 z-40 bg-background/80 backdrop-blur-md p-3 -mx-4 md:mx-0 md:p-0 md:bg-transparent md:backdrop-blur-none border-t border-border/50 md:border-none">
         <BengalButton
           type="submit"
           variant="primary"

@@ -97,7 +97,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
   };
 
   return (
-    <form onSubmit={rhfHandleSubmit(onSubmit)} className="max-w-2xl space-y-5 md:space-y-8">
+    <form onSubmit={rhfHandleSubmit(onSubmit)} className="max-w-2xl space-y-5 md:space-y-8 pb-24 md:pb-12">
       {apiError && (
         <div
           role="alert"
@@ -387,7 +387,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
       </div>
 
       {/* Submit */}
-      <div className="sticky bottom-[calc(3.5rem+env(safe-area-inset-bottom)+1rem)] md:bottom-6 z-10">
+      <div className="sticky bottom-[calc(3.5rem+env(safe-area-inset-bottom)+1rem)] md:bottom-6 z-40 bg-background/80 backdrop-blur-md p-3 -mx-4 md:mx-0 md:p-0 md:bg-transparent md:backdrop-blur-none border-t border-border/50 md:border-none">
         <div className="flex gap-3">
           <button
             type="submit"
