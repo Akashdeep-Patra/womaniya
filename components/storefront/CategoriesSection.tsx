@@ -83,7 +83,7 @@ export function CategoriesSection({ categories, isCompact = false }: Props) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.06 }}
-              className="shrink-0 snap-start w-[72vw] max-w-[280px] sm:w-[44vw] sm:max-w-[320px] md:w-[28vw] md:max-w-[340px] lg:flex-1 lg:w-auto lg:max-w-none"
+              className="shrink-0 snap-start w-[72vw] max-w-[280px] sm:w-[44vw] sm:max-w-[320px] md:w-[28vw] md:max-w-[340px] lg:w-[22vw] lg:max-w-[360px]"
             >
               <Link  href={`/${locale}/category/${cat.slug}`}
                 
