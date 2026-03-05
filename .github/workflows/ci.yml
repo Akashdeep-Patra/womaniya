@@ -1,0 +1,184 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9'
+
+jobs:
+  # ── Fast parallel checks (< 1 min each) ────────────────────────
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: tsc --noEmit
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+
+  # ── Build gate (blocks downstream jobs) ─────────────────────────
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [typecheck, lint]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build Next.js
+        run: pnpm next build
+        env:
+          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextjs-build
+          path: .next
+          retention-days: 1
+
+  # ── Bundle size budget ──────────────────────────────────────────
+  bundle-size:
+    name: Bundle Size
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: nextjs-build
+          path: .next
+
+      - name: Check bundle sizes
+        run: |
+          echo "## Bundle Size Report" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Chunk | Size |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|-------|------|" >> "$GITHUB_STEP_SUMMARY"
+
+          TOTAL=0
+          for f in .next/static/chunks/*.js; do
+            SIZE=$(wc -c < "$f" | tr -d ' ')
+            SIZE_KB=$((SIZE / 1024))
+            TOTAL=$((TOTAL + SIZE))
+            NAME=$(basename "$f")
+            echo "| \`$NAME\` | ${SIZE_KB} KB |" >> "$GITHUB_STEP_SUMMARY"
+          done
+
+          TOTAL_KB=$((TOTAL / 1024))
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Total JS chunks: ${TOTAL_KB} KB**" >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$TOTAL_KB" -gt 500 ]; then
+            echo "::error::Total JS bundle size (${TOTAL_KB} KB) exceeds 500 KB budget"
+            exit 1
+          fi
+
+          echo "✅ Bundle size OK: ${TOTAL_KB} KB (budget: 500 KB)"
+
+  # ── Lighthouse CI ───────────────────────────────────────────────
+  lighthouse:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: nextjs-build
+          path: .next
+
+      - name: Run Lighthouse CI
+        run: pnpm dlx @lhci/cli autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
+
+      - name: Summarize results
+        if: always()
+        run: |
+          echo "## Lighthouse Results" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          for f in .lighthouseci/lhr-*.json; do
+            [ -f "$f" ] || continue
+            URL=$(jq -r '.requestedUrl' "$f")
+            PERF=$(jq '.categories.performance.score * 100 | round' "$f")
+            A11Y=$(jq '.categories.accessibility.score * 100 | round' "$f")
+            BP=$(jq '.categories["best-practices"].score * 100 | round' "$f")
+            SEO=$(jq '.categories.seo.score * 100 | round' "$f")
+            FCP=$(jq '.audits["first-contentful-paint"].numericValue | round' "$f")
+            LCP=$(jq '.audits["largest-contentful-paint"].numericValue | round' "$f")
+            TBT=$(jq '.audits["total-blocking-time"].numericValue | round' "$f")
+            CLS=$(jq '.audits["cumulative-layout-shift"].numericValue' "$f")
+
+            echo "### ${URL}" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Category | Score |" >> "$GITHUB_STEP_SUMMARY"
+            echo "|----------|-------|" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Performance | **${PERF}** |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Accessibility | **${A11Y}** |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Best Practices | **${BP}** |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| SEO | **${SEO}** |" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Metric | Value |" >> "$GITHUB_STEP_SUMMARY"
+            echo "|--------|-------|" >> "$GITHUB_STEP_SUMMARY"
+            echo "| FCP | ${FCP}ms |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| LCP | ${LCP}ms |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| TBT | ${TBT}ms |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| CLS | ${CLS} |" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+          done

@@ -58,7 +58,36 @@ export default async function StoryPage({ params }: Props) {
 
   const heroImage = ((page.images as string[] | null) ?? [])[0] || page.hero_image_url;
 
+  const articleLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: page.title_en,
+    description: page.seo_description_en ?? `${page.title_en} — Womaniya Stories`,
+    url: `https://womaniya.in/${locale}/stories/${slug}`,
+    ...(heroImage ? { image: heroImage } : {}),
+    publisher: {
+      '@type': 'Organization',
+      name: 'Womaniya',
+      logo: { '@type': 'ImageObject', url: 'https://womaniya.in/logo.svg' },
+    },
+    datePublished: page.created_at?.toISOString(),
+    dateModified: page.updated_at?.toISOString(),
+  };
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `https://womaniya.in/${locale}` },
+      { '@type': 'ListItem', position: 2, name: 'Stories', item: `https://womaniya.in/${locale}/stories` },
+      { '@type': 'ListItem', position: 3, name: page.title_en, item: `https://womaniya.in/${locale}/stories/${slug}` },
+    ],
+  };
+
   return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
     <div className="min-h-screen bg-bengal-cream pb-12">
       {heroImage && (
         <div className="relative w-full h-[70vh] overflow-hidden mb-16">
@@ -104,5 +133,6 @@ export default async function StoryPage({ params }: Props) {
         </div>
       </div>
     </div>
+    </>
   );
 }

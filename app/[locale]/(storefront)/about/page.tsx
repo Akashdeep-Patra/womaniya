@@ -19,9 +19,20 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'about' });
+  const title = t('title');
+  const description = t('intro');
   return {
-    title:       t('title'),
-    description: t('intro'),
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
     alternates: {
       canonical: `/${locale}/about`,
       languages: { en: '/en/about', bn: '/bn/about' },

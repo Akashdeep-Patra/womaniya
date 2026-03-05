@@ -128,7 +128,7 @@ export default async function HomePage({ params }: Props) {
     '@type': 'Organization',
     name: 'Womaniya',
     url: 'https://womaniya.in',
-    logo: 'https://womaniya.in/logo.png',
+    logo: 'https://womaniya.in/logo.svg',
   };
 
   const websiteLd = {

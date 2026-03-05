@@ -9,7 +9,11 @@
       "Bash(ls:*)",
       "Bash(tree:*)",
       "Bash(pnpm tsc:*)",
-      "Bash(pnpm next:*)"
+      "Bash(pnpm next:*)",
+      "Bash(node:*)",
+      "Bash(cat:*)",
+      "Bash(git add:*)",
+      "Bash(arh:*)"
     ]
   }
 }

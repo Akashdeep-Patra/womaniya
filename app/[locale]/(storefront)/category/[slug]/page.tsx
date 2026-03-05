@@ -72,7 +72,30 @@ export default async function CategoryPage({ params }: Props) {
     </div>
   );
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `https://womaniya.in/${locale}` },
+      { '@type': 'ListItem', position: 2, name: 'Categories', item: `https://womaniya.in/${locale}/categories` },
+      { '@type': 'ListItem', position: 3, name: category.name_en, item: `https://womaniya.in/${locale}/category/${slug}` },
+    ],
+  };
+
+  const collectionLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: category.name_en,
+    description: category.description_en ?? `${category.name_en} — Authentic Handloom by Womaniya`,
+    url: `https://womaniya.in/${locale}/category/${slug}`,
+    ...(allImages[0] ? { image: allImages[0] } : {}),
+    numberOfItems: category.products.length,
+  };
+
   return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }} />
     <div className="min-h-screen bg-bengal-cream pt-24 pb-12">
       <div className="max-w-7xl mx-auto px-4">
         {hasImages && allImages.length > 1 ? (
@@ -118,5 +141,6 @@ export default async function CategoryPage({ params }: Props) {
         )}
       </div>
     </div>
+    </>
   );
 }

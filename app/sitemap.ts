@@ -30,15 +30,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const allPages = await db.query.pages.findMany({
     where: eq(pages.status, 'published'),
-    columns: { slug: true, updated_at: true },
+    columns: { slug: true, updated_at: true, page_type: true },
   });
 
   const sitemapEntries: MetadataRoute.Sitemap = [];
 
   const locales = routing.locales;
 
-  // Static routes
-  const staticRoutes = ['', '/shop', '/stories'];
+  const staticRoutes = [
+    '',
+    '/shop',
+    '/stories',
+    '/collections',
+    '/categories',
+    '/campaigns',
+    '/about',
+  ];
 
   for (const route of staticRoutes) {
     sitemapEntries.push({
@@ -114,16 +121,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
-  // Dynamic pages
   for (const page of allPages) {
+    const prefix = page.page_type === 'story' ? 'stories' : 'pages';
     sitemapEntries.push({
-      url: `${baseUrl}/en/pages/${page.slug}`,
+      url: `${baseUrl}/en/${prefix}/${page.slug}`,
       lastModified: page.updated_at || new Date(),
       changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: page.page_type === 'story' ? 0.6 : 0.5,
       alternates: {
         languages: Object.fromEntries(
-          locales.map((locale) => [locale, `${baseUrl}/${locale}/pages/${page.slug}`])
+          locales.map((locale) => [locale, `${baseUrl}/${locale}/${prefix}/${page.slug}`])
         ),
       },
     });
