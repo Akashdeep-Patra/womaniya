@@ -1,13 +1,21 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { useId } from 'react';
 
 interface BrandMascotProps {
   className?: string;
   size?: number | string;
 }
 
-export function BrandMascot({ className = '', size = 48 }: BrandMascotProps) {
+export function BrandMascot({ className = '', size = 56 }: BrandMascotProps) {
+  const id = useId().replace(/:/g, '');
+  const prefersReducedMotion = useReducedMotion();
+  const skip = !!prefersReducedMotion;
+
+  const gradientId = `sindoor-${id}`;
+  const goldId = `gold-${id}`;
+
   return (
     <motion.svg
       width={size}
@@ -16,100 +24,122 @@ export function BrandMascot({ className = '', size = 48 }: BrandMascotProps) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={`${className} drop-shadow-md`}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={skip ? undefined : { scale: 1.08, rotate: 2 }}
+      whileTap={skip ? undefined : { scale: 0.94 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
     >
       <defs>
-        <linearGradient id="mascotGold" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#E2C980" />
-          <stop offset="50%" stopColor="#C5A059" />
-          <stop offset="100%" stopColor="#9B7A3D" />
+        <linearGradient id={gradientId} x1="15%" y1="5%" x2="85%" y2="95%">
+          <stop offset="0%" stopColor="#D94A3E" />
+          <stop offset="50%" stopColor="#C0392B" />
+          <stop offset="100%" stopColor="#A42E24" />
         </linearGradient>
-
-        <linearGradient id="mascotBody" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#8A1C14" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#1A1918" stopOpacity="0.8" />
+        <linearGradient id={goldId} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#F0DDA4" />
+          <stop offset="50%" stopColor="#D4A843" />
+          <stop offset="100%" stopColor="#B8923A" />
         </linearGradient>
       </defs>
 
-      <g>
-        {/* Soft elegant drop shape behind */}
-        <motion.path
-          d="M 50 15 C 80 15, 90 40, 80 70 C 70 90, 30 90, 20 70 C 10 40, 20 15, 50 15 Z"
-          fill="url(#mascotBody)"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.15, scale: 1 }}
-          transition={{ duration: 2, ease: 'easeOut' }}
-        />
+      {/* Red circle — organic, hand-painted feel */}
+      <motion.circle
+        cx="50"
+        cy="50"
+        r="46"
+        fill={`url(#${gradientId})`}
+        initial={skip ? false : { scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+      />
 
-        {/* Continuous Line - Sharp, Sensual Side Profile */}
-        <motion.path
-          d="M 60 15 C 45 15, 35 25, 35 35 C 35 38, 30 42, 28 45 C 25 48, 25 50, 28 52 C 25 55, 25 58, 32 60 C 40 62, 45 70, 42 80 C 40 88, 48 95, 60 90"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 2, delay: 0.2, ease: 'easeInOut' }}
-        />
+      {/* Subtle inner glow for depth */}
+      <motion.circle
+        cx="50"
+        cy="50"
+        r="42"
+        fill="none"
+        stroke="rgba(255,255,255,0.08)"
+        strokeWidth="1.5"
+        initial={skip ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+      />
 
-        {/* Sultry Eye - Minimalist lash */}
-        <motion.path
-          d="M 35 42 C 40 40, 45 42, 48 45"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.5 }}
-        />
+      {/*
+        Single continuous calligraphic "W" path.
+        Left curl → down → up → down → up → top flourish curl
+        Bold strokes so it reads clearly even at 20px.
+      */}
+      <motion.path
+        d={[
+          'M 19 36',
+          'C 16 34, 14 37, 15 40',
+          'C 16 42, 19 42, 20 40',
+          'L 34 72',
+          'C 35 74, 36 74, 37 72',
+          'L 47 40',
+          'C 48 38, 49 38, 50 40',
+          'L 60 72',
+          'C 61 74, 62 74, 63 72',
+          'L 76 28',
+          'C 77 24, 80 22, 82 24',
+          'C 84 26, 83 30, 80 31',
+          'C 77 32, 75 30, 76 28',
+        ].join(' ')}
+        fill="none"
+        stroke="#FBF8F1"
+        strokeWidth="4.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        initial={skip ? false : { pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{
+          pathLength: { duration: 1.6, delay: 0.4, ease: [0.65, 0, 0.35, 1] },
+          opacity: { duration: 0.2, delay: 0.4 },
+        }}
+      />
 
-        {/* Plump Red Lip Accent */}
-        <motion.path
-          d="M 28 52 C 32 50, 35 52, 33 54 C 30 54, 28 52, 28 52 Z"
-          fill="#B3241C"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200, delay: 1.8 }}
-        />
+      {/* Gold bindi — pops in with a spring at the end */}
+      <motion.circle
+        cx="48"
+        cy="30"
+        r="3"
+        fill={`url(#${goldId})`}
+        initial={skip ? false : { scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{
+          type: 'spring',
+          stiffness: 500,
+          damping: 15,
+          delay: 1.8,
+        }}
+      />
 
-        {/* Sharp Bindi */}
-        <motion.circle
-          cx="30"
-          cy="32"
-          r="2.5"
-          fill="#B3241C"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: 'spring', stiffness: 200, delay: 1.2 }}
-        />
-
-        {/* Elegant Gold Jhumka/Earring */}
-        <motion.path
-          d="M 45 55 L 45 65 M 40 60 C 45 58, 50 62, 50 65"
-          fill="none"
-          stroke="url(#mascotGold)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.5, delay: 1.8 }}
-        />
-        
-        {/* Tiny gold jewel drop */}
-        <motion.circle
-          cx="45"
-          cy="68"
-          r="2.5"
-          fill="url(#mascotGold)"
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 2.2 }}
-        />
-      </g>
+      {/* Idle shimmer — subtle gold sparkle that loops */}
+      <motion.circle
+        cx="48"
+        cy="30"
+        r="3"
+        fill="none"
+        stroke={`url(#${goldId})`}
+        strokeWidth="1.5"
+        initial={skip ? false : { scale: 1, opacity: 0 }}
+        animate={
+          skip
+            ? { opacity: 0 }
+            : {
+                scale: [1, 1.8, 1],
+                opacity: [0, 0.6, 0],
+              }
+        }
+        transition={{
+          duration: 2.5,
+          delay: 2.5,
+          repeat: Infinity,
+          repeatDelay: 4,
+          ease: 'easeInOut',
+        }}
+      />
     </motion.svg>
   );
 }

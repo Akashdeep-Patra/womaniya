@@ -1,6 +1,5 @@
 import { ImageResponse } from 'next/og';
 
-// App Router uses icon.tsx to generate favicons dynamically
 export const size = { width: 48, height: 48 };
 export const contentType = 'image/png';
 
@@ -24,31 +23,57 @@ export default function Icon() {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Transparent or solid background behind the icon */}
-          <circle cx="50" cy="50" r="48" fill="#F9F6F0" />
-          
+          {/* Sindoor red circle */}
+          <circle cx="50" cy="50" r="46" fill="#C0392B" />
+
+          {/* Calligraphic W — simplified for small size */}
+          {/* Left curl */}
           <path
-            d="M 20 35 C 20 70, 45 90, 50 90 C 55 90, 80 70, 80 35 C 80 15, 65 10, 50 25 C 35 10, 20 15, 20 35 Z"
-            stroke="#2C2C2C"
+            d="M 18 38 C 15 38, 14 42, 17 44 C 19 45, 21 43, 21 41"
+            stroke="#FBF8F1"
             strokeWidth="4"
             strokeLinecap="round"
-            strokeLinejoin="round"
+            fill="none"
           />
+          {/* Left descender */}
           <path
-            d="M 38 32 L 50 48 L 62 32"
-            stroke="#C5A059"
+            d="M 21 41 L 36 74"
+            stroke="#FBF8F1"
             strokeWidth="4"
             strokeLinecap="round"
-            strokeLinejoin="round"
           />
+          {/* Center-left ascender */}
           <path
-            d="M 32 48 L 50 72 L 68 48"
-            stroke="#C5A059"
+            d="M 36 74 L 46 38"
+            stroke="#FBF8F1"
             strokeWidth="4"
             strokeLinecap="round"
-            strokeLinejoin="round"
           />
-          <circle cx="50" cy="55" r="7" fill="#8A1C14" />
+          {/* Center-right descender */}
+          <path
+            d="M 46 38 L 58 74"
+            stroke="#FBF8F1"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+          {/* Right ascender */}
+          <path
+            d="M 58 74 L 68 22"
+            stroke="#FBF8F1"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+          {/* Top curl */}
+          <path
+            d="M 68 22 C 68 16, 73 13, 77 15 C 80 17, 79 22, 75 24 C 72 25, 69 23, 68 22"
+            stroke="#FBF8F1"
+            strokeWidth="4"
+            strokeLinecap="round"
+            fill="none"
+          />
+
+          {/* Gold bindi accent */}
+          <circle cx="50" cy="28" r="3" fill="#D4A843" />
         </svg>
       </div>
     ),

@@ -158,15 +158,10 @@ export function Header() {
             href={`/${locale}`} 
             className="group flex items-center shrink-0 gap-2.5 p-1.5 pr-4 md:pr-5 bg-background/50 backdrop-blur-md hover:bg-background/70 rounded-full shadow-sm border border-border/20 transition-colors"
           >
-            <div className="relative rounded-full border border-border/50 bg-background flex items-center justify-center overflow-hidden size-10 md:size-11 shadow-sm">
+            <div className="relative rounded-full flex items-center justify-center overflow-hidden size-11 md:size-12">
               <BrandMascot 
-                size={26} 
-                className="text-foreground transition-transform duration-500 group-hover:scale-110 translate-y-[2px]" 
-              />
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                className="absolute inset-0 border-[0.5px] border-dashed border-primary/30 rounded-full scale-[0.85]"
+                size={44} 
+                className="text-foreground" 
               />
             </div>
             <div className="flex flex-col justify-center">
@@ -212,10 +207,10 @@ export function Header() {
             href={`/${locale}`} 
             className="group flex items-center shrink-0 gap-2 p-1.5 pr-3 md:pr-4 bg-background/50 hover:bg-background/80 rounded-full transition-colors"
           >
-            <div className="relative rounded-full border border-border bg-secondary flex items-center justify-center overflow-hidden size-8 md:size-9">
+            <div className="relative rounded-full flex items-center justify-center overflow-hidden size-9 md:size-10">
               <BrandMascot 
-                size={20} 
-                className="text-foreground transition-transform duration-500 group-hover:scale-110" 
+                size={36} 
+                className="text-foreground" 
               />
             </div>
             <div className="flex flex-col justify-center hidden sm:block">

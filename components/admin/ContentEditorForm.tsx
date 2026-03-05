@@ -175,28 +175,33 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
 
   const sectionDirtyCount = useCallback((ns: string) => dirtyKeys[ns]?.size ?? 0, [dirtyKeys]);
 
-  // ─── Render ──────────────────────────────────────────────────────
-  // Uses inline styles for the scroll container height to guarantee
-  // it works regardless of any parent CSS (AdminShell, PageTransition).
-  // Heights account for: topbar (3.5/4rem) + main padding (3rem/3rem)
-  // + bottom nav mobile (4rem) + this component's header+toolbar (~6rem)
-
   return (
-    <>
+    <div className="flex flex-col h-[calc(100dvh-8.5rem-env(safe-area-inset-bottom))] lg:h-[calc(100dvh-6rem)]">
       {/* Header */}
-      <div className="mb-3 sm:mb-4">
+      <div className="shrink-0 mb-3 sm:mb-4">
         <h1 className="font-sans font-bold tracking-tight text-xl sm:text-2xl lg:text-3xl text-foreground">Site Copy</h1>
         <p className="text-xs sm:text-sm text-foreground/50 mt-0.5">Edit all website text. Changes apply after saving.</p>
       </div>
 
       {/* Toolbar */}
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-3 sm:mb-4">
+      <div className="shrink-0 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-3 sm:mb-4">
         <div className="flex items-center gap-2.5">
           <Globe size={15} className="text-muted-foreground shrink-0 hidden sm:block" />
           <div className="inline-flex rounded-lg border border-border overflow-hidden" role="radiogroup" aria-label="Select locale">
             {(['en', 'bn'] as const).map((loc) => (
-              <button key={loc} role="radio" aria-checked={activeLocale === loc} onClick={() => handleLocaleSwitch(loc)}
-                className={cn('px-4 py-2 sm:py-1.5 text-sm font-medium transition-colors min-w-[72px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset', activeLocale === loc ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground hover:text-foreground active:bg-muted')}>
+              <button
+                key={loc}
+                role="radio"
+                aria-checked={activeLocale === loc}
+                onClick={() => handleLocaleSwitch(loc)}
+                className={cn(
+                  'px-4 py-2 sm:py-1.5 text-sm font-medium transition-colors min-w-[72px]',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset',
+                  activeLocale === loc
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-card text-muted-foreground hover:text-foreground active:bg-muted',
+                )}
+              >
                 {loc === 'en' ? 'English' : 'Bengali'}
               </button>
             ))}
@@ -205,9 +210,23 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
         <div className="flex items-center gap-2">
           <div className="relative flex-1 sm:flex-initial sm:w-48">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-            <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Filter sections..." aria-label="Filter content sections"
-              className="w-full h-9 pl-8 pr-8 rounded-lg border border-border bg-background text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors" />
-            {search && <button onClick={() => setSearch('')} className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground" aria-label="Clear search"><X size={14} /></button>}
+            <input
+              type="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Filter sections..."
+              aria-label="Filter content sections"
+              className="w-full h-9 pl-8 pr-8 rounded-lg border border-border bg-background text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch('')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+                aria-label="Clear search"
+              >
+                <X size={14} />
+              </button>
+            )}
           </div>
           <BengalButton type="button" variant="primary" size="sm" onClick={handleSaveAll} loading={isPending} disabled={totalDirtyCount === 0} className="shrink-0 hidden sm:inline-flex">
             <Save size={14} className="mr-1.5" />
@@ -216,20 +235,15 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
         </div>
       </div>
 
-      {/* Body: scrollable editor + preview */}
-      <div className="flex gap-6">
-        {/* Scrollable editor — inline style for bulletproof scroll */}
-        <div
-          className="flex-1 min-w-0 overflow-y-auto overscroll-contain rounded-lg"
-          style={{
-            maxHeight: 'calc(100dvh - 16rem)',
-          }}
-          role="group"
-          aria-label="Content sections"
-        >
-          <div className="space-y-6 pb-20 sm:pb-4 pr-1">
+      {/* Body: scrollable editor + fixed preview */}
+      <div className="flex-1 min-h-0 flex gap-4 xl:gap-6">
+        {/* Editor — only this column scrolls */}
+        <div className="flex-1 min-w-0 min-h-0 overflow-y-auto overscroll-contain" role="group" aria-label="Content sections">
+          <div className="space-y-6 pb-4">
             {filteredPages.length === 0 && (
-              <p className="text-sm text-muted-foreground text-center py-8">No sections match &ldquo;{search}&rdquo;</p>
+              <p className="text-sm text-muted-foreground text-center py-8">
+                No sections match &ldquo;{search}&rdquo;
+              </p>
             )}
             {filteredPages.map((pg) => (
               <section key={pg.page} aria-label={pg.page}>
@@ -240,9 +254,20 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
                 <p className="text-[11px] text-muted-foreground mb-2.5">{pg.description}</p>
                 <div className="space-y-2">
                   {pg.sections.map((ns) => (
-                    <SectionAccordion key={ns.name} ns={ns} expanded={expandedSections.has(ns.name)} onToggle={() => toggleSection(ns.name)}
-                      dirtyCount={sectionDirtyCount(ns.name)} overrides={overrides[ns.name]} defaults={defaults[ns.name] ?? {}}
-                      isBn={isBn} isPending={isPending} onChange={handleChange} onReset={handleResetKey} idPrefix={idPrefix} />
+                    <SectionAccordion
+                      key={ns.name}
+                      ns={ns}
+                      expanded={expandedSections.has(ns.name)}
+                      onToggle={() => toggleSection(ns.name)}
+                      dirtyCount={sectionDirtyCount(ns.name)}
+                      overrides={overrides[ns.name]}
+                      defaults={defaults[ns.name] ?? {}}
+                      isBn={isBn}
+                      isPending={isPending}
+                      onChange={handleChange}
+                      onReset={handleResetKey}
+                      idPrefix={idPrefix}
+                    />
                   ))}
                 </div>
               </section>
@@ -250,44 +275,73 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
           </div>
         </div>
 
-        {/* Preview (xl+) */}
-        <div
-          className="hidden xl:flex flex-col w-[420px] shrink-0"
-          style={{ maxHeight: 'calc(100dvh - 16rem)' }}
-        >
-          <div className="flex items-center justify-between mb-2">
+        {/* Preview (xl+ only) — stays in place */}
+        <div className="hidden xl:flex flex-col w-[420px] shrink-0 min-h-0">
+          <div className="flex items-center justify-between mb-2 shrink-0">
             <span className="text-[11px] font-semibold tracking-widest uppercase text-muted-foreground">Preview</span>
             <div className="flex items-center gap-0.5">
               <div className="flex rounded-md border border-border overflow-hidden mr-1.5" role="radiogroup" aria-label="Preview device">
-                <button role="radio" aria-checked={previewMode === 'phone'} onClick={() => setPreviewMode('phone')} className={cn('p-1.5 transition-colors', previewMode === 'phone' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground')} aria-label="Phone preview"><Smartphone size={14} /></button>
-                <button role="radio" aria-checked={previewMode === 'desktop'} onClick={() => setPreviewMode('desktop')} className={cn('p-1.5 transition-colors', previewMode === 'desktop' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground')} aria-label="Desktop preview"><Monitor size={14} /></button>
+                <button
+                  role="radio"
+                  aria-checked={previewMode === 'phone'}
+                  onClick={() => setPreviewMode('phone')}
+                  className={cn('p-1.5 transition-colors', previewMode === 'phone' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground')}
+                  aria-label="Phone preview"
+                >
+                  <Smartphone size={14} />
+                </button>
+                <button
+                  role="radio"
+                  aria-checked={previewMode === 'desktop'}
+                  onClick={() => setPreviewMode('desktop')}
+                  className={cn('p-1.5 transition-colors', previewMode === 'desktop' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground')}
+                  aria-label="Desktop preview"
+                >
+                  <Monitor size={14} />
+                </button>
               </div>
-              <button onClick={() => setIframeKey((k) => k + 1)} className="p-1.5 text-muted-foreground hover:text-foreground rounded" aria-label="Refresh preview"><RefreshCw size={14} /></button>
-              <a href={`/${activeLocale}`} target="_blank" rel="noopener noreferrer" className="p-1.5 text-muted-foreground hover:text-foreground rounded" aria-label="Open in new tab"><ExternalLink size={14} /></a>
+              <button onClick={() => setIframeKey((k) => k + 1)} className="p-1.5 text-muted-foreground hover:text-foreground rounded" aria-label="Refresh preview">
+                <RefreshCw size={14} />
+              </button>
+              <a href={`/${activeLocale}`} target="_blank" rel="noopener noreferrer" className="p-1.5 text-muted-foreground hover:text-foreground rounded" aria-label="Open in new tab">
+                <ExternalLink size={14} />
+              </a>
             </div>
           </div>
           <div className="flex-1 min-h-0 flex items-start justify-center">
             <div className={cn('h-full transition-all duration-300', previewMode === 'phone' ? 'w-[375px]' : 'w-full')}>
               <div className={cn('h-full flex flex-col overflow-hidden', previewMode === 'phone' ? 'rounded-[2.5rem] border-[6px] border-foreground/80 shadow-2xl bg-black' : 'rounded-xl border border-border bg-white')}>
-                {previewMode === 'phone' && <div className="h-7 bg-black flex items-center justify-center shrink-0"><div className="w-20 h-5 bg-foreground/80 rounded-b-2xl" /></div>}
-                <div className="flex-1 overflow-hidden bg-white"><iframe ref={iframeRef} key={iframeKey} src={`/${activeLocale}`} className="w-full h-full border-0" title="Site preview" /></div>
-                {previewMode === 'phone' && <div className="h-5 bg-black flex items-center justify-center shrink-0"><div className="w-28 h-1 bg-white/30 rounded-full" /></div>}
+                {previewMode === 'phone' && (
+                  <div className="h-7 bg-black flex items-center justify-center shrink-0">
+                    <div className="w-20 h-5 bg-foreground/80 rounded-b-2xl" />
+                  </div>
+                )}
+                <div className="flex-1 overflow-hidden bg-white">
+                  <iframe ref={iframeRef} key={iframeKey} src={`/${activeLocale}`} className="w-full h-full border-0" title="Site preview" />
+                </div>
+                {previewMode === 'phone' && (
+                  <div className="h-5 bg-black flex items-center justify-center shrink-0">
+                    <div className="w-28 h-1 bg-white/30 rounded-full" />
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Mobile Save Bar */}
-      <div className="fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom))] inset-x-0 sm:hidden z-30 bg-background/95 backdrop-blur-sm border-t border-border px-3 py-2" role="toolbar" aria-label="Save">
+      {/* Mobile Save Bar — in-flow so it doesn't overlap the scroll area */}
+      <div className="shrink-0 sm:hidden border-t border-border bg-background px-3 pt-2 pb-1" role="toolbar" aria-label="Save">
         <div className="flex items-center gap-2">
           <BengalButton type="button" variant="primary" size="md" onClick={handleSaveAll} loading={isPending} disabled={totalDirtyCount === 0} className="flex-1">
             <Save size={15} className="mr-1.5" />
             {isPending ? 'Saving...' : totalDirtyCount > 0 ? `Save ${totalDirtyCount} Change${totalDirtyCount > 1 ? 's' : ''}` : 'All Saved'}
           </BengalButton>
-          <a href={`/${activeLocale}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full border border-border bg-card text-muted-foreground hover:text-foreground active:bg-muted transition-colors shrink-0" aria-label="Preview site"><ExternalLink size={16} /></a>
+          <a href={`/${activeLocale}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full border border-border bg-card text-muted-foreground hover:text-foreground active:bg-muted transition-colors shrink-0" aria-label="Preview site">
+            <ExternalLink size={16} />
+          </a>
         </div>
       </div>
-    </>
+    </div>
   );
 }
