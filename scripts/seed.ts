@@ -240,6 +240,107 @@ async function linkProductsToCollections() {
   }
 }
 
+const TESTIMONIALS = [
+  {
+    quote_en: 'Each thread I weave carries a prayer. It is not just cloth; it is my family\'s legacy.',
+    quote_bn: 'প্রতিটি সুতোয় একটি প্রার্থনা বোনা। এটা শুধু কাপড় নয়; এটা আমার পরিবারের উত্তরাধিকার।',
+    author_name: 'Rahim Ansari',
+    author_title: 'Master Weaver, Phulia',
+    source: 'anecdotal' as const,
+    rating: null,
+    sort_order: 0,
+    status: 'published' as const,
+  },
+  {
+    quote_en: 'Wearing a Womaniya Jamdani feels like wearing a piece of history. The craftsmanship is palpable.',
+    quote_bn: 'ওমনিয়ার জামদানি পরলে মনে হয় ইতিহাসের একটা টুকরো গায়ে জড়িয়ে আছে। কারিগরি যেন হাতে ছোঁয়া যায়।',
+    author_name: 'Arundhati M.',
+    author_title: 'Kolkata',
+    source: 'google' as const,
+    rating: 5,
+    sort_order: 1,
+    status: 'published' as const,
+  },
+  {
+    quote_en: 'We don\'t rush the loom. The design decides its own time.',
+    quote_bn: 'তাঁত তাড়াহুড়ো করা যায় না। নকশা নিজেই ঠিক করে নেয় তার সময়।',
+    author_name: 'Karim Khatri',
+    author_title: 'Block Printer, Ajrakhpur',
+    source: 'anecdotal' as const,
+    rating: null,
+    sort_order: 2,
+    status: 'published' as const,
+  },
+  {
+    quote_en: 'I ordered a Chanderi blouse for my sister\'s wedding and it arrived beautifully packaged. The zari work is exquisite — better than what I\'ve seen in stores.',
+    quote_bn: 'আমার বোনের বিয়ের জন্য একটা চান্দেরি ব্লাউজ অর্ডার করেছিলাম। প্যাকেজিং অসাধারণ। জরির কাজ দোকানে যা পাওয়া যায় তার চেয়ে অনেক ভালো।',
+    author_name: 'Priya Sen',
+    author_title: 'Mumbai',
+    source: 'instagram' as const,
+    rating: 5,
+    sort_order: 3,
+    status: 'published' as const,
+  },
+  {
+    quote_en: 'The Ikkat saree I bought is absolutely stunning. The colours are vibrant and the weave is incredibly soft. Will definitely order again!',
+    quote_bn: 'যে ইক্কাট শাড়িটা কিনেছি সেটা অসাধারণ। রং উজ্জ্বল আর বুনন অবিশ্বাস্য নরম। আবার অবশ্যই অর্ডার করব!',
+    author_name: 'Deepa R.',
+    author_title: 'Bangalore',
+    source: 'google' as const,
+    rating: 4,
+    sort_order: 4,
+    status: 'published' as const,
+  },
+  {
+    quote_en: 'My grandmother wove Jamdani. Seeing Womaniya keep this art alive brings tears to my eyes. Thank you for honouring our heritage.',
+    quote_bn: 'আমার ঠাকুমা জামদানি বুনতেন। ওমনিয়া এই শিল্পকে বাঁচিয়ে রাখছে দেখে চোখে জল আসে। আমাদের ঐতিহ্যকে সম্মান করার জন্য ধন্যবাদ।',
+    author_name: 'Fatima Begum',
+    author_title: 'Dhaka',
+    source: 'whatsapp' as const,
+    rating: null,
+    sort_order: 5,
+    status: 'published' as const,
+  },
+  {
+    quote_en: 'Received my Tant saree yesterday. The fabric is so light and airy — perfect for Bengal summers. The border design is unique and elegant.',
+    quote_bn: null,
+    author_name: 'Suchitra D.',
+    author_title: 'Kolkata',
+    source: 'facebook' as const,
+    rating: 5,
+    sort_order: 6,
+    status: 'published' as const,
+  },
+  {
+    quote_en: 'As a textile researcher, I\'m impressed by the authenticity of Womaniya\'s collection. They genuinely support artisan communities.',
+    quote_bn: null,
+    author_name: 'Dr. Meera Iyer',
+    author_title: 'Textile Researcher, NIFT',
+    source: 'email' as const,
+    rating: null,
+    sort_order: 7,
+    status: 'published' as const,
+  },
+];
+
+async function seedTestimonials() {
+  console.log('Seeding testimonials...');
+  for (const testimonial of TESTIMONIALS) {
+    const existing = await db.query.testimonials.findFirst({
+      where: (t, { and, eq }) => and(
+        eq(t.author_name, testimonial.author_name),
+        eq(t.quote_en, testimonial.quote_en),
+      ),
+    });
+    if (!existing) {
+      await db.insert(schema.testimonials).values(testimonial);
+      console.log(`  + "${testimonial.author_name}" (${testimonial.source})`);
+    } else {
+      console.log(`  = "${testimonial.author_name}" (already exists)`);
+    }
+  }
+}
+
 async function main() {
   console.log('Starting seed...\n');
 
@@ -250,6 +351,8 @@ async function main() {
   await seedFakeProducts();
   console.log('');
   await linkProductsToCollections();
+  console.log('');
+  await seedTestimonials();
 
   console.log('\nSeed complete!');
   process.exit(0);

@@ -8,6 +8,7 @@ import { getFeaturedProducts } from '@/actions/products';
 import { getPublishedCategories } from '@/actions/categories';
 import { getFeaturedCollections } from '@/actions/collections';
 import { getSetting } from '@/actions/settings';
+import { getPublishedTestimonials } from '@/actions/testimonials';
 import { AlponaDivider }       from '@/components/illustrations/AlponaDivider';
 
 /* Below-fold sections: dynamic import to reduce initial JS and improve LCP */
@@ -101,12 +102,14 @@ export default async function HomePage({ params }: Props) {
   let featured: Awaited<ReturnType<typeof getFeaturedProducts>> = [];
   let categories: Awaited<ReturnType<typeof getPublishedCategories>> = [];
   let collections: Awaited<ReturnType<typeof getFeaturedCollections>> = [];
+  let testimonials: Awaited<ReturnType<typeof getPublishedTestimonials>> = [];
   let waNumber = '919143161829';
   try {
-    [featured, categories, collections, waNumber] = await Promise.all([
+    [featured, categories, collections, testimonials, waNumber] = await Promise.all([
       getFeaturedProducts(),
       getPublishedCategories(),
       getFeaturedCollections(),
+      getPublishedTestimonials(),
       getSetting('whatsapp_number', '919143161829'),
     ]);
   } catch {
@@ -155,7 +158,7 @@ export default async function HomePage({ params }: Props) {
         </div>
         
         <GlimpsesSection />
-        <ArtisanVoicesSection />
+        <ArtisanVoicesSection testimonials={testimonials} />
         <CategoriesSection categories={categories} isCompact={true} />
 
         {featured.length > 0 && (

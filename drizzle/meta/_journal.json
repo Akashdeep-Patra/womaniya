@@ -36,6 +36,13 @@
       "when": 1772564651747,
       "tag": "0004_public_callisto",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1772870400000,
+      "tag": "0006_add_testimonials",
+      "breakpoints": true
     }
   ]
 }

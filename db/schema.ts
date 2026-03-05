@@ -285,6 +285,26 @@ export const pageSectionsRelations = relations(pageSections, ({ one }) => ({
   }),
 }));
 
+// ─── Testimonials ───────────────────────────────────────────────────
+export const testimonials = pgTable('testimonials', {
+  id:           serial('id').primaryKey(),
+  quote_en:     text('quote_en').notNull(),
+  quote_bn:     text('quote_bn'),
+  author_name:  text('author_name').notNull(),
+  author_title: text('author_title'),
+  author_image_url: text('author_image_url'),
+  source:       text('source').default('anecdotal').notNull(),
+  source_url:   text('source_url'),
+  rating:       integer('rating'),
+  sort_order:   integer('sort_order').default(0),
+  status:       text('status').default('published').notNull(),
+  created_at:   timestamp('created_at').defaultNow(),
+  updated_at:   timestamp('updated_at').defaultNow(),
+});
+
+export type Testimonial    = typeof testimonials.$inferSelect;
+export type NewTestimonial = typeof testimonials.$inferInsert;
+
 // ─── Settings ──────────────────────────────────────────────────────
 export const settings = pgTable('settings', {
   key: text('key').primaryKey(),
