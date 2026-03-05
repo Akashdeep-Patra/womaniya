@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { CameraUpload } from './CameraUpload';
+import { FormSelect } from './FormField';
 import { toast } from 'sonner';
 import { X, GripVertical } from 'lucide-react';
 import { Reorder } from 'framer-motion';
@@ -51,6 +52,8 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
     register,
     handleSubmit: rhfHandleSubmit,
     formState: { errors },
+    watch,
+    setValue,
   } = useForm<CategoryFormValues>({
     resolver: zodResolver(categoryFormSchema) as Resolver<CategoryFormValues>,
     defaultValues: {
@@ -140,7 +143,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
               </div>
             </Reorder.Item>
           ))}
-          <div className="w-28 h-20 shrink-0">
+          <div className="flex shrink-0">
             <CameraUpload
               onUpload={(url) => { if (url) setImages((prev) => [...prev, url]); }}
               onUploadMultiple={(urls) => setImages((prev) => [...prev, ...urls])}
@@ -371,28 +374,16 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
       {/* Status */}
       <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-4">
         <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Settings</h3>
-        <label
-          htmlFor="status"
-          className="block text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium mb-1.5"
-        >
-          Status
-        </label>
-        <select
-          id="status"
-          {...register('status')}
-          className={cn(
-            inputBaseClasses,
-            'max-w-xs',
-            errors.status ? inputErrorClasses : inputNormalClasses
-          )}
+        <FormSelect 
+          label="Status" 
+          value={watch('status')}
+          onValueChange={(v) => setValue('status', v as any)}
+          error={errors.status?.message}
         >
           <option value="draft">Draft</option>
           <option value="published">Published</option>
           <option value="archived">Archived</option>
-        </select>
-        {errors.status && (
-          <p className="text-destructive text-xs font-medium mt-1">{errors.status.message}</p>
-        )}
+        </FormSelect>
       </div>
 
       {/* Submit */}

@@ -188,7 +188,7 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
               </div>
             </Reorder.Item>
           ))}
-          <div className="w-28 h-20 shrink-0">
+          <div className="flex shrink-0">
             <CameraUpload
               onUpload={(url) => { if (url) setImages((prev) => [...prev, url]); }}
               onUploadMultiple={(urls) => setImages((prev) => [...prev, ...urls])}

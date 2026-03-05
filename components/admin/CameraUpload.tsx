@@ -215,16 +215,18 @@ export function CameraUpload({
         <Image src={singlePreview} alt="Preview" fill className="object-cover" />
 
         {isWorking && (
-          <div className="absolute inset-0 bg-background/60 flex flex-col items-center justify-center gap-4 p-4 backdrop-blur-sm">
-            <div className="w-full max-w-[120px] bg-foreground/20 rounded-full h-1.5 overflow-hidden">
-              <div 
-                className="bg-primary h-full transition-all duration-300 ease-out" 
-                style={{ width: `${currentUpload.progress}%` }} 
-              />
-            </div>
-            <p className="text-foreground text-[10px] tracking-widest uppercase font-medium">
-              {currentUpload.progress}%
-            </p>
+          <div className="absolute inset-0 bg-background/60 flex flex-col items-center justify-center gap-2 p-2 backdrop-blur-sm">
+            <span className={cn("font-medium", currentUpload?.error ? "text-destructive text-xs" : "text-foreground text-[10px] tracking-widest")}>
+              {currentUpload?.error ? 'Failed' : `${currentUpload?.progress ?? 0}%`}
+            </span>
+            {!currentUpload?.error && (
+              <div className="w-full bg-foreground/20 rounded-full h-1 overflow-hidden">
+                <div
+                  className="h-full bg-primary transition-all duration-300 ease-out"
+                  style={{ width: `${currentUpload?.progress ?? 0}%` }}
+                />
+              </div>
+            )}
           </div>
         )}
 

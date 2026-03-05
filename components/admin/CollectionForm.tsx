@@ -215,7 +215,7 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
               </div>
             </Reorder.Item>
           ))}
-          <div className="w-28 h-20 shrink-0">
+          <div className="flex shrink-0">
             <CameraUpload
               onUpload={handleImageUpload}
               onUploadMultiple={handleImageUploadMultiple}
