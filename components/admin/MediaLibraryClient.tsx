@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { CameraUpload } from './CameraUpload';
 import { Trash2, Copy, Tag, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
-import { deleteMedia, updateMediaMetadata, recordMediaAsset } from '@/actions/media';
+import { deleteMedia, updateMediaMetadata } from '@/actions/media';
 import { BengalInput, BengalButton } from '@/components/bengal';
 import type { MediaAsset } from '@/db/schema';
 import { cn } from '@/lib/utils';
@@ -17,10 +17,9 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
   const [isPending, startTransition] = useTransition();
 
   const handleUpload = async (url: string) => {
-    // In a real app we'd get filename from the file object directly, but CameraUpload just returns URL
     const filename = url.split('/').pop() || 'uploaded-image.jpg';
-    
-    // Optimistic UI update
+
+    // Optimistic UI update — the API route auto-records to media_assets
     const tempAsset: MediaAsset = {
       id: Date.now(),
       url,
@@ -34,18 +33,9 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
       tags: null,
       created_at: new Date(),
     };
-    
-    setAssets(prev => [tempAsset, ...prev]);
 
-    startTransition(async () => {
-      try {
-        await recordMediaAsset({ url, filename });
-        // Refresh could be done here if needed, or rely on router.refresh()
-        toast.success('Image uploaded successfully');
-      } catch (err) {
-        toast.error('Failed to record upload in DB');
-      }
-    });
+    setAssets(prev => [tempAsset, ...prev]);
+    toast.success('Image uploaded successfully');
   };
 
   const copyUrl = (url: string) => {

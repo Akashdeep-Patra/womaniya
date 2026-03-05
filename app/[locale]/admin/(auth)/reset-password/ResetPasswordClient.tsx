@@ -102,19 +102,23 @@ export default function ResetPasswordClient() {
             <BengalInput
               label="New Password"
               type="password"
+              name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={8}
+              autoComplete="new-password"
             />
 
             <BengalInput
               label="Confirm New Password"
               type="password"
+              name="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               minLength={8}
+              autoComplete="new-password"
             />
 
             <BengalButton

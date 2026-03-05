@@ -2,12 +2,13 @@
 
 import { useCallback, useState } from 'react';
 import Image from 'next/image';
-import { ImagePlus, X, UploadCloud } from 'lucide-react';
+import { ImagePlus, X, UploadCloud, FolderOpen } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useDropzone } from 'react-dropzone';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { upload } from '@vercel/blob/client';
+import { MediaPicker } from './MediaPicker';
+import type { MediaAsset } from '@/db/schema';
 
 interface Props {
   onUpload: (url: string) => void;
@@ -16,6 +17,7 @@ interface Props {
   initialUrl?: string | null;
   compact?: boolean;
   multiple?: boolean;
+  enableLibrary?: boolean;
 }
 
 interface UploadingFile {
@@ -26,6 +28,46 @@ interface UploadingFile {
   error?: string;
 }
 
+function uploadViaServer(
+  file: File,
+  onProgress?: (pct: number) => void
+): Promise<{ url: string }> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+    formData.append('file', file);
+
+    xhr.upload.addEventListener('progress', (e) => {
+      if (e.lengthComputable && onProgress) {
+        onProgress(Math.round((e.loaded / e.total) * 100));
+      }
+    });
+
+    xhr.addEventListener('load', () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          resolve(JSON.parse(xhr.responseText));
+        } catch {
+          reject(new Error('Invalid server response'));
+        }
+      } else {
+        try {
+          const body = JSON.parse(xhr.responseText);
+          reject(new Error(body.error || `Upload failed (${xhr.status})`));
+        } catch {
+          reject(new Error(`Upload failed (${xhr.status})`));
+        }
+      }
+    });
+
+    xhr.addEventListener('error', () => reject(new Error('Network error')));
+    xhr.addEventListener('abort', () => reject(new Error('Upload cancelled')));
+
+    xhr.open('POST', '/api/upload-file');
+    xhr.send(formData);
+  });
+}
+
 export function CameraUpload({
   onUpload,
   onUploadMultiple,
@@ -33,11 +75,15 @@ export function CameraUpload({
   initialUrl,
   compact,
   multiple,
+  enableLibrary = true,
 }: Props) {
   const t = useTranslations('admin');
-  
+
   // Single mode state
   const [singlePreview, setSinglePreview] = useState<string | null>(initialUrl || null);
+
+  // Media library picker
+  const [pickerOpen, setPickerOpen] = useState(false);
   
   // Multi mode state
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
@@ -62,19 +108,14 @@ export function CameraUpload({
         
         const urls: string[] = [];
         
-        // Upload concurrently but track progress individually via @vercel/blob/client
+        // Upload concurrently but track progress individually
         await Promise.all(
           newUploads.map(async (uploadItem) => {
             try {
-              const newBlob = await upload(uploadItem.file.name, uploadItem.file, {
-                access: 'public',
-                handleUploadUrl: '/api/upload',
-                onUploadProgress: (progressEvent) => {
-                  const pct = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-                  setUploadingFiles((prev) =>
-                    prev.map((p) => (p.id === uploadItem.id ? { ...p, progress: pct } : p))
-                  );
-                },
+              const newBlob = await uploadViaServer(uploadItem.file, (pct) => {
+                setUploadingFiles((prev) =>
+                  prev.map((p) => (p.id === uploadItem.id ? { ...p, progress: pct } : p))
+                );
               });
               
               urls.push(newBlob.url);
@@ -114,13 +155,8 @@ export function CameraUpload({
         setUploadingFiles([newUploads[0]]);
 
         try {
-          const newBlob = await upload(file.name, file, {
-            access: 'public',
-            handleUploadUrl: '/api/upload',
-            onUploadProgress: (progressEvent) => {
-              const pct = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-              setUploadingFiles([{ ...newUploads[0], progress: pct }]);
-            },
+          const newBlob = await uploadViaServer(file, (pct) => {
+            setUploadingFiles([{ ...newUploads[0], progress: pct }]);
           });
           onUpload(newBlob.url);
         } catch (err) {
@@ -155,6 +191,20 @@ export function CameraUpload({
     onUpload('');
   };
 
+  const handlePickerSelect = (asset: MediaAsset) => {
+    setPickerOpen(false);
+    if (multiple) {
+      if (onUploadMultiple) {
+        onUploadMultiple([asset.url]);
+      } else {
+        onUpload(asset.url);
+      }
+    } else {
+      setSinglePreview(asset.url);
+      onUpload(asset.url);
+    }
+  };
+
   // If SINGLE mode and we have a preview
   if (!multiple && singlePreview) {
     const currentUpload = uploadingFiles[0];
@@ -179,13 +229,33 @@ export function CameraUpload({
         )}
 
         {!isWorking && (
-          <button
-            type="button"
-            onClick={clearSingle}
-            className="absolute top-1.5 right-1.5 w-8 h-8 bg-foreground/80 hover:bg-destructive rounded-full flex items-center justify-center touch-manipulation active:scale-90 transition-all z-10"
-          >
-            <X size={14} className="text-background" />
-          </button>
+          <>
+            {enableLibrary && (
+              <button
+                type="button"
+                onClick={() => setPickerOpen(true)}
+                className="absolute top-1.5 left-1.5 w-8 h-8 bg-foreground/80 hover:bg-primary rounded-full flex items-center justify-center touch-manipulation active:scale-90 transition-all z-10"
+              >
+                <FolderOpen size={14} className="text-background" />
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={clearSingle}
+              className="absolute top-1.5 right-1.5 w-8 h-8 bg-foreground/80 hover:bg-destructive rounded-full flex items-center justify-center touch-manipulation active:scale-90 transition-all z-10"
+            >
+              <X size={14} className="text-background" />
+            </button>
+          </>
+        )}
+
+        {enableLibrary && (
+          <MediaPicker
+            open={pickerOpen}
+            onClose={() => setPickerOpen(false)}
+            onSelect={handlePickerSelect}
+            selected={singlePreview ?? undefined}
+          />
         )}
       </div>
     );
@@ -231,14 +301,28 @@ export function CameraUpload({
             </p>
           </div>
         )}
+
+        {enableLibrary && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setPickerOpen(true); }}
+            className={cn(
+              "flex items-center gap-1.5 text-primary hover:text-primary/80 transition-colors z-10",
+              compact ? "text-[10px]" : "text-xs"
+            )}
+          >
+            <FolderOpen size={compact ? 12 : 14} />
+            {!compact && 'Browse Library'}
+          </button>
+        )}
       </div>
 
       {/* Progress tracking for MULTIPLE uploads - Horizontal scroll */}
       {multiple && uploadingFiles.length > 0 && (
         <div className="flex overflow-x-auto gap-3 mt-1 pb-2 w-full snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {uploadingFiles.map((uf) => (
-            <div 
-              key={uf.id} 
+            <div
+              key={uf.id}
               className="flex flex-col gap-2 p-1.5 rounded-lg bg-card border border-border shrink-0 w-28 snap-start shadow-sm"
             >
               <div className="w-full aspect-square rounded-md overflow-hidden bg-muted relative">
@@ -255,7 +339,7 @@ export function CameraUpload({
                 </div>
                 {!uf.error && (
                   <div className="w-full h-1 bg-muted rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className="h-full bg-primary transition-all duration-300 ease-out"
                       style={{ width: `${uf.progress}%` }}
                     />
@@ -265,6 +349,14 @@ export function CameraUpload({
             </div>
           ))}
         </div>
+      )}
+
+      {enableLibrary && (
+        <MediaPicker
+          open={pickerOpen}
+          onClose={() => setPickerOpen(false)}
+          onSelect={handlePickerSelect}
+        />
       )}
     </div>
   );

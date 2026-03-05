@@ -60,6 +60,7 @@ export default function LoginPage() {
           <BengalInput
             label={t('login_email')}
             type="email"
+            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -69,6 +70,7 @@ export default function LoginPage() {
             <BengalInput
               label={t('login_password')}
               type="password"
+              name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

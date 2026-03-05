@@ -5,13 +5,7 @@ import { cn } from '@/lib/utils';
 import { X, Search, Check } from 'lucide-react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-
-type MediaAsset = {
-  id: number;
-  url: string;
-  filename: string;
-  alt_en?: string | null;
-};
+import type { MediaAsset } from '@/db/schema';
 
 type MediaPickerProps = {
   open: boolean;
