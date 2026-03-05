@@ -66,6 +66,8 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
     handleSubmit: rhfHandleSubmit,
     formState: { errors },
     reset,
+    watch,
+    setValue,
   } = useForm<CollectionFormValues>({
     resolver: zodResolver(collectionFormSchema) as Resolver<CollectionFormValues>,
     defaultValues: {
@@ -370,7 +372,11 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
       <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-4 md:gap-5">
         <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Settings</h3>
 
-        <FormSelect label="Status" {...register('status')}>
+        <FormSelect 
+          label="Status" 
+          value={watch('status')}
+          onValueChange={(v) => setValue('status', v as any)}
+        >
           <option value="draft">Draft</option>
           <option value="scheduled">Scheduled</option>
           <option value="live">Live</option>

@@ -79,6 +79,8 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
     register,
     handleSubmit: rhfHandleSubmit,
     formState: { errors },
+    watch,
+    setValue,
   } = useForm<BannerFormValues>({
     resolver: zodResolver(bannerFormSchema) as Resolver<BannerFormValues>,
     defaultValues: {
@@ -245,7 +247,12 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
       <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-4">
         <h3 className="font-sans font-semibold tracking-tight text-lg md:text-xl text-foreground">Placement & Settings</h3>
 
-        <FormSelect label="Placement *" {...register('placement')} error={errors.placement?.message}>
+        <FormSelect 
+          label="Placement *" 
+          value={watch('placement')}
+          onValueChange={(v) => setValue('placement', v as any)}
+          error={errors.placement?.message}
+        >
           <option value="hero">Hero (Storefront Top)</option>
           <option value="inline">Inline (Middle of page)</option>
           <option value="sidebar">Sidebar</option>
@@ -254,7 +261,11 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
         </FormSelect>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <FormSelect label="Link to Campaign" {...register('campaign_id')}>
+          <FormSelect 
+            label="Link to Campaign" 
+            value={String(watch('campaign_id') || '')}
+            onValueChange={(v) => setValue('campaign_id', v ? Number(v) : undefined as any)}
+          >
             <option value="">None</option>
             {refs.campaigns.map((c) => (
               <option key={c.id} value={c.id}>
@@ -262,7 +273,11 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
               </option>
             ))}
           </FormSelect>
-          <FormSelect label="Link to Collection" {...register('collection_id')}>
+          <FormSelect 
+            label="Link to Collection" 
+            value={String(watch('collection_id') || '')}
+            onValueChange={(v) => setValue('collection_id', v ? Number(v) : undefined as any)}
+          >
             <option value="">None</option>
             {refs.collections.map((c) => (
               <option key={c.id} value={c.id}>
@@ -270,7 +285,11 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
               </option>
             ))}
           </FormSelect>
-          <FormSelect label="Link to Category" {...register('category_id')}>
+          <FormSelect 
+            label="Link to Category" 
+            value={String(watch('category_id') || '')}
+            onValueChange={(v) => setValue('category_id', v ? Number(v) : undefined as any)}
+          >
             <option value="">None</option>
             {refs.categories.map((c) => (
               <option key={c.id} value={c.id}>
@@ -280,7 +299,11 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
           </FormSelect>
         </div>
 
-        <FormSelect label="Status" {...register('status')}>
+        <FormSelect 
+          label="Status" 
+          value={watch('status')}
+          onValueChange={(v) => setValue('status', v as any)}
+        >
           <option value="draft">Draft</option>
           <option value="published">Published</option>
           <option value="archived">Archived</option>

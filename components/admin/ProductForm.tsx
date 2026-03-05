@@ -97,6 +97,7 @@ export function ProductForm({ initialData, initialImages, categories, collection
     formState: { errors },
     setValue,
     reset,
+    watch,
   } = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema) as Resolver<ProductFormValues>,
     defaultValues: {
@@ -376,7 +377,8 @@ export function ProductForm({ initialData, initialImages, categories, collection
 
         <FormSelect
           label={t('form_category')}
-          {...register('category_id', { valueAsNumber: true })}
+          value={String(watch('category_id') || '')}
+          onValueChange={(v) => setValue('category_id', Number(v))}
           error={errors.category_id?.message}
         >
           <option value="" disabled>
@@ -411,7 +413,11 @@ export function ProductForm({ initialData, initialImages, categories, collection
           </div>
         </div>
 
-        <FormSelect label="Status" {...register('status')}>
+        <FormSelect 
+          label="Status" 
+          value={watch('status')}
+          onValueChange={(v) => setValue('status', v as any)}
+        >
           <option value="draft">Draft</option>
           <option value="published">Published</option>
           <option value="archived">Archived</option>
@@ -484,7 +490,12 @@ export function ProductForm({ initialData, initialImages, categories, collection
           error={errors.sku?.message}
         />
 
-        <FormSelect label="Stock Status" {...register('stock_status')} error={errors.stock_status?.message}>
+        <FormSelect 
+          label="Stock Status" 
+          value={watch('stock_status')}
+          onValueChange={(v) => setValue('stock_status', v as any)}
+          error={errors.stock_status?.message}
+        >
           <option value="in_stock">In Stock</option>
           <option value="low_stock">Low Stock</option>
           <option value="made_to_order">Made to Order</option>

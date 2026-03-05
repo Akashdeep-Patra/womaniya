@@ -64,34 +64,86 @@ export const FormTextarea = React.forwardRef<HTMLTextAreaElement, FormTextareaPr
 );
 FormTextarea.displayName = 'FormTextarea';
 
-interface FormSelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'className'> {
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+interface FormSelectProps {
   label?: string;
   error?: string;
   id?: string;
   className?: string;
   children: React.ReactNode;
+  value?: string;
+  onValueChange?: (value: string) => void;
+  defaultValue?: string;
+  disabled?: boolean;
+  name?: string;
 }
 
-export const FormSelect = React.forwardRef<HTMLSelectElement, FormSelectProps>(
-  ({ label, error, id, className, children, ...props }, ref) => {
-    const selectId = id ?? (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
-    return (
-      <FormField label={label ?? ''} error={error} id={selectId}>
-        <select
-          ref={ref}
-          id={selectId}
+export function FormSelect({ label, error, id, className, children, value, onValueChange, defaultValue, disabled, name }: FormSelectProps) {
+  const selectId = id ?? (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
+  
+  const options: { value: string; label: string; disabled?: boolean }[] = [];
+  let placeholder = "Select an option...";
+
+  React.Children.forEach(children, (child) => {
+    if (React.isValidElement(child) && child.type === 'option') {
+      const props = child.props as React.OptionHTMLAttributes<HTMLOptionElement>;
+      if (props.value === "" && props.disabled) {
+        placeholder = props.children as string;
+      } else {
+        const optValue = String(props.value ?? '');
+        options.push({
+          value: optValue === '' ? '__EMPTY__' : optValue,
+          label: props.children as string,
+          disabled: props.disabled,
+        });
+      }
+    }
+  });
+
+  // Handle number to string conversion for value if needed, Radix Select only accepts string values
+  // Map empty string value to '__EMPTY__' to avoid Radix UI empty string value restriction
+  let stringValue: string | undefined = undefined;
+  if (value !== undefined && value !== null) {
+    stringValue = String(value);
+    if (stringValue === '') stringValue = '__EMPTY__';
+  } else if (defaultValue !== undefined && defaultValue !== null) {
+    stringValue = String(defaultValue);
+    if (stringValue === '') stringValue = '__EMPTY__';
+  }
+  
+  // Only set stringValue if there's a matching option, otherwise let it be undefined to show placeholder
+  const hasMatchingOption = options.some(opt => opt.value === stringValue);
+  if (!hasMatchingOption) {
+    stringValue = undefined;
+  }
+
+  const handleValueChange = (val: string) => {
+    if (!onValueChange) return;
+    onValueChange(val === '__EMPTY__' ? '' : val);
+  };
+
+  return (
+    <FormField label={label ?? ''} error={error} id={selectId}>
+      <Select value={stringValue} onValueChange={handleValueChange} disabled={disabled} name={name}>
+        <SelectTrigger 
+          id={selectId} 
           className={cn(
-            inputBaseClasses,
-            'h-12 appearance-none',
-            error ? 'border-bengal-alta ' + inputErrorClasses : 'border-bengal-kansa/30',
+            "h-12 w-full px-4 rounded-xl border bg-card text-foreground text-sm font-sans-en focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm", 
+            error ? "border-destructive ring-2 ring-destructive/20" : "border-border", 
             className
           )}
-          {...props}
         >
-          {children}
-        </select>
-      </FormField>
-    );
-  }
-);
-FormSelect.displayName = 'FormSelect';
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent className="bg-popover text-popover-foreground border-border rounded-xl shadow-lg z-50">
+          {options.map((opt) => (
+            <SelectItem key={opt.value} value={String(opt.value)} disabled={opt.disabled} className="cursor-pointer">
+              {opt.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </FormField>
+  );
+}

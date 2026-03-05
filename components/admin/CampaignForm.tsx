@@ -58,6 +58,8 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
     register,
     handleSubmit: rhfHandleSubmit,
     formState: { errors },
+    watch,
+    setValue,
   } = useForm<CampaignFormValues>({
     resolver: zodResolver(campaignFormSchema) as Resolver<CampaignFormValues>,
     defaultValues: {
@@ -227,7 +229,11 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
           </div>
         </div>
 
-        <FormSelect label="Status" {...register('status')}>
+        <FormSelect 
+          label="Status" 
+          value={watch('status')}
+          onValueChange={(v) => setValue('status', v as any)}
+        >
           <option value="draft">Draft</option>
           <option value="scheduled">Scheduled</option>
           <option value="live">Live</option>

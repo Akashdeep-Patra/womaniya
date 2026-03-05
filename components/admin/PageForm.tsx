@@ -71,6 +71,8 @@ export function PageForm({ initialData, locale, basePath = 'pages', defaultPageT
     register,
     handleSubmit: rhfHandleSubmit,
     formState: { errors },
+    watch,
+    setValue,
   } = useForm<PageFormValues>({
     resolver: zodResolver(pageFormSchema) as Resolver<PageFormValues>,
     defaultValues: {
@@ -176,12 +178,20 @@ export function PageForm({ initialData, locale, basePath = 'pages', defaultPageT
       {/* ─── Layout, Media & Settings ─── */}
       <div className="bg-card p-4 md:p-6 rounded-2xl border border-border flex flex-col gap-4 md:gap-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormSelect label="Page Type" {...register('page_type')}>
+          <FormSelect 
+            label="Page Type" 
+            value={watch('page_type')}
+            onValueChange={(v) => setValue('page_type', v as any)}
+          >
             <option value="static">Static Page</option>
             <option value="story">Story / Editorial</option>
             <option value="landing">Landing Page</option>
           </FormSelect>
-          <FormSelect label="Status" {...register('status')}>
+          <FormSelect 
+            label="Status" 
+            value={watch('status')}
+            onValueChange={(v) => setValue('status', v as any)}
+          >
             <option value="draft">Draft</option>
             <option value="published">Published</option>
             <option value="archived">Archived</option>
