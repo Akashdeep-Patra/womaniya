@@ -95,7 +95,7 @@ export function AdminMobileNav({ locale }: { locale: string }) {
           {mainTabs.map((tab) => {
             const active = isActive(tab.href);
             return (
-              <Link  key={tab.href}
+              <Link prefetch={true} key={tab.href}
                 href={tab.href}
                 
                 className={cn(
