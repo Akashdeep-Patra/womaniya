@@ -56,35 +56,6 @@ export function EntityTable<T>({
         <div className="md:hidden flex flex-col">
           {data.map((item, idx) => {
             const href = getRowHref?.(item);
-            const inner = (
-              <div
-                onClick={!href ? () => onRowClick?.(item) : undefined}
-                className={cn(
-                  'flex items-center gap-3 px-4 py-3 min-h-[56px] transition-colors',
-                  'active:bg-muted/50 hover:bg-muted/50 touch-manipulation',
-                  (onRowClick || href) && 'cursor-pointer',
-                )}
-              >
-                {mobileCard.leading && (
-                  <div className="shrink-0">{mobileCard.leading(item)}</div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-foreground truncate">
-                    {mobileCard.title(item)}
-                  </div>
-                  {mobileCard.subtitle && (
-                    <div className="text-xs text-muted-foreground mt-0.5">
-                      {mobileCard.subtitle(item)}
-                    </div>
-                  )}
-                </div>
-                {mobileCard.actions && (
-                  <div className="shrink-0 flex items-center gap-1 z-10" onClick={e => e.stopPropagation()}>
-                    {mobileCard.actions(item)}
-                  </div>
-                )}
-              </div>
-            );
 
             return (
               <motion.div
@@ -95,11 +66,65 @@ export function EntityTable<T>({
                 className="border-b border-border last:border-0"
               >
                 {href ? (
-                  <Link href={href} prefetch={true} className="block w-full h-full">
-                    {inner}
-                  </Link>
+                  <div className="relative">
+                    <Link href={href} prefetch={true} className="block w-full h-full">
+                      <div
+                        className={cn(
+                          'flex items-center gap-3 px-4 py-3 min-h-[56px] transition-colors',
+                          'active:bg-muted/50 hover:bg-muted/50 touch-manipulation cursor-pointer',
+                        )}
+                      >
+                        {mobileCard.leading && (
+                          <div className="shrink-0">{mobileCard.leading(item)}</div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-medium text-foreground truncate">
+                            {mobileCard.title(item)}
+                          </div>
+                          {mobileCard.subtitle && (
+                            <div className="text-xs text-muted-foreground mt-0.5">
+                              {mobileCard.subtitle(item)}
+                            </div>
+                          )}
+                        </div>
+                        {/* Spacer for actions area */}
+                        {mobileCard.actions && <div className="shrink-0 w-20" />}
+                      </div>
+                    </Link>
+                    {mobileCard.actions && (
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">
+                        {mobileCard.actions(item)}
+                      </div>
+                    )}
+                  </div>
                 ) : (
-                  inner
+                  <div
+                    onClick={() => onRowClick?.(item)}
+                    className={cn(
+                      'flex items-center gap-3 px-4 py-3 min-h-[56px] transition-colors',
+                      'active:bg-muted/50 hover:bg-muted/50 touch-manipulation',
+                      onRowClick && 'cursor-pointer',
+                    )}
+                  >
+                    {mobileCard.leading && (
+                      <div className="shrink-0">{mobileCard.leading(item)}</div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium text-foreground truncate">
+                        {mobileCard.title(item)}
+                      </div>
+                      {mobileCard.subtitle && (
+                        <div className="text-xs text-muted-foreground mt-0.5">
+                          {mobileCard.subtitle(item)}
+                        </div>
+                      )}
+                    </div>
+                    {mobileCard.actions && (
+                      <div className="shrink-0 flex items-center gap-1 z-10" onClick={e => e.stopPropagation()}>
+                        {mobileCard.actions(item)}
+                      </div>
+                    )}
+                  </div>
                 )}
               </motion.div>
             );
