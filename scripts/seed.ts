@@ -13,7 +13,7 @@ import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { sql } from '@vercel/postgres';
 import * as schema from '../db/schema';
 import { eq } from 'drizzle-orm';
-import type { SimpleStatus, LifecycleStatus, TestimonialSource, BannerPlacement, PageType } from '../db/enums';
+import type { SimpleStatus, LifecycleStatus } from '../db/enums';
 
 const db = drizzle(sql, { schema });
 
@@ -151,7 +151,7 @@ const PRODUCTS = [
     category: 'Dhakai Jamdani',
     image_url: '/placeholder-saree.svg',
     is_featured: true,
-    status: 'published',
+    status: 'published' as const,
     fabric: 'Pure Muslin',
     origin: 'Phulia, West Bengal',
   },
@@ -165,7 +165,7 @@ const PRODUCTS = [
     category: 'Designer Blouse',
     image_url: '/placeholder-saree.svg',
     is_featured: true,
-    status: 'published',
+    status: 'published' as const,
     fabric: 'Chanderi Silk',
     sizes: ['S', 'M', 'L', 'XL'],
   },
@@ -179,7 +179,7 @@ const PRODUCTS = [
     category: 'Bengal Tant',
     image_url: '/placeholder-saree.svg',
     is_featured: true,
-    status: 'published',
+    status: 'published' as const,
     fabric: 'Handloom Cotton',
     origin: 'Nadia, West Bengal',
   },
@@ -193,7 +193,7 @@ const PRODUCTS = [
     category: 'Ikkat Pochampally',
     image_url: '/placeholder-saree.svg',
     is_featured: false,
-    status: 'published',
+    status: 'published' as const,
     fabric: 'Pure Silk',
     origin: 'Pochampally, Telangana',
   },
@@ -207,7 +207,7 @@ const PRODUCTS = [
     category: 'Ajrakh Block Print',
     image_url: '/placeholder-saree.svg',
     is_featured: false,
-    status: 'published',
+    status: 'published' as const,
     fabric: 'Handloom Cotton',
     origin: 'Ajrakhpur, Gujarat',
   },
@@ -221,7 +221,7 @@ const PRODUCTS = [
     category: 'Ready to Wear',
     image_url: '/placeholder-saree.svg',
     is_featured: true,
-    status: 'published',
+    status: 'published' as const,
     fabric: 'Khadi Cotton',
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
   },
@@ -342,7 +342,7 @@ async function seedBanners() {
 
   const BANNERS = [
     {
-      placement: 'hero',
+      placement: 'hero' as const,
       images: ['/instagram/2026-01-30_12-28-39_UTC_5.jpg'],
       image_url: '/instagram/2026-01-30_12-28-39_UTC_5.jpg',
       title_en: 'Heritage Woven for You',
@@ -357,7 +357,7 @@ async function seedBanners() {
       campaign_id: campaignMap.get('summer-loom-2026')?.id ?? null,
     },
     {
-      placement: 'hero',
+      placement: 'hero' as const,
       images: ['/instagram/2026-02-02_12-37-01_UTC_2.jpg'],
       image_url: '/instagram/2026-02-02_12-37-01_UTC_2.jpg',
       title_en: 'The DEVI Collection',
@@ -372,7 +372,7 @@ async function seedBanners() {
       collection_id: collectionMap.get('devi')?.id ?? null,
     },
     {
-      placement: 'category_hero',
+      placement: 'category_hero' as const,
       images: ['/instagram/2026-01-30_12-28-39_UTC_5.jpg'],
       image_url: '/instagram/2026-01-30_12-28-39_UTC_5.jpg',
       title_en: 'Dhakai Jamdani',
@@ -417,7 +417,7 @@ const PAGES_DATA = [
     seo_description_en: 'Learn about Womaniya — our mission to preserve India\'s handloom heritage through contemporary fashion.',
     sections: [
       {
-        section_type: 'richtext',
+        section_type: 'richtext' as const,
         content_json: {
           body_en: '<h2>Where Tradition Meets Today</h2><p>At Womaniya, we celebrate the beauty of handloom traditions by transforming them into contemporary, wearable fashion. Rooted in craft and guided by conscious design, our work brings together heritage textiles and modern silhouettes that fit seamlessly into everyday life.</p><p>We collaborate closely with skilled Jamdani weavers, Chanderi silk artisans, Ikkat Pochampally craftsmen, and Ajrakh block printers — communities whose knowledge has been passed down through generations.</p>',
           body_bn: '<h2>যেখানে ঐতিহ্য আজকের সাথে মেলে</h2><p>ওমনিয়ায় আমরা হ্যান্ডলুম ঐতিহ্যের সৌন্দর্যকে আধুনিক, পরিধানযোগ্য ফ্যাশনে রূপান্তরিত করি।</p>',
@@ -425,7 +425,7 @@ const PAGES_DATA = [
         sort_order: 0,
       },
       {
-        section_type: 'richtext',
+        section_type: 'richtext' as const,
         content_json: {
           body_en: '<h2>Our Artisan Communities</h2><p>Every textile is thoughtfully created through slow, mindful processes — handspun, handwoven, and hand block printed — preserving the authenticity and soul of true craftsmanship. By working directly with local artisans and weaving communities, we support sustainable livelihoods while keeping India\'s rich textile legacy alive.</p>',
           body_bn: '<h2>আমাদের কারিগর সম্প্রদায়</h2><p>প্রতিটি কাপড় ধীরে, মনোযোগ দিয়ে তৈরি — হাতে কাটা, হাতে বোনা, হাতে ব্লক প্রিন্ট করা।</p>',
@@ -444,7 +444,7 @@ const PAGES_DATA = [
     seo_description_en: 'Free shipping across India on orders above ₹2,000. Easy 7-day returns on all handloom products.',
     sections: [
       {
-        section_type: 'richtext',
+        section_type: 'richtext' as const,
         content_json: {
           body_en: '<h2>Shipping Policy</h2><p>We ship across India via trusted courier partners. Orders above ₹2,000 qualify for free shipping. Standard delivery takes 5–7 business days. Express delivery (2–3 days) is available for an additional ₹150.</p><h2>Returns & Exchanges</h2><p>We accept returns within 7 days of delivery. Items must be unworn, unwashed, and in original packaging. Handloom products may have minor variations — these are marks of authenticity, not defects.</p>',
           body_bn: '<h2>শিপিং নীতি</h2><p>আমরা সারা ভারতে শিপ করি। ₹২,০০০-এর উপরে অর্ডারে ফ্রি শিপিং।</p>',
@@ -463,7 +463,7 @@ const PAGES_DATA = [
     seo_description_en: 'Discover the centuries-old art of Jamdani weaving — from the Mughal courts to the looms of modern Bengal.',
     sections: [
       {
-        section_type: 'richtext',
+        section_type: 'richtext' as const,
         content_json: {
           body_en: '<p>The Jamdani is not merely a fabric — it is a whispered conversation between the weaver and the loom, a dialogue that has continued unbroken for over two thousand years.</p><p>Born in the muslin workshops of Dhaka during the Mughal era, Jamdani was once so fine that an entire saree could pass through a finger ring. The weavers of Phulia and Shantipur in West Bengal carry forward this tradition today, each motif — the peacock, the lotus, the geometric diamond — woven directly into the fabric without any additional thread or embroidery.</p>',
           body_bn: '<p>জামদানি শুধু কাপড় নয় — এটা তাঁতি আর তাঁতের মধ্যে দুই হাজার বছরের কথোপকথন।</p>',
@@ -471,7 +471,7 @@ const PAGES_DATA = [
         sort_order: 0,
       },
       {
-        section_type: 'richtext',
+        section_type: 'richtext' as const,
         content_json: {
           body_en: '<p>At Womaniya, we source our Jamdani directly from the weaving families of Phulia. Each saree takes between 15 days to 3 months to complete, depending on the intricacy of the design. The weavers work in pairs — one controls the loom while the other interlaces the supplementary weft threads by hand to create the distinctive motifs.</p><p>When you wear a Jamdani, you wear patience. You wear devotion. You wear a living heritage.</p>',
           body_bn: '<p>ওমনিয়ায় আমরা ফুলিয়ার তাঁতি পরিবারদের কাছ থেকে সরাসরি জামদানি সংগ্রহ করি। প্রতিটি শাড়ি তৈরি হতে ১৫ দিন থেকে ৩ মাস লাগে।</p>',
@@ -490,7 +490,7 @@ const PAGES_DATA = [
     seo_description_en: 'The hands behind the handloom — meet the master weavers of Phulia who keep the Jamdani tradition alive.',
     sections: [
       {
-        section_type: 'richtext',
+        section_type: 'richtext' as const,
         content_json: {
           body_en: '<p>In the quiet village of Phulia, about 100 kilometres north of Kolkata, the rhythmic clack of handlooms is the heartbeat of the community. Here, families have woven Jamdani and Tant for generations — a craft passed from father to son, mother to daughter.</p><p>Rahim Ansari, a third-generation weaver, begins his day before dawn. "Each thread carries a prayer," he says, adjusting the warp on his pit loom. "My grandfather taught my father, my father taught me. This loom is our inheritance."</p>',
           body_bn: '<p>কলকাতা থেকে প্রায় ১০০ কিলোমিটার উত্তরে ফুলিয়া গ্রামে তাঁতের ছন্দময় শব্দ সম্প্রদায়ের হৃদস্পন্দন।</p>',

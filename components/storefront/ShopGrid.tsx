@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Fragment } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import { CategoryFilter } from './CategoryFilter';
 import { ProductCard }    from './ProductCard';
 import { EmptyState } from './EmptyState';
+import { BannerDisplay } from './BannerDisplay';
 import type { Product, Category } from '@/db/schema';
 import { ArrowRight } from 'lucide-react';
 
@@ -13,9 +14,10 @@ interface Props {
   products: Product[];
   categories?: Category[];
   isCompact?: boolean;
+  banners?: any[];
 }
 
-export function ShopGrid({ products, categories, isCompact = false }: Props) {
+export function ShopGrid({ products, categories, isCompact = false, banners = [] }: Props) {
   const t = useTranslations('shop');
   const locale = useLocale();
   const [activeCategory, setActiveCategory] = useState('All');
@@ -27,6 +29,8 @@ export function ShopGrid({ products, categories, isCompact = false }: Props) {
   // If compact, limit to 4 or 8 items depending on preference. Let's do 4.
   const displayLimit = isCompact ? 4 : undefined;
   const displayProducts = displayLimit ? filtered.slice(0, displayLimit) : filtered;
+
+  const inlineBanners = banners.filter(b => b.placement === 'inline' && b.status === 'published');
 
   return (
     <section className="px-4 sm:px-6 py-12 md:py-20 max-w-7xl mx-auto">
@@ -66,10 +70,19 @@ export function ShopGrid({ products, categories, isCompact = false }: Props) {
         <EmptyState />
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-          {displayProducts.map((product) => (
-            <div key={product.id} className="break-inside-avoid">
-              <ProductCard product={product} variant="portrait" />
-            </div>
+          {displayProducts.map((product, index) => (
+            <Fragment key={product.id}>
+              <div className="break-inside-avoid">
+                <ProductCard product={product} variant="portrait" />
+              </div>
+              
+              {/* Inject banner after 4th item if not compact */}
+              {!isCompact && index === 3 && inlineBanners.length > 0 && (
+                <div className="col-span-2 md:col-span-3 lg:col-span-4 mt-4 mb-4 rounded-2xl overflow-hidden shadow-sm">
+                  <BannerDisplay banner={inlineBanners[0]} locale={locale} />
+                </div>
+              )}
+            </Fragment>
           ))}
         </div>
       )}

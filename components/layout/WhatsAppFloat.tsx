@@ -35,16 +35,14 @@ export function WhatsAppFloat({ waNumber }: { waNumber?: string }) {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Chat on WhatsApp"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 12, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 12, scale: 0.9 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="fixed bottom-24 right-4 md:bottom-8 md:right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl bg-card text-card-foreground border border-border shadow-sm hover:shadow-md transition-shadow duration-200"
+          className="fixed bottom-[84px] right-4 md:bottom-8 md:right-6 z-50 flex items-center justify-center gap-2 w-11 h-11 md:w-auto md:h-auto md:px-5 md:py-3 rounded-full bg-primary md:bg-card text-primary-foreground md:text-card-foreground border border-border/50 shadow-[0_8px_20px_rgb(0,0,0,0.15)] hover:shadow-xl transition-all duration-300"
         >
-          <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-            <WAIcon size={18} className="text-primary-foreground flex-shrink-0" />
-          </div>
-          <span className={`text-xs font-semibold tracking-wide hidden sm:inline ${locale === 'bn' ? 'font-bengali' : 'font-sans-en'}`}>
+          <WAIcon size={20} className="flex-shrink-0 md:text-primary md:w-[18px] md:h-[18px]" />
+          <span className={`text-xs font-bold tracking-wide hidden md:inline ${locale === 'bn' ? 'font-bengali' : 'font-sans-en uppercase'}`}>
             {locale === 'bn' ? 'চ্যাট করুন' : 'Chat'}
           </span>
         </motion.a>

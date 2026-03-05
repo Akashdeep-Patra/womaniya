@@ -9,6 +9,8 @@ import { getPublishedCategories } from '@/actions/categories';
 import { getFeaturedCollections } from '@/actions/collections';
 import { getSetting } from '@/actions/settings';
 import { getPublishedTestimonials } from '@/actions/testimonials';
+import { getAllBanners } from '@/actions/banners';
+import { BannerDisplay } from '@/components/storefront/BannerDisplay';
 import { AlponaDivider }       from '@/components/illustrations/AlponaDivider';
 
 /* Below-fold sections: dynamic import to reduce initial JS and improve LCP */
@@ -98,23 +100,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const isBn = locale === 'bn';
 
   let featured: Awaited<ReturnType<typeof getFeaturedProducts>> = [];
   let categories: Awaited<ReturnType<typeof getPublishedCategories>> = [];
   let collections: Awaited<ReturnType<typeof getFeaturedCollections>> = [];
   let testimonials: Awaited<ReturnType<typeof getPublishedTestimonials>> = [];
+  let banners: Awaited<ReturnType<typeof getAllBanners>> = [];
   let waNumber = '919143161829';
   try {
-    [featured, categories, collections, testimonials, waNumber] = await Promise.all([
+    [featured, categories, collections, testimonials, banners, waNumber] = await Promise.all([
       getFeaturedProducts(),
       getPublishedCategories(),
       getFeaturedCollections(),
       getPublishedTestimonials(),
+      getAllBanners(),
       getSetting('whatsapp_number', '919143161829'),
     ]);
   } catch {
     // DB not yet connected in dev
   }
+
+  const heroBanners = banners.filter(b => b.placement === 'hero' && b.status === 'published');
 
   const organizationLd = {
     '@context': 'https://schema.org',
@@ -141,8 +148,36 @@ export default async function HomePage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }} />
       
-      <main className="min-h-screen">
+      <main className="min-h-screen touch-pan-y">
         <HeroSection />
+        
+        {heroBanners.length > 0 && (
+          <section className="py-16 md:py-24 bg-background relative z-20 border-b border-border/50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6">
+              <div className="text-center mb-12">
+                <p className="text-[10px] tracking-[0.28em] uppercase text-accent mb-3 font-sans-en">
+                  {isBn ? 'হাইলাইটস' : 'Highlights'}
+                </p>
+                <h2 className={`font-editorial text-3xl md:text-5xl text-foreground ${isBn ? 'font-bengali-serif' : ''}`}>
+                  {isBn ? 'বিশেষ আয়োজন' : 'Featured Campaigns'}
+                </h2>
+              </div>
+              <div className={`grid gap-8 ${
+                heroBanners.length === 1 ? "grid-cols-1" : 
+                "grid-cols-1 lg:grid-cols-2"
+              }`}>
+                {heroBanners.slice(0, 2).map((banner) => (
+                  <BannerDisplay 
+                    key={banner.id} 
+                    banner={banner} 
+                    locale={locale} 
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
         <HeritageTicker categories={categories} />
         
         <FeaturesSection />

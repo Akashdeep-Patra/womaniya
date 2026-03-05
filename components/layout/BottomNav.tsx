@@ -24,15 +24,16 @@ import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { generalEnquiryUrl } from '@/lib/whatsapp';
-import type { Category } from '@/db/schema';
+import type { Category, Page } from '@/db/schema';
 import { useTheme } from 'next-themes';
 
 interface BottomNavProps {
   categories?: Category[];
+  staticPages?: Page[];
   waNumber?: string;
 }
 
-export function BottomNav({ categories: dbCategories, waNumber }: BottomNavProps) {
+export function BottomNav({ categories: dbCategories, staticPages = [], waNumber }: BottomNavProps) {
   const t = useTranslations('nav');
   const pathname = usePathname();
   const params = useParams();
@@ -153,15 +154,15 @@ export function BottomNav({ categories: dbCategories, waNumber }: BottomNavProps
               animate={{ y: '0%' }}
               exit={{ y: '100%' }}
               transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-              className="fixed bottom-15 left-0 right-0 bg-background z-30 rounded-t-3xl border-t border-border overflow-hidden shadow-lg md:hidden max-h-[80vh] flex flex-col will-change-transform pb-[env(safe-area-inset-bottom)]"
+              className="fixed bottom-15 left-0 right-0 bg-background z-30 rounded-t-3xl border-t border-border shadow-lg md:hidden max-h-[85vh] flex flex-col will-change-transform pb-[env(safe-area-inset-bottom)]"
             >
               {/* Handle */}
-              <div className="flex justify-center pt-4 pb-2" onClick={closeSheet}>
+              <div className="flex justify-center pt-4 pb-2 shrink-0 cursor-pointer" onClick={closeSheet}>
                 <div className="w-12 h-1 bg-bengal-kansa/40 rounded-full" />
               </div>
 
               {/* Scrollable Content */}
-              <div className="overflow-y-auto px-6 pt-4 pb-8 flex-1 custom-scrollbar">
+              <div className="overflow-y-auto px-6 pt-4 pb-8 flex-1 overscroll-contain" data-lenis-prevent="true">
                 
                 {/* Brand Header */}
                 <div className="flex items-center justify-between mb-8">
@@ -201,11 +202,20 @@ export function BottomNav({ categories: dbCategories, waNumber }: BottomNavProps
                     </div>
                     <ChevronRight size={18} strokeWidth={2} className="text-bengal-kajal/40 group-hover:text-bengal-kansa transition-colors drop-shadow-sm" />
                   </Link>
-                  <Link  href={`/${locale}#story`} onClick={closeSheet} className="flex items-center justify-between group">
+                  <Link  href={`/${locale}/campaigns`} onClick={closeSheet} className="flex items-center justify-between group">
+                    <div className="flex items-center gap-3 text-bengal-kajal">
+                      <Layers size={20} strokeWidth={2} className="text-bengal-kansa drop-shadow-sm fill-bengal-kansa/20" />
+                      <span className={`text-lg ${isBn ? 'font-bengali' : 'font-sans-en font-light tracking-wide'}`}>
+                        {isBn ? 'ক্যাম্পেইন' : 'Campaigns'}
+                      </span>
+                    </div>
+                    <ChevronRight size={18} strokeWidth={2} className="text-bengal-kajal/40 group-hover:text-bengal-kansa transition-colors drop-shadow-sm" />
+                  </Link>
+                  <Link  href={`/${locale}/stories`} onClick={closeSheet} className="flex items-center justify-between group">
                     <div className="flex items-center gap-3 text-bengal-kajal">
                       <Info size={20} strokeWidth={2} className="text-bengal-kansa drop-shadow-sm fill-bengal-kansa/20" />
                       <span className={`text-lg ${isBn ? 'font-bengali' : 'font-sans-en font-light tracking-wide'}`}>
-                        {isBn ? 'আমাদের কথা' : 'About Us'}
+                        {isBn ? 'আমাদের কথা' : 'Our Stories'}
                       </span>
                     </div>
                     <ChevronRight size={18} strokeWidth={2} className="text-bengal-kajal/40 group-hover:text-bengal-kansa transition-colors drop-shadow-sm" />
@@ -237,6 +247,34 @@ export function BottomNav({ categories: dbCategories, waNumber }: BottomNavProps
                 </div>
 
                 <div className="w-full h-px bg-bengal-kansa/20 mb-8" />
+
+                {/* Information / Static Pages */}
+                {staticPages && staticPages.length > 0 && (
+                  <>
+                    <div className="mb-8">
+                      <h4 className="text-[10px] tracking-[0.2em] uppercase text-bengal-kajal/50 mb-4 font-sans-en">
+                        {isBn ? 'তথ্য' : 'Information'}
+                      </h4>
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                        {staticPages.map((page) => (
+                          <Link prefetch={true}
+                            key={page.id}
+                            href={`/${locale}/pages/${page.slug}`}
+                            onClick={closeSheet}
+                            className="flex items-center gap-2 text-bengal-kajal/80 hover:text-bengal-sindoor transition-colors"
+                          >
+                            <div className="w-1.5 h-1.5 rounded-full bg-bengal-kansa/40" />
+                            <span className={`text-sm ${isBn ? 'font-bengali' : 'font-sans-en'}`}>
+                              {isBn ? (page.title_bn || page.title_en) : page.title_en}
+                            </span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="w-full h-px bg-bengal-kansa/20 mb-8" />
+                  </>
+                )}
 
                 {/* Support / Contact */}
                 <div>

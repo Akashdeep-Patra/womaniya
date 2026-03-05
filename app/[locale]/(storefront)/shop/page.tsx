@@ -3,6 +3,7 @@ import { getTranslations }  from 'next-intl/server';
 import { ShopGrid }         from '@/components/storefront/ShopGrid';
 import { getPublishedProducts } from '@/actions/products';
 import { getPublishedCategories } from '@/actions/categories';
+import { getAllBanners } from '@/actions/banners';
 import type { Metadata }    from 'next';
 
 type Props = { params: Promise<{ locale: string }> };
@@ -37,10 +38,12 @@ export default async function ShopPage({ params }: Props) {
 
   let allProducts: Awaited<ReturnType<typeof getPublishedProducts>> = [];
   let dbCategories: Awaited<ReturnType<typeof getPublishedCategories>> = [];
+  let banners: Awaited<ReturnType<typeof getAllBanners>> = [];
   try {
-    [allProducts, dbCategories] = await Promise.all([
+    [allProducts, dbCategories, banners] = await Promise.all([
       getPublishedProducts(),
       getPublishedCategories(),
+      getAllBanners(),
     ]);
   } catch {
     // DB not connected in dev
@@ -48,7 +51,7 @@ export default async function ShopPage({ params }: Props) {
 
   return (
     <main className="pt-14 md:pt-16">
-      <ShopGrid products={allProducts} categories={dbCategories} />
+      <ShopGrid products={allProducts} categories={dbCategories} banners={banners} />
     </main>
   );
 }

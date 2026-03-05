@@ -1,82 +1,82 @@
 /**
- * Centralized enum definitions for all database entities.
+ * Centralized enum types and UI labels — all derived from Drizzle pgEnum
+ * definitions in schema.ts.
  *
- * SINGLE SOURCE OF TRUTH — every action, form, component, and seed script
- * should import from here instead of hardcoding string literals.
+ * SINGLE SOURCE OF TRUTH CHAIN:
+ *   schema.ts (pgEnum) → enums.ts (re-exports + labels) → actions / forms / UI
  *
- * When adding a new enum value, add it here and it will propagate everywhere.
+ * To add a new enum value:
+ *   1. Add it to the pgEnum in schema.ts
+ *   2. Add its label here
+ *   3. Generate a migration
  */
 
-// ─── Shared status enums ─────────────────────────────────────────
+import {
+  simpleStatusEnum,
+  lifecycleStatusEnum,
+  stockStatusEnum,
+  bannerPlacementEnum,
+  pageTypeEnum,
+  sectionTypeEnum,
+  imageTextLayoutEnum,
+  testimonialSourceEnum,
+} from './schema';
 
-export const SIMPLE_STATUSES = ['draft', 'published', 'archived'] as const;
+// ─── Re-export enum value arrays (derived from pgEnum.enumValues) ─
+
+export const SIMPLE_STATUSES = simpleStatusEnum.enumValues;
 export type SimpleStatus = (typeof SIMPLE_STATUSES)[number];
 
-export const LIFECYCLE_STATUSES = ['draft', 'scheduled', 'live', 'ended', 'archived'] as const;
+export const LIFECYCLE_STATUSES = lifecycleStatusEnum.enumValues;
 export type LifecycleStatus = (typeof LIFECYCLE_STATUSES)[number];
 
-/** All possible status values across all entities (for StatusPill, etc.) */
-export const ALL_STATUSES = ['draft', 'published', 'scheduled', 'live', 'ended', 'archived'] as const;
-export type AnyStatus = (typeof ALL_STATUSES)[number];
-
-// ─── Helpers: which statuses count as "visible" on the storefront ─
+export type AnyStatus = SimpleStatus | LifecycleStatus;
+export const ALL_STATUSES: readonly AnyStatus[] = [
+  ...new Set<AnyStatus>([...SIMPLE_STATUSES, ...LIFECYCLE_STATUSES]),
+];
 
 export const VISIBLE_SIMPLE_STATUSES: readonly SimpleStatus[] = ['published'] as const;
 export const VISIBLE_LIFECYCLE_STATUSES: readonly LifecycleStatus[] = ['live', 'scheduled'] as const;
 
-// ─── Category ────────────────────────────────────────────────────
+// ─── Entity-specific aliases ─────────────────────────────────────
 
 export const CATEGORY_STATUSES = SIMPLE_STATUSES;
 export type CategoryStatus = SimpleStatus;
 
-// ─── Product ─────────────────────────────────────────────────────
-
 export const PRODUCT_STATUSES = SIMPLE_STATUSES;
 export type ProductStatus = SimpleStatus;
 
-export const STOCK_STATUSES = ['in_stock', 'low_stock', 'made_to_order', 'out_of_stock'] as const;
+export const STOCK_STATUSES = stockStatusEnum.enumValues;
 export type StockStatus = (typeof STOCK_STATUSES)[number];
-
-// ─── Collection ──────────────────────────────────────────────────
 
 export const COLLECTION_STATUSES = LIFECYCLE_STATUSES;
 export type CollectionStatus = LifecycleStatus;
 
-// ─── Campaign ────────────────────────────────────────────────────
-
 export const CAMPAIGN_STATUSES = LIFECYCLE_STATUSES;
 export type CampaignStatus = LifecycleStatus;
-
-// ─── Banner ──────────────────────────────────────────────────────
 
 export const BANNER_STATUSES = SIMPLE_STATUSES;
 export type BannerStatus = SimpleStatus;
 
-export const BANNER_PLACEMENTS = ['hero', 'sidebar', 'inline', 'category_hero', 'collection_hero'] as const;
+export const BANNER_PLACEMENTS = bannerPlacementEnum.enumValues;
 export type BannerPlacement = (typeof BANNER_PLACEMENTS)[number];
-
-// ─── Page ────────────────────────────────────────────────────────
 
 export const PAGE_STATUSES = SIMPLE_STATUSES;
 export type PageStatus = SimpleStatus;
 
-export const PAGE_TYPES = ['static', 'story', 'landing'] as const;
+export const PAGE_TYPES = pageTypeEnum.enumValues;
 export type PageType = (typeof PAGE_TYPES)[number];
 
-// ─── Page Sections ───────────────────────────────────────────────
-
-export const SECTION_TYPES = ['hero', 'richtext', 'image_text', 'product_grid', 'quote', 'cta', 'gallery', 'testimonial'] as const;
+export const SECTION_TYPES = sectionTypeEnum.enumValues;
 export type SectionType = (typeof SECTION_TYPES)[number];
 
-export const IMAGE_TEXT_LAYOUTS = ['image_left', 'image_right'] as const;
+export const IMAGE_TEXT_LAYOUTS = imageTextLayoutEnum.enumValues;
 export type ImageTextLayout = (typeof IMAGE_TEXT_LAYOUTS)[number];
-
-// ─── Testimonial ─────────────────────────────────────────────────
 
 export const TESTIMONIAL_STATUSES = SIMPLE_STATUSES;
 export type TestimonialStatus = SimpleStatus;
 
-export const TESTIMONIAL_SOURCES = ['anecdotal', 'google', 'instagram', 'facebook', 'whatsapp', 'email', 'youtube', 'trustpilot'] as const;
+export const TESTIMONIAL_SOURCES = testimonialSourceEnum.enumValues;
 export type TestimonialSource = (typeof TESTIMONIAL_SOURCES)[number];
 
 // ─── UI label maps ───────────────────────────────────────────────

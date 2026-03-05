@@ -1,6 +1,8 @@
 import { setRequestLocale } from 'next-intl/server';
 import { getTranslations }  from 'next-intl/server';
 import { getPublishedCategories } from '@/actions/categories';
+import { getAllBanners } from '@/actions/banners';
+import { BannerDisplay } from '@/components/storefront/BannerDisplay';
 import type { Metadata }    from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -32,12 +34,17 @@ export default async function CategoriesPage({ params }: Props) {
   setRequestLocale(locale);
 
   let categories: Awaited<ReturnType<typeof getPublishedCategories>> = [];
+  let banners: Awaited<ReturnType<typeof getAllBanners>> = [];
   try {
-    categories = await getPublishedCategories();
+    [categories, banners] = await Promise.all([
+      getPublishedCategories(),
+      getAllBanners(),
+    ]);
   } catch {
     // dev fallback
   }
 
+  const categoryBanners = banners.filter(b => b.placement === 'category_hero' && b.status === 'published');
   const isBn = locale === 'bn';
 
   return (
@@ -52,6 +59,14 @@ export default async function CategoriesPage({ params }: Props) {
             : 'Browse our diverse range of traditional weaves and artisanal craftsmanship.'}
         </p>
       </header>
+
+      {categoryBanners.length > 0 && (
+        <div className="mb-12 md:mb-16">
+          {categoryBanners.map(banner => (
+            <BannerDisplay key={banner.id} banner={banner} locale={locale} />
+          ))}
+        </div>
+      )}
 
       {categories.length === 0 ? (
         <div className="text-center py-20 text-bengal-kajal/50">
@@ -71,7 +86,7 @@ export default async function CategoriesPage({ params }: Props) {
                 href={`/${locale}/category/${category.slug}`}
                 className="group block"
               >
-                <div className={`relative aspect-3/4 rounded-2xl overflow-hidden mb-4 ${coverImage ? 'bg-bengal-mati' : fallbackBg}`}>
+                <div className={`relative aspect-[3/4] rounded-2xl overflow-hidden mb-4 ${coverImage ? 'bg-bengal-mati' : fallbackBg}`}>
                   {coverImage ? (
                     <Image
                       src={coverImage}

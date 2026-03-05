@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
-import { useRef, useEffect, useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -45,26 +45,6 @@ export function HeroSection() {
   const { scrollY } = useScroll();
   const yText = useTransform(scrollY, [0, 600], [0, -30]);
 
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const springConfig = { stiffness: 80, damping: 25, mass: 0.8 };
-  const rotateX = useSpring(useTransform(mouseY, [-400, 400], [8, -8]), springConfig);
-  const rotateY = useSpring(useTransform(mouseX, [-500, 500], [-12, 12]), springConfig);
-
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    mouseX.set(e.clientX - rect.left - rect.width / 2);
-    mouseY.set(e.clientY - rect.top - rect.height / 2);
-  };
-
-  const handleMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
-
   return (
     <section
       ref={containerRef}
@@ -79,7 +59,7 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 w-full max-w-[1800px] mx-auto px-5 sm:px-6 md:px-8 lg:px-[6%] xl:px-[8%]">
-        <div className="flex flex-col lg:flex-row lg:items-center min-h-[100svh] pt-[140px] sm:pt-[160px] lg:pt-[140px] pb-12 lg:pb-0 gap-8 lg:gap-0">
+        <div className="flex flex-col lg:flex-row lg:items-center min-h-svh pt-[140px] sm:pt-[160px] lg:pt-[140px] pb-12 lg:pb-0 gap-8 lg:gap-0">
 
           {/* ── TYPOGRAPHY (unchanged) ── */}
           <motion.div
@@ -157,7 +137,7 @@ export function HeroSection() {
                 <span className="relative z-10 group-hover:text-primary-foreground transition-colors duration-500">{t('cta_shop')}</span>
               </Link>
               <Link
-                href={`/${locale}#story`}
+                href={`/${locale}/stories`}
                 className="group flex items-center gap-2 text-[10px] md:text-[11px] tracking-[0.2em] uppercase text-foreground/70 hover:text-primary transition-colors font-medium py-2 pointer-events-auto"
               >
                 <span className="relative pb-0.5">
@@ -168,203 +148,119 @@ export function HeroSection() {
             </motion.div>
           </motion.div>
 
-          {/* ── MOBILE COLLAGE ── */}
-          <div className="w-full lg:hidden relative z-10 order-1 flex justify-center pt-2">
-            <div className="relative w-full max-w-[380px] aspect-[3/4]" style={{ perspective: '600px' }}>
-              {/* Back card */}
+          {/* ── MOBILE COLLAGE — Editorial Scattered Grid ── */}
+          <div className="w-full lg:hidden relative z-10 order-1 pt-6 pb-2">
+            <div className="relative w-full max-w-[420px] mx-auto aspect-4/5 p-2">
+              {/* Main Image (Bottom Left) */}
               <motion.div
-                initial={{ opacity: 0, y: 60 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
-                className="absolute top-0 right-0 w-[75%] h-[80%] rounded-2xl overflow-hidden shadow-xl"
-                style={{ transform: 'rotateY(-4deg) rotateX(2deg)' }}
-              >
-                <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card2.pos }} sizes="60vw" />
-              </motion.div>
-              {/* Front card */}
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.25, ease: EASE }}
-                className="absolute bottom-0 left-0 w-[72%] h-[78%] rounded-2xl overflow-hidden shadow-2xl border-2 border-background z-10"
-                style={{ transform: 'rotateY(3deg) rotateX(-1deg)' }}
+                className="absolute bottom-2 left-2 w-[65%] h-[75%] rounded-4xl overflow-hidden shadow-xl border-[6px] border-background z-20 group bg-muted"
               >
                 <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card1.pos }} sizes="60vw" />
               </motion.div>
-              {/* Small accent */}
+
+              {/* Top Right Image */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.25, ease: EASE }}
+                className="absolute top-2 right-2 w-[50%] h-[60%] rounded-3xl overflow-hidden shadow-lg border-[6px] border-background z-10 group bg-muted"
+              >
+                <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card2.pos }} sizes="45vw" />
+              </motion.div>
+
+              {/* Bottom Right Image */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4, ease: EASE }}
+                className="absolute bottom-[10%] right-2 w-[35%] h-[35%] rounded-2xl overflow-hidden shadow-2xl border-4 border-background z-30 group bg-muted"
+              >
+                <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill className="object-cover" style={{ objectPosition: IMAGES.card3.pos }} sizes="40vw" />
+              </motion.div>
+
+              {/* Floating Badge / Separator */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.5, type: 'spring', bounce: 0.3 }}
-                className="absolute bottom-[5%] right-[2%] w-[35%] aspect-square rounded-xl overflow-hidden shadow-lg border-2 border-background z-20"
-                style={{ transform: 'rotateY(6deg) rotateX(-3deg)' }}
-              >
-                <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill className="object-cover" style={{ objectPosition: IMAGES.card3.pos }} sizes="30vw" />
-              </motion.div>
-              {/* Badge */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.7, duration: 0.5 }}
-                className="absolute top-[8%] left-[5%] z-30 bg-background/90 backdrop-blur-xl px-4 py-2 rounded-full border border-border/40 shadow-md"
+                transition={{ duration: 0.6, delay: 0.6, type: 'spring' }}
+                className="absolute top-[50%] left-[55%] z-40 bg-background/95 backdrop-blur-md px-4 py-2 rounded-full border border-border shadow-md"
               >
                 <span className="text-[8px] tracking-[0.25em] uppercase text-primary font-sans-en font-bold">Handwoven</span>
               </motion.div>
             </div>
           </div>
 
-          {/* ── DESKTOP COLLAGE — 3D Fanned Card Stack ── */}
-          <div
-            className="hidden lg:flex w-[58%] h-[88vh] relative z-10 order-2 items-center justify-center"
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-          >
-            <motion.div
-              style={{
-                rotateX: mounted ? rotateX : 0,
-                rotateY: mounted ? rotateY : 0,
-                transformStyle: 'preserve-3d',
-                perspective: '1400px',
-              }}
-              className="relative w-full h-full"
-            >
-              {/* ─── CARD 5 (deepest, back-right) ─── */}
+          {/* ── DESKTOP COLLAGE — Magazine Cover Orchestration ── */}
+          <div className="hidden lg:block w-[58%] h-full relative z-10 order-2 pt-12 pb-16 pl-12 pr-6">
+            <div className="relative w-full h-[82vh] max-h-[850px] p-4">
+              
+              {/* Back Left (Subtle Texture) */}
               <motion.div
-                initial={{ opacity: 0, z: -200, rotateY: 15 }}
-                animate={{ opacity: 1, z: 0, rotateY: 0 }}
-                transition={{ duration: 1.4, delay: 0, ease: EASE }}
-                className="absolute will-change-transform"
-                style={{
-                  top: '8%', right: '0%',
-                  width: '42%', height: '55%',
-                  transform: 'translateZ(-120px) rotateY(-6deg) rotateX(2deg)',
-                  transformStyle: 'preserve-3d',
-                }}
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1.2, delay: 0.1, ease: EASE }}
+                className="absolute top-[8%] left-[2%] w-[38%] h-[55%] rounded-4xl overflow-hidden shadow-md border-8 border-background z-0 group bg-muted"
               >
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-[0_30px_80px_-20px_rgba(0,0,0,0.25)] dark:shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)] group">
-                  <Image src={IMAGES.card5.src} alt={IMAGES.card5.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card5.pos }} sizes="24vw" />
-                  <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
-                </div>
+                <Image src={IMAGES.card5.src} alt={IMAGES.card5.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card5.pos }} sizes="20vw" />
               </motion.div>
 
-              {/* ─── CARD 4 (mid-back, left) ─── */}
+              {/* Main Center-Left (Hero) */}
               <motion.div
-                initial={{ opacity: 0, z: -150, rotateY: -10 }}
-                animate={{ opacity: 1, z: 0, rotateY: 0 }}
-                transition={{ duration: 1.3, delay: 0.1, ease: EASE }}
-                className="absolute will-change-transform"
-                style={{
-                  top: '2%', left: '0%',
-                  width: '38%', height: '58%',
-                  transform: 'translateZ(-60px) rotateY(5deg) rotateX(1deg)',
-                  transformStyle: 'preserve-3d',
-                }}
-              >
-                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-[0_35px_80px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_35px_80px_-15px_rgba(0,0,0,0.55)] group">
-                  <Image src={IMAGES.card4.src} alt={IMAGES.card4.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card4.pos }} sizes="22vw" />
-                  <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
-                </div>
-              </motion.div>
-
-              {/* ─── CARD 2 (mid-front, right-center) ─── */}
-              <motion.div
-                initial={{ opacity: 0, y: 60, rotateY: -8 }}
-                animate={{ opacity: 1, y: 0, rotateY: 0 }}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, delay: 0.2, ease: EASE }}
-                className="absolute will-change-transform"
-                style={{
-                  top: '12%', right: '8%',
-                  width: '48%', height: '72%',
-                  transform: 'translateZ(20px) rotateY(-3deg) rotateX(1deg)',
-                  transformStyle: 'preserve-3d',
-                }}
+                className="absolute bottom-[2%] left-[12%] w-[45%] h-[75%] rounded-[2.5rem] overflow-hidden shadow-2xl border-10 border-background z-20 group bg-muted"
               >
-                <div className="relative w-full h-full rounded-[1.25rem] overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.35)] dark:shadow-[0_40px_100px_-20px_rgba(0,0,0,0.6)] group">
-                  <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card2.pos }} sizes="28vw" />
-                  <div className="absolute inset-0 bg-linear-to-t from-black/25 via-transparent to-transparent" />
-                </div>
+                <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority className="object-cover transition-transform duration-[2s] group-hover:scale-[1.03]" style={{ objectPosition: IMAGES.card1.pos }} sizes="30vw" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/10 to-transparent" />
               </motion.div>
 
-              {/* ─── CARD 1 (front-most, dominant, left-center) ─── */}
+              {/* Top Right (Secondary Story) */}
               <motion.div
-                initial={{ opacity: 0, y: 80, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 1.3, delay: 0.3, ease: EASE }}
-                className="absolute will-change-transform"
-                style={{
-                  top: '5%', left: '8%',
-                  width: '52%', height: '80%',
-                  transform: 'translateZ(80px) rotateY(4deg) rotateX(-1deg)',
-                  transformStyle: 'preserve-3d',
-                }}
+                initial={{ opacity: 0, y: -30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.2, delay: 0.3, ease: EASE }}
+                className="absolute top-[2%] right-[5%] w-[42%] h-[60%] rounded-4xl overflow-hidden shadow-xl border-8 border-background z-10 group bg-muted"
               >
-                <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden shadow-[0_50px_120px_-25px_rgba(0,0,0,0.4)] dark:shadow-[0_50px_120px_-25px_rgba(0,0,0,0.65)] group">
-                  <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority className="object-cover transition-transform duration-[2.5s] group-hover:scale-[1.04]" style={{ objectPosition: IMAGES.card1.pos }} sizes="30vw" />
-                  <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent" />
-                  {/* Subtle brand watermark */}
-                  <div className="absolute bottom-4 left-5 z-10">
-                    <span className="text-[9px] tracking-[0.35em] uppercase text-white/40 font-sans-en font-medium">
-                      Womaniya
-                    </span>
-                  </div>
-                </div>
+                <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card2.pos }} sizes="25vw" />
               </motion.div>
 
-              {/* ─── CARD 3 (small, bottom-right, popping forward) ─── */}
+              {/* Bottom Right (Detail Accent) */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.7, y: 40 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 0.9, delay: 0.5, type: 'spring', bounce: 0.25 }}
-                className="absolute will-change-transform"
-                style={{
-                  bottom: '2%', right: '2%',
-                  width: '30%', height: '38%',
-                  transform: 'translateZ(140px) rotateY(-7deg) rotateX(3deg)',
-                  transformStyle: 'preserve-3d',
-                }}
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1.2, delay: 0.4, ease: EASE }}
+                className="absolute bottom-[8%] right-[2%] w-[35%] h-[45%] rounded-3xl overflow-hidden shadow-lg border-8 border-background z-10 group bg-muted"
               >
-                <div className="relative w-full h-full rounded-xl overflow-hidden shadow-[0_35px_90px_-15px_rgba(0,0,0,0.35)] dark:shadow-[0_35px_90px_-15px_rgba(0,0,0,0.6)] group">
-                  <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card3.pos }} sizes="18vw" />
-                  <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
-                </div>
+                <Image src={IMAGES.card4.src} alt={IMAGES.card4.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card4.pos }} sizes="20vw" />
               </motion.div>
 
-              {/* ─── Floating badge ─── */}
+              {/* Small Floating Overlap (Front Right) */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.6 }}
+                initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.0, duration: 0.7, type: 'spring', bounce: 0.35 }}
-                className="absolute z-50"
-                style={{
-                  bottom: '35%', left: '38%',
-                  transform: 'translateZ(180px) rotate(-8deg)',
-                  transformStyle: 'preserve-3d',
-                }}
+                transition={{ duration: 0.8, delay: 0.6, type: 'spring', bounce: 0.3 }}
+                className="absolute bottom-[28%] right-[32%] w-[22%] aspect-4/5 rounded-[1.25rem] overflow-hidden shadow-2xl border-[6px] border-background z-30 group bg-muted"
               >
-                <div className="bg-background/90 backdrop-blur-xl px-5 py-2.5 rounded-full border border-border/40 shadow-[0_12px_40px_-8px_rgba(0,0,0,0.2)] dark:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.45)]">
-                  <span className="text-[9px] tracking-[0.3em] uppercase text-primary font-sans-en font-bold">
-                    Handwoven
-                  </span>
-                </div>
+                <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card3.pos }} sizes="15vw" />
               </motion.div>
 
-              {/* ─── Decorative line accent ─── */}
+              {/* Editorial Separator Badge */}
               <motion.div
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ delay: 0.8, duration: 1.2, ease: EASE }}
-                className="absolute bottom-[18%] left-[5%] w-[25%] h-px bg-primary/15 origin-left pointer-events-none"
-                style={{ transform: 'translateZ(40px)' }}
-              />
-              <motion.div
-                initial={{ scaleY: 0 }}
-                animate={{ scaleY: 1 }}
-                transition={{ delay: 0.9, duration: 1.0, ease: EASE }}
-                className="absolute top-[15%] right-[5%] w-px h-[20%] bg-primary/15 origin-top pointer-events-none"
-                style={{ transform: 'translateZ(40px)' }}
-              />
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 0.8 }}
+                className="absolute top-[48%] left-[52%] z-30 bg-background/95 backdrop-blur-md px-6 py-2.5 rounded-full border border-border shadow-md flex items-center gap-3"
+              >
+                <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                <span className="text-[10px] tracking-[0.3em] uppercase text-foreground font-sans-en font-bold">The Edit</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+              </motion.div>
 
-            </motion.div>
+            </div>
           </div>
 
         </div>

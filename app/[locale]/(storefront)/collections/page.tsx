@@ -1,6 +1,8 @@
 import { setRequestLocale } from 'next-intl/server';
 import { getTranslations }  from 'next-intl/server';
 import { getPublishedCollections } from '@/actions/collections';
+import { getAllBanners } from '@/actions/banners';
+import { BannerDisplay } from '@/components/storefront/BannerDisplay';
 import type { Metadata }    from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -23,12 +25,17 @@ export default async function CollectionsPage({ params }: Props) {
   setRequestLocale(locale);
 
   let collections: Awaited<ReturnType<typeof getPublishedCollections>> = [];
+  let banners: Awaited<ReturnType<typeof getAllBanners>> = [];
   try {
-    collections = await getPublishedCollections();
+    [collections, banners] = await Promise.all([
+      getPublishedCollections(),
+      getAllBanners(),
+    ]);
   } catch {
     // dev fallback
   }
 
+  const collectionBanners = banners.filter(b => b.placement === 'collection_hero' && b.status === 'published');
   const isBn = locale === 'bn';
 
   return (
@@ -43,6 +50,14 @@ export default async function CollectionsPage({ params }: Props) {
               : 'Curated stories woven in thread, celebrating the living heritage of Bengal and beyond.'}
           </p>
         </header>
+
+        {collectionBanners.length > 0 && (
+          <div className="mb-12 md:mb-16">
+            {collectionBanners.map(banner => (
+              <BannerDisplay key={banner.id} banner={banner} locale={locale} />
+            ))}
+          </div>
+        )}
 
         {collections.length === 0 ? (
           <div className="text-center py-20 text-bengal-kajal/50">

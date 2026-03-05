@@ -1,5 +1,6 @@
 import {
   pgTable,
+  pgEnum,
   serial,
   text,
   numeric,
@@ -10,6 +11,19 @@ import {
   primaryKey,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
+
+// ─── Enum definitions (single source of truth) ──────────────────
+// These create real Postgres ENUM types and are the authority for
+// all status/type values used across the entire codebase.
+
+export const simpleStatusEnum = pgEnum('simple_status', ['draft', 'published', 'archived']);
+export const lifecycleStatusEnum = pgEnum('lifecycle_status', ['draft', 'scheduled', 'live', 'ended', 'archived']);
+export const stockStatusEnum = pgEnum('stock_status', ['in_stock', 'low_stock', 'made_to_order', 'out_of_stock']);
+export const bannerPlacementEnum = pgEnum('banner_placement', ['hero', 'sidebar', 'inline', 'category_hero', 'collection_hero']);
+export const pageTypeEnum = pgEnum('page_type', ['static', 'story', 'landing']);
+export const sectionTypeEnum = pgEnum('section_type', ['hero', 'richtext', 'image_text', 'product_grid', 'quote', 'cta', 'gallery', 'testimonial']);
+export const imageTextLayoutEnum = pgEnum('image_text_layout', ['image_left', 'image_right']);
+export const testimonialSourceEnum = pgEnum('testimonial_source', ['anecdotal', 'google', 'instagram', 'facebook', 'whatsapp', 'email', 'youtube', 'trustpilot']);
 
 // ─── Categories ──────────────────────────────────────────────────
 export const categories = pgTable('categories', {
@@ -26,7 +40,7 @@ export const categories = pgTable('categories', {
   seo_description_en: text('seo_description_en'),
   seo_description_bn: text('seo_description_bn'),
   sort_order:         integer('sort_order').default(0),
-  status:             text('status').default('draft').notNull(),
+  status:             simpleStatusEnum('status').default('draft').notNull(),
   created_at:         timestamp('created_at').defaultNow(),
   updated_at:         timestamp('updated_at').defaultNow(),
 });
@@ -53,10 +67,10 @@ export const products = pgTable('products', {
   care_instructions:  text('care_instructions'),
   origin:             text('origin'),
   sku:                text('sku'),
-  stock_status:       text('stock_status').default('in_stock').notNull(),
+  stock_status:       stockStatusEnum('stock_status').default('in_stock').notNull(),
   delivery_info:      text('delivery_info'),
   is_featured:        boolean('is_featured').default(false),
-  status:             text('status').default('published').notNull(),
+  status:             simpleStatusEnum('status').default('published').notNull(),
   seo_title_en:       text('seo_title_en'),
   seo_description_en: text('seo_description_en'),
   created_at:         timestamp('created_at').defaultNow(),
@@ -92,7 +106,7 @@ export const collections = pgTable('collections', {
   carousel_images:    jsonb('carousel_images').$type<string[]>().default([]),
   launch_date:        timestamp('launch_date'),
   end_date:           timestamp('end_date'),
-  status:             text('status').default('draft').notNull(),
+  status:             lifecycleStatusEnum('status').default('draft').notNull(),
   is_featured:        boolean('is_featured').default(false),
   seo_title_en:       text('seo_title_en'),
   seo_title_bn:       text('seo_title_bn'),
@@ -127,7 +141,7 @@ export const campaigns = pgTable('campaigns', {
   description_bn:        text('description_bn'),
   starts_at:             timestamp('starts_at'),
   ends_at:               timestamp('ends_at'),
-  status:                text('status').default('draft').notNull(),
+  status:                lifecycleStatusEnum('status').default('draft').notNull(),
   announcement_text_en:  text('announcement_text_en'),
   announcement_text_bn:  text('announcement_text_bn'),
   cta_url:               text('cta_url'),
@@ -144,7 +158,7 @@ export const banners = pgTable('banners', {
   campaign_id:      integer('campaign_id'),
   collection_id:    integer('collection_id'),
   category_id:      integer('category_id'),
-  placement:        text('placement').notNull(),
+  placement:        bannerPlacementEnum('placement').notNull(),
   images:           jsonb('images').$type<string[]>().default([]),
   image_url:        text('image_url'),
   image_url_mobile: text('image_url_mobile'),
@@ -156,7 +170,7 @@ export const banners = pgTable('banners', {
   cta_text_bn:      text('cta_text_bn'),
   cta_url:          text('cta_url'),
   sort_order:       integer('sort_order').default(0),
-  status:           text('status').default('draft').notNull(),
+  status:           simpleStatusEnum('status').default('draft').notNull(),
   starts_at:        timestamp('starts_at'),
   ends_at:          timestamp('ends_at'),
   created_at:       timestamp('created_at').defaultNow(),
@@ -171,10 +185,10 @@ export const pages = pgTable('pages', {
   slug:               text('slug').unique().notNull(),
   title_en:           text('title_en').notNull(),
   title_bn:           text('title_bn'),
-  page_type:          text('page_type').default('static').notNull(),
+  page_type:          pageTypeEnum('page_type').default('static').notNull(),
   images:             jsonb('images').$type<string[]>().default([]),
   hero_image_url:     text('hero_image_url'),
-  status:             text('status').default('draft').notNull(),
+  status:             simpleStatusEnum('status').default('draft').notNull(),
   published_at:       timestamp('published_at'),
   seo_title_en:       text('seo_title_en'),
   seo_title_bn:       text('seo_title_bn'),
@@ -191,7 +205,7 @@ export type NewPage = typeof pages.$inferInsert;
 export const pageSections = pgTable('page_sections', {
   id:           serial('id').primaryKey(),
   page_id:      integer('page_id').notNull(),
-  section_type: text('section_type').notNull(),
+  section_type: sectionTypeEnum('section_type').notNull(),
   content_json: jsonb('content_json'),
   sort_order:   integer('sort_order').default(0),
 });
@@ -293,11 +307,11 @@ export const testimonials = pgTable('testimonials', {
   author_name:  text('author_name').notNull(),
   author_title: text('author_title'),
   author_image_url: text('author_image_url'),
-  source:       text('source').default('anecdotal').notNull(),
+  source:       testimonialSourceEnum('source').default('anecdotal').notNull(),
   source_url:   text('source_url'),
   rating:       integer('rating'),
   sort_order:   integer('sort_order').default(0),
-  status:       text('status').default('published').notNull(),
+  status:       simpleStatusEnum('status').default('published').notNull(),
   created_at:   timestamp('created_at').defaultNow(),
   updated_at:   timestamp('updated_at').defaultNow(),
 });
