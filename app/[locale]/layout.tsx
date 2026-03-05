@@ -128,7 +128,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         </Providers>
         <Analytics />
         <SpeedInsights />
-        <VercelToolbar />
+        {process.env.NODE_ENV === 'development' && <VercelToolbar />}
       </body>
     </html>
   );
