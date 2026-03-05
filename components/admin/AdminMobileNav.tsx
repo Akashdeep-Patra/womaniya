@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import {
   LayoutDashboard, Package, PlusCircle, FileText, MoreHorizontal,
-  Tags, FolderOpen, Megaphone, Flag, Image as ImageIcon, BookOpen, Settings, Quote,
+  Tags, FolderOpen, Megaphone, Flag, Image as ImageIcon, BookOpen, Settings, Quote, Type,
 } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -32,6 +32,7 @@ export function AdminMobileNav({ locale }: { locale: string }) {
     { href: `${base}/collections`, label: 'Collections', icon: FolderOpen },
     { href: `${base}/campaigns`, label: 'Campaigns', icon: Megaphone },
     { href: `${base}/banners`, label: 'Banners', icon: Flag },
+    { href: `${base}/content`, label: 'Site Copy', icon: Type },
     { href: `${base}/stories`, label: 'Stories', icon: BookOpen },
     { href: `${base}/testimonials`, label: 'Testimonials', icon: Quote },
     { href: `${base}/media`, label: 'Media', icon: ImageIcon },

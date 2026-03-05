@@ -9,6 +9,7 @@ import {
   integer,
   jsonb,
   primaryKey,
+  uniqueIndex,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
@@ -328,6 +329,21 @@ export const settings = pgTable('settings', {
 
 export type Setting = typeof settings.$inferSelect;
 export type NewSetting = typeof settings.$inferInsert;
+
+// ─── Content Overrides ──────────────────────────────────────────────
+export const contentOverrides = pgTable('content_overrides', {
+  id:         serial('id').primaryKey(),
+  locale:     text('locale').notNull(),
+  namespace:  text('namespace').notNull(),
+  key:        text('key').notNull(),
+  value:      text('value').notNull(),
+  updated_at: timestamp('updated_at').defaultNow(),
+}, (t) => [
+  uniqueIndex('content_overrides_locale_ns_key').on(t.locale, t.namespace, t.key),
+]);
+
+export type ContentOverride    = typeof contentOverrides.$inferSelect;
+export type NewContentOverride = typeof contentOverrides.$inferInsert;
 
 // ─── Admins ────────────────────────────────────────────────────────
 export const admins = pgTable('admins', {

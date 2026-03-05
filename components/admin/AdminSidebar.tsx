@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import {
   LayoutDashboard, Package, Tags, FolderOpen, Megaphone,
   Image as ImageIcon, FileText, BookOpen, Settings, Flag,
-  PanelLeftClose, PanelLeft, Quote,
+  PanelLeftClose, PanelLeft, Quote, Type,
 } from 'lucide-react';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -49,6 +49,7 @@ function getNavGroups(locale: string): NavGroup[] {
     {
       title: 'Content',
       items: [
+        { label: 'Site Copy',    href: `${base}/content`,      icon: Type },
         { label: 'Pages',        href: `${base}/pages`,        icon: FileText },
         { label: 'Stories',      href: `${base}/stories`,      icon: BookOpen },
         { label: 'Testimonials', href: `${base}/testimonials`, icon: Quote },
