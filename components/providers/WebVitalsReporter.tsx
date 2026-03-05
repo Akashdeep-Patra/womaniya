@@ -18,11 +18,11 @@ function getRating(name: string, value: number): 'good' | 'needs-improvement' | 
   return 'poor';
 }
 
-const RATING_COLORS = {
+const RATING_COLORS: Record<string, string> = {
   good: '#0CCE6B',
   'needs-improvement': '#FFA400',
   poor: '#FF4E42',
-} as const;
+};
 
 export function WebVitalsReporter() {
   useReportWebVitals((metric) => {
