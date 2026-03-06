@@ -62,10 +62,12 @@ export function ActivityDropdown() {
     });
   }, []);
 
-  // Poll unread count every 30s
+  // Poll unread count every 30s, pause when tab is hidden
   useEffect(() => {
     fetchUnread();
-    const interval = setInterval(fetchUnread, 30_000);
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') fetchUnread();
+    }, 30_000);
     return () => clearInterval(interval);
   }, [fetchUnread]);
 

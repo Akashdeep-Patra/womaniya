@@ -8,7 +8,7 @@ import { mediaAssets }    from '@/db/schema';
 import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
 import { logger }         from '@/lib/logger';
-import { logActivity }    from './activity-log';
+import { logActivity }    from '@/lib/activity-logger';
 
 const UpdateMediaSchema = z.object({
   alt_en: z.string().max(300).optional(),
@@ -25,8 +25,10 @@ export async function getAllMedia() {
 export async function deleteMedia(id: number) {
   const session = await auth();
   if (!session) throw new Error('Unauthorized');
+  const parsed = z.number().int().positive().safeParse(id);
+  if (!parsed.success) throw new Error('Invalid media ID');
   const asset = await db.query.mediaAssets.findFirst({
-    where: eq(mediaAssets.id, id),
+    where: eq(mediaAssets.id, parsed.data),
     columns: { url: true },
   });
 
@@ -38,9 +40,9 @@ export async function deleteMedia(id: number) {
     }
   }
 
-  await db.delete(mediaAssets).where(eq(mediaAssets.id, id));
+  await db.delete(mediaAssets).where(eq(mediaAssets.id, parsed.data));
 
-  try { await logActivity({ action: 'deleted', entity_type: 'media', entity_id: id, entity_name: asset?.url ? asset.url.split('/').pop() ?? `Media #${id}` : `Media #${id}` }); } catch {}
+  logActivity({ action: 'deleted', entity_type: 'media', entity_id: id, entity_name: asset?.url ? asset.url.split('/').pop() ?? `Media #${id}` : `Media #${id}` }).catch(() => {});
 
   revalidatePath('/');
 }
@@ -67,7 +69,7 @@ export async function updateMediaMetadata(id: number, formData: FormData) {
     tags: data.tags ?? null,
   }).where(eq(mediaAssets.id, id));
 
-  try { await logActivity({ action: 'updated', entity_type: 'media', entity_id: id, entity_name: `Media #${id}` }); } catch {}
+  logActivity({ action: 'updated', entity_type: 'media', entity_id: id, entity_name: `Media #${id}` }).catch(() => {});
 
   revalidatePath('/');
 }

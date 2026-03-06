@@ -7,7 +7,7 @@ import { eq, and } from 'drizzle-orm';
 import { revalidateTag } from 'next/cache';
 import { unstable_cache } from 'next/cache';
 import { logger } from '@/lib/logger';
-import { logActivity } from './activity-log';
+import { logActivity } from '@/lib/activity-logger';
 
 type OverrideMap = Record<string, Record<string, string>>;
 
@@ -57,7 +57,7 @@ export async function saveContentOverrides({
       });
   }
 
-  try { await logActivity({ action: 'updated', entity_type: 'content', entity_name: `${namespace} (${locale})` }); } catch {}
+  logActivity({ action: 'updated', entity_type: 'content', entity_name: `${namespace} (${locale})` }).catch(() => {});
 
   revalidateTag('content-overrides');
 }

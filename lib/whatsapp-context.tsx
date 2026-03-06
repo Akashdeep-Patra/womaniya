@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 
 export type WhatsAppPageContext =
   | { type: 'general' }
@@ -21,8 +21,9 @@ const Context = createContext<WhatsAppCtx>({
 
 export function WhatsAppProvider({ children }: { children: React.ReactNode }) {
   const [pageContext, setPageContext] = useState<WhatsAppPageContext>({ type: 'general' });
+  const value = useMemo(() => ({ pageContext, setPageContext }), [pageContext]);
   return (
-    <Context.Provider value={{ pageContext, setPageContext }}>
+    <Context.Provider value={value}>
       {children}
     </Context.Provider>
   );

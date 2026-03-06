@@ -1,13 +1,13 @@
 'use server';
 import { auth } from '@/auth';
-import { unstable_cache } from 'next/cache';
+import { unstable_cache, revalidateTag } from 'next/cache';
 
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { settings } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '@/lib/logger';
-import { logActivity } from './activity-log';
+import { logActivity } from '@/lib/activity-logger';
 
 const _getSettings = unstable_cache(async () => {
   try {
@@ -47,14 +47,13 @@ export async function updateSettings(data: Record<string, string>) {
     }
   }
 
-  try {
-    await logActivity({
-      action: 'updated',
-      entity_type: 'settings',
-      entity_name: Object.keys(data).join(', '),
-    });
-  } catch { /* logging must not break settings */ }
+  logActivity({
+    action: 'updated',
+    entity_type: 'settings',
+    entity_name: Object.keys(data).join(', '),
+  }).catch(() => {});
 
+  revalidateTag('settings');
   revalidatePath('/');
   revalidatePath('/en');
   revalidatePath('/bn');

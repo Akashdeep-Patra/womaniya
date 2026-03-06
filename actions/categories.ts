@@ -8,7 +8,7 @@ import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
 import { CATEGORY_STATUSES } from '@/db/enums';
 import { logger } from '@/lib/logger';
-import { logActivity } from './activity-log';
+import { logActivity } from '@/lib/activity-logger';
 
 const CategorySchema = z.object({
   name_en:            z.string().min(2).max(120),
@@ -109,7 +109,7 @@ export async function createCategory(formData: FormData) {
     status:             data.status,
   });
 
-  try { await logActivity({ action: 'created', entity_type: 'category', entity_name: data.name_en }); } catch {}
+  logActivity({ action: 'created', entity_type: 'category', entity_name: data.name_en }).catch(() => {});
 
   revalidatePath('/');
 }
@@ -153,7 +153,7 @@ export async function updateCategory(id: number, formData: FormData) {
     updated_at:         new Date(),
   }).where(eq(categories.id, id));
 
-  try { await logActivity({ action: 'updated', entity_type: 'category', entity_id: id, entity_name: data.name_en }); } catch {}
+  logActivity({ action: 'updated', entity_type: 'category', entity_id: id, entity_name: data.name_en }).catch(() => {});
 
   revalidatePath('/');
 }
@@ -161,9 +161,11 @@ export async function updateCategory(id: number, formData: FormData) {
 export async function deleteCategory(id: number) {
   const session = await auth();
   if (!session) throw new Error('Unauthorized');
-  await db.delete(categories).where(eq(categories.id, id));
+  const parsed = z.number().int().positive().safeParse(id);
+  if (!parsed.success) throw new Error('Invalid category ID');
+  await db.delete(categories).where(eq(categories.id, parsed.data));
 
-  try { await logActivity({ action: 'deleted', entity_type: 'category', entity_id: id, entity_name: `Category #${id}` }); } catch {}
+  logActivity({ action: 'deleted', entity_type: 'category', entity_id: id, entity_name: `Category #${id}` }).catch(() => {});
 
   revalidatePath('/');
 }
@@ -171,10 +173,14 @@ export async function deleteCategory(id: number) {
 export async function reorderCategories(orderedIds: number[]) {
   const session = await auth();
   if (!session) throw new Error('Unauthorized');
-  for (let i = 0; i < orderedIds.length; i++) {
+
+  const parsed = z.array(z.number().int().positive()).max(200).safeParse(orderedIds);
+  if (!parsed.success) throw new Error('Invalid category IDs');
+
+  for (let i = 0; i < parsed.data.length; i++) {
     await db.update(categories)
       .set({ sort_order: i })
-      .where(eq(categories.id, orderedIds[i]));
+      .where(eq(categories.id, parsed.data[i]));
   }
   revalidatePath('/');
 }

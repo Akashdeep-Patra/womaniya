@@ -7,7 +7,7 @@ import { banners }        from '@/db/schema';
 import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
 import { BANNER_STATUSES, BANNER_PLACEMENTS } from '@/db/enums';
-import { logActivity } from './activity-log';
+import { logActivity } from '@/lib/activity-logger';
 
 const BannerSchema = z.object({
   campaign_id:      z.coerce.number().optional(),
@@ -91,7 +91,7 @@ export async function createBanner(formData: FormData) {
     ends_at:          data.ends_at ? new Date(data.ends_at) : null,
   });
 
-  try { await logActivity({ action: 'created', entity_type: 'banner', entity_name: data.title_en ?? `${data.placement} banner` }); } catch {}
+  logActivity({ action: 'created', entity_type: 'banner', entity_name: data.title_en ?? `${data.placement} banner` }).catch(() => {});
 
   revalidatePath('/');
 }
@@ -147,7 +147,7 @@ export async function updateBanner(id: number, formData: FormData) {
     ends_at:          data.ends_at ? new Date(data.ends_at) : null,
   }).where(eq(banners.id, id));
 
-  try { await logActivity({ action: 'updated', entity_type: 'banner', entity_id: id, entity_name: data.title_en ?? `${data.placement} banner` }); } catch {}
+  logActivity({ action: 'updated', entity_type: 'banner', entity_id: id, entity_name: data.title_en ?? `${data.placement} banner` }).catch(() => {});
 
   revalidatePath('/');
 }
@@ -155,9 +155,11 @@ export async function updateBanner(id: number, formData: FormData) {
 export async function deleteBanner(id: number) {
   const session = await auth();
   if (!session) throw new Error('Unauthorized');
-  await db.delete(banners).where(eq(banners.id, id));
+  const parsed = z.number().int().positive().safeParse(id);
+  if (!parsed.success) throw new Error('Invalid banner ID');
+  await db.delete(banners).where(eq(banners.id, parsed.data));
 
-  try { await logActivity({ action: 'deleted', entity_type: 'banner', entity_id: id, entity_name: `Banner #${id}` }); } catch {}
+  logActivity({ action: 'deleted', entity_type: 'banner', entity_id: id, entity_name: `Banner #${id}` }).catch(() => {});
 
   revalidatePath('/');
 }

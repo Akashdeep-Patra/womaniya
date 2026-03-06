@@ -8,7 +8,7 @@ import { eq, desc, and, inArray } from 'drizzle-orm';
 import { z }              from 'zod';
 import { PRODUCT_STATUSES, STOCK_STATUSES } from '@/db/enums';
 import { uploadImageToBlob } from './upload';
-import { logActivity } from './activity-log';
+import { logActivity } from '@/lib/activity-logger';
 
 const ProductSchema = z.object({
   name_en:            z.string().min(2).max(120),
@@ -156,7 +156,7 @@ export async function createProduct(formData: FormData) {
     }
   }
 
-  try { await logActivity({ action: 'created', entity_type: 'product', entity_id: product?.id, entity_name: data.name_en }); } catch {}
+  logActivity({ action: 'created', entity_type: 'product', entity_id: product?.id, entity_name: data.name_en }).catch(() => {});
 
   revalidateAll();
 }
@@ -261,7 +261,7 @@ export async function updateProduct(id: number, formData: FormData) {
     }
   }
 
-  try { await logActivity({ action: 'updated', entity_type: 'product', entity_id: id, entity_name: data.name_en }); } catch {}
+  logActivity({ action: 'updated', entity_type: 'product', entity_id: id, entity_name: data.name_en }).catch(() => {});
 
   revalidateAll();
 }
@@ -276,7 +276,7 @@ export async function deleteProduct(id: number) {
   await db.delete(collectionProducts).where(eq(collectionProducts.product_id, parsed.data));
   await db.delete(products).where(eq(products.id, parsed.data));
 
-  try { await logActivity({ action: 'deleted', entity_type: 'product', entity_id: parsed.data, entity_name: `Product #${parsed.data}` }); } catch {}
+  logActivity({ action: 'deleted', entity_type: 'product', entity_id: parsed.data, entity_name: `Product #${parsed.data}` }).catch(() => {});
 
   revalidateAll();
 }

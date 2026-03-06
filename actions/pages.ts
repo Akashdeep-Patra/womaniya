@@ -7,7 +7,7 @@ import { pages, pageSections } from '@/db/schema';
 import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
 import { PAGE_STATUSES, PAGE_TYPES } from '@/db/enums';
-import { logActivity } from './activity-log';
+import { logActivity } from '@/lib/activity-logger';
 
 const PageSchema = z.object({
   title_en:           z.string().min(2).max(120),
@@ -102,7 +102,7 @@ export async function createPage(formData: FormData, sectionsJson: string) {
     }
   }
 
-  try { await logActivity({ action: 'created', entity_type: 'page', entity_id: page?.id, entity_name: data.title_en }); } catch {}
+  logActivity({ action: 'created', entity_type: 'page', entity_id: page?.id, entity_name: data.title_en }).catch(() => {});
 
   revalidatePath('/');
 }
@@ -159,7 +159,7 @@ export async function updatePage(id: number, formData: FormData, sectionsJson: s
     }
   }
 
-  try { await logActivity({ action: 'updated', entity_type: 'page', entity_id: id, entity_name: data.title_en }); } catch {}
+  logActivity({ action: 'updated', entity_type: 'page', entity_id: id, entity_name: data.title_en }).catch(() => {});
 
   revalidatePath('/');
 }
@@ -167,10 +167,12 @@ export async function updatePage(id: number, formData: FormData, sectionsJson: s
 export async function deletePage(id: number) {
   const session = await auth();
   if (!session) throw new Error('Unauthorized');
-  await db.delete(pageSections).where(eq(pageSections.page_id, id));
-  await db.delete(pages).where(eq(pages.id, id));
+  const parsed = z.number().int().positive().safeParse(id);
+  if (!parsed.success) throw new Error('Invalid page ID');
+  await db.delete(pageSections).where(eq(pageSections.page_id, parsed.data));
+  await db.delete(pages).where(eq(pages.id, parsed.data));
 
-  try { await logActivity({ action: 'deleted', entity_type: 'page', entity_id: id, entity_name: `Page #${id}` }); } catch {}
+  logActivity({ action: 'deleted', entity_type: 'page', entity_id: id, entity_name: `Page #${id}` }).catch(() => {});
 
   revalidatePath('/');
 }
