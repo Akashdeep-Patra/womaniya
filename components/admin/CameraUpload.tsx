@@ -35,6 +35,7 @@ const COMPRESSION_OPTIONS = {
   maxWidthOrHeight: 3840,
   useWebWorker: true,
   initialQuality: 0.92,
+  fileType: 'image/webp' as const,
 };
 
 async function compressAndUpload(
