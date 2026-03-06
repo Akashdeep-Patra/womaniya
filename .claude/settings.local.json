@@ -13,7 +13,14 @@
       "Bash(node:*)",
       "Bash(cat:*)",
       "Bash(git add:*)",
-      "Bash(arh:*)"
+      "Bash(arh:*)",
+      "Bash(wc:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm drizzle-kit:*)",
+      "Bash(git status:*)",
+      "Bash(git push:*)",
+      "Bash(git diff:*)",
+      "Bash(vercel domains:*)"
     ]
   }
 }

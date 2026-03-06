@@ -29,8 +29,18 @@ const nextConfig: NextConfig = {
         { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
         { key: 'X-XSS-Protection', value: '1; mode=block' },
         { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-        { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+        { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()' },
         { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+      ],
+    },
+    {
+      // CORS for same-origin API routes (admin uploads, web vitals, media)
+      source: '/api/:path*',
+      headers: [
+        { key: 'Access-Control-Allow-Origin', value: process.env.NEXT_PUBLIC_APP_URL || 'https://womaniyakolkata.in' },
+        { key: 'Access-Control-Allow-Methods', value: 'GET, POST, OPTIONS' },
+        { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization' },
+        { key: 'Access-Control-Max-Age', value: '86400' },
       ],
     },
   ],

@@ -123,22 +123,58 @@ export default async function HomePage({ params }: Props) {
 
   const heroBanners = banners.filter(b => b.placement === 'hero' && b.status === 'published');
 
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://womaniyakolkata.in';
+
   const organizationLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Womaniya',
-    url: 'https://womaniya.in',
-    logo: 'https://womaniya.in/logo.svg',
+    url: baseUrl,
+    logo: `${baseUrl}/logo.svg`,
+    sameAs: [
+      'https://www.instagram.com/womaniya2019/',
+      'https://www.facebook.com/womaniya2019/',
+    ],
+  };
+
+  const localBusinessLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Store',
+    name: 'Womaniya',
+    description: 'Authentic handwoven sarees, blouses & more — Jamdani, Tant, Chanderi, Ikkat, Ajrakh — crafted by master artisans in Kolkata.',
+    url: baseUrl,
+    logo: `${baseUrl}/logo.svg`,
+    image: `${baseUrl}/opengraph-image`,
+    telephone: '+919143161829',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Kolkata',
+      addressRegion: 'West Bengal',
+      addressCountry: 'IN',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 22.5726,
+      longitude: 88.3639,
+    },
+    priceRange: '$$',
+    openingHoursSpecification: {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: '10:00',
+      closes: '20:00',
+    },
   };
 
   const websiteLd = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Womaniya',
-    url: 'https://womaniya.in',
+    url: baseUrl,
+    inLanguage: ['en', 'bn'],
     potentialAction: {
       '@type': 'SearchAction',
-      target: 'https://womaniya.in/shop?q={search_term_string}',
+      target: `${baseUrl}/shop?q={search_term_string}`,
       'query-input': 'required name=search_term_string',
     },
   };
@@ -146,6 +182,7 @@ export default async function HomePage({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }} />
       
       <main id="main-content" className="min-h-screen touch-pan-y">

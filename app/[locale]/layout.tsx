@@ -56,12 +56,20 @@ export const metadata: Metadata = {
   description:
     'Discover exquisite handwoven sarees, blouses & more — Jamdani, Tant, Chanderi, Ikkat, Ajrakh — crafted by master artisans in Kolkata.',
   keywords: ['Womaniya', 'handloom', 'Jamdani saree', 'Tant saree', 'Chanderi blouse', 'Ikkat', 'Ajrakh', 'Kolkata fashion', 'handwoven saree'],
+  // Search engine verification — set env vars after registering with each service
+  ...(process.env.GOOGLE_SITE_VERIFICATION && {
+    verification: {
+      google: process.env.GOOGLE_SITE_VERIFICATION,
+      ...(process.env.BING_SITE_VERIFICATION && { other: { 'msvalidate.01': process.env.BING_SITE_VERIFICATION } }),
+    },
+  }),
   openGraph: {
     siteName: 'Womaniya',
     type: 'website',
     title: 'Womaniya — Authentic Handloom Heritage',
     description: 'Discover exquisite handwoven sarees, blouses & more — Jamdani, Tant, Chanderi, Ikkat, Ajrakh — crafted by master artisans in Kolkata.',
     url: '/',
+    locale: 'en_IN',
     images: [
       {
         url: '/opengraph-image',
@@ -78,6 +86,7 @@ export const metadata: Metadata = {
     description: 'Discover exquisite handwoven sarees, blouses & more — Jamdani, Tant, Chanderi, Ikkat, Ajrakh — crafted by master artisans in Kolkata.',
     images: ['/twitter-image'],
   },
+  category: 'fashion',
 };
 
 export function generateStaticParams() {
