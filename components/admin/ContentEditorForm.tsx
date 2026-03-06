@@ -176,7 +176,7 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
   const sectionDirtyCount = useCallback((ns: string) => dirtyKeys[ns]?.size ?? 0, [dirtyKeys]);
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-8.5rem-env(safe-area-inset-bottom))] lg:h-[calc(100dvh-6rem)]">
+    <div className="flex flex-col">
       {/* Header */}
       <div className="shrink-0 mb-3 sm:mb-4">
         <h1 className="font-sans font-bold tracking-tight text-xl sm:text-2xl lg:text-3xl text-foreground">Site Copy</h1>
@@ -235,10 +235,10 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
         </div>
       </div>
 
-      {/* Body: scrollable editor + fixed preview */}
-      <div className="flex-1 min-h-0 flex gap-4 xl:gap-6">
-        {/* Editor — only this column scrolls */}
-        <div className="flex-1 min-w-0 min-h-0 overflow-y-auto overscroll-contain" role="group" aria-label="Content sections">
+      {/* Body: scrollable editor + sticky preview */}
+      <div className="flex-1 flex gap-4 xl:gap-6 relative items-start">
+        {/* Editor — scrolls naturally with the page */}
+        <div className="flex-1 min-w-0" role="group" aria-label="Content sections">
           <div className="space-y-6 pb-4">
             {filteredPages.length === 0 && (
               <p className="text-sm text-muted-foreground text-center py-8">
@@ -275,8 +275,8 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
           </div>
         </div>
 
-        {/* Preview (xl+ only) — stays in place */}
-        <div className="hidden xl:flex flex-col w-[420px] shrink-0 min-h-0">
+        {/* Preview (xl+ only) — sticky to stay in place while left side scrolls */}
+        <div className="hidden xl:flex flex-col w-[420px] shrink-0 sticky top-4" style={{ height: 'calc(100dvh - 8rem)' }}>
           <div className="flex items-center justify-between mb-2 shrink-0">
             <span className="text-[11px] font-semibold tracking-widest uppercase text-muted-foreground">Preview</span>
             <div className="flex items-center gap-0.5">
