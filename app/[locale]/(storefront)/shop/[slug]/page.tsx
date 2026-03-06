@@ -72,7 +72,7 @@ export default async function ProductPage({ params }: Props) {
   const allImages = [
     { id: 'primary', image_url: product.image_url, alt_en: product.name_en },
     ...additionalImages
-  ];
+  ].filter(img => img && img.image_url && typeof img.image_url === 'string' && img.image_url.trim() !== '');
 
   const name = isBn && product.name_bn ? product.name_bn : product.name_en;
   const desc = isBn && product.description_bn ? product.description_bn : product.description_en;

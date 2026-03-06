@@ -57,7 +57,7 @@ export function ProductImageCarousel({ images, productName }: ProductImageCarous
     <div className="flex flex-col gap-4 w-full">
       {/* Main Image */}
       <div className="relative aspect-[3/4] md:aspect-[4/5] w-full bg-bengal-kori/50 rounded-2xl md:rounded-3xl overflow-hidden border border-bengal-kansa/20 group">
-        <AnimatePresence initial={false} custom={direction}>
+        <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={currentIndex}
             custom={direction}
@@ -75,9 +75,9 @@ export function ProductImageCarousel({ images, productName }: ProductImageCarous
             onDragEnd={(e, { offset, velocity }) => {
               const swipe = swipePower(offset.x, velocity.x);
 
-              if (swipe < -swipeConfidenceThreshold) {
+              if (swipe < -swipeConfidenceThreshold || offset.x < -50) {
                 paginate(1);
-              } else if (swipe > swipeConfidenceThreshold) {
+              } else if (swipe > swipeConfidenceThreshold || offset.x > 50) {
                 paginate(-1);
               }
             }}
@@ -87,9 +87,10 @@ export function ProductImageCarousel({ images, productName }: ProductImageCarous
               src={images[currentIndex]}
               alt={`${productName} - Image ${currentIndex + 1}`}
               fill
-              className="object-cover"
+              className="object-cover pointer-events-none"
               sizes="(max-width: 768px) 100vw, 50vw"
               priority={currentIndex === 0}
+              draggable={false}
             />
           </motion.div>
         </AnimatePresence>
