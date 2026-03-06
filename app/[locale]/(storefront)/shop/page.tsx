@@ -5,6 +5,7 @@ import { getPublishedProducts } from '@/actions/products';
 import { getPublishedCategories } from '@/actions/categories';
 import { getAllBanners } from '@/actions/banners';
 import type { Metadata }    from 'next';
+import { WhatsAppContextSetter } from '@/lib/whatsapp-context';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -61,8 +62,9 @@ export default async function ShopPage({ params }: Props) {
 
   return (
     <>
+      <WhatsAppContextSetter context={{ type: 'shop' }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
-      <main className="pt-14 md:pt-16">
+      <main id="main-content" className="pt-14 md:pt-16">
         <ShopGrid products={allProducts} categories={dbCategories} banners={banners} />
       </main>
     </>

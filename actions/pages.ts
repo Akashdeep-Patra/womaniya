@@ -1,4 +1,5 @@
 'use server';
+import { auth } from '@/auth';
 
 import { revalidatePath } from 'next/cache';
 import { db }             from '@/lib/db';
@@ -6,6 +7,7 @@ import { pages, pageSections } from '@/db/schema';
 import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
 import { PAGE_STATUSES, PAGE_TYPES } from '@/db/enums';
+import { logActivity } from './activity-log';
 
 const PageSchema = z.object({
   title_en:           z.string().min(2).max(120),
@@ -49,6 +51,8 @@ export async function getPageById(id: number) {
 }
 
 export async function createPage(formData: FormData, sectionsJson: string) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   const imagesRaw = formData.getAll('images') as string[];
   const raw = {
     title_en:           formData.get('title_en') as string,
@@ -98,10 +102,14 @@ export async function createPage(formData: FormData, sectionsJson: string) {
     }
   }
 
+  try { await logActivity({ action: 'created', entity_type: 'page', entity_id: page?.id, entity_name: data.title_en }); } catch {}
+
   revalidatePath('/');
 }
 
 export async function updatePage(id: number, formData: FormData, sectionsJson: string) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   const imagesRaw = formData.getAll('images') as string[];
   const raw = {
     title_en:           formData.get('title_en') as string,
@@ -151,11 +159,18 @@ export async function updatePage(id: number, formData: FormData, sectionsJson: s
     }
   }
 
+  try { await logActivity({ action: 'updated', entity_type: 'page', entity_id: id, entity_name: data.title_en }); } catch {}
+
   revalidatePath('/');
 }
 
 export async function deletePage(id: number) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   await db.delete(pageSections).where(eq(pageSections.page_id, id));
   await db.delete(pages).where(eq(pages.id, id));
+
+  try { await logActivity({ action: 'deleted', entity_type: 'page', entity_id: id, entity_name: `Page #${id}` }); } catch {}
+
   revalidatePath('/');
 }

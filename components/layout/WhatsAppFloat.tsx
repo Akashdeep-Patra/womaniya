@@ -1,9 +1,17 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
-import { useParams, usePathname }               from 'next/navigation';
-import { generalEnquiryUrl }       from '@/lib/whatsapp';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams, usePathname }      from 'next/navigation';
+import {
+  generalEnquiryUrl,
+  productViewUrl,
+  shopBrowsingUrl,
+  categoryEnquiryUrl,
+  aboutPageUrl,
+} from '@/lib/whatsapp';
+import { useWhatsAppContext } from '@/lib/whatsapp-context';
+
 function WAIcon({ size = 20, className }: { size?: number; className?: string }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -16,6 +24,7 @@ export function WhatsAppFloat({ waNumber }: { waNumber?: string }) {
   const params = useParams();
   const pathname = usePathname();
   const locale = params.locale as string;
+  const { pageContext } = useWhatsAppContext();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -23,9 +32,22 @@ export function WhatsAppFloat({ waNumber }: { waNumber?: string }) {
     return () => clearTimeout(t);
   }, []);
 
-  if (pathname?.includes('/admin')) return null;
+  const href = useMemo(() => {
+    switch (pageContext.type) {
+      case 'product':
+        return productViewUrl(pageContext.name, pageContext.price, locale, waNumber);
+      case 'shop':
+        return shopBrowsingUrl(locale, pageContext.category, waNumber);
+      case 'category':
+        return categoryEnquiryUrl(pageContext.name, locale, waNumber);
+      case 'about':
+        return aboutPageUrl(locale, waNumber);
+      default:
+        return generalEnquiryUrl(locale, waNumber);
+    }
+  }, [pageContext, locale, waNumber]);
 
-  const href = generalEnquiryUrl(locale, waNumber);
+  if (pathname?.includes('/admin')) return null;
 
   return (
     <AnimatePresence>

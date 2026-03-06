@@ -1,4 +1,5 @@
 'use server';
+import { auth } from '@/auth';
 
 import { db } from '@/lib/db';
 import { contentOverrides } from '@/db/schema';
@@ -6,6 +7,7 @@ import { eq, and } from 'drizzle-orm';
 import { revalidateTag } from 'next/cache';
 import { unstable_cache } from 'next/cache';
 import { logger } from '@/lib/logger';
+import { logActivity } from './activity-log';
 
 type OverrideMap = Record<string, Record<string, string>>;
 
@@ -43,6 +45,8 @@ export async function saveContentOverrides({
   namespace: string;
   entries: Record<string, string>;
 }) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   for (const [key, value] of Object.entries(entries)) {
     await db
       .insert(contentOverrides)
@@ -52,6 +56,8 @@ export async function saveContentOverrides({
         set: { value, updated_at: new Date() },
       });
   }
+
+  try { await logActivity({ action: 'updated', entity_type: 'content', entity_name: `${namespace} (${locale})` }); } catch {}
 
   revalidateTag('content-overrides');
 }
@@ -65,6 +71,8 @@ export async function resetContentKey({
   namespace: string;
   key: string;
 }) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   await db
     .delete(contentOverrides)
     .where(
@@ -79,6 +87,8 @@ export async function resetContentKey({
 }
 
 export async function resetNamespaceContent(locale: string, namespace: string) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   await db
     .delete(contentOverrides)
     .where(

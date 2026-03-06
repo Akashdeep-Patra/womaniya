@@ -3,11 +3,19 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { recordMediaAsset } from '@/actions/media';
 import { logger } from '@/lib/logger';
+import { ratelimit } from '@/lib/ratelimit';
 
 export async function POST(request: Request): Promise<NextResponse> {
   const session = await auth();
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  if (ratelimit) {
+    const forwarded = request.headers.get('x-forwarded-for');
+    const ip = forwarded?.split(',')[0]?.trim() ?? request.headers.get('x-real-ip') ?? '127.0.0.1';
+    const { success } = await ratelimit.limit(`upload_file_${ip}`);
+    if (!success) return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 
   const formData = await request.formData();
@@ -28,7 +36,8 @@ export async function POST(request: Request): Promise<NextResponse> {
   }
 
   try {
-    const filename = `products/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+    const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_').replace(/\.{2,}/g, '');
+    const filename = `products/${Date.now()}-${safeName || 'upload'}`;
     const blob = await put(filename, file, { access: 'public' });
 
     // Record in media_assets for the library — don't fail the upload if this errors

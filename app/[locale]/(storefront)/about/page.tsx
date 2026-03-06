@@ -11,6 +11,7 @@ import { PaisleyCluster }     from '@/components/illustrations/PaisleyCluster';
 import { JamdaniMotif }       from '@/components/illustrations/JamdaniMotif';
 import { KanthaStitch }       from '@/components/illustrations/KanthaStitch';
 import { getSetting }         from '@/actions/settings';
+import { WhatsAppContextSetter } from '@/lib/whatsapp-context';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -64,7 +65,9 @@ export default async function AboutPage({ params }: Props) {
   ];
 
   return (
-    <main className="pt-28 md:pt-32 pb-32 md:pb-16 min-h-screen">
+    <>
+    <WhatsAppContextSetter context={{ type: 'about' }} />
+    <main id="main-content" className="pt-28 md:pt-32 pb-32 md:pb-16 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
 
           {/* Badge */}
@@ -149,5 +152,6 @@ export default async function AboutPage({ params }: Props) {
 
         <WhatsAppSection waNumber={waNumber} />
       </main>
+    </>
   );
 }

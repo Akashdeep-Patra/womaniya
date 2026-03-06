@@ -345,6 +345,21 @@ export const contentOverrides = pgTable('content_overrides', {
 export type ContentOverride    = typeof contentOverrides.$inferSelect;
 export type NewContentOverride = typeof contentOverrides.$inferInsert;
 
+// ─── Activity Log ───────────────────────────────────────────────────
+export const activityLog = pgTable('activity_log', {
+  id:          serial('id').primaryKey(),
+  action:      text('action').notNull(),       // 'created' | 'updated' | 'deleted'
+  entity_type: text('entity_type').notNull(),  // 'product' | 'category' | etc.
+  entity_id:   integer('entity_id'),
+  entity_name: text('entity_name').notNull(),
+  details:     text('details'),
+  is_read:     boolean('is_read').default(false).notNull(),
+  created_at:  timestamp('created_at').defaultNow(),
+});
+
+export type ActivityLogEntry    = typeof activityLog.$inferSelect;
+export type NewActivityLogEntry = typeof activityLog.$inferInsert;
+
 // ─── Admins ────────────────────────────────────────────────────────
 export const admins = pgTable('admins', {
   id:                 serial('id').primaryKey(),

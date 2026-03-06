@@ -1,4 +1,5 @@
 'use server';
+import { auth } from '@/auth';
 
 import { revalidatePath } from 'next/cache';
 import { db }             from '@/lib/db';
@@ -7,6 +8,7 @@ import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
 import { COLLECTION_STATUSES } from '@/db/enums';
 import { logger } from '@/lib/logger';
+import { logActivity } from './activity-log';
 
 const CollectionSchema = z.object({
   name_en:            z.string().min(2).max(120),
@@ -81,6 +83,8 @@ export async function getCollectionById(id: number) {
 }
 
 export async function createCollection(formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   const carouselRaw = formData.getAll('carousel_images') as string[];
   const raw = {
     name_en:            formData.get('name_en') as string,
@@ -136,10 +140,14 @@ export async function createCollection(formData: FormData) {
     }
   }
 
+  try { await logActivity({ action: 'created', entity_type: 'collection', entity_id: collection?.id, entity_name: data.name_en }); } catch {}
+
   revalidatePath('/');
 }
 
 export async function updateCollection(id: number, formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   const carouselRaw = formData.getAll('carousel_images') as string[];
   const raw = {
     name_en:            formData.get('name_en') as string,
@@ -196,11 +204,18 @@ export async function updateCollection(id: number, formData: FormData) {
     }
   }
 
+  try { await logActivity({ action: 'updated', entity_type: 'collection', entity_id: id, entity_name: data.name_en }); } catch {}
+
   revalidatePath('/');
 }
 
 export async function deleteCollection(id: number) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   await db.delete(collectionProducts).where(eq(collectionProducts.collection_id, id));
   await db.delete(collections).where(eq(collections.id, id));
+
+  try { await logActivity({ action: 'deleted', entity_type: 'collection', entity_id: id, entity_name: `Collection #${id}` }); } catch {}
+
   revalidatePath('/');
 }

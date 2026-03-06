@@ -1,4 +1,5 @@
 'use server';
+import { auth } from '@/auth';
 
 import { revalidatePath } from 'next/cache';
 import { db }             from '@/lib/db';
@@ -7,6 +8,7 @@ import { eq, desc, and, inArray } from 'drizzle-orm';
 import { z }              from 'zod';
 import { PRODUCT_STATUSES, STOCK_STATUSES } from '@/db/enums';
 import { uploadImageToBlob } from './upload';
+import { logActivity } from './activity-log';
 
 const ProductSchema = z.object({
   name_en:            z.string().min(2).max(120),
@@ -49,6 +51,8 @@ function revalidateAll() {
 }
 
 export async function createProduct(formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   const raw = {
     name_en:            formData.get('name_en'),
     name_bn:            formData.get('name_bn') || undefined,
@@ -152,10 +156,14 @@ export async function createProduct(formData: FormData) {
     }
   }
 
+  try { await logActivity({ action: 'created', entity_type: 'product', entity_id: product?.id, entity_name: data.name_en }); } catch {}
+
   revalidateAll();
 }
 
 export async function updateProduct(id: number, formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   const raw = {
     name_en:            formData.get('name_en'),
     name_bn:            formData.get('name_bn') || undefined,
@@ -253,16 +261,22 @@ export async function updateProduct(id: number, formData: FormData) {
     }
   }
 
+  try { await logActivity({ action: 'updated', entity_type: 'product', entity_id: id, entity_name: data.name_en }); } catch {}
+
   revalidateAll();
 }
 
 export async function deleteProduct(id: number) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   const parsed = z.number().int().positive().safeParse(id);
   if (!parsed.success) throw new Error('Invalid product ID');
 
   await db.delete(productImages).where(eq(productImages.product_id, parsed.data));
   await db.delete(collectionProducts).where(eq(collectionProducts.product_id, parsed.data));
   await db.delete(products).where(eq(products.id, parsed.data));
+
+  try { await logActivity({ action: 'deleted', entity_type: 'product', entity_id: parsed.data, entity_name: `Product #${parsed.data}` }); } catch {}
 
   revalidateAll();
 }

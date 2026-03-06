@@ -1,4 +1,5 @@
 'use server';
+import { auth } from '@/auth';
 
 import { revalidatePath } from 'next/cache';
 import { db }             from '@/lib/db';
@@ -6,6 +7,7 @@ import { banners }        from '@/db/schema';
 import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
 import { BANNER_STATUSES, BANNER_PLACEMENTS } from '@/db/enums';
+import { logActivity } from './activity-log';
 
 const BannerSchema = z.object({
   campaign_id:      z.coerce.number().optional(),
@@ -39,6 +41,8 @@ export async function getBannerById(id: number) {
 }
 
 export async function createBanner(formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   const imagesRaw = formData.getAll('images') as string[];
   const raw = {
     campaign_id:      formData.get('campaign_id') || undefined,
@@ -87,10 +91,14 @@ export async function createBanner(formData: FormData) {
     ends_at:          data.ends_at ? new Date(data.ends_at) : null,
   });
 
+  try { await logActivity({ action: 'created', entity_type: 'banner', entity_name: data.title_en ?? `${data.placement} banner` }); } catch {}
+
   revalidatePath('/');
 }
 
 export async function updateBanner(id: number, formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   const imagesRaw = formData.getAll('images') as string[];
   const raw = {
     campaign_id:      formData.get('campaign_id') || undefined,
@@ -139,10 +147,17 @@ export async function updateBanner(id: number, formData: FormData) {
     ends_at:          data.ends_at ? new Date(data.ends_at) : null,
   }).where(eq(banners.id, id));
 
+  try { await logActivity({ action: 'updated', entity_type: 'banner', entity_id: id, entity_name: data.title_en ?? `${data.placement} banner` }); } catch {}
+
   revalidatePath('/');
 }
 
 export async function deleteBanner(id: number) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   await db.delete(banners).where(eq(banners.id, id));
+
+  try { await logActivity({ action: 'deleted', entity_type: 'banner', entity_id: id, entity_name: `Banner #${id}` }); } catch {}
+
   revalidatePath('/');
 }

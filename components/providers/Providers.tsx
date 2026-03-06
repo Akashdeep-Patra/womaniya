@@ -1,12 +1,12 @@
 'use client';
 
-import { MagneticCursor } from '@/components/layout/MagneticCursor';
 import { SmoothScrollProvider } from '@/components/layout/SmoothScrollProvider';
 import { WhatsAppFloat } from '@/components/layout/WhatsAppFloat';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { Toaster } from '@/components/ui/sonner';
 import type { AbstractIntlMessages } from 'next-intl';
 import { NextIntlClientProvider } from 'next-intl';
+import { WhatsAppProvider } from '@/lib/whatsapp-context';
 
 type Props = {
   locale:   string;
@@ -19,8 +19,8 @@ export function Providers({ locale, messages, children, waNumber }: Props) {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
       <NextIntlClientProvider locale={locale} messages={messages} timeZone="Asia/Kolkata">
+        <WhatsAppProvider>
         <SmoothScrollProvider>
-          <MagneticCursor />
           {children}
           <WhatsAppFloat waNumber={waNumber} />
           <Toaster
@@ -32,6 +32,7 @@ export function Providers({ locale, messages, children, waNumber }: Props) {
             }}
           />
         </SmoothScrollProvider>
+        </WhatsAppProvider>
       </NextIntlClientProvider>
     </ThemeProvider>
   );

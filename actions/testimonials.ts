@@ -1,4 +1,5 @@
 'use server';
+import { auth } from '@/auth';
 
 import { revalidatePath } from 'next/cache';
 import { db }             from '@/lib/db';
@@ -6,6 +7,7 @@ import { testimonials }   from '@/db/schema';
 import { eq, asc }        from 'drizzle-orm';
 import { z }              from 'zod';
 import { TESTIMONIAL_SOURCES, TESTIMONIAL_STATUSES } from '@/db/enums';
+import { logActivity } from './activity-log';
 
 const TestimonialSchema = z.object({
   quote_en:         z.string().min(1, 'Quote (EN) is required').max(1000),
@@ -41,6 +43,8 @@ export async function getTestimonialById(id: number) {
 }
 
 export async function createTestimonial(formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   const raw = {
     quote_en:         formData.get('quote_en'),
     quote_bn:         formData.get('quote_bn') || undefined,
@@ -74,10 +78,14 @@ export async function createTestimonial(formData: FormData) {
     status:           data.status,
   });
 
+  try { await logActivity({ action: 'created', entity_type: 'testimonial', entity_name: data.author_name }); } catch {}
+
   revalidatePath('/');
 }
 
 export async function updateTestimonial(id: number, formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   const raw = {
     quote_en:         formData.get('quote_en'),
     quote_bn:         formData.get('quote_bn') || undefined,
@@ -112,10 +120,17 @@ export async function updateTestimonial(id: number, formData: FormData) {
     updated_at:       new Date(),
   }).where(eq(testimonials.id, id));
 
+  try { await logActivity({ action: 'updated', entity_type: 'testimonial', entity_id: id, entity_name: data.author_name }); } catch {}
+
   revalidatePath('/');
 }
 
 export async function deleteTestimonial(id: number) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   await db.delete(testimonials).where(eq(testimonials.id, id));
+
+  try { await logActivity({ action: 'deleted', entity_type: 'testimonial', entity_id: id, entity_name: `Testimonial #${id}` }); } catch {}
+
   revalidatePath('/');
 }

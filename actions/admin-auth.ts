@@ -1,4 +1,5 @@
 'use server';
+import { auth } from '@/auth';
 
 import { db } from '@/lib/db';
 import { admins } from '@/db/schema';
@@ -9,6 +10,7 @@ import nodemailer from 'nodemailer';
 import { logger } from '@/lib/logger';
 
 export async function forgotPasswordAction(email: string) {
+  // No auth check — this is for unauthenticated users who forgot their password
   try {
     // Check if the user is in DB. If they are an ENV-only admin, we must insert them into the DB first.
     let adminUser = await db.select().from(admins).where(eq(admins.email, email)).limit(1).then(res => res[0]);
@@ -68,6 +70,7 @@ export async function forgotPasswordAction(email: string) {
 }
 
 export async function resetPasswordAction(token: string, newPassword: string) {
+  // No auth check — this is for unauthenticated users resetting via a token
   try {
     const adminList = await db.select().from(admins).where(eq(admins.reset_token, token)).limit(1);
     const adminUser = adminList[0];

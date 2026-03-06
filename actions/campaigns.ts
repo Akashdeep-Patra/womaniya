@@ -1,4 +1,5 @@
 'use server';
+import { auth } from '@/auth';
 
 import { revalidatePath } from 'next/cache';
 import { db }             from '@/lib/db';
@@ -6,6 +7,7 @@ import { campaigns }      from '@/db/schema';
 import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
 import { CAMPAIGN_STATUSES } from '@/db/enums';
+import { logActivity } from './activity-log';
 
 const CampaignSchema = z.object({
   name_en:              z.string().min(2).max(120),
@@ -40,6 +42,8 @@ export async function getCampaignById(id: number) {
 }
 
 export async function createCampaign(formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   const raw = {
     name_en:              formData.get('name_en') as string,
     name_bn:              (formData.get('name_bn') as string) || undefined,
@@ -75,10 +79,14 @@ export async function createCampaign(formData: FormData) {
     cta_url:              data.cta_url ?? null,
   });
 
+  try { await logActivity({ action: 'created', entity_type: 'campaign', entity_name: data.name_en }); } catch {}
+
   revalidatePath('/');
 }
 
 export async function updateCampaign(id: number, formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   const raw = {
     name_en:              formData.get('name_en') as string,
     name_bn:              (formData.get('name_bn') as string) || undefined,
@@ -113,10 +121,17 @@ export async function updateCampaign(id: number, formData: FormData) {
     updated_at:           new Date(),
   }).where(eq(campaigns.id, id));
 
+  try { await logActivity({ action: 'updated', entity_type: 'campaign', entity_id: id, entity_name: data.name_en }); } catch {}
+
   revalidatePath('/');
 }
 
 export async function deleteCampaign(id: number) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   await db.delete(campaigns).where(eq(campaigns.id, id));
+
+  try { await logActivity({ action: 'deleted', entity_type: 'campaign', entity_id: id, entity_name: `Campaign #${id}` }); } catch {}
+
   revalidatePath('/');
 }

@@ -1,4 +1,5 @@
 'use server';
+import { auth } from '@/auth';
 
 import { revalidatePath } from 'next/cache';
 import { db }             from '@/lib/db';
@@ -7,6 +8,7 @@ import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
 import { CATEGORY_STATUSES } from '@/db/enums';
 import { logger } from '@/lib/logger';
+import { logActivity } from './activity-log';
 
 const CategorySchema = z.object({
   name_en:            z.string().min(2).max(120),
@@ -68,6 +70,8 @@ export async function getCategoryById(id: number) {
 }
 
 export async function createCategory(formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   const carouselRaw = formData.getAll('carousel_images') as string[];
   const raw = {
     name_en:            formData.get('name_en') as string,
@@ -105,10 +109,14 @@ export async function createCategory(formData: FormData) {
     status:             data.status,
   });
 
+  try { await logActivity({ action: 'created', entity_type: 'category', entity_name: data.name_en }); } catch {}
+
   revalidatePath('/');
 }
 
 export async function updateCategory(id: number, formData: FormData) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   const carouselRaw = formData.getAll('carousel_images') as string[];
   const raw = {
     name_en:            formData.get('name_en') as string,
@@ -145,15 +153,24 @@ export async function updateCategory(id: number, formData: FormData) {
     updated_at:         new Date(),
   }).where(eq(categories.id, id));
 
+  try { await logActivity({ action: 'updated', entity_type: 'category', entity_id: id, entity_name: data.name_en }); } catch {}
+
   revalidatePath('/');
 }
 
 export async function deleteCategory(id: number) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   await db.delete(categories).where(eq(categories.id, id));
+
+  try { await logActivity({ action: 'deleted', entity_type: 'category', entity_id: id, entity_name: `Category #${id}` }); } catch {}
+
   revalidatePath('/');
 }
 
 export async function reorderCategories(orderedIds: number[]) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   for (let i = 0; i < orderedIds.length; i++) {
     await db.update(categories)
       .set({ sort_order: i })

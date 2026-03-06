@@ -2,12 +2,21 @@
 
 import { db } from '@/lib/db';
 import { admins } from '@/db/schema';
+import { ratelimit } from '@/lib/ratelimit';
+import { headers } from 'next/headers';
 import { eq } from 'drizzle-orm';
 import { sendEmail } from '@/lib/email';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 
 export async function requestPasswordReset(formData: FormData) {
+  if (ratelimit) {
+    const headersList = await headers();
+    const forwarded = headersList.get('x-forwarded-for');
+    const ip = forwarded?.split(',')[0]?.trim() ?? headersList.get('x-real-ip') ?? '127.0.0.1';
+    const { success } = await ratelimit.limit(`reset_${ip}`);
+    if (!success) throw new Error('Too many requests. Please try again later.');
+  }
   const email = formData.get('email') as string;
   if (!email) {
     throw new Error('Email is required');
@@ -61,6 +70,13 @@ export async function requestPasswordReset(formData: FormData) {
 }
 
 export async function resetPassword(formData: FormData) {
+  if (ratelimit) {
+    const headersList = await headers();
+    const forwarded = headersList.get('x-forwarded-for');
+    const ip = forwarded?.split(',')[0]?.trim() ?? headersList.get('x-real-ip') ?? '127.0.0.1';
+    const { success } = await ratelimit.limit(`reset_confirm_${ip}`);
+    if (!success) throw new Error('Too many requests. Please try again later.');
+  }
   const email = formData.get('email') as string;
   const token = formData.get('token') as string;
   const password = formData.get('password') as string;

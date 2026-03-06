@@ -1,4 +1,6 @@
 'use server';
+import { auth } from '@/auth';
+import { unstable_cache } from 'next/cache';
 
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
@@ -6,7 +8,7 @@ import { settings } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '@/lib/logger';
 
-export async function getSettings() {
+const _getSettings = unstable_cache(async () => {
   try {
     const allSettings = await db.query.settings.findMany();
     const settingsMap: Record<string, string> = {};
@@ -18,21 +20,20 @@ export async function getSettings() {
     logger.error('Failed to get settings', { error });
     return {};
   }
+}, ['all-settings'], { revalidate: 60, tags: ['settings'] });
+
+export async function getSettings() {
+  return _getSettings();
 }
 
 export async function getSetting(key: string, defaultValue = '') {
-  try {
-    const s = await db.query.settings.findFirst({
-      where: (table, { eq }) => eq(table.key, key),
-    });
-    return s?.value ?? defaultValue;
-  } catch (error) {
-    logger.error('Failed to get setting', { key, error });
-    return defaultValue;
-  }
+  const all = await _getSettings();
+  return all[key] ?? defaultValue;
 }
 
 export async function updateSettings(data: Record<string, string>) {
+  const session = await auth();
+  if (!session) throw new Error('Unauthorized');
   for (const [key, value] of Object.entries(data)) {
     const existing = await db.query.settings.findFirst({
       where: (table, { eq }) => eq(table.key, key),
