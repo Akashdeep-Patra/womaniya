@@ -37,9 +37,15 @@ export function ShopGrid({ products, categories, isCompact = false, banners = []
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-6">
         <div>
-          <h2 className="font-ancient text-4xl md:text-5xl text-foreground mb-2">
-            {isCompact ? t('title') : t('title')}
-          </h2>
+          {isCompact ? (
+            <h2 className="font-ancient text-4xl md:text-5xl text-foreground mb-2">
+              {t('title')}
+            </h2>
+          ) : (
+            <h1 className="font-ancient text-4xl md:text-5xl text-foreground mb-2">
+              {t('title')}
+            </h1>
+          )}
           <p className="text-muted-foreground text-sm md:text-base max-w-xl font-sans-en">
             {t('subtitle')}
           </p>

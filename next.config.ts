@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     },
     serverActions: {
       bodySizeLimit: '25mb',
+      allowedOrigins: ['womaniya.vercel.app', 'womaniyakolkata.in', 'www.womaniyakolkata.in', 'localhost:5001'],
     },
     optimizePackageImports: [
       'lucide-react',

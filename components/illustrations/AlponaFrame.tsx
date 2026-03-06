@@ -37,8 +37,8 @@ export function AlponaFrame({
                   fill={color} opacity="0.35" />
               );
             })}
-            <circle r="2" fill={color} opacity="0.6" />
-            <circle r="0.8" fill="#8A1C14" opacity="0.5" />
+            <circle cx="0" cy="0" r="2" fill={color} opacity="0.6" />
+            <circle cx="0" cy="0" r="0.8" fill="#8A1C14" opacity="0.5" />
           </g>
         ),
       )}
@@ -46,7 +46,7 @@ export function AlponaFrame({
         ([cx, cy], i) => (
           <g key={`m${i}`} transform={`translate(${cx},${cy})`}>
             <path d="M0 -4 L3 0 L0 4 L-3 0 Z" fill="none" stroke={color} strokeWidth="0.5" opacity="0.4" />
-            <circle r="1" fill={color} opacity="0.5" />
+            <circle cx="0" cy="0" r="1" fill={color} opacity="0.5" />
           </g>
         ),
       )}

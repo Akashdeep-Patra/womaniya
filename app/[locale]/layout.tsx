@@ -14,10 +14,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { VercelToolbar } from '@vercel/toolbar/next';
 import { WebVitalsReporter } from '@/components/providers/WebVitalsReporter';
-
-import { CustomCursor } from '@/components/layout/CustomCursor';
-import { NoiseOverlay } from '@/components/layout/NoiseOverlay';
-import { ScrollProgress } from '@/components/layout/ScrollProgress';
+import { ClientOverlays } from '@/components/layout/ClientOverlays';
 
 import '@/app/globals.css';
 
@@ -115,9 +112,10 @@ export default async function LocaleLayout({ children, params }: Props) {
       className={fontVars}
     >
       <body className="min-h-screen bg-background text-foreground antialiased">
-        <CustomCursor />
-        <NoiseOverlay />
-        <ScrollProgress />
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-background focus:text-foreground">
+          Skip to main content
+        </a>
+        <ClientOverlays />
         <Providers locale={locale} messages={messages} waNumber={waNumber}>
           {children}
         </Providers>

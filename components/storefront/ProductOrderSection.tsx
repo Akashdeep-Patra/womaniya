@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { productOrderUrl } from '@/lib/whatsapp';
+import { toast } from 'sonner';
 import { BengalButton } from '@/components/bengal';
 import { ShareButton } from './ShareButton';
 import { Check } from 'lucide-react';
@@ -41,13 +42,13 @@ export function ProductOrderSection({ product, locale, isBn, waNumber }: Product
     
     if (hasSizes && !selectedSize) {
       e.preventDefault();
-      alert(isBn ? 'দয়া করে একটি সাইজ নির্বাচন করুন' : 'Please select a size');
+      toast.error(isBn ? 'দয়া করে একটি সাইজ নির্বাচন করুন' : 'Please select a size');
       return;
     }
     
     if (hasColors && !selectedColor) {
       e.preventDefault();
-      alert(isBn ? 'দয়া করে একটি রঙ নির্বাচন করুন' : 'Please select a color');
+      toast.error(isBn ? 'দয়া করে একটি রঙ নির্বাচন করুন' : 'Please select a color');
       return;
     }
   };

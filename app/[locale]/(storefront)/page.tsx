@@ -148,7 +148,7 @@ export default async function HomePage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd) }} />
       
-      <main className="min-h-screen touch-pan-y">
+      <main id="main-content" className="min-h-screen touch-pan-y">
         <HeroSection />
         
         {heroBanners.length > 0 && (

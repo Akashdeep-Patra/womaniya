@@ -1,5 +1,3 @@
-'use client';
-
 import type { Category } from '@/db/schema';
 
 const STATIC_ITEMS = [

@@ -27,7 +27,7 @@ export function TempleArch({
               fill={color} opacity="0.5" />
           );
         })}
-        <circle r="1.5" fill={color} opacity="0.7" />
+        <circle cx="0" cy="0" r="1.5" fill={color} opacity="0.7" />
       </g>
       <circle cx={16} cy={40} r="1.2" fill={color} opacity="0.4" />
       <circle cx={width - 16} cy={40} r="1.2" fill={color} opacity="0.4" />

@@ -82,35 +82,35 @@ export function HeroSection() {
               </span>
             </motion.div>
 
-            <div className={`mb-6 md:mb-10 ${isBn ? 'font-bengali-serif' : ''}`}>
-              <motion.h1
+            <h1 className={`mb-6 md:mb-10 ${isBn ? 'font-bengali-serif' : ''}`}>
+              <motion.span
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, delay: 0.1, ease: EASE }}
-                className={`leading-[0.85] tracking-tight text-foreground ${!isBn ? 'font-editorial' : ''}`}
+                className={`block leading-[0.85] tracking-tight text-foreground ${!isBn ? 'font-editorial' : ''}`}
                 style={{ fontSize: 'clamp(3rem, 10vw, 8rem)' }}
               >
                 <span className="block lg:-translate-x-2">{t('headline_1')}</span>
-              </motion.h1>
-              <motion.h1
+              </motion.span>
+              <motion.span
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1.2, delay: 0.2, ease: EASE }}
-                className={`leading-[0.8] tracking-tight text-primary mt-1 md:mt-1 ml-4 sm:ml-8 lg:ml-14 ${!isBn ? 'font-editorial italic' : ''}`}
+                className={`block leading-[0.8] tracking-tight text-primary mt-1 md:mt-1 ml-4 sm:ml-8 lg:ml-14 ${!isBn ? 'font-editorial italic' : ''}`}
                 style={{ fontSize: 'clamp(3.8rem, 12vw, 10rem)' }}
               >
                 {t('headline_2')}
-              </motion.h1>
-              <motion.h1
+              </motion.span>
+              <motion.span
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, delay: 0.3, ease: EASE }}
-                className={`leading-[0.9] tracking-tight text-foreground mt-1.5 md:mt-2 ${!isBn ? 'font-editorial' : ''}`}
+                className={`block leading-[0.9] tracking-tight text-foreground mt-1.5 md:mt-2 ${!isBn ? 'font-editorial' : ''}`}
                 style={{ fontSize: 'clamp(2.8rem, 9vw, 7.5rem)' }}
               >
                 {t('headline_3')}
-              </motion.h1>
-            </div>
+              </motion.span>
+            </h1>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
