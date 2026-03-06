@@ -21,7 +21,8 @@ export function AboutSection() {
 
   return (
     <section id="story" className="relative bg-card text-card-foreground overflow-hidden border-y border-border">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-28 lg:py-32">
+      <div className="absolute inset-0 bg-alpona-grid text-card-foreground pointer-events-none" />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-28 lg:py-32 relative z-10">
 
         {/* ── Section label ── */}
         <motion.div

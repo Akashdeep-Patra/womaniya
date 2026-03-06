@@ -18,8 +18,9 @@ export function FeaturesSection() {
 
   return (
     <section className="relative px-4 sm:px-6 py-20 md:py-32 max-w-[1400px] mx-auto overflow-hidden">
-      {/* Intricate decorative background lines */}
+      {/* Intricate decorative background */}
       <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0 bg-alpona-grid text-foreground" />
         <div className="absolute left-[5%] top-0 bottom-0 w-px bg-border/50" />
         <div className="absolute right-[5%] top-0 bottom-0 w-px bg-border/50" />
         <div className="absolute left-0 right-0 top-[10%] h-px bg-border/50" />

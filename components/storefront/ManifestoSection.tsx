@@ -14,8 +14,9 @@ export function ManifestoSection() {
 
   return (
     <section className="relative py-24 md:py-36 bg-card text-card-foreground overflow-hidden border-y border-border">
-      {/* Subtle radial glow — uses semantic tokens so it works in both themes */}
+      {/* Subtle radial glow + textile pattern */}
       <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-kantha-dots text-card-foreground" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl" />
       </div>
 

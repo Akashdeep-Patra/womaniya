@@ -53,6 +53,7 @@ export function HeroSection() {
       {/* Atmospheric background */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-background to-secondary/10" />
+        <div className="absolute inset-0 bg-jamdani-lattice text-foreground" />
         <div className="absolute left-[8%] top-0 bottom-0 w-px bg-primary/5 hidden lg:block" />
         <div className="absolute right-[8%] top-0 bottom-0 w-px bg-primary/5 hidden lg:block" />
         <div className="absolute inset-0 bg-noise opacity-[0.015] mix-blend-overlay" />
