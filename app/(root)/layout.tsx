@@ -1,4 +1,4 @@
-// Root layout — minimal shell; locale layout owns <html> and <body>
+// Root layout for the redirect page
 export default function RootLayout({
   children,
 }: {

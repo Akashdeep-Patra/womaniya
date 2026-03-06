@@ -6,7 +6,8 @@ import { productOrderUrl } from '@/lib/whatsapp';
 import { toast } from 'sonner';
 import { BengalButton } from '@/components/bengal';
 import { ShareButton } from './ShareButton';
-import { Check } from 'lucide-react';
+import { Check, Truck, Shield } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ProductOrderSectionProps {
   product: {
@@ -31,21 +32,19 @@ export function ProductOrderSection({ product, locale, isBn, waNumber }: Product
 
   const hasSizes = product.sizes && product.sizes.length > 0;
   const hasColors = product.colors && product.colors.length > 0;
-
   const isOutOfStock = product.stock_status === 'out_of_stock';
-  
+  const isMadeToOrder = product.stock_status === 'made_to_order';
+
   const handleOrderClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (isOutOfStock) {
       e.preventDefault();
       return;
     }
-    
     if (hasSizes && !selectedSize) {
       e.preventDefault();
       toast.error(isBn ? 'দয়া করে একটি সাইজ নির্বাচন করুন' : 'Please select a size');
       return;
     }
-    
     if (hasColors && !selectedColor) {
       e.preventDefault();
       toast.error(isBn ? 'দয়া করে একটি রঙ নির্বাচন করুন' : 'Please select a color');
@@ -54,87 +53,89 @@ export function ProductOrderSection({ product, locale, isBn, waNumber }: Product
   };
 
   const name = isBn && product.name_bn ? product.name_bn : product.name_en;
-  
   const pageUrl = typeof window !== 'undefined' ? window.location.href : undefined;
-  const waUrl = productOrderUrl(
-    name,
-    product.price,
-    locale,
-    product.sku,
-    selectedSize,
-    selectedColor,
-    waNumber,
-    pageUrl
-  );
+  const waUrl = productOrderUrl(name, product.price, locale, product.sku, selectedSize, selectedColor, waNumber, pageUrl);
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Options Selection */}
-      {(hasSizes || hasColors) && (
-        <div className="flex flex-col gap-5 bg-bengal-mati/50 p-4 rounded-2xl border border-bengal-kansa/10">
-          {hasSizes && (
-            <div className="flex flex-col gap-3">
-              <span className="text-[10px] tracking-widest uppercase text-bengal-kajal/70 font-sans-en">
-                {isBn ? 'সাইজ নির্বাচন করুন' : 'Select Size'} {selectedSize && <span className="font-semibold text-bengal-sindoor ml-1">{selectedSize}</span>}
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {product.sizes!.map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    className={`min-h-[44px] min-w-[44px] px-4 rounded-full border transition-all duration-200 touch-manipulation flex items-center justify-center gap-1.5
-                      ${selectedSize === size 
-                        ? 'bg-bengal-kajal text-white border-bengal-kajal shadow-md' 
-                        : 'bg-white text-bengal-kajal border-bengal-kansa/30 hover:border-bengal-kajal/50'
-                      }`}
-                  >
-                    {selectedSize === size && <Check size={14} />}
-                    <span className="font-sans-en text-sm font-medium">{size}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {hasColors && (
-            <div className="flex flex-col gap-3">
-              <span className="text-[10px] tracking-widest uppercase text-bengal-kajal/70 font-sans-en">
-                {isBn ? 'রঙ নির্বাচন করুন' : 'Select Color'} {selectedColor && <span className="font-semibold text-bengal-sindoor ml-1">{selectedColor}</span>}
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {product.colors!.map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => setSelectedColor(color)}
-                    className={`min-h-[44px] min-w-[44px] px-4 rounded-full border transition-all duration-200 touch-manipulation flex items-center justify-center gap-1.5
-                      ${selectedColor === color 
-                        ? 'bg-bengal-kajal text-white border-bengal-kajal shadow-md' 
-                        : 'bg-white text-bengal-kajal border-bengal-kansa/30 hover:border-bengal-kajal/50'
-                      }`}
-                  >
-                    {selectedColor === color && <Check size={14} />}
-                    <span className="font-sans-en text-sm font-medium">{color}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+    <div className="flex flex-col gap-5">
+      {/* Size Selection */}
+      {hasSizes && (
+        <div className="flex flex-col gap-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground font-sans-en font-medium">
+              {isBn ? 'সাইজ' : 'Size'}
+            </span>
+            {selectedSize && (
+              <span className="text-xs text-primary font-medium font-sans-en">{selectedSize}</span>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {product.sizes!.map((size) => (
+              <button
+                key={size}
+                onClick={() => setSelectedSize(size)}
+                className={cn(
+                  'min-h-[42px] min-w-[42px] px-4 rounded-full border transition-all duration-200 touch-manipulation flex items-center justify-center gap-1.5',
+                  selectedSize === size
+                    ? 'bg-foreground text-background border-foreground shadow-sm'
+                    : 'bg-background text-foreground border-border hover:border-foreground/40'
+                )}
+              >
+                {selectedSize === size && <Check size={13} strokeWidth={2.5} />}
+                <span className="font-sans-en text-sm font-medium">{size}</span>
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
+      {/* Color Selection */}
+      {hasColors && (
+        <div className="flex flex-col gap-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground font-sans-en font-medium">
+              {isBn ? 'রঙ' : 'Color'}
+            </span>
+            {selectedColor && (
+              <span className="text-xs text-primary font-medium font-sans-en">{selectedColor}</span>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {product.colors!.map((color) => (
+              <button
+                key={color}
+                onClick={() => setSelectedColor(color)}
+                className={cn(
+                  'min-h-[42px] min-w-[42px] px-4 rounded-full border transition-all duration-200 touch-manipulation flex items-center justify-center gap-1.5',
+                  selectedColor === color
+                    ? 'bg-foreground text-background border-foreground shadow-sm'
+                    : 'bg-background text-foreground border-border hover:border-foreground/40'
+                )}
+              >
+                {selectedColor === color && <Check size={13} strokeWidth={2.5} />}
+                <span className="font-sans-en text-sm font-medium">{color}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Separator if options exist */}
+      {(hasSizes || hasColors) && <div className="border-t border-border/50" />}
+
       {/* Action Buttons */}
-      <div className="flex flex-col gap-3 mt-2">
-        <a 
-          href={isOutOfStock ? '#' : waUrl} 
-          target={isOutOfStock ? undefined : '_blank'} 
-          rel="noopener noreferrer" 
-          className={`w-full ${isOutOfStock ? 'opacity-50 cursor-not-allowed' : ''}`}
+      <div className="flex flex-col gap-2.5">
+        <a
+          href={isOutOfStock ? '#' : waUrl}
+          target={isOutOfStock ? undefined : '_blank'}
+          rel="noopener noreferrer"
+          className={cn('w-full', isOutOfStock && 'opacity-50 cursor-not-allowed')}
           onClick={handleOrderClick}
         >
-          <BengalButton 
-            variant={isOutOfStock ? "outline" : "whatsapp"} 
-            size="touch" 
-            isBengali={isBn} 
+          <BengalButton
+            variant={isOutOfStock ? 'outline' : 'whatsapp'}
+            size="touch"
+            isBengali={isBn}
             className="w-full text-base font-medium"
             disabled={isOutOfStock}
           >
@@ -146,15 +147,31 @@ export function ProductOrderSection({ product, locale, isBn, waNumber }: Product
             {isOutOfStock ? (isBn ? 'স্টক নেই' : 'Out of Stock') : t('whatsapp_order')}
           </BengalButton>
         </a>
-        
+
         <ShareButton />
       </div>
 
-      {product.delivery_info && (
-        <p className={`text-center text-bengal-kajal/60 text-xs mt-2 ${isBn ? 'font-bengali' : 'font-sans-en'}`}>
-          📦 {product.delivery_info}
-        </p>
-      )}
+      {/* Stock & Delivery Info */}
+      <div className="flex flex-col gap-2">
+        {isMadeToOrder && (
+          <p className={cn(
+            'text-xs text-accent flex items-center gap-2',
+            isBn ? 'font-bengali' : 'font-sans-en'
+          )}>
+            <span className="w-1.5 h-1.5 rounded-full bg-accent inline-block shrink-0" />
+            {isBn ? 'অর্ডার অনুযায়ী তৈরি — ৭-১০ দিন' : 'Made to order — 7-10 days'}
+          </p>
+        )}
+        {product.delivery_info && (
+          <p className={cn(
+            'text-xs text-muted-foreground flex items-center gap-2',
+            isBn ? 'font-bengali' : 'font-sans-en'
+          )}>
+            <Truck size={13} className="shrink-0" />
+            {product.delivery_info}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
