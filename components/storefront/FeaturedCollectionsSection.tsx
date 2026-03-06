@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation';
 import type { Collection } from '@/db/schema';
 import { useTranslations } from 'next-intl';
 import { AlponaCorner } from '@/components/illustrations/AlponaCorner';
+import { JamdaniBackdrop } from '@/components/illustrations/SectionBackdrop';
 
 interface Props {
   collections: Collection[];
@@ -23,7 +24,7 @@ export function FeaturedCollectionsSection({ collections, isCompact = false }: P
 
   return (
     <section className="py-20 md:py-32 relative overflow-hidden bg-background">
-      <div className="absolute inset-0 bg-jamdani-lattice text-foreground pointer-events-none" />
+      <JamdaniBackdrop className="text-foreground" />
       <div className="px-4 sm:px-6 max-w-7xl mx-auto mb-12 md:mb-16 flex flex-col items-center text-center relative z-10">
         <motion.p 
           initial={{ opacity: 0, y: 10 }}

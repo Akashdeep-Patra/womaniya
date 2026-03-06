@@ -244,19 +244,18 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
-  /* Bengali textile-inspired SVG pattern backgrounds */
+  /* Bengali textile-inspired SVG pattern backgrounds — visible but non-intrusive */
   .bg-kantha-dots {
-    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='0.8' fill='currentColor' opacity='0.12'/%3E%3Ccircle cx='14' cy='2' r='0.8' fill='currentColor' opacity='0.08'/%3E%3Ccircle cx='8' cy='8' r='0.8' fill='currentColor' opacity='0.10'/%3E%3Ccircle cx='20' cy='8' r='0.8' fill='currentColor' opacity='0.06'/%3E%3Ccircle cx='2' cy='14' r='0.8' fill='currentColor' opacity='0.07'/%3E%3Ccircle cx='14' cy='14' r='0.8' fill='currentColor' opacity='0.11'/%3E%3Ccircle cx='8' cy='20' r='0.8' fill='currentColor' opacity='0.09'/%3E%3Ccircle cx='20' cy='20' r='0.8' fill='currentColor' opacity='0.06'/%3E%3C/svg%3E");
-    background-size: 24px 24px;
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='1.2' fill='currentColor' opacity='0.07'/%3E%3C/svg%3E");
+    background-size: 20px 20px;
   }
   .bg-jamdani-lattice {
-    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L24 10L20 20L16 10Z' fill='none' stroke='currentColor' stroke-width='0.4' opacity='0.08'/%3E%3Cpath d='M0 20L4 30L0 40' fill='none' stroke='currentColor' stroke-width='0.4' opacity='0.06'/%3E%3Cpath d='M40 20L36 30L40 40' fill='none' stroke='currentColor' stroke-width='0.4' opacity='0.06'/%3E%3Ccircle cx='20' cy='10' r='1' fill='currentColor' opacity='0.05'/%3E%3Ccircle cx='20' cy='30' r='1' fill='currentColor' opacity='0.05'/%3E%3C/svg%3E");
-    background-size: 40px 40px;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L36 15L30 30L24 15Z' fill='none' stroke='currentColor' stroke-width='0.6' opacity='0.07'/%3E%3Cpath d='M0 30L6 45L0 60' fill='none' stroke='currentColor' stroke-width='0.6' opacity='0.05'/%3E%3Cpath d='M60 30L54 45L60 60' fill='none' stroke='currentColor' stroke-width='0.6' opacity='0.05'/%3E%3Ccircle cx='30' cy='15' r='1.5' fill='currentColor' opacity='0.06'/%3E%3Ccircle cx='30' cy='45' r='1.5' fill='currentColor' opacity='0.06'/%3E%3C/svg%3E");
+    background-size: 60px 60px;
   }
   .bg-alpona-grid {
-    background-image:
-      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='8' fill='none' stroke='currentColor' stroke-width='0.3' opacity='0.06'/%3E%3Ccircle cx='30' cy='30' r='3' fill='none' stroke='currentColor' stroke-width='0.3' opacity='0.08'/%3E%3Cpath d='M30 22L33 30L30 38L27 30Z' fill='none' stroke='currentColor' stroke-width='0.3' opacity='0.06'/%3E%3Cpath d='M22 30L30 27L38 30L30 33Z' fill='none' stroke='currentColor' stroke-width='0.3' opacity='0.06'/%3E%3Ccircle cx='0' cy='0' r='1.5' fill='currentColor' opacity='0.04'/%3E%3Ccircle cx='60' cy='0' r='1.5' fill='currentColor' opacity='0.04'/%3E%3Ccircle cx='0' cy='60' r='1.5' fill='currentColor' opacity='0.04'/%3E%3Ccircle cx='60' cy='60' r='1.5' fill='currentColor' opacity='0.04'/%3E%3C/svg%3E");
-    background-size: 60px 60px;
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='12' fill='none' stroke='currentColor' stroke-width='0.5' opacity='0.06'/%3E%3Ccircle cx='40' cy='40' r='4' fill='none' stroke='currentColor' stroke-width='0.5' opacity='0.08'/%3E%3Cpath d='M40 28L44 40L40 52L36 40Z' fill='none' stroke='currentColor' stroke-width='0.5' opacity='0.07'/%3E%3Cpath d='M28 40L40 36L52 40L40 44Z' fill='none' stroke='currentColor' stroke-width='0.5' opacity='0.07'/%3E%3C/svg%3E");
+    background-size: 80px 80px;
   }
   .masonry-grid {
     columns: 2;

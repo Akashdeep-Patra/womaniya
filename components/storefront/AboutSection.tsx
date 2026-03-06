@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useParams }       from 'next/navigation';
 import Link                from 'next/link';
 import { KanthaStitch }    from '@/components/illustrations/KanthaStitch';
+import { AlponaBackdrop }  from '@/components/illustrations/SectionBackdrop';
 
 export function AboutSection() {
   const t      = useTranslations('about');
@@ -21,7 +22,7 @@ export function AboutSection() {
 
   return (
     <section id="story" className="relative bg-card text-card-foreground overflow-hidden border-y border-border">
-      <div className="absolute inset-0 bg-alpona-grid text-card-foreground pointer-events-none" />
+      <AlponaBackdrop className="text-card-foreground" />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-28 lg:py-32 relative z-10">
 
         {/* ── Section label ── */}

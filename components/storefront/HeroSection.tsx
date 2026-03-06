@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import { JamdaniBackdrop } from '@/components/illustrations/SectionBackdrop';
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -53,7 +54,7 @@ export function HeroSection() {
       {/* Atmospheric background */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-background to-secondary/10" />
-        <div className="absolute inset-0 bg-jamdani-lattice text-foreground" />
+        <JamdaniBackdrop className="text-foreground" />
         <div className="absolute left-[8%] top-0 bottom-0 w-px bg-primary/5 hidden lg:block" />
         <div className="absolute right-[8%] top-0 bottom-0 w-px bg-primary/5 hidden lg:block" />
         <div className="absolute inset-0 bg-noise opacity-[0.015] mix-blend-overlay" />
