@@ -77,7 +77,7 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-background/90 backdrop-blur-md border-t border-border pb-safe">
+      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 z-40 md:hidden bg-background/90 backdrop-blur-md border-t border-border pb-safe w-full max-w-[1800px]">
         <div className="grid grid-cols-5 h-15">
           {mainLinks.map(({ href, label, Icon }) => {
             const active = pathname === href;
@@ -144,7 +144,7 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="fixed inset-0 bg-bengal-kajal/40 backdrop-blur-sm z-30 md:hidden"
+              className="fixed inset-0 left-1/2 -translate-x-1/2 max-w-[1800px] bg-bengal-kajal/40 backdrop-blur-sm z-30 md:hidden"
               onClick={closeSheet}
             />
 
@@ -154,7 +154,7 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
               animate={{ y: '0%' }}
               exit={{ y: '100%' }}
               transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-              className="fixed bottom-15 left-0 right-0 bg-background z-30 rounded-t-3xl border-t border-border shadow-lg md:hidden max-h-[85vh] flex flex-col will-change-transform pb-[env(safe-area-inset-bottom)]"
+              className="fixed bottom-15 left-1/2 -translate-x-1/2 w-full max-w-[1800px] bg-background z-30 rounded-t-3xl border-t border-border shadow-lg md:hidden max-h-[85vh] flex flex-col will-change-transform pb-[env(safe-area-inset-bottom)]"
             >
               {/* Handle */}
               <div className="flex justify-center pt-4 pb-2 shrink-0 cursor-pointer" onClick={closeSheet}>

@@ -123,17 +123,20 @@ export default async function LocaleLayout({ children, params }: Props) {
       className={fontVars}
     >
       <body className="min-h-screen bg-background text-foreground antialiased">
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-background focus:text-foreground">
-          Skip to main content
-        </a>
-        <ClientOverlays />
-        <Providers locale={locale} messages={messages} waNumber={waNumber}>
-          {children}
-        </Providers>
-        <WebVitalsReporter />
-        <Analytics />
-        <SpeedInsights />
-        {process.env.NODE_ENV === 'development' && <VercelToolbar />}
+        {/* Max-width shell — caps the UI on ultra-wide displays */}
+        <div className="max-w-[1800px] mx-auto relative app-shell">
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-background focus:text-foreground">
+            Skip to main content
+          </a>
+          <ClientOverlays />
+          <Providers locale={locale} messages={messages} waNumber={waNumber}>
+            {children}
+          </Providers>
+          <WebVitalsReporter />
+          <Analytics />
+          <SpeedInsights />
+          {process.env.NODE_ENV === 'development' && <VercelToolbar />}
+        </div>
       </body>
     </html>
   );

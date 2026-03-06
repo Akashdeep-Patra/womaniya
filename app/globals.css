@@ -257,6 +257,32 @@
     background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='12' fill='none' stroke='currentColor' stroke-width='0.5' opacity='0.06'/%3E%3Ccircle cx='40' cy='40' r='4' fill='none' stroke='currentColor' stroke-width='0.5' opacity='0.08'/%3E%3Cpath d='M40 28L44 40L40 52L36 40Z' fill='none' stroke='currentColor' stroke-width='0.5' opacity='0.07'/%3E%3Cpath d='M28 40L40 36L52 40L40 44Z' fill='none' stroke='currentColor' stroke-width='0.5' opacity='0.07'/%3E%3C/svg%3E");
     background-size: 80px 80px;
   }
+
+  /* App shell — soft edge fade on ultra-wide screens (>1800px) */
+  @media (min-width: 1801px) {
+    .app-shell {
+      position: relative;
+    }
+    .app-shell::before,
+    .app-shell::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: 80px;
+      z-index: 60;
+      pointer-events: none;
+    }
+    .app-shell::before {
+      left: calc((100vw - 1800px) / 2 - 40px);
+      background: linear-gradient(to right, var(--background) 0%, transparent 100%);
+    }
+    .app-shell::after {
+      right: calc((100vw - 1800px) / 2 - 40px);
+      background: linear-gradient(to left, var(--background) 0%, transparent 100%);
+    }
+  }
+
   .masonry-grid {
     columns: 2;
     column-gap: 0.75rem;

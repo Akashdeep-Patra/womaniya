@@ -137,7 +137,7 @@ export function Header() {
   return (
     <>
       {/* ── HEADER ── */}
-      <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none pt-4 md:pt-5 flex justify-center w-full h-24">
+      <header className="fixed top-0 left-1/2 -translate-x-1/2 z-50 pointer-events-none pt-4 md:pt-5 flex justify-center w-full max-w-[1800px] h-24">
         
         {/* Phase 1: Expanded Header */}
         <motion.div
