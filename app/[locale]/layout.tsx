@@ -73,8 +73,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: '/opengraph-image',
-        width: 1200,
-        height: 630,
+        width: 600,
+        height: 315,
         alt: 'Womaniya — Authentic Handloom Heritage',
       },
     ],

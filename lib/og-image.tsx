@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-export const OG_SIZE = { width: 1200, height: 630 };
+export const OG_SIZE = { width: 600, height: 315 };
 
 const COLORS = {
   cream: '#F9F6F0',
@@ -11,7 +11,7 @@ const COLORS = {
   white: '#FFFFFF',
 } as const;
 
-function BrandLogo({ size = 60 }: { size?: number }) {
+function BrandLogo({ size = 30 }: { size?: number }) {
   return (
     <svg
       width={size}
@@ -62,7 +62,16 @@ export function generateOgImage({
   price,
 }: OgImageOptions): ImageResponse {
   const accentColor = VARIANT_ACCENTS[variant];
-  const hasImage = !!imageUrl;
+  
+  let resolvedImageUrl = imageUrl;
+  if (resolvedImageUrl && resolvedImageUrl.startsWith('/')) {
+    if (resolvedImageUrl.endsWith('.svg')) {
+      resolvedImageUrl = undefined;
+    } else {
+      resolvedImageUrl = new URL(resolvedImageUrl, process.env.NEXT_PUBLIC_APP_URL || 'https://womaniya.in').toString();
+    }
+  }
+  const hasImage = !!resolvedImageUrl;
 
   return new ImageResponse(
     (
@@ -84,7 +93,7 @@ export function generateOgImage({
             opacity: 0.03,
             backgroundImage:
               'radial-gradient(circle at 25% 25%, #2C2C2C 1px, transparent 1px)',
-            backgroundSize: '30px 30px',
+            backgroundSize: '15px 15px',
             display: 'flex',
           }}
         />
@@ -96,7 +105,7 @@ export function generateOgImage({
             top: 0,
             left: 0,
             right: 0,
-            height: 6,
+            height: 3,
             background: accentColor,
             display: 'flex',
           }}
@@ -118,7 +127,7 @@ export function generateOgImage({
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 width: '55%',
-                padding: '56px 48px 48px',
+                padding: '28px 24px 24px',
               }}
             >
               <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -127,12 +136,12 @@ export function generateOgImage({
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      marginBottom: 16,
+                      marginBottom: 8,
                     }}
                   >
                     <span
                       style={{
-                        fontSize: 14,
+                        fontSize: 7,
                         fontWeight: 600,
                         letterSpacing: '0.2em',
                         textTransform: 'uppercase',
@@ -145,11 +154,11 @@ export function generateOgImage({
                 )}
                 <h1
                   style={{
-                    fontSize: title.length > 40 ? 40 : 52,
+                    fontSize: title.length > 40 ? 20 : 26,
                     fontWeight: 700,
                     color: COLORS.kajal,
                     lineHeight: 1.15,
-                    marginBottom: 16,
+                    marginBottom: 8,
                     fontFamily: 'serif',
                     display: '-webkit-box',
                     WebkitLineClamp: 3,
@@ -162,11 +171,11 @@ export function generateOgImage({
                 {price && (
                   <span
                     style={{
-                      fontSize: 36,
+                      fontSize: 18,
                       fontWeight: 700,
                       color: COLORS.sindoor,
                       fontFamily: 'serif',
-                      marginBottom: 8,
+                      marginBottom: 4,
                     }}
                   >
                     {price}
@@ -175,7 +184,7 @@ export function generateOgImage({
                 {subtitle && (
                   <p
                     style={{
-                      fontSize: 20,
+                      fontSize: 10,
                       color: `${COLORS.kajal}99`,
                       lineHeight: 1.5,
                       display: '-webkit-box',
@@ -194,14 +203,14 @@ export function generateOgImage({
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 14,
+                  gap: 7,
                 }}
               >
-                <BrandLogo size={40} />
+                <BrandLogo size={20} />
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <span
                     style={{
-                      fontSize: 20,
+                      fontSize: 10,
                       fontWeight: 700,
                       color: COLORS.kajal,
                       letterSpacing: '0.06em',
@@ -212,7 +221,7 @@ export function generateOgImage({
                   </span>
                   <span
                     style={{
-                      fontSize: 11,
+                      fontSize: 6,
                       color: COLORS.kansa,
                       letterSpacing: '0.18em',
                       textTransform: 'uppercase',
@@ -235,7 +244,7 @@ export function generateOgImage({
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={imageUrl}
+                src={resolvedImageUrl}
                 alt=""
                 style={{
                   width: '100%',
@@ -250,7 +259,7 @@ export function generateOgImage({
                   top: 0,
                   left: 0,
                   bottom: 0,
-                  width: 80,
+                  width: 40,
                   background: `linear-gradient(to right, ${COLORS.cream}, transparent)`,
                   display: 'flex',
                 }}
@@ -267,22 +276,22 @@ export function generateOgImage({
               justifyContent: 'center',
               width: '100%',
               height: '100%',
-              padding: '56px 80px 48px',
+              padding: '28px 40px 24px',
               textAlign: 'center',
             }}
           >
-            <BrandLogo size={72} />
+            <BrandLogo size={36} />
 
             {badge && (
               <span
                 style={{
-                  fontSize: 14,
+                  fontSize: 7,
                   fontWeight: 600,
                   letterSpacing: '0.25em',
                   textTransform: 'uppercase',
                   color: accentColor,
-                  marginTop: 28,
-                  marginBottom: 8,
+                  marginTop: 14,
+                  marginBottom: 4,
                 }}
               >
                 {badge}
@@ -291,12 +300,12 @@ export function generateOgImage({
 
             <h1
               style={{
-                fontSize: title.length > 30 ? 48 : 64,
+                fontSize: title.length > 30 ? 24 : 32,
                 fontWeight: 700,
                 color: COLORS.kajal,
                 lineHeight: 1.15,
-                marginTop: badge ? 8 : 28,
-                marginBottom: 16,
+                marginTop: badge ? 4 : 14,
+                marginBottom: 8,
                 fontFamily: 'serif',
               }}
             >
@@ -306,12 +315,12 @@ export function generateOgImage({
             {subtitle && (
               <p
                 style={{
-                  fontSize: 24,
+                  fontSize: 12,
                   color: COLORS.kansa,
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
                   fontWeight: 500,
-                  marginTop: 4,
+                  marginTop: 2,
                 }}
               >
                 {subtitle}
@@ -321,11 +330,11 @@ export function generateOgImage({
             {/* Decorative line */}
             <div
               style={{
-                width: 80,
-                height: 2,
+                width: 40,
+                height: 1,
                 background: COLORS.kansa,
                 opacity: 0.4,
-                marginTop: 32,
+                marginTop: 16,
                 display: 'flex',
               }}
             />

@@ -29,6 +29,6 @@ export default async function ProductOgImage({
     badge: product.category ?? undefined,
     imageUrl: product.image_url,
     variant: 'product',
-    price: `₹${Number(product.price).toLocaleString('en-IN')}`,
+    price: `Rs. ${Number(product.price).toLocaleString('en-IN')}`,
   });
 }
