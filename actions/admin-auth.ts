@@ -6,6 +6,7 @@ import { eq } from 'drizzle-orm';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
+import { logger } from '@/lib/logger';
 
 export async function forgotPasswordAction(email: string) {
   try {
@@ -54,15 +55,14 @@ export async function forgotPasswordAction(email: string) {
         text: `You requested a password reset. Click the link to reset your password: ${resetUrl}`,
         html: `<p>You requested a password reset. Click the link below to reset your password:</p><p><a href="${resetUrl}">${resetUrl}</a></p><p>This link is valid for 1 hour.</p>`,
       });
-      console.log(`Password reset email sent to ${email}`);
-    } else {
-      // In development or if SMTP is not set, log the URL to console
-      console.log(`[DEV ONLY] SMTP not configured. Password reset link for ${email}: ${resetUrl}`);
+      logger.info('Password reset email sent', { email });
+    } else if (process.env.NODE_ENV !== 'production') {
+      logger.info('SMTP not configured — reset link for dev', { email, resetUrl });
     }
 
     return { success: true, message: "If the email is registered, a reset link will be sent." };
   } catch (error) {
-    console.error("Forgot password error:", error);
+    logger.error('Forgot password error', { error });
     return { success: false, message: "Something went wrong. Please try again." };
   }
 }
@@ -92,7 +92,7 @@ export async function resetPasswordAction(token: string, newPassword: string) {
 
     return { success: true, message: "Password has been successfully updated." };
   } catch (error) {
-    console.error("Reset password error:", error);
+    logger.error('Reset password error', { error });
     return { success: false, message: "Something went wrong. Please try again." };
   }
 }

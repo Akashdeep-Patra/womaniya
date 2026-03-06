@@ -22,40 +22,32 @@ import { ScrollProgress } from '@/components/layout/ScrollProgress';
 import '@/app/globals.css';
 
 /* ── Google Fonts ─────────────────────────────────────────────── */
-/* DM Serif Display — very thick, aesthetic, ancient heritage serif for English */
 const dmSerifDisplay = DM_Serif_Display({
-  variable: '--font-playfair', // keep variable name mapping
+  variable: '--font-playfair',
   subsets: ['latin'],
   display: 'swap',
   weight: ['400'],
 });
-/* Jost — clean, elegant sans for English */
 const jost = Jost({
   variable: '--font-jost',
   subsets: ['latin'],
   display: 'swap',
 });
-/* Noto Serif Bengali — highly traditional, thick, heritage Bengali serif */
 const notoSerifBn = Noto_Serif_Bengali({
   variable: '--font-noto-serif-bn',
   subsets: ['bengali'],
-  display: 'swap',
+  display: 'optional',
   weight: ['400', '500', '600', '700', '800'],
 });
-/* Anek Bangla — clean but solid modern Bengali font */
 const anekBn = Anek_Bangla({
   variable: '--font-anek-bn',
   subsets: ['bengali'],
-  display: 'swap',
+  display: 'optional',
   weight: ['300', '400', '500', '600', '700'],
 });
 
-const fontVars = [
-  dmSerifDisplay.variable,
-  jost.variable,
-  notoSerifBn.variable,
-  anekBn.variable,
-].join(' ');
+const baseFontVars = [dmSerifDisplay.variable, jost.variable].join(' ');
+const bnFontVars = [notoSerifBn.variable, anekBn.variable].join(' ');
 
 /* ── Metadata ─────────────────────────────────────────────────── */
 export const metadata: Metadata = {
@@ -113,6 +105,8 @@ export default async function LocaleLayout({ children, params }: Props) {
   // Must be fetched server-side and passed to the client provider
   const messages = await getMessages();
   const waNumber = await getSetting('whatsapp_number', '919143161829');
+
+  const fontVars = locale === 'bn' ? `${baseFontVars} ${bnFontVars}` : baseFontVars;
 
   return (
     <html

@@ -1,6 +1,8 @@
 'use server';
 
 import { put } from '@vercel/blob';
+import { recordMediaAsset } from '@/actions/media';
+import { logger } from '@/lib/logger';
 
 export async function uploadImageToBlob(formData: FormData): Promise<string> {
   const file = formData.get('file') as File;
@@ -9,8 +11,19 @@ export async function uploadImageToBlob(formData: FormData): Promise<string> {
     throw new Error('No file provided');
   }
 
-  const filename  = `products/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-  const { url }   = await put(filename, file, { access: 'public' });
+  const filename = `products/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+  const { url } = await put(filename, file, { access: 'public' });
+
+  try {
+    await recordMediaAsset({
+      url,
+      filename,
+      mime_type: file.type,
+      size_bytes: file.size,
+    });
+  } catch (e) {
+    logger.warn('Failed to record media asset after upload', { url, error: e });
+  }
 
   return url;
 }

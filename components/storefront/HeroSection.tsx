@@ -148,40 +148,22 @@ export function HeroSection() {
             </motion.div>
           </motion.div>
 
-          {/* ── MOBILE COLLAGE — Editorial Scattered Grid ── */}
+          {/* ── MOBILE COLLAGE — LCP image is NOT animated to avoid delaying paint ── */}
           <div className="w-full lg:hidden relative z-10 order-1 pt-6 pb-2">
             <div className="relative w-full max-w-[420px] mx-auto aspect-4/5 p-2">
-              {/* Main Image (Bottom Left) */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
-                className="absolute bottom-2 left-2 w-[65%] h-[75%] rounded-4xl overflow-hidden shadow-xl border-[6px] border-background z-20 group bg-muted"
-              >
-                <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card1.pos }} sizes="60vw" />
-              </motion.div>
+              <div className="absolute bottom-2 left-2 w-[65%] h-[75%] rounded-4xl overflow-hidden shadow-xl border-[6px] border-background z-20 bg-muted">
+                <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority fetchPriority="high" className="object-cover" style={{ objectPosition: IMAGES.card1.pos }} sizes="60vw" />
+              </div>
 
-              {/* Top Right Image */}
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.25, ease: EASE }}
                 className="absolute top-2 right-2 w-[50%] h-[60%] rounded-3xl overflow-hidden shadow-lg border-[6px] border-background z-10 group bg-muted"
               >
-                <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card2.pos }} sizes="45vw" />
+                <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card2.pos }} sizes="45vw" />
               </motion.div>
 
-              {/* Bottom Right Image */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4, ease: EASE }}
-                className="absolute bottom-[10%] right-2 w-[35%] h-[35%] rounded-2xl overflow-hidden shadow-2xl border-4 border-background z-30 group bg-muted"
-              >
-                <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill className="object-cover" style={{ objectPosition: IMAGES.card3.pos }} sizes="40vw" />
-              </motion.div>
-
-              {/* Floating Badge / Separator */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}

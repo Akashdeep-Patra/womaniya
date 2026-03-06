@@ -6,6 +6,7 @@ import { collections, collectionProducts }    from '@/db/schema';
 import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
 import { COLLECTION_STATUSES } from '@/db/enums';
+import { logger } from '@/lib/logger';
 
 const CollectionSchema = z.object({
   name_en:            z.string().min(2).max(120),
@@ -37,7 +38,7 @@ export async function getAllCollections() {
     });
     return res || [];
   } catch (e) {
-    console.error('[getAllCollections] error:', e);
+    logger.error('Failed to get all collections', { error: e });
     return [];
   }
 }
@@ -50,7 +51,7 @@ export async function getPublishedCollections() {
     });
     return res || [];
   } catch (e) {
-    console.error('[getPublishedCollections] error:', e);
+    logger.error('Failed to get published collections', { error: e });
     return [];
   }
 }

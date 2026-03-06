@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
 import { settings } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { logger } from '@/lib/logger';
 
 export async function getSettings() {
   try {
@@ -14,8 +15,7 @@ export async function getSettings() {
     }
     return settingsMap;
   } catch (error) {
-    console.error('[getSettings] Error:', error);
-    // If the table doesn't exist yet or query fails, return empty gracefully
+    logger.error('Failed to get settings', { error });
     return {};
   }
 }
@@ -27,7 +27,7 @@ export async function getSetting(key: string, defaultValue = '') {
     });
     return s?.value ?? defaultValue;
   } catch (error) {
-    console.error(`[getSetting ${key}] Error:`, error);
+    logger.error('Failed to get setting', { key, error });
     return defaultValue;
   }
 }

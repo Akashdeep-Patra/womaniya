@@ -2,6 +2,7 @@ import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { ratelimit } from '@/lib/ratelimit';
+import { logger } from '@/lib/logger';
 
 export async function POST(request: Request): Promise<NextResponse> {
   const body = (await request.json()) as HandleUploadBody;
@@ -28,7 +29,7 @@ export async function POST(request: Request): Promise<NextResponse> {
           throw new Error('Unauthorized');
         }
 
-        console.log(`[Upload] Token generated for ${pathname} by user ${session.user?.email || 'admin'}`);
+        logger.info('Upload token generated', { pathname, user: session.user?.email || 'admin' });
 
         return {
           allowedContentTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/avif'],
@@ -40,13 +41,13 @@ export async function POST(request: Request): Promise<NextResponse> {
       },
       onUploadCompleted: async ({ blob, tokenPayload }) => {
         // Run after the upload is completed
-        console.log(`[Upload] Completed: ${blob.url}`, tokenPayload);
+        logger.info('Upload completed', { url: blob.url });
       },
     });
 
     return NextResponse.json(jsonResponse);
   } catch (error) {
-    console.error('[Upload] Error:', error);
+    logger.error('Upload handler error', { error });
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 400 }, // The webhook will retry 5 times waiting for a 200

@@ -2,6 +2,7 @@ import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { recordMediaAsset } from '@/actions/media';
+import { logger } from '@/lib/logger';
 
 export async function POST(request: Request): Promise<NextResponse> {
   const session = await auth();
@@ -39,12 +40,12 @@ export async function POST(request: Request): Promise<NextResponse> {
         size_bytes: file.size,
       });
     } catch (e) {
-      console.error('[Upload] Failed to record media asset:', e);
+      logger.warn('Failed to record media asset after upload', { url: blob.url, error: e });
     }
 
     return NextResponse.json({ url: blob.url });
   } catch (error) {
-    console.error('[Upload] Error:', error);
+    logger.error('File upload failed', { error });
     return NextResponse.json(
       { error: 'Upload failed' },
       { status: 500 }

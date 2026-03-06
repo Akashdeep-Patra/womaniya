@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 
 type WebVitalPayload = {
   name: string;
@@ -23,9 +24,12 @@ export async function POST(request: Request) {
 
     const threshold = POOR_THRESHOLDS[metric.name];
     if (threshold && metric.value > threshold) {
-      console.warn(
-        `[Web Vital POOR] ${metric.name}=${metric.value} on ${metric.page} (${metric.navigationType})`,
-      );
+      logger.warn('Poor web vital detected', {
+        metric: metric.name,
+        value: metric.value,
+        page: metric.page,
+        navigationType: metric.navigationType,
+      });
     }
 
     return NextResponse.json({ ok: true }, { status: 202 });

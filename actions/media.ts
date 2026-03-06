@@ -1,10 +1,12 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { del } from '@vercel/blob';
 import { db }             from '@/lib/db';
 import { mediaAssets }    from '@/db/schema';
 import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
+import { logger }         from '@/lib/logger';
 
 const UpdateMediaSchema = z.object({
   alt_en: z.string().max(300).optional(),
@@ -19,6 +21,19 @@ export async function getAllMedia() {
 }
 
 export async function deleteMedia(id: number) {
+  const asset = await db.query.mediaAssets.findFirst({
+    where: eq(mediaAssets.id, id),
+    columns: { url: true },
+  });
+
+  if (asset?.url) {
+    try {
+      await del(asset.url);
+    } catch (e) {
+      logger.warn('Failed to delete blob, removing DB record anyway', { url: asset.url, error: e });
+    }
+  }
+
   await db.delete(mediaAssets).where(eq(mediaAssets.id, id));
   revalidatePath('/');
 }

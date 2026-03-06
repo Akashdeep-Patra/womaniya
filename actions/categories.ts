@@ -6,6 +6,7 @@ import { categories }     from '@/db/schema';
 import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
 import { CATEGORY_STATUSES } from '@/db/enums';
+import { logger } from '@/lib/logger';
 
 const CategorySchema = z.object({
   name_en:            z.string().min(2).max(120),
@@ -36,7 +37,7 @@ export async function getAllCategories() {
     });
     return res || [];
   } catch (e) {
-    console.error('[getAllCategories] error:', e);
+    logger.error('Failed to get all categories', { error: e });
     return [];
   }
 }
@@ -49,7 +50,7 @@ export async function getPublishedCategories() {
     });
     return res || [];
   } catch (e) {
-    console.error('[getPublishedCategories] error:', e);
+    logger.error('Failed to get published categories', { error: e });
     return [];
   }
 }

@@ -5,6 +5,7 @@ import { contentOverrides } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { revalidateTag } from 'next/cache';
 import { unstable_cache } from 'next/cache';
+import { logger } from '@/lib/logger';
 
 type OverrideMap = Record<string, Record<string, string>>;
 
@@ -22,7 +23,7 @@ export async function getContentOverrides(locale: string): Promise<OverrideMap> 
     }
     return map;
   } catch (error) {
-    console.error('[getContentOverrides] Error:', error);
+    logger.error('Failed to get content overrides', { error });
     return {};
   }
 }
