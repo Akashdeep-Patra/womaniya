@@ -31,19 +31,19 @@ interface UploadingFile {
 }
 
 const COMPRESSION_OPTIONS = {
-  maxSizeMB: 2,
-  maxWidthOrHeight: 2400,
+  maxSizeMB: 8,
+  maxWidthOrHeight: 3840,
   useWebWorker: true,
-  fileType: 'image/webp' as const,
+  initialQuality: 0.92,
 };
 
 async function compressAndUpload(
   file: File,
   onProgress?: (pct: number) => void,
 ): Promise<{ url: string }> {
-  // Compress client-side (skip for already-small files)
+  // Only compress large files (>4MB) — keeps original quality for reasonable sizes
   let processedFile: File = file;
-  if (file.size > 500 * 1024) {
+  if (file.size > 4 * 1024 * 1024) {
     onProgress?.(5);
     processedFile = await imageCompression(file, COMPRESSION_OPTIONS);
   }
