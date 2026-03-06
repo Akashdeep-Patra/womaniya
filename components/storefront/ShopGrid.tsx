@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useCallback } from 'react';
+import { Fragment, useCallback, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -8,6 +8,7 @@ import { CategoryFilter } from './CategoryFilter';
 import { ProductCard }    from './ProductCard';
 import { EmptyState } from './EmptyState';
 import { BannerDisplay } from './BannerDisplay';
+import { useWhatsAppContext } from '@/lib/whatsapp-context';
 import type { Product, Category } from '@/db/schema';
 import { ArrowRight } from 'lucide-react';
 
@@ -25,7 +26,17 @@ export function ShopGrid({ products, categories, isCompact = false, banners = []
   const router = useRouter();
   const pathname = usePathname();
 
+  const { setPageContext } = useWhatsAppContext();
   const activeCategory = searchParams.get('category') || 'All';
+
+  useEffect(() => {
+    if (!isCompact) {
+      setPageContext({
+        type: 'shop',
+        category: activeCategory === 'All' ? undefined : activeCategory,
+      });
+    }
+  }, [activeCategory, isCompact, setPageContext]);
 
   const setActiveCategory = useCallback((cat: string) => {
     const params = new URLSearchParams(searchParams.toString());

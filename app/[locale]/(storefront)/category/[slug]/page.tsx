@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { EmptyState } from '@/components/storefront/EmptyState';
 import { HeroCarousel } from '@/components/storefront/HeroCarousel';
+import { WhatsAppContextSetter } from '@/lib/whatsapp-context';
 import type { Metadata } from 'next';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -92,6 +93,7 @@ export default async function CategoryPage({ params }: Props) {
 
   return (
     <>
+      <WhatsAppContextSetter context={{ type: 'category', name: category.name_en }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }} />
     <div className="min-h-screen bg-bengal-cream pt-24 pb-12">

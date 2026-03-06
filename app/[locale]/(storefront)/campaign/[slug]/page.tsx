@@ -2,6 +2,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 import Image from 'next/image';
+import { WhatsAppContextSetter } from '@/lib/whatsapp-context';
 import type { Metadata } from 'next';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -50,6 +51,8 @@ export default async function CampaignPage({ params }: Props) {
   if (!campaign || campaign.status === 'draft' || campaign.status === 'archived') notFound();
 
   return (
+    <>
+    <WhatsAppContextSetter context={{ type: 'campaign', name: campaign.name_en }} />
     <div className="min-h-screen bg-bengal-cream pt-24 pb-12">
       <div className="max-w-7xl mx-auto px-4">
         <h1 className="text-4xl md:text-6xl font-editorial text-bengal-kajal mb-4 text-center">
@@ -71,5 +74,6 @@ export default async function CampaignPage({ params }: Props) {
         )}
       </div>
     </div>
+    </>
   );
 }

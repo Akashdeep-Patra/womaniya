@@ -83,4 +83,31 @@ export function productViewUrl(name: string, price: string | number, locale = 'e
   return whatsappUrl(msg, waNumber);
 }
 
+export function collectionEnquiryUrl(name: string, locale = 'en', waNumber = DEFAULT_WA_NUMBER, pageUrl?: string): string {
+  let msg =
+    locale === 'bn'
+      ? `নমস্কার! আমি Womaniya-র "${name}" সংগ্রহটি দেখছি। এই কালেকশন সম্পর্কে আরও জানতে চাই।`
+      : `Hi! I'm exploring the "${name}" collection on Womaniya. Could you tell me more about it?`;
+  if (pageUrl) msg += `\n\n${pageUrl}`;
+  return whatsappUrl(msg, waNumber);
+}
+
+export function campaignEnquiryUrl(name: string, locale = 'en', waNumber = DEFAULT_WA_NUMBER, pageUrl?: string): string {
+  let msg =
+    locale === 'bn'
+      ? `নমস্কার! আমি Womaniya-র "${name}" ক্যাম্পেইনে আগ্রহী। আরও তথ্য জানাবেন?`
+      : `Hi! I'm interested in Womaniya's "${name}" campaign. Could you share more details?`;
+  if (pageUrl) msg += `\n\n${pageUrl}`;
+  return whatsappUrl(msg, waNumber);
+}
+
+export function storyEnquiryUrl(name: string, locale = 'en', waNumber = DEFAULT_WA_NUMBER, pageUrl?: string): string {
+  let msg =
+    locale === 'bn'
+      ? `নমস্কার! আমি Womaniya-তে "${name}" গল্পটি পড়ছিলাম। এই বিষয়ে আরও জানতে চাই।`
+      : `Hi! I was reading "${name}" on Womaniya. I'd love to learn more about this.`;
+  if (pageUrl) msg += `\n\n${pageUrl}`;
+  return whatsappUrl(msg, waNumber);
+}
+
 export const getWaHref = (waNumber = DEFAULT_WA_NUMBER) => `https://wa.me/${waNumber}`;

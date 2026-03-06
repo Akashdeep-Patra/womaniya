@@ -2,6 +2,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 import Image from 'next/image';
+import { WhatsAppContextSetter } from '@/lib/whatsapp-context';
 import type { Metadata } from 'next';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -84,6 +85,7 @@ export default async function StoryPage({ params }: Props) {
 
   return (
     <>
+      <WhatsAppContextSetter context={{ type: 'story', name: page.title_en }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
     <div className="min-h-screen bg-bengal-cream pb-12">

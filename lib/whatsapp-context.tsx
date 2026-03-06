@@ -7,6 +7,9 @@ export type WhatsAppPageContext =
   | { type: 'product'; name: string; price: string | number; sku?: string | null }
   | { type: 'shop'; category?: string }
   | { type: 'category'; name: string }
+  | { type: 'collection'; name: string }
+  | { type: 'campaign'; name: string }
+  | { type: 'story'; name: string }
   | { type: 'about' };
 
 type WhatsAppCtx = {

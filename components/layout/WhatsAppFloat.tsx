@@ -8,6 +8,9 @@ import {
   productViewUrl,
   shopBrowsingUrl,
   categoryEnquiryUrl,
+  collectionEnquiryUrl,
+  campaignEnquiryUrl,
+  storyEnquiryUrl,
   aboutPageUrl,
 } from '@/lib/whatsapp';
 import { useWhatsAppContext } from '@/lib/whatsapp-context';
@@ -41,6 +44,12 @@ export function WhatsAppFloat({ waNumber }: { waNumber?: string }) {
         return shopBrowsingUrl(locale, pageContext.category, waNumber, currentUrl);
       case 'category':
         return categoryEnquiryUrl(pageContext.name, locale, waNumber, currentUrl);
+      case 'collection':
+        return collectionEnquiryUrl(pageContext.name, locale, waNumber, currentUrl);
+      case 'campaign':
+        return campaignEnquiryUrl(pageContext.name, locale, waNumber, currentUrl);
+      case 'story':
+        return storyEnquiryUrl(pageContext.name, locale, waNumber, currentUrl);
       case 'about':
         return aboutPageUrl(locale, waNumber, currentUrl);
       default:
