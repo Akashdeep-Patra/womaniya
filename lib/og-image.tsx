@@ -53,6 +53,13 @@ const VARIANT_ACCENTS: Record<OgVariant, string> = {
   category: COLORS.sindoor,
 };
 
+const getBaseUrl = () => {
+  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return `http://localhost:${process.env.PORT || 5001}`;
+};
+
 export function generateOgImage({
   title,
   subtitle,
@@ -68,7 +75,7 @@ export function generateOgImage({
     if (resolvedImageUrl.endsWith('.svg')) {
       resolvedImageUrl = undefined;
     } else {
-      resolvedImageUrl = new URL(resolvedImageUrl, process.env.NEXT_PUBLIC_APP_URL || 'https://womaniya.in').toString();
+      resolvedImageUrl = new URL(resolvedImageUrl, getBaseUrl()).toString();
     }
   }
   const hasImage = !!resolvedImageUrl;

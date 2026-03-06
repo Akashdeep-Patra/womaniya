@@ -1,7 +1,7 @@
 'use server';
 import { auth } from '@/auth';
 
-import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
+import { revalidatePath, updateTag, unstable_cache } from 'next/cache';
 import { db }             from '@/lib/db';
 import { campaigns }      from '@/db/schema';
 import { eq }             from 'drizzle-orm';
@@ -89,7 +89,7 @@ export async function createCampaign(formData: FormData) {
 
   logActivity({ action: 'created', entity_type: 'campaign', entity_name: data.name_en }).catch(() => {});
 
-  revalidateTag('campaigns');
+  updateTag('campaigns');
   revalidatePath('/');
 }
 
@@ -132,7 +132,7 @@ export async function updateCampaign(id: number, formData: FormData) {
 
   logActivity({ action: 'updated', entity_type: 'campaign', entity_id: id, entity_name: data.name_en }).catch(() => {});
 
-  revalidateTag('campaigns');
+  updateTag('campaigns');
   revalidatePath('/');
 }
 
@@ -145,6 +145,6 @@ export async function deleteCampaign(id: number) {
 
   logActivity({ action: 'deleted', entity_type: 'campaign', entity_id: id, entity_name: `Campaign #${id}` }).catch(() => {});
 
-  revalidateTag('campaigns');
+  updateTag('campaigns');
   revalidatePath('/');
 }

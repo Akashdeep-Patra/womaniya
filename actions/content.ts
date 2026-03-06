@@ -4,7 +4,7 @@ import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { contentOverrides } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
-import { revalidateTag } from 'next/cache';
+import { updateTag } from 'next/cache';
 import { unstable_cache } from 'next/cache';
 import { logger } from '@/lib/logger';
 import { logActivity } from '@/lib/activity-logger';
@@ -59,7 +59,7 @@ export async function saveContentOverrides({
 
   logActivity({ action: 'updated', entity_type: 'content', entity_name: `${namespace} (${locale})` }).catch(() => {});
 
-  revalidateTag('content-overrides');
+  updateTag('content-overrides');
 }
 
 export async function resetContentKey({
@@ -83,7 +83,7 @@ export async function resetContentKey({
       ),
     );
 
-  revalidateTag('content-overrides');
+  updateTag('content-overrides');
 }
 
 export async function resetNamespaceContent(locale: string, namespace: string) {
@@ -98,5 +98,5 @@ export async function resetNamespaceContent(locale: string, namespace: string) {
       ),
     );
 
-  revalidateTag('content-overrides');
+  updateTag('content-overrides');
 }

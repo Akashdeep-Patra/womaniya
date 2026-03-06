@@ -1,7 +1,7 @@
 'use server';
 import { auth } from '@/auth';
 
-import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
+import { revalidatePath, updateTag, unstable_cache } from 'next/cache';
 import { db }             from '@/lib/db';
 import { testimonials }   from '@/db/schema';
 import { eq, asc }        from 'drizzle-orm';
@@ -88,7 +88,7 @@ export async function createTestimonial(formData: FormData) {
 
   logActivity({ action: 'created', entity_type: 'testimonial', entity_name: data.author_name }).catch(() => {});
 
-  revalidateTag('testimonials');
+  updateTag('testimonials');
   revalidatePath('/');
 }
 
@@ -131,7 +131,7 @@ export async function updateTestimonial(id: number, formData: FormData) {
 
   logActivity({ action: 'updated', entity_type: 'testimonial', entity_id: id, entity_name: data.author_name }).catch(() => {});
 
-  revalidateTag('testimonials');
+  updateTag('testimonials');
   revalidatePath('/');
 }
 
@@ -144,6 +144,6 @@ export async function deleteTestimonial(id: number) {
 
   logActivity({ action: 'deleted', entity_type: 'testimonial', entity_id: id, entity_name: `Testimonial #${id}` }).catch(() => {});
 
-  revalidateTag('testimonials');
+  updateTag('testimonials');
   revalidatePath('/');
 }

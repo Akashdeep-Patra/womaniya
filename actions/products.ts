@@ -1,7 +1,7 @@
 'use server';
 import { auth } from '@/auth';
 
-import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
+import { revalidatePath, updateTag, unstable_cache } from 'next/cache';
 import { db }             from '@/lib/db';
 import { products, productImages, collectionProducts } from '@/db/schema';
 import { eq, desc, and, inArray } from 'drizzle-orm';
@@ -43,7 +43,7 @@ function slugify(text: string): string {
 }
 
 function revalidateAll() {
-  revalidateTag('products');
+  updateTag('products');
   revalidatePath('/');
   revalidatePath('/en/shop');
   revalidatePath('/bn/shop');

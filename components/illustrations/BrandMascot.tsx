@@ -1,7 +1,6 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
-import { useId } from 'react';
 
 interface BrandMascotProps {
   className?: string;
@@ -9,12 +8,13 @@ interface BrandMascotProps {
 }
 
 export function BrandMascot({ className = '', size = 56 }: BrandMascotProps) {
-  const id = useId().replace(/:/g, '');
   const prefersReducedMotion = useReducedMotion();
   const skip = !!prefersReducedMotion;
 
-  const gradientId = `sindoor-${id}`;
-  const goldId = `gold-${id}`;
+  // Use a deterministic static ID for SVG definitions to avoid hydration mismatch
+  // Because this might be rendered multiple times on a page, we use a constant ID
+  const gradientId = `sindoor-brand-gradient`;
+  const goldId = `gold-brand-gradient`;
 
   return (
     <motion.svg

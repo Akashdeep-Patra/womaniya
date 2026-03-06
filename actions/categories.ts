@@ -1,7 +1,7 @@
 'use server';
 import { auth } from '@/auth';
 
-import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
+import { revalidatePath, updateTag, unstable_cache } from 'next/cache';
 import { db }             from '@/lib/db';
 import { categories }     from '@/db/schema';
 import { eq }             from 'drizzle-orm';
@@ -119,7 +119,7 @@ export async function createCategory(formData: FormData) {
 
   logActivity({ action: 'created', entity_type: 'category', entity_name: data.name_en }).catch(() => {});
 
-  revalidateTag('categories');
+  updateTag('categories');
   revalidatePath('/');
 }
 
@@ -164,7 +164,7 @@ export async function updateCategory(id: number, formData: FormData) {
 
   logActivity({ action: 'updated', entity_type: 'category', entity_id: id, entity_name: data.name_en }).catch(() => {});
 
-  revalidateTag('categories');
+  updateTag('categories');
   revalidatePath('/');
 }
 
@@ -177,7 +177,7 @@ export async function deleteCategory(id: number) {
 
   logActivity({ action: 'deleted', entity_type: 'category', entity_id: id, entity_name: `Category #${id}` }).catch(() => {});
 
-  revalidateTag('categories');
+  updateTag('categories');
   revalidatePath('/');
 }
 
@@ -193,6 +193,6 @@ export async function reorderCategories(orderedIds: number[]) {
       .set({ sort_order: i })
       .where(eq(categories.id, parsed.data[i]));
   }
-  revalidateTag('categories');
+  updateTag('categories');
   revalidatePath('/');
 }

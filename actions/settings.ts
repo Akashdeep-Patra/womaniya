@@ -1,6 +1,6 @@
 'use server';
 import { auth } from '@/auth';
-import { unstable_cache, revalidateTag } from 'next/cache';
+import { unstable_cache, updateTag } from 'next/cache';
 
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/db';
@@ -53,7 +53,7 @@ export async function updateSettings(data: Record<string, string>) {
     entity_name: Object.keys(data).join(', '),
   }).catch(() => {});
 
-  revalidateTag('settings');
+  updateTag('settings');
   revalidatePath('/');
   revalidatePath('/en');
   revalidatePath('/bn');

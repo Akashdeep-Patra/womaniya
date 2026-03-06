@@ -1,7 +1,7 @@
 'use server';
 import { auth } from '@/auth';
 
-import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
+import { revalidatePath, updateTag, unstable_cache } from 'next/cache';
 import { db }             from '@/lib/db';
 import { pages, pageSections } from '@/db/schema';
 import { eq }             from 'drizzle-orm';
@@ -112,7 +112,7 @@ export async function createPage(formData: FormData, sectionsJson: string) {
 
   logActivity({ action: 'created', entity_type: 'page', entity_id: page?.id, entity_name: data.title_en }).catch(() => {});
 
-  revalidateTag('pages');
+  updateTag('pages');
   revalidatePath('/');
 }
 
@@ -170,7 +170,7 @@ export async function updatePage(id: number, formData: FormData, sectionsJson: s
 
   logActivity({ action: 'updated', entity_type: 'page', entity_id: id, entity_name: data.title_en }).catch(() => {});
 
-  revalidateTag('pages');
+  updateTag('pages');
   revalidatePath('/');
 }
 
@@ -184,6 +184,6 @@ export async function deletePage(id: number) {
 
   logActivity({ action: 'deleted', entity_type: 'page', entity_id: id, entity_name: `Page #${id}` }).catch(() => {});
 
-  revalidateTag('pages');
+  updateTag('pages');
   revalidatePath('/');
 }

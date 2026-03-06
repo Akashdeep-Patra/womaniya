@@ -1,7 +1,7 @@
 'use server';
 import { auth } from '@/auth';
 
-import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
+import { revalidatePath, updateTag, unstable_cache } from 'next/cache';
 import { db }             from '@/lib/db';
 import { collections, collectionProducts }    from '@/db/schema';
 import { eq }             from 'drizzle-orm';
@@ -150,7 +150,7 @@ export async function createCollection(formData: FormData) {
 
   logActivity({ action: 'created', entity_type: 'collection', entity_id: collection?.id, entity_name: data.name_en }).catch(() => {});
 
-  revalidateTag('collections');
+  updateTag('collections');
   revalidatePath('/');
 }
 
@@ -215,7 +215,7 @@ export async function updateCollection(id: number, formData: FormData) {
 
   logActivity({ action: 'updated', entity_type: 'collection', entity_id: id, entity_name: data.name_en }).catch(() => {});
 
-  revalidateTag('collections');
+  updateTag('collections');
   revalidatePath('/');
 }
 
@@ -229,6 +229,6 @@ export async function deleteCollection(id: number) {
 
   logActivity({ action: 'deleted', entity_type: 'collection', entity_id: id, entity_name: `Collection #${id}` }).catch(() => {});
 
-  revalidateTag('collections');
+  updateTag('collections');
   revalidatePath('/');
 }
