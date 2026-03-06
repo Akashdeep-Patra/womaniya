@@ -7,6 +7,7 @@ import { db } from '@/lib/db';
 import { settings } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { logger } from '@/lib/logger';
+import { logActivity } from './activity-log';
 
 const _getSettings = unstable_cache(async () => {
   try {
@@ -45,6 +46,14 @@ export async function updateSettings(data: Record<string, string>) {
       await db.insert(settings).values({ key, value });
     }
   }
+
+  try {
+    await logActivity({
+      action: 'updated',
+      entity_type: 'settings',
+      entity_name: Object.keys(data).join(', '),
+    });
+  } catch { /* logging must not break settings */ }
 
   revalidatePath('/');
   revalidatePath('/en');

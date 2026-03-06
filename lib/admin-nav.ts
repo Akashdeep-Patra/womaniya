@@ -1,3 +1,4 @@
+import type { ElementType } from 'react';
 import {
   LayoutDashboard, Package, Tags, FolderOpen, Megaphone,
   Image as ImageIcon, FileText, BookOpen, Settings, Flag,
@@ -7,7 +8,7 @@ import {
 export type NavItem = {
   label: string;
   href: string;
-  icon: React.ElementType;
+  icon: ElementType;
 };
 
 export type NavGroup = {

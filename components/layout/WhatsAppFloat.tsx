@@ -47,7 +47,7 @@ export function WhatsAppFloat({ waNumber }: { waNumber?: string }) {
     }
   }, [pageContext, locale, waNumber]);
 
-  if (pathname?.includes('/admin')) return null;
+  if (pathname?.startsWith(`/${locale}/admin`)) return null;
 
   return (
     <AnimatePresence>

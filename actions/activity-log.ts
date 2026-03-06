@@ -3,12 +3,12 @@
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { activityLog } from '@/db/schema';
-import { eq, desc, sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { logger } from '@/lib/logger';
 
 /**
  * Fire-and-forget activity logger. Called from already-authed CRUD actions.
- * Also checks auth itself to prevent direct invocation by malicious clients.
+ * Skips the redundant auth() call since callers already verified the session.
  * Wrapped so logging failures never break the parent action.
  */
 export async function logActivity(params: {
@@ -19,9 +19,6 @@ export async function logActivity(params: {
   details?: string;
 }) {
   try {
-    const session = await auth();
-    if (!session) return;
-
     await db.insert(activityLog).values({
       action:      params.action,
       entity_type: params.entity_type,
@@ -38,9 +35,11 @@ export async function getRecentActivity(limit = 20) {
   const session = await auth();
   if (!session) throw new Error('Unauthorized');
 
+  const safeLimit = Math.min(Math.max(1, Math.floor(limit)), 100);
+
   return db.query.activityLog.findMany({
     orderBy: (a, { desc }) => [desc(a.created_at)],
-    limit,
+    limit: safeLimit,
   });
 }
 

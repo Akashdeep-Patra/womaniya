@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { getNavGroups } from '@/lib/admin-nav';
 import {
@@ -20,7 +20,7 @@ type CommandPaletteProps = {
 
 export function CommandPalette({ open, onOpenChange, locale }: CommandPaletteProps) {
   const router = useRouter();
-  const navGroups = getNavGroups(locale);
+  const navGroups = useMemo(() => getNavGroups(locale), [locale]);
 
   const openRef = useRef(open);
   openRef.current = open;

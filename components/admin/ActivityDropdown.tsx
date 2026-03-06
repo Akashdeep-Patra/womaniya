@@ -10,7 +10,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { getRecentActivity, getUnreadCount, markAllAsRead } from '@/actions/activity-log';
 import type { ActivityLogEntry } from '@/db/schema';
@@ -49,10 +48,11 @@ export function ActivityDropdown() {
   const [entries, setEntries] = useState<ActivityLogEntry[]>([]);
   const [unread, setUnread] = useState(0);
   const [open, setOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [, startPollTransition] = useTransition();
+  const [isMarking, startMarkTransition] = useTransition();
 
   const fetchUnread = useCallback(() => {
-    startTransition(async () => {
+    startPollTransition(async () => {
       try {
         const count = await getUnreadCount();
         setUnread(count);
@@ -69,13 +69,19 @@ export function ActivityDropdown() {
     return () => clearInterval(interval);
   }, [fetchUnread]);
 
-  // Load entries when dropdown opens
+  // Load entries + mark as read when dropdown opens
   useEffect(() => {
     if (!open) return;
-    startTransition(async () => {
+    startPollTransition(async () => {
       try {
         const data = await getRecentActivity(20);
         setEntries(data);
+        // Auto-mark as read when user opens the dropdown
+        if (data.some((e) => !e.is_read)) {
+          await markAllAsRead();
+          setUnread(0);
+          setEntries(data.map((e) => ({ ...e, is_read: true })));
+        }
       } catch {
         // ignore
       }
@@ -83,7 +89,7 @@ export function ActivityDropdown() {
   }, [open]);
 
   function handleMarkAllRead() {
-    startTransition(async () => {
+    startMarkTransition(async () => {
       try {
         await markAllAsRead();
         setUnread(0);
@@ -117,7 +123,7 @@ export function ActivityDropdown() {
           {unread > 0 && (
             <button
               onClick={handleMarkAllRead}
-              disabled={isPending}
+              disabled={isMarking}
               className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
             >
               <CheckCheck size={14} />
