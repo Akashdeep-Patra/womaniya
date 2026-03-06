@@ -16,17 +16,19 @@ export default async function StorefrontLayout({
   let categories: any[] = [];
   let staticPages: any[] = [];
   let serializableCampaigns: any[] = [];
-  
+  let waNumber = '919143161829';
+
   try {
-    const [fetchedCategories, fetchedPages, fetchedCampaigns] = await Promise.all([
+    const [fetchedCategories, fetchedPages, fetchedCampaigns, fetchedWaNumber] = await Promise.all([
       getPublishedCategories(),
       getAllPages('static'),
       getAllCampaigns(),
+      getSetting('whatsapp_number', '919143161829'),
     ]);
     const liveCampaigns = fetchedCampaigns.filter(c => c.status === 'live' && (c.announcement_text_en || c.announcement_text_bn));
     categories = fetchedCategories;
     staticPages = fetchedPages.filter(p => p.status === 'published');
-    // Map Drizzle output to the expected format for the client
+    waNumber = fetchedWaNumber;
     serializableCampaigns = liveCampaigns.map(c => ({
       slug: c.slug,
       announcement_text_en: c.announcement_text_en,
@@ -36,8 +38,6 @@ export default async function StorefrontLayout({
   } catch {
     // DB not yet connected in dev
   }
-
-  const waNumber = await getSetting('whatsapp_number', '919143161829');
   
   const locale = await getLocale();
   const isBn = locale === 'bn';

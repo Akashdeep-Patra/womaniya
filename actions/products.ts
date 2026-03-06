@@ -1,7 +1,7 @@
 'use server';
 import { auth } from '@/auth';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 import { db }             from '@/lib/db';
 import { products, productImages, collectionProducts } from '@/db/schema';
 import { eq, desc, and, inArray } from 'drizzle-orm';
@@ -43,6 +43,7 @@ function slugify(text: string): string {
 }
 
 function revalidateAll() {
+  revalidateTag('products');
   revalidatePath('/');
   revalidatePath('/en/shop');
   revalidatePath('/bn/shop');
@@ -281,12 +282,20 @@ export async function deleteProduct(id: number) {
   revalidateAll();
 }
 
+const _getFeaturedProducts = unstable_cache(
+  async () => {
+    return db.query.products.findMany({
+      where:   (p, { and, eq }) => and(eq(p.is_featured, true), eq(p.status, 'published')),
+      orderBy: (p, { desc }) => [desc(p.created_at)],
+      limit:   6,
+    });
+  },
+  ['featured-products'],
+  { revalidate: 60, tags: ['products'] },
+);
+
 export async function getFeaturedProducts() {
-  return db.query.products.findMany({
-    where:   (p, { and, eq }) => and(eq(p.is_featured, true), eq(p.status, 'published')),
-    orderBy: (p, { desc }) => [desc(p.created_at)],
-    limit:   6,
-  });
+  return _getFeaturedProducts();
 }
 
 export async function getPublishedProducts(category?: string) {

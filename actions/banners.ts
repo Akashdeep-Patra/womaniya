@@ -1,7 +1,7 @@
 'use server';
 import { auth } from '@/auth';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 import { db }             from '@/lib/db';
 import { banners }        from '@/db/schema';
 import { eq }             from 'drizzle-orm';
@@ -28,10 +28,18 @@ const BannerSchema = z.object({
   ends_at:          z.string().optional(),
 });
 
+const _getAllBanners = unstable_cache(
+  async () => {
+    return db.query.banners.findMany({
+      orderBy: (b, { asc }) => [asc(b.sort_order)],
+    });
+  },
+  ['all-banners'],
+  { revalidate: 60, tags: ['banners'] },
+);
+
 export async function getAllBanners() {
-  return db.query.banners.findMany({
-    orderBy: (b, { asc }) => [asc(b.sort_order)],
-  });
+  return _getAllBanners();
 }
 
 export async function getBannerById(id: number) {
@@ -93,6 +101,7 @@ export async function createBanner(formData: FormData) {
 
   logActivity({ action: 'created', entity_type: 'banner', entity_name: data.title_en ?? `${data.placement} banner` }).catch(() => {});
 
+  revalidateTag('banners');
   revalidatePath('/');
 }
 
@@ -149,6 +158,7 @@ export async function updateBanner(id: number, formData: FormData) {
 
   logActivity({ action: 'updated', entity_type: 'banner', entity_id: id, entity_name: data.title_en ?? `${data.placement} banner` }).catch(() => {});
 
+  revalidateTag('banners');
   revalidatePath('/');
 }
 
@@ -161,5 +171,6 @@ export async function deleteBanner(id: number) {
 
   logActivity({ action: 'deleted', entity_type: 'banner', entity_id: id, entity_name: `Banner #${id}` }).catch(() => {});
 
+  revalidateTag('banners');
   revalidatePath('/');
 }

@@ -1,7 +1,7 @@
 'use server';
 import { auth } from '@/auth';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 import { db }             from '@/lib/db';
 import { testimonials }   from '@/db/schema';
 import { eq, asc }        from 'drizzle-orm';
@@ -28,12 +28,20 @@ export async function getAllTestimonials() {
   });
 }
 
+const _getPublishedTestimonials = unstable_cache(
+  async () => {
+    return db
+      .select()
+      .from(testimonials)
+      .where(eq(testimonials.status, 'published'))
+      .orderBy(asc(testimonials.sort_order));
+  },
+  ['published-testimonials'],
+  { revalidate: 60, tags: ['testimonials'] },
+);
+
 export async function getPublishedTestimonials() {
-  return db
-    .select()
-    .from(testimonials)
-    .where(eq(testimonials.status, 'published'))
-    .orderBy(asc(testimonials.sort_order));
+  return _getPublishedTestimonials();
 }
 
 export async function getTestimonialById(id: number) {
@@ -80,6 +88,7 @@ export async function createTestimonial(formData: FormData) {
 
   logActivity({ action: 'created', entity_type: 'testimonial', entity_name: data.author_name }).catch(() => {});
 
+  revalidateTag('testimonials');
   revalidatePath('/');
 }
 
@@ -122,6 +131,7 @@ export async function updateTestimonial(id: number, formData: FormData) {
 
   logActivity({ action: 'updated', entity_type: 'testimonial', entity_id: id, entity_name: data.author_name }).catch(() => {});
 
+  revalidateTag('testimonials');
   revalidatePath('/');
 }
 
@@ -134,5 +144,6 @@ export async function deleteTestimonial(id: number) {
 
   logActivity({ action: 'deleted', entity_type: 'testimonial', entity_id: id, entity_name: `Testimonial #${id}` }).catch(() => {});
 
+  revalidateTag('testimonials');
   revalidatePath('/');
 }

@@ -1,7 +1,7 @@
 'use server';
 import { auth } from '@/auth';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 import { db }             from '@/lib/db';
 import { campaigns }      from '@/db/schema';
 import { eq }             from 'drizzle-orm';
@@ -26,10 +26,18 @@ function slugify(text: string): string {
   return text.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/--+/g, '-');
 }
 
+const _getAllCampaigns = unstable_cache(
+  async () => {
+    return db.query.campaigns.findMany({
+      orderBy: (c, { desc }) => [desc(c.created_at)],
+    });
+  },
+  ['all-campaigns'],
+  { revalidate: 60, tags: ['campaigns'] },
+);
+
 export async function getAllCampaigns() {
-  return db.query.campaigns.findMany({
-    orderBy: (c, { desc }) => [desc(c.created_at)],
-  });
+  return _getAllCampaigns();
 }
 
 export async function getCampaignById(id: number) {
@@ -81,6 +89,7 @@ export async function createCampaign(formData: FormData) {
 
   logActivity({ action: 'created', entity_type: 'campaign', entity_name: data.name_en }).catch(() => {});
 
+  revalidateTag('campaigns');
   revalidatePath('/');
 }
 
@@ -123,6 +132,7 @@ export async function updateCampaign(id: number, formData: FormData) {
 
   logActivity({ action: 'updated', entity_type: 'campaign', entity_id: id, entity_name: data.name_en }).catch(() => {});
 
+  revalidateTag('campaigns');
   revalidatePath('/');
 }
 
@@ -135,5 +145,6 @@ export async function deleteCampaign(id: number) {
 
   logActivity({ action: 'deleted', entity_type: 'campaign', entity_id: id, entity_name: `Campaign #${id}` }).catch(() => {});
 
+  revalidateTag('campaigns');
   revalidatePath('/');
 }

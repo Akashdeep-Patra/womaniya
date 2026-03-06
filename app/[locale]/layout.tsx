@@ -108,9 +108,11 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   setRequestLocale(locale);
 
-  // Must be fetched server-side and passed to the client provider
-  const messages = await getMessages();
-  const waNumber = await getSetting('whatsapp_number', '919143161829');
+  // Fetch messages and settings in parallel
+  const [messages, waNumber] = await Promise.all([
+    getMessages(),
+    getSetting('whatsapp_number', '919143161829'),
+  ]);
 
   const fontVars = locale === 'bn' ? `${baseFontVars} ${bnFontVars}` : baseFontVars;
 

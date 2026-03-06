@@ -3,7 +3,21 @@ import { getTranslations }     from 'next-intl/server';
 import type { Metadata }       from 'next';
 import dynamic from 'next/dynamic';
 
-import { HeroSection }         from '@/components/storefront/HeroSection';
+const HeroSection = dynamic(
+  () => import('@/components/storefront/HeroSection').then((m) => ({ default: m.HeroSection })),
+  {
+    ssr: true,
+    loading: () => (
+      <section className="relative w-full bg-background min-h-svh flex items-center justify-center">
+        <div className="animate-pulse flex flex-col items-center gap-4">
+          <div className="w-16 h-1 bg-primary/20 rounded" />
+          <div className="h-16 w-64 bg-muted rounded-lg" />
+          <div className="h-12 w-48 bg-muted rounded-lg" />
+        </div>
+      </section>
+    ),
+  }
+);
 import { getFeaturedProducts } from '@/actions/products';
 import { getPublishedCategories } from '@/actions/categories';
 import { getFeaturedCollections } from '@/actions/collections';

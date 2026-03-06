@@ -1,7 +1,7 @@
 'use server';
 import { auth } from '@/auth';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 import { db }             from '@/lib/db';
 import { pages, pageSections } from '@/db/schema';
 import { eq }             from 'drizzle-orm';
@@ -25,11 +25,19 @@ function slugify(text: string): string {
   return text.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/--+/g, '-');
 }
 
+const _getAllPages = unstable_cache(
+  async (page_type?: string) => {
+    return db.query.pages.findMany({
+      where: page_type ? (p, { eq }) => eq(p.page_type, page_type as 'static' | 'story' | 'landing') : undefined,
+      orderBy: (p, { desc }) => [desc(p.created_at)],
+    });
+  },
+  ['all-pages'],
+  { revalidate: 60, tags: ['pages'] },
+);
+
 export async function getAllPages(page_type?: 'static' | 'story' | 'landing') {
-  return db.query.pages.findMany({
-    where: page_type ? (p, { eq }) => eq(p.page_type, page_type) : undefined,
-    orderBy: (p, { desc }) => [desc(p.created_at)],
-  });
+  return _getAllPages(page_type);
 }
 
 export async function getNonStoryPages() {
@@ -104,6 +112,7 @@ export async function createPage(formData: FormData, sectionsJson: string) {
 
   logActivity({ action: 'created', entity_type: 'page', entity_id: page?.id, entity_name: data.title_en }).catch(() => {});
 
+  revalidateTag('pages');
   revalidatePath('/');
 }
 
@@ -161,6 +170,7 @@ export async function updatePage(id: number, formData: FormData, sectionsJson: s
 
   logActivity({ action: 'updated', entity_type: 'page', entity_id: id, entity_name: data.title_en }).catch(() => {});
 
+  revalidateTag('pages');
   revalidatePath('/');
 }
 
@@ -174,5 +184,6 @@ export async function deletePage(id: number) {
 
   logActivity({ action: 'deleted', entity_type: 'page', entity_id: id, entity_name: `Page #${id}` }).catch(() => {});
 
+  revalidateTag('pages');
   revalidatePath('/');
 }

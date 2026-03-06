@@ -1,7 +1,7 @@
 'use server';
 import { auth } from '@/auth';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 import { db }             from '@/lib/db';
 import { collections, collectionProducts }    from '@/db/schema';
 import { eq }             from 'drizzle-orm';
@@ -58,14 +58,22 @@ export async function getPublishedCollections() {
   }
 }
 
+const _getFeaturedCollections = unstable_cache(
+  async () => {
+    return db.query.collections.findMany({
+      where: (c, { and, or, eq }) => and(
+        or(eq(c.status, 'live'), eq(c.status, 'scheduled')),
+        eq(c.is_featured, true),
+      ),
+      orderBy: (c, { desc }) => [desc(c.created_at)],
+    });
+  },
+  ['featured-collections'],
+  { revalidate: 60, tags: ['collections'] },
+);
+
 export async function getFeaturedCollections() {
-  return db.query.collections.findMany({
-    where: (c, { and, or, eq }) => and(
-      or(eq(c.status, 'live'), eq(c.status, 'scheduled')),
-      eq(c.is_featured, true),
-    ),
-    orderBy: (c, { desc }) => [desc(c.created_at)],
-  });
+  return _getFeaturedCollections();
 }
 
 export async function getCollectionById(id: number) {
@@ -142,6 +150,7 @@ export async function createCollection(formData: FormData) {
 
   logActivity({ action: 'created', entity_type: 'collection', entity_id: collection?.id, entity_name: data.name_en }).catch(() => {});
 
+  revalidateTag('collections');
   revalidatePath('/');
 }
 
@@ -206,6 +215,7 @@ export async function updateCollection(id: number, formData: FormData) {
 
   logActivity({ action: 'updated', entity_type: 'collection', entity_id: id, entity_name: data.name_en }).catch(() => {});
 
+  revalidateTag('collections');
   revalidatePath('/');
 }
 
@@ -219,5 +229,6 @@ export async function deleteCollection(id: number) {
 
   logActivity({ action: 'deleted', entity_type: 'collection', entity_id: id, entity_name: `Collection #${id}` }).catch(() => {});
 
+  revalidateTag('collections');
   revalidatePath('/');
 }

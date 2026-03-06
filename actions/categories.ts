@@ -1,7 +1,7 @@
 'use server';
 import { auth } from '@/auth';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 import { db }             from '@/lib/db';
 import { categories }     from '@/db/schema';
 import { eq }             from 'drizzle-orm';
@@ -44,17 +44,25 @@ export async function getAllCategories() {
   }
 }
 
+const _getPublishedCategories = unstable_cache(
+  async () => {
+    try {
+      const res = await db.query.categories.findMany({
+        where: (c, { eq }) => eq(c.status, 'published'),
+        orderBy: (c, { asc }) => [asc(c.sort_order), asc(c.name_en)],
+      });
+      return res || [];
+    } catch (e) {
+      logger.error('Failed to get published categories', { error: e });
+      return [];
+    }
+  },
+  ['published-categories'],
+  { revalidate: 60, tags: ['categories'] },
+);
+
 export async function getPublishedCategories() {
-  try {
-    const res = await db.query.categories.findMany({
-      where: (c, { eq }) => eq(c.status, 'published'),
-      orderBy: (c, { asc }) => [asc(c.sort_order), asc(c.name_en)],
-    });
-    return res || [];
-  } catch (e) {
-    logger.error('Failed to get published categories', { error: e });
-    return [];
-  }
+  return _getPublishedCategories();
 }
 
 export async function getCategoryBySlug(slug: string) {
@@ -111,6 +119,7 @@ export async function createCategory(formData: FormData) {
 
   logActivity({ action: 'created', entity_type: 'category', entity_name: data.name_en }).catch(() => {});
 
+  revalidateTag('categories');
   revalidatePath('/');
 }
 
@@ -155,6 +164,7 @@ export async function updateCategory(id: number, formData: FormData) {
 
   logActivity({ action: 'updated', entity_type: 'category', entity_id: id, entity_name: data.name_en }).catch(() => {});
 
+  revalidateTag('categories');
   revalidatePath('/');
 }
 
@@ -167,6 +177,7 @@ export async function deleteCategory(id: number) {
 
   logActivity({ action: 'deleted', entity_type: 'category', entity_id: id, entity_name: `Category #${id}` }).catch(() => {});
 
+  revalidateTag('categories');
   revalidatePath('/');
 }
 
@@ -182,5 +193,6 @@ export async function reorderCategories(orderedIds: number[]) {
       .set({ sort_order: i })
       .where(eq(categories.id, parsed.data[i]));
   }
+  revalidateTag('categories');
   revalidatePath('/');
 }

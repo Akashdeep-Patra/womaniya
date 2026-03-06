@@ -19,6 +19,10 @@ const nextConfig: NextConfig = {
       'radix-ui',
       'sonner',
       'class-variance-authority',
+      'cmdk',
+      'lenis',
+      'react-dropzone',
+      'zod',
     ],
   },
   headers: async () => [
