@@ -8,11 +8,46 @@ const HeroSection = dynamic(
   {
     ssr: true,
     loading: () => (
-      <section className="relative w-full bg-background min-h-svh flex items-center justify-center">
-        <div className="animate-pulse flex flex-col items-center gap-4">
-          <div className="w-16 h-1 bg-primary/20 rounded" />
-          <div className="h-16 w-64 bg-muted rounded-lg" />
-          <div className="h-12 w-48 bg-muted rounded-lg" />
+      <section className="relative w-full bg-background overflow-hidden">
+        <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-background to-secondary/10" />
+        <div className="relative z-10 w-full max-w-[1800px] mx-auto px-5 sm:px-6 md:px-8 lg:px-[6%] xl:px-[8%]">
+          <div className="flex flex-col lg:flex-row lg:items-center min-h-svh pt-[140px] sm:pt-[160px] lg:pt-[140px] pb-12 lg:pb-0 gap-8 lg:gap-0">
+            <div className="w-full lg:w-[42%] flex flex-col justify-center lg:pr-6 order-2 lg:order-1 mt-4 lg:mt-0 animate-pulse">
+              <div className="flex items-center gap-3 mb-6 md:mb-8">
+                <div className="w-8 md:w-12 h-px bg-primary/20" />
+                <div className="h-3 w-32 bg-primary/10 rounded" />
+              </div>
+              <div className="mb-6 md:mb-10 flex flex-col gap-2">
+                <div className="h-12 sm:h-16 lg:h-20 w-[70%] bg-muted rounded-lg" />
+                <div className="h-14 sm:h-20 lg:h-24 w-[85%] bg-primary/8 rounded-lg ml-4 sm:ml-8 lg:ml-14" />
+                <div className="h-10 sm:h-14 lg:h-16 w-[60%] bg-muted rounded-lg" />
+              </div>
+              <div className="flex items-start gap-4 mb-8 md:mb-10 pl-2 lg:pl-4">
+                <div className="w-0.5 h-12 bg-primary/10 shrink-0 mt-1" />
+                <div className="flex flex-col gap-2 w-full max-w-[320px]">
+                  <div className="h-4 w-full bg-muted rounded" />
+                  <div className="h-4 w-[80%] bg-muted rounded" />
+                </div>
+              </div>
+              <div className="flex items-center gap-4 pl-2 lg:pl-4">
+                <div className="h-12 md:h-14 w-44 bg-foreground/10 rounded-full" />
+                <div className="h-4 w-24 bg-muted rounded" />
+              </div>
+            </div>
+            <div className="w-full lg:hidden relative z-10 order-1 pt-6 pb-2">
+              <div className="relative w-full max-w-[420px] mx-auto aspect-4/5 p-2">
+                <div className="absolute bottom-2 left-2 w-[65%] h-[75%] rounded-4xl bg-muted border-[6px] border-background z-20 animate-pulse" />
+                <div className="absolute top-2 right-2 w-[50%] h-[60%] rounded-3xl bg-muted/70 border-[6px] border-background z-10 animate-pulse" />
+              </div>
+            </div>
+            <div className="hidden lg:block w-[58%] relative z-10 order-2 pt-12 pb-16 pl-12 pr-6 animate-pulse">
+              <div className="relative w-full h-[600px] max-h-[80vh]">
+                <div className="absolute left-0 top-[5%] w-[38%] h-[55%] rounded-3xl bg-muted" />
+                <div className="absolute left-[30%] top-0 w-[40%] h-[65%] rounded-3xl bg-muted/80 z-10" />
+                <div className="absolute right-0 top-[10%] w-[32%] h-[50%] rounded-3xl bg-muted/60 z-20" />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     ),
