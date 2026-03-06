@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { ImagePlus, X, UploadCloud, FolderOpen } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useDropzone } from 'react-dropzone';
+import { upload } from '@vercel/blob/client';
+import imageCompression from 'browser-image-compression';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { MediaPicker } from './MediaPicker';
@@ -28,44 +30,35 @@ interface UploadingFile {
   error?: string;
 }
 
-function uploadViaServer(
+const COMPRESSION_OPTIONS = {
+  maxSizeMB: 2,
+  maxWidthOrHeight: 2400,
+  useWebWorker: true,
+  fileType: 'image/webp' as const,
+};
+
+async function compressAndUpload(
   file: File,
-  onProgress?: (pct: number) => void
+  onProgress?: (pct: number) => void,
 ): Promise<{ url: string }> {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    const formData = new FormData();
-    formData.append('file', file);
+  // Compress client-side (skip for already-small files)
+  let processedFile: File = file;
+  if (file.size > 500 * 1024) {
+    onProgress?.(5);
+    processedFile = await imageCompression(file, COMPRESSION_OPTIONS);
+  }
 
-    xhr.upload.addEventListener('progress', (e) => {
-      if (e.lengthComputable && onProgress) {
-        onProgress(Math.round((e.loaded / e.total) * 100));
-      }
-    });
-
-    xhr.addEventListener('load', () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        try {
-          resolve(JSON.parse(xhr.responseText));
-        } catch {
-          reject(new Error('Invalid server response'));
-        }
-      } else {
-        try {
-          const body = JSON.parse(xhr.responseText);
-          reject(new Error(body.error || `Upload failed (${xhr.status})`));
-        } catch {
-          reject(new Error(`Upload failed (${xhr.status})`));
-        }
-      }
-    });
-
-    xhr.addEventListener('error', () => reject(new Error('Network error')));
-    xhr.addEventListener('abort', () => reject(new Error('Upload cancelled')));
-
-    xhr.open('POST', '/api/upload-file');
-    xhr.send(formData);
+  // Upload directly to Vercel Blob (bypasses serverless body limit)
+  const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_').replace(/\.{2,}/g, '');
+  const blob = await upload(`products/${Date.now()}-${safeName || 'upload'}`, processedFile, {
+    access: 'public',
+    handleUploadUrl: '/api/upload',
+    onUploadProgress: (e) => {
+      onProgress?.(Math.round(10 + (e.percentage * 0.9)));
+    },
   });
+
+  return { url: blob.url };
 }
 
 export function CameraUpload({
@@ -112,7 +105,7 @@ export function CameraUpload({
         await Promise.all(
           newUploads.map(async (uploadItem) => {
             try {
-              const newBlob = await uploadViaServer(uploadItem.file, (pct) => {
+              const newBlob = await compressAndUpload(uploadItem.file, (pct) => {
                 setUploadingFiles((prev) =>
                   prev.map((p) => (p.id === uploadItem.id ? { ...p, progress: pct } : p))
                 );
@@ -155,7 +148,7 @@ export function CameraUpload({
         setUploadingFiles([newUploads[0]]);
 
         try {
-          const newBlob = await uploadViaServer(file, (pct) => {
+          const newBlob = await compressAndUpload(file, (pct) => {
             setUploadingFiles([{ ...newUploads[0], progress: pct }]);
           });
           onUpload(newBlob.url);

@@ -1,6 +1,7 @@
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
+import { recordMediaAsset } from '@/actions/media';
 import { ratelimit } from '@/lib/ratelimit';
 import { logger } from '@/lib/logger';
 
@@ -39,9 +40,18 @@ export async function POST(request: Request): Promise<NextResponse> {
           }),
         };
       },
-      onUploadCompleted: async ({ blob, tokenPayload }) => {
-        // Run after the upload is completed
+      onUploadCompleted: async ({ blob }) => {
         logger.info('Upload completed', { url: blob.url });
+        try {
+          await recordMediaAsset({
+            url: blob.url,
+            filename: blob.pathname,
+            mime_type: blob.contentType,
+            size_bytes: 0,
+          });
+        } catch (e) {
+          logger.warn('Failed to record media asset', { url: blob.url, error: e });
+        }
       },
     });
 
