@@ -35,8 +35,8 @@ export function productOrderUrl(
 export function generalEnquiryUrl(locale = 'en', waNumber = DEFAULT_WA_NUMBER, pageUrl?: string): string {
   let msg =
     locale === 'bn'
-      ? `নমস্কার! আমি Womaniya-র হ্যান্ডলুম সংগ্রহ সম্পর্কে জানতে চাই।`
-      : `Hi! I'd love to know more about Womaniya's handloom collection.`;
+      ? `নমস্কার! আমি Womaniya সম্পর্কে জানতে চাই।`
+      : `Hi! I'd love to know more about Womaniya.`;
   if (pageUrl) msg += `\n\n${pageUrl}`;
   return whatsappUrl(msg, waNumber);
 }
@@ -45,12 +45,12 @@ export function shopBrowsingUrl(locale = 'en', category?: string, waNumber = DEF
   let msg = '';
   if (locale === 'bn') {
     msg = category
-      ? `নমস্কার! আমি Womaniya-র "${category}" সংগ্রহ দেখছি। এই ক্যাটাগরিতে কিছু সুপারিশ করবেন?`
-      : `নমস্কার! আমি Womaniya-র দোকান ব্রাউজ করছি। আমাকে কি সঠিক হ্যান্ডলুম পণ্য খুঁজে পেতে সাহায্য করবেন?`;
+      ? `নমস্কার! আমি Womaniya-তে "${category}" দেখছি। এই ক্যাটাগরিতে কিছু সুপারিশ করবেন?`
+      : `নমস্কার! আমি Womaniya-র দোকান ব্রাউজ করছি। আমাকে কি কিছু সুপারিশ করবেন?`;
   } else {
     msg = category
-      ? `Hi! I'm browsing Womaniya's "${category}" collection. Could you recommend something from this category?`
-      : `Hi! I'm browsing Womaniya's shop. Could you help me find the right handloom piece?`;
+      ? `Hi! I'm browsing "${category}" on Womaniya. Could you recommend something from this category?`
+      : `Hi! I'm browsing Womaniya's shop. Could you help me find something?`;
   }
   if (pageUrl) msg += `\n\n${pageUrl}`;
   return whatsappUrl(msg, waNumber);
@@ -59,8 +59,8 @@ export function shopBrowsingUrl(locale = 'en', category?: string, waNumber = DEF
 export function categoryEnquiryUrl(name: string, locale = 'en', waNumber = DEFAULT_WA_NUMBER, pageUrl?: string): string {
   let msg =
     locale === 'bn'
-      ? `নমস্কার! আমি Womaniya-র "${name}" সংগ্রহ সম্পর্কে আরও জানতে চাই।`
-      : `Hi! I'd love to learn more about Womaniya's "${name}" collection.`;
+      ? `নমস্কার! আমি Womaniya-তে "${name}" ক্যাটাগরি দেখছি। এই বিষয়ে আরও জানতে চাই।`
+      : `Hi! I'm looking at the "${name}" category on Womaniya. Could you tell me more?`;
   if (pageUrl) msg += `\n\n${pageUrl}`;
   return whatsappUrl(msg, waNumber);
 }
@@ -68,8 +68,8 @@ export function categoryEnquiryUrl(name: string, locale = 'en', waNumber = DEFAU
 export function aboutPageUrl(locale = 'en', waNumber = DEFAULT_WA_NUMBER, pageUrl?: string): string {
   let msg =
     locale === 'bn'
-      ? `নমস্কার! আমি Womaniya সম্পর্কে পড়ছিলাম এবং আপনাদের হ্যান্ডলুম সংগ্রহ সম্পর্কে আরও জানতে চাই।`
-      : `Hi! I was reading about Womaniya and would love to know more about your handloom heritage.`;
+      ? `নমস্কার! আমি Womaniya সম্পর্কে পড়ছিলাম এবং আরও জানতে চাই।`
+      : `Hi! I was reading about Womaniya and would love to know more.`;
   if (pageUrl) msg += `\n\n${pageUrl}`;
   return whatsappUrl(msg, waNumber);
 }
