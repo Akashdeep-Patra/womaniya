@@ -1,13 +1,20 @@
 'use client';
 
-import { ReactLenis } from 'lenis/react';
+import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
+import { useMediaQuery } from '@/lib/use-media-query';
+
+const ReactLenis = dynamic(
+  () => import('lenis/react').then((m) => ({ default: m.ReactLenis })),
+  { ssr: false },
+);
 
 export function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const isAdmin = pathname.includes('/admin');
 
-  if (isAdmin) return <>{children}</>;
+  if (isAdmin || !isDesktop) return <>{children}</>;
 
   return (
     <ReactLenis
