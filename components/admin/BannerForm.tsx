@@ -5,7 +5,7 @@ import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { CameraUpload } from './CameraUpload';
 import { BengalButton, BengalInput } from '@/components/bengal';
 import { FormSelect } from './FormField';
@@ -103,7 +103,7 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
   const onSubmit = (data: BannerFormValues) => {
     if (images.length === 0) {
       setApiError('At least one image is required');
-      toast.error('At least one image is required');
+      notify.warn('At least one image is required');
       return;
     }
 
@@ -127,16 +127,16 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
       try {
         if (initialData) {
           await updateBanner(initialData.id, formData);
-          toast.success('Banner updated successfully');
+          notify.success('banner', 'updated', data.title_en);
         } else {
           await createBanner(formData);
-          toast.success('Banner created successfully');
+          notify.success('banner', 'created', data.title_en);
         }
         router.push(`/${locale}/admin/banners`);
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Error saving banner';
         setApiError(message);
-        toast.error(message);
+        notify.error('banner', initialData ? 'updated' : 'created', message);
       }
     });
   };

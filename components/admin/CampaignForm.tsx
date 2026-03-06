@@ -5,7 +5,7 @@ import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { BengalButton, BengalInput } from '@/components/bengal';
 import { FormTextarea, FormSelect } from './FormField';
 import { createCampaign, updateCampaign } from '@/actions/campaigns';
@@ -95,16 +95,16 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
       try {
         if (initialData) {
           await updateCampaign(initialData.id, formData);
-          toast.success('Campaign updated successfully');
+          notify.success('campaign', 'updated', data.name_en);
         } else {
           await createCampaign(formData);
-          toast.success('Campaign created successfully');
+          notify.success('campaign', 'created', data.name_en);
         }
         router.push(`/${locale}/admin/campaigns`);
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Error saving campaign';
         setApiError(message);
-        toast.error(message);
+        notify.error('campaign', initialData ? 'updated' : 'created', message);
       }
     });
   };

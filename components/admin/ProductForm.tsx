@@ -5,7 +5,7 @@ import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useTranslations } from 'next-intl';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { CameraUpload } from './CameraUpload';
 import { TagInput } from './TagInput';
 import { BengalButton, BengalInput } from '@/components/bengal';
@@ -184,10 +184,10 @@ export function ProductForm({ initialData, initialImages, categories, collection
       try {
         if (initialData) {
           await updateProduct(initialData.id, formData);
-          toast.success('Updated successfully');
+          notify.success('product', 'updated', data.name_en);
         } else {
           await createProduct(formData);
-          toast.success(t('published'));
+          notify.success('product', 'created', data.name_en);
           reset({
             name_en: '',
             name_bn: '',
@@ -217,7 +217,7 @@ export function ProductForm({ initialData, initialImages, categories, collection
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Error publishing';
         setApiError(message);
-        toast.error(message);
+        notify.error('product', initialData ? 'updated' : 'created', message);
       }
     });
   };

@@ -11,7 +11,8 @@ export function productOrderUrl(
   sku?: string | null,
   size?: string | null,
   color?: string | null,
-  waNumber = DEFAULT_WA_NUMBER
+  waNumber = DEFAULT_WA_NUMBER,
+  pageUrl?: string
 ): string {
   let msg = '';
   if (locale === 'bn') {
@@ -27,18 +28,20 @@ export function productOrderUrl(
     if (color) msg += `Color: ${color}\n`;
     msg += `Could you help me place an order?`;
   }
+  if (pageUrl) msg += `\n\n${pageUrl}`;
   return whatsappUrl(msg, waNumber);
 }
 
-export function generalEnquiryUrl(locale = 'en', waNumber = DEFAULT_WA_NUMBER): string {
-  const msg =
+export function generalEnquiryUrl(locale = 'en', waNumber = DEFAULT_WA_NUMBER, pageUrl?: string): string {
+  let msg =
     locale === 'bn'
       ? `নমস্কার! আমি Womaniya-র হ্যান্ডলুম সংগ্রহ সম্পর্কে জানতে চাই।`
       : `Hi! I'd love to know more about Womaniya's handloom collection.`;
+  if (pageUrl) msg += `\n\n${pageUrl}`;
   return whatsappUrl(msg, waNumber);
 }
 
-export function shopBrowsingUrl(locale = 'en', category?: string, waNumber = DEFAULT_WA_NUMBER): string {
+export function shopBrowsingUrl(locale = 'en', category?: string, waNumber = DEFAULT_WA_NUMBER, pageUrl?: string): string {
   let msg = '';
   if (locale === 'bn') {
     msg = category
@@ -49,30 +52,34 @@ export function shopBrowsingUrl(locale = 'en', category?: string, waNumber = DEF
       ? `Hi! I'm browsing Womaniya's "${category}" collection. Could you recommend something from this category?`
       : `Hi! I'm browsing Womaniya's shop. Could you help me find the right handloom piece?`;
   }
+  if (pageUrl) msg += `\n\n${pageUrl}`;
   return whatsappUrl(msg, waNumber);
 }
 
-export function categoryEnquiryUrl(name: string, locale = 'en', waNumber = DEFAULT_WA_NUMBER): string {
-  const msg =
+export function categoryEnquiryUrl(name: string, locale = 'en', waNumber = DEFAULT_WA_NUMBER, pageUrl?: string): string {
+  let msg =
     locale === 'bn'
       ? `নমস্কার! আমি Womaniya-র "${name}" সংগ্রহ সম্পর্কে আরও জানতে চাই।`
       : `Hi! I'd love to learn more about Womaniya's "${name}" collection.`;
+  if (pageUrl) msg += `\n\n${pageUrl}`;
   return whatsappUrl(msg, waNumber);
 }
 
-export function aboutPageUrl(locale = 'en', waNumber = DEFAULT_WA_NUMBER): string {
-  const msg =
+export function aboutPageUrl(locale = 'en', waNumber = DEFAULT_WA_NUMBER, pageUrl?: string): string {
+  let msg =
     locale === 'bn'
       ? `নমস্কার! আমি Womaniya সম্পর্কে পড়ছিলাম এবং আপনাদের হ্যান্ডলুম সংগ্রহ সম্পর্কে আরও জানতে চাই।`
       : `Hi! I was reading about Womaniya and would love to know more about your handloom heritage.`;
+  if (pageUrl) msg += `\n\n${pageUrl}`;
   return whatsappUrl(msg, waNumber);
 }
 
-export function productViewUrl(name: string, price: string | number, locale = 'en', waNumber = DEFAULT_WA_NUMBER): string {
-  const msg =
+export function productViewUrl(name: string, price: string | number, locale = 'en', waNumber = DEFAULT_WA_NUMBER, pageUrl?: string): string {
+  let msg =
     locale === 'bn'
       ? `নমস্কার! আমি Womaniya-তে "${name}" (₹${price}) দেখছি। এই পণ্য সম্পর্কে আরও জানতে পারি?`
       : `Hi! I'm looking at "${name}" (₹${price}) on Womaniya. Could you tell me more about this piece?`;
+  if (pageUrl) msg += `\n\n${pageUrl}`;
   return whatsappUrl(msg, waNumber);
 }
 

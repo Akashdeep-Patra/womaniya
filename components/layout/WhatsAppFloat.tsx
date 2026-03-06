@@ -33,19 +33,20 @@ export function WhatsAppFloat({ waNumber }: { waNumber?: string }) {
   }, []);
 
   const href = useMemo(() => {
+    const currentUrl = typeof window !== 'undefined' ? window.location.href : undefined;
     switch (pageContext.type) {
       case 'product':
-        return productViewUrl(pageContext.name, pageContext.price, locale, waNumber);
+        return productViewUrl(pageContext.name, pageContext.price, locale, waNumber, currentUrl);
       case 'shop':
-        return shopBrowsingUrl(locale, pageContext.category, waNumber);
+        return shopBrowsingUrl(locale, pageContext.category, waNumber, currentUrl);
       case 'category':
-        return categoryEnquiryUrl(pageContext.name, locale, waNumber);
+        return categoryEnquiryUrl(pageContext.name, locale, waNumber, currentUrl);
       case 'about':
-        return aboutPageUrl(locale, waNumber);
+        return aboutPageUrl(locale, waNumber, currentUrl);
       default:
-        return generalEnquiryUrl(locale, waNumber);
+        return generalEnquiryUrl(locale, waNumber, currentUrl);
     }
-  }, [pageContext, locale, waNumber]);
+  }, [pageContext, locale, waNumber, pathname]);
 
   if (pathname?.startsWith(`/${locale}/admin`)) return null;
 

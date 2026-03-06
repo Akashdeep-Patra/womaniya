@@ -1,13 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { Package, Tags, FolderOpen, Megaphone, FileText, PlusCircle, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import {
+  Package, Tags, FolderOpen, Megaphone, FileText, Flag,
+  Plus, ArrowUpRight, Sparkles, CalendarDays,
+} from 'lucide-react';
 import { StatCard } from './StatCard';
 import { StatusPill } from './StatusPill';
-import { EmptyState } from './EmptyState';
 import type { DashboardStats } from '@/actions/dashboard';
-import type { Product } from '@/db/schema';
-import type { Collection, Campaign } from '@/db/schema';
+import type { Product, Collection, Campaign } from '@/db/schema';
 
 type DashboardClientProps = {
   stats: DashboardStats;
@@ -16,6 +19,50 @@ type DashboardClientProps = {
   liveCampaigns: Campaign[];
   locale: string;
 };
+
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.06 } },
+};
+const fadeUp = {
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] as const } },
+};
+
+function SectionHeader({
+  title,
+  href,
+  icon: Icon,
+}: {
+  title: string;
+  href: string;
+  icon: React.ElementType;
+}) {
+  return (
+    <div className="flex items-center justify-between px-1 mb-3">
+      <div className="flex items-center gap-2">
+        <Icon size={14} className="text-muted-foreground" />
+        <h3 className="text-xs tracking-[0.14em] uppercase text-muted-foreground font-semibold">
+          {title}
+        </h3>
+      </div>
+      <Link
+        href={href}
+        className="text-[11px] tracking-wider uppercase text-primary/70 hover:text-primary font-medium transition-colors flex items-center gap-1"
+      >
+        View all
+        <ArrowUpRight size={11} />
+      </Link>
+    </div>
+  );
+}
+
+const QUICK_ACTIONS = [
+  { key: 'product', href: '/products/new', label: 'Product', icon: Package },
+  { key: 'category', href: '/categories/new', label: 'Category', icon: Tags },
+  { key: 'collection', href: '/collections/new', label: 'Collection', icon: FolderOpen },
+  { key: 'banner', href: '/banners/new', label: 'Banner', icon: Flag },
+] as const;
 
 export function DashboardClient({
   stats,
@@ -27,114 +74,139 @@ export function DashboardClient({
   const base = `/${locale}/admin`;
 
   return (
-    <div className="space-y-8">
-      {/* KPI cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+    <motion.div
+      variants={stagger}
+      initial="hidden"
+      animate="show"
+      className="space-y-6 lg:space-y-8"
+    >
+      {/* ─── KPI Row ─── */}
+      <motion.div variants={fadeUp} className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
         <StatCard
           icon={<Package size={18} className="text-primary" />}
-          label="Total Products"
+          label="Products"
           value={stats.totalProducts}
-          variant="dark"
+          href={`${base}/products`}
         />
         <StatCard
           icon={<Tags size={18} className="text-primary" />}
           label="Categories"
           value={stats.totalCategories}
-          variant="accent"
+          href={`${base}/categories`}
         />
         <StatCard
-          icon={<FolderOpen size={18} className="text-foreground/60" />}
+          icon={<FolderOpen size={18} className="text-primary" />}
           label="Collections"
           value={stats.totalCollections}
+          href={`${base}/collections`}
         />
         <StatCard
-          icon={<Megaphone size={18} className="text-[#2D7A4F]" />}
+          icon={<Megaphone size={18} className="text-admin-success" />}
           label="Live Campaigns"
           value={stats.liveCampaigns}
+          href={`${base}/campaigns`}
         />
-      </div>
+      </motion.div>
 
-      {/* Secondary stats row */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="bg-card border border-border rounded-lg p-4 text-center">
-          <p className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Published</p>
-          <p className="font-sans font-semibold tracking-tight text-2xl text-primary">{stats.publishedProducts}</p>
-        </div>
-        <div className="bg-card border border-border rounded-lg p-4 text-center">
-          <p className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Drafts</p>
-          <p className="font-sans font-semibold tracking-tight text-2xl text-accent">{stats.draftProducts}</p>
-        </div>
-        <div className="bg-card border border-border rounded-lg p-4 text-center">
-          <p className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Pages</p>
-          <p className="font-sans font-semibold tracking-tight text-2xl text-foreground">{stats.totalPages}</p>
-        </div>
-      </div>
-
-      {/* Quick actions */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      {/* ─── Status Strip ─── */}
+      <motion.div variants={fadeUp} className="grid grid-cols-3 gap-3">
         {[
-          { href: `${base}/products/new`, label: 'Add Product', icon: PlusCircle, colorClass: 'text-primary', bgClass: 'bg-primary/10' },
-          { href: `${base}/categories/new`, label: 'Add Category', icon: Tags, colorClass: 'text-accent', bgClass: 'bg-accent/10' },
-          { href: `${base}/collections/new`, label: 'New Collection', icon: FolderOpen, colorClass: 'text-primary', bgClass: 'bg-primary/10' },
-          { href: `${base}/pages/new`, label: 'New Page', icon: FileText, colorClass: 'text-foreground', bgClass: 'bg-foreground/10' },
-        ].map((action) => (
-          <Link prefetch={true} key={action.href}
-            
-            href={action.href}
-            className="flex items-center gap-3 bg-card rounded-lg border border-border p-4 hover:bg-muted transition-colors group"
+          { label: 'Published', value: stats.publishedProducts, color: 'text-admin-success' },
+          { label: 'Drafts', value: stats.draftProducts, color: 'text-admin-warning' },
+          { label: 'Pages', value: stats.totalPages, color: 'text-foreground' },
+        ].map((s) => (
+          <div
+            key={s.label}
+            className="relative overflow-hidden rounded-xl border border-border bg-card px-4 py-3 lg:py-4"
           >
-            <div
-              className={`w-10 h-10 rounded-md flex items-center justify-center shrink-0 ${action.bgClass}`}
-            >
-              <action.icon size={18} className={action.colorClass} />
-            </div>
-            <span className="text-sm font-medium text-foreground">{action.label}</span>
-            <ArrowRight
-              size={14}
-              className="ml-auto text-muted-foreground group-hover:text-foreground transition-colors"
-            />
-          </Link>
-        ))}
-      </div>
-
-      {/* Two column layout: Recent Products + Live Campaigns */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Recent Products */}
-        <div className="bg-background rounded-lg border border-border overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-            <h3 className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
-              Recent Products
-            </h3>
-            <Link  href={`${base}/products`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
-              View all
-            </Link>
+            <p className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
+              {s.label}
+            </p>
+            <p className={`font-sans font-bold tracking-tight text-2xl lg:text-3xl tabular-nums mt-0.5 ${s.color}`}>
+              {s.value}
+            </p>
           </div>
-          {recentProducts.length === 0 ? (
-            <div className="p-8">
-              <EmptyState
-                title="No products yet"
-                description="Add your first product to get started."
-                action={
-                  <Link  href={`${base}/products/new`} className="text-sm text-bengal-sindoor hover:underline">
-                    Add Product
-                  </Link>
-                }
+        ))}
+      </motion.div>
+
+      {/* ─── Quick Actions ─── */}
+      <motion.div variants={fadeUp}>
+        <div className="flex items-center gap-2 px-1 mb-3">
+          <Sparkles size={14} className="text-muted-foreground" />
+          <h3 className="text-xs tracking-[0.14em] uppercase text-muted-foreground font-semibold">
+            Quick Create
+          </h3>
+        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+          {QUICK_ACTIONS.map((action) => (
+            <Link
+              key={action.key}
+              prefetch={true}
+              href={`${base}${action.href}`}
+              className="group flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3.5 transition-all duration-200 hover:border-primary/30 hover:bg-primary/[0.03] active:scale-[0.98]"
+            >
+              <div className="w-9 h-9 rounded-lg bg-primary/8 dark:bg-primary/15 flex items-center justify-center shrink-0 transition-all duration-300 group-hover:bg-primary/15 group-hover:scale-105">
+                <action.icon size={16} className="text-primary" />
+              </div>
+              <span className="text-sm font-medium text-foreground flex-1">{action.label}</span>
+              <Plus
+                size={14}
+                className="text-muted-foreground/40 transition-all duration-200 group-hover:text-primary group-hover:rotate-90"
               />
+            </Link>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* ─── Content Grid ─── */}
+      <motion.div variants={fadeUp} className="grid lg:grid-cols-5 gap-4 lg:gap-5">
+        {/* Recent Products — wider column */}
+        <div className="lg:col-span-3 rounded-2xl border border-border bg-card overflow-hidden">
+          <SectionHeader title="Recent Products" href={`${base}/products`} icon={Package} />
+          {recentProducts.length === 0 ? (
+            <div className="px-5 py-12 text-center">
+              <Package size={28} className="mx-auto text-muted-foreground/20 mb-3" />
+              <p className="text-sm text-muted-foreground">No products yet</p>
+              <Link
+                href={`${base}/products/new`}
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-primary mt-3 hover:underline"
+              >
+                <Plus size={12} />
+                Add your first product
+              </Link>
             </div>
           ) : (
-            <div className="divide-y divide-border">
-              {recentProducts.map((product) => (
-                <Link prefetch={true} key={product.id}
+            <div>
+              {recentProducts.map((product, i) => (
+                <Link
+                  key={product.id}
+                  prefetch={true}
                   href={`${base}/products/${product.id}/edit`}
-                  className="flex items-center justify-between px-5 py-3.5 hover:bg-muted transition-colors"
+                  className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/50 border-t border-border first:border-t-0"
                 >
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{product.name_en}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{product.category}</p>
+                  {/* Thumbnail */}
+                  <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-muted shrink-0 ring-1 ring-border">
+                    <Image
+                      src={product.image_url}
+                      alt={product.name_en}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      sizes="40px"
+                    />
                   </div>
-                  <div className="flex items-center gap-3">
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors">
+                      {product.name_en}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">{product.category}</p>
+                  </div>
+
+                  {/* Meta */}
+                  <div className="flex items-center gap-2.5 shrink-0">
                     <StatusPill status={product.status} />
-                    <span className="font-sans font-semibold tracking-tight text-bengal-sindoor">
+                    <span className="font-sans font-semibold text-sm tabular-nums text-foreground hidden sm:block">
                       ₹{Number(product.price).toLocaleString('en-IN')}
                     </span>
                   </div>
@@ -144,72 +216,77 @@ export function DashboardClient({
           )}
         </div>
 
-        {/* Live Campaigns + Upcoming Collections */}
-        <div className="space-y-4">
-          <div className="bg-background rounded-lg border border-border overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-              <h3 className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
-                Live Campaigns
-              </h3>
-              <Link  href={`${base}/campaigns`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
-                View all
-              </Link>
-            </div>
+        {/* Right column — Campaigns + Collections stacked */}
+        <div className="lg:col-span-2 flex flex-col gap-4 lg:gap-5">
+          {/* Live Campaigns */}
+          <div className="rounded-2xl border border-border bg-card overflow-hidden">
+            <SectionHeader title="Live Campaigns" href={`${base}/campaigns`} icon={Megaphone} />
             {liveCampaigns.length === 0 ? (
-              <div className="px-5 py-6 text-center text-sm text-muted-foreground">
-                No active campaigns
+              <div className="px-4 py-8 text-center">
+                <Megaphone size={24} className="mx-auto text-muted-foreground/20 mb-2" />
+                <p className="text-sm text-muted-foreground">No active campaigns</p>
               </div>
             ) : (
-              <div className="divide-y divide-border">
+              <div>
                 {liveCampaigns.map((campaign) => (
-                  <Link  key={campaign.id}
+                  <Link
+                    key={campaign.id}
                     href={`${base}/campaigns/${campaign.id}/edit`}
-                    className="flex items-center justify-between px-5 py-3.5 hover:bg-muted transition-colors"
+                    className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/50 border-t border-border first:border-t-0"
                   >
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{campaign.name_en}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
+                    <div className="w-8 h-8 rounded-lg bg-admin-success/10 flex items-center justify-center shrink-0">
+                      <Megaphone size={14} className="text-admin-success" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground truncate">
+                        {campaign.name_en}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5 flex items-center gap-1">
+                        <CalendarDays size={10} />
                         {campaign.starts_at
-                          ? new Date(campaign.starts_at).toLocaleDateString()
-                          : ''}{' '}
-                        —{' '}
+                          ? new Date(campaign.starts_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })
+                          : '—'}
+                        {' — '}
                         {campaign.ends_at
-                          ? new Date(campaign.ends_at).toLocaleDateString()
+                          ? new Date(campaign.ends_at).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })
                           : 'Ongoing'}
                       </p>
                     </div>
-                    <StatusPill status="live" />
+                    <div className="w-2 h-2 rounded-full bg-admin-success animate-pulse shrink-0" />
                   </Link>
                 ))}
               </div>
             )}
           </div>
 
-          <div className="bg-background rounded-lg border border-border overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-border">
-              <h3 className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
-                Upcoming Collections
-              </h3>
-              <Link  href={`${base}/collections`} className="text-[10px] tracking-wider uppercase text-bengal-kansa hover:underline">
-                View all
-              </Link>
-            </div>
+          {/* Upcoming Collections */}
+          <div className="rounded-2xl border border-border bg-card overflow-hidden">
+            <SectionHeader title="Upcoming Collections" href={`${base}/collections`} icon={FolderOpen} />
             {upcomingCollections.length === 0 ? (
-              <div className="px-5 py-6 text-center text-sm text-muted-foreground">
-                No upcoming launches
+              <div className="px-4 py-8 text-center">
+                <FolderOpen size={24} className="mx-auto text-muted-foreground/20 mb-2" />
+                <p className="text-sm text-muted-foreground">No upcoming launches</p>
               </div>
             ) : (
-              <div className="divide-y divide-border">
+              <div>
                 {upcomingCollections.map((col) => (
-                  <Link prefetch={true}
+                  <Link
                     key={col.id}
+                    prefetch={true}
                     href={`${base}/collections/${col.id}/edit`}
-                    className="flex items-center justify-between px-5 py-3.5 hover:bg-muted transition-colors"
+                    className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/50 border-t border-border first:border-t-0"
                   >
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{col.name_en}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">
-                        Launches {col.launch_date ? new Date(col.launch_date).toLocaleDateString() : 'TBD'}
+                    <div className="w-8 h-8 rounded-lg bg-primary/8 dark:bg-primary/15 flex items-center justify-center shrink-0">
+                      <FolderOpen size={14} className="text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground truncate">
+                        {col.name_en}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                        {col.launch_date
+                          ? new Date(col.launch_date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })
+                          : 'TBD'}
                       </p>
                     </div>
                     <StatusPill status="scheduled" />
@@ -219,7 +296,7 @@ export function DashboardClient({
             )}
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

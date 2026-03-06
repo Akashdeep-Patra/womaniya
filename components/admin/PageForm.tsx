@@ -5,7 +5,7 @@ import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { CameraUpload } from './CameraUpload';
 import { BengalButton, BengalInput } from '@/components/bengal';
 import { FormTextarea, FormSelect } from './FormField';
@@ -105,16 +105,16 @@ export function PageForm({ initialData, locale, basePath = 'pages', defaultPageT
       try {
         if (initialData) {
           await updatePage(initialData.id, formData, sectionsJson);
-          toast.success('Page updated successfully');
+          notify.success('page', 'updated', data.title_en);
         } else {
           await createPage(formData, sectionsJson);
-          toast.success('Page created successfully');
+          notify.success('page', 'created', data.title_en);
         }
         router.push(`/${locale}/admin/${basePath}`);
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Error saving page';
         setApiError(message);
-        toast.error(message);
+        notify.error('page', initialData ? 'updated' : 'created', message);
       }
     });
   };

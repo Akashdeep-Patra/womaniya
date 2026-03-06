@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useState, useTransition } from 'react';
 import { Trash2, Edit } from 'lucide-react';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { deleteBanner } from '@/actions/banners';
 import { EntityTable, Column, MobileCardConfig } from './EntityTable';
 import { StatusPill } from './StatusPill';
@@ -26,9 +26,9 @@ export function BannerTableClient({ initialBanners, locale }: { initialBanners: 
       try {
         await deleteBanner(id);
         setBanners((prev) => prev.filter((b) => b.id !== id));
-        toast.success('Deleted successfully');
-      } catch {
-        toast.error('Failed to delete');
+        notify.success('banner', 'deleted', banners.find(b => b.id === id)?.title_en ?? undefined);
+      } catch (err) {
+        notify.error('banner', 'deleted', err);
       } finally {
         setId(null);
       }

@@ -5,7 +5,7 @@ import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { CameraUpload } from './CameraUpload';
 import { BengalButton, BengalInput } from '@/components/bengal';
 import { FormSelect, FormTextarea } from './FormField';
@@ -92,16 +92,16 @@ export function TestimonialForm({ initialData, locale }: TestimonialFormProps) {
       try {
         if (initialData) {
           await updateTestimonial(initialData.id, formData);
-          toast.success('Testimonial updated successfully');
+          notify.success('testimonial', 'updated', data.author_name);
         } else {
           await createTestimonial(formData);
-          toast.success('Testimonial created successfully');
+          notify.success('testimonial', 'created', data.author_name);
         }
         router.push(`/${locale}/admin/testimonials`);
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Error saving testimonial';
         setApiError(message);
-        toast.error(message);
+        notify.error('testimonial', initialData ? 'updated' : 'created', message);
       }
     });
   };

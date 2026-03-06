@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { Trash2, Edit, Star } from 'lucide-react';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { deleteTestimonial } from '@/actions/testimonials';
 import { EntityTable, Column, MobileCardConfig } from './EntityTable';
 import { StatusPill } from './StatusPill';
@@ -26,9 +26,9 @@ export function TestimonialTableClient({ initialTestimonials, locale }: { initia
       try {
         await deleteTestimonial(id);
         setTestimonials((prev) => prev.filter((t) => t.id !== id));
-        toast.success('Deleted successfully');
-      } catch {
-        toast.error('Failed to delete');
+        notify.success('testimonial', 'deleted', testimonials.find(t => t.id === id)?.author_name);
+      } catch (err) {
+        notify.error('testimonial', 'deleted', err);
       } finally {
         setId(null);
       }

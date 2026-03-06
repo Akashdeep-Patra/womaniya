@@ -23,14 +23,7 @@ export function Providers({ locale, messages, children, waNumber }: Props) {
         <SmoothScrollProvider>
           {children}
           <WhatsAppFloat waNumber={waNumber} />
-          <Toaster
-            position="top-center"
-            toastOptions={{
-              classNames: {
-                toast: 'bg-background text-foreground border-border font-sans rounded-2xl',
-              },
-            }}
-          />
+          <Toaster />
         </SmoothScrollProvider>
         </WhatsAppProvider>
       </NextIntlClientProvider>

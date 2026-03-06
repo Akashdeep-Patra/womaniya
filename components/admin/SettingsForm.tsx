@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { BengalButton, BengalInput } from '@/components/bengal';
 import { updateSettings } from '@/actions/settings';
 
@@ -29,10 +29,10 @@ export function SettingsForm({ initialData, locale }: SettingsFormProps) {
     startTransition(async () => {
       try {
         await updateSettings(data);
-        toast.success('Settings updated successfully');
+        notify.success('settings', 'updated');
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Error updating settings';
-        toast.error(message);
+        notify.error('settings', 'updated', message);
       }
     });
   };

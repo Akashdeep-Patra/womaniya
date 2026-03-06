@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useState, useTransition } from 'react';
 import { Trash2, Edit } from 'lucide-react';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { deleteCollection } from '@/actions/collections';
 import { EntityTable, Column, MobileCardConfig } from './EntityTable';
 import { StatusPill } from './StatusPill';
@@ -26,9 +26,9 @@ export function CollectionTableClient({ initialCollections, locale }: { initialC
       try {
         await deleteCollection(id);
         setCollections((prev) => prev.filter((c) => c.id !== id));
-        toast.success('Deleted successfully');
-      } catch {
-        toast.error('Failed to delete');
+        notify.success('collection', 'deleted', collections.find(c => c.id === id)?.name_en);
+      } catch (err) {
+        notify.error('collection', 'deleted', err);
       } finally {
         setId(null);
       }

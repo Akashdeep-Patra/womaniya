@@ -4,7 +4,7 @@ import { useState, useTransition, useMemo } from 'react';
 import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { CameraUpload } from './CameraUpload';
 import { BengalButton, BengalInput } from '@/components/bengal';
 import { FormTextarea, FormSelect } from './FormField';
@@ -133,10 +133,10 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
       try {
         if (initialData) {
           await updateCollection(initialData.id, formData);
-          toast.success('Collection updated successfully');
+          notify.success('collection', 'updated', data.name_en);
         } else {
           await createCollection(formData);
-          toast.success('Collection created successfully');
+          notify.success('collection', 'created', data.name_en);
           reset({
             name_en: '',
             name_bn: '',
@@ -153,7 +153,7 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Error saving collection';
         setApiError(message);
-        toast.error(message);
+        notify.error('collection', initialData ? 'updated' : 'created', message);
       }
     });
   };

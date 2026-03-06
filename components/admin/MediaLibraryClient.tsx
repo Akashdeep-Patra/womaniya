@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react';
 import Image from 'next/image';
 import { CameraUpload } from './CameraUpload';
 import { Trash2, Copy, Tag, Check, X } from 'lucide-react';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { deleteMedia, updateMediaMetadata } from '@/actions/media';
 import { BengalInput, BengalButton } from '@/components/bengal';
 import type { MediaAsset } from '@/db/schema';
@@ -35,12 +35,12 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
     };
 
     setAssets(prev => [tempAsset, ...prev]);
-    toast.success('Image uploaded successfully');
+    notify.success('media', 'uploaded');
   };
 
   const copyUrl = (url: string) => {
     navigator.clipboard.writeText(url);
-    toast.success('URL copied to clipboard');
+    notify.info('URL copied to clipboard');
   };
 
   const handleDelete = (id: number) => {
@@ -51,9 +51,9 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
         await deleteMedia(id);
         setAssets(prev => prev.filter(a => a.id !== id));
         setSelectedAsset(null);
-        toast.success('Deleted successfully');
-      } catch {
-        toast.error('Failed to delete');
+        notify.success('media', 'deleted');
+      } catch (err) {
+        notify.error('media', 'deleted', err);
       }
     });
   };
@@ -67,7 +67,7 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
     startTransition(async () => {
       try {
         await updateMediaMetadata(selectedAsset.id, formData);
-        toast.success('Metadata updated');
+        notify.success('media', 'updated');
         // Optimistic update
         setAssets(prev => prev.map(a => 
           a.id === selectedAsset.id ? {
@@ -77,7 +77,7 @@ export function MediaLibraryClient({ initialMedia }: { initialMedia: MediaAsset[
           } : a
         ));
       } catch {
-        toast.error('Failed to update');
+        notify.error('media', 'updated');
       }
     });
   };

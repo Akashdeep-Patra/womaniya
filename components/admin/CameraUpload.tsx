@@ -8,7 +8,7 @@ import { useDropzone } from 'react-dropzone';
 import { upload } from '@vercel/blob/client';
 import imageCompression from 'browser-image-compression';
 import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { MediaPicker } from './MediaPicker';
 import type { MediaAsset } from '@/db/schema';
 
@@ -119,7 +119,7 @@ export function CameraUpload({
               );
             } catch (err) {
               const msg = err instanceof Error ? err.message : 'Upload failed';
-              toast.error(`Failed to upload ${uploadItem.file.name}: ${msg}`);
+              notify.error('media', 'uploaded', `Failed to upload ${uploadItem.file.name}: ${msg}`);
               setUploadingFiles((prev) =>
                 prev.map((p) => (p.id === uploadItem.id ? { ...p, error: msg } : p))
               );
@@ -155,7 +155,7 @@ export function CameraUpload({
           onUpload(newBlob.url);
         } catch (err) {
           const msg = err instanceof Error ? err.message : 'Upload failed';
-          toast.error(msg);
+          notify.error('media', 'uploaded', msg);
           setSinglePreview(null);
         } finally {
           setUploadingFiles([]);

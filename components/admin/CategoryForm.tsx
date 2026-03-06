@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { CameraUpload } from './CameraUpload';
 import { FormSelect } from './FormField';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { X, GripVertical } from 'lucide-react';
 import { Reorder } from 'framer-motion';
 import type { Category } from '@/db/schema';
@@ -87,12 +87,12 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
     startTransition(async () => {
       try {
         await action(formData);
-        toast.success(category ? 'Category updated' : 'Category created');
+        notify.success('category', category ? 'updated' : 'created', data.name_en);
         router.push(`/${locale}/admin/categories`);
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Something went wrong';
         setApiError(message);
-        toast.error(message);
+        notify.error('category', category ? 'updated' : 'created', message);
       }
     });
   };

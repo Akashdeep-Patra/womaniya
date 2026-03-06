@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { Trash2, Edit, FileText } from 'lucide-react';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { deletePage } from '@/actions/pages';
 import { EntityTable, Column, MobileCardConfig } from './EntityTable';
 import { StatusPill } from './StatusPill';
@@ -25,9 +25,9 @@ export function PageTableClient({ initialPages, locale, basePath = 'pages' }: { 
       try {
         await deletePage(id);
         setPages((prev) => prev.filter((p) => p.id !== id));
-        toast.success('Deleted successfully');
-      } catch {
-        toast.error('Failed to delete');
+        notify.success('page', 'deleted', pages.find(p => p.id === id)?.title_en);
+      } catch (err) {
+        notify.error('page', 'deleted', err);
       } finally {
         setId(null);
       }

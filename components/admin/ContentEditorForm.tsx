@@ -3,7 +3,7 @@
 import {
   useState, useTransition, useCallback, useMemo, useRef, useId,
 } from 'react';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { BengalButton } from '@/components/bengal';
 import { cn } from '@/lib/utils';
 import {
@@ -144,8 +144,8 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
         }
         setDirtyKeys({});
         setIframeKey((k) => k + 1);
-        toast.success(`Saved ${totalDirtyCount} change${totalDirtyCount > 1 ? 's' : ''}`);
-      } catch { toast.error('Failed to save changes'); }
+        notify.success('settings', 'saved');
+      } catch { notify.error('settings', 'saved'); }
     });
   }, [dirtyKeys, overrides, activeLocale, totalDirtyCount]);
 
@@ -156,8 +156,8 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
         setOverrides((prev) => { const next = { ...prev }; if (next[ns]) { const { [key]: _, ...rest } = next[ns]; next[ns] = rest; } return next; });
         setDirtyKeys((prev) => { const next = { ...prev }; if (next[ns]) { const s = new Set(next[ns]); s.delete(key); next[ns] = s; } return next; });
         setIframeKey((k) => k + 1);
-        toast.success('Reset to default');
-      } catch { toast.error('Failed to reset'); }
+        notify.success('settings', 'reset');
+      } catch { notify.error('settings', 'reset'); }
     });
   }, [activeLocale]);
 
@@ -170,7 +170,7 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
       setOverrides(newOverrides);
       setDirtyKeys({});
       setIframeKey((k) => k + 1);
-    } catch { toast.error('Failed to load content'); }
+    } catch { notify.error('settings', 'saved', 'Failed to load content'); }
   }, [activeLocale, totalDirtyCount]);
 
   const sectionDirtyCount = useCallback((ns: string) => dirtyKeys[ns]?.size ?? 0, [dirtyKeys]);

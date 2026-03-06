@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useState, useTransition } from 'react';
 import { useTranslations } from 'next-intl';
 import { Trash2, Edit } from 'lucide-react';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { deleteProduct } from '@/actions/products';
 import { EntityTable, Column, MobileCardConfig } from './EntityTable';
 import { StatusPill } from './StatusPill';
@@ -28,9 +28,9 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
       try {
         await deleteProduct(id);
         setProducts((prev) => prev.filter((p) => p.id !== id));
-        toast.success('Deleted successfully');
-      } catch {
-        toast.error('Failed to delete');
+        notify.success('product', 'deleted', products.find(p => p.id === id)?.name_en);
+      } catch (err) {
+        notify.error('product', 'deleted', err);
       } finally {
         setId(null);
       }

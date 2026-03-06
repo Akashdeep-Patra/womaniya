@@ -55,14 +55,16 @@ export function ProductOrderSection({ product, locale, isBn, waNumber }: Product
 
   const name = isBn && product.name_bn ? product.name_bn : product.name_en;
   
+  const pageUrl = typeof window !== 'undefined' ? window.location.href : undefined;
   const waUrl = productOrderUrl(
-    name, 
-    product.price, 
-    locale, 
-    product.sku, 
-    selectedSize, 
+    name,
+    product.price,
+    locale,
+    product.sku,
+    selectedSize,
     selectedColor,
-    waNumber
+    waNumber,
+    pageUrl
   );
 
   return (

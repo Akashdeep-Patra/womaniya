@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { Trash2, Edit, CalendarDays } from 'lucide-react';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notify';
 import { deleteCampaign } from '@/actions/campaigns';
 import { EntityTable, Column, MobileCardConfig } from './EntityTable';
 import { StatusPill } from './StatusPill';
@@ -29,9 +29,9 @@ export function CampaignTableClient({ initialCampaigns, locale }: { initialCampa
       try {
         await deleteCampaign(id);
         setCampaigns((prev) => prev.filter((c) => c.id !== id));
-        toast.success('Deleted successfully');
-      } catch {
-        toast.error('Failed to delete');
+        notify.success('campaign', 'deleted', campaigns.find(c => c.id === id)?.name_en);
+      } catch (err) {
+        notify.error('campaign', 'deleted', err);
       } finally {
         setId(null);
       }
