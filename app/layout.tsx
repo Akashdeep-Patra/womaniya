@@ -4,6 +4,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return children as any;
+  return (
+    <html>
+      <body>{children}</body>
+    </html>
+  );
 }
