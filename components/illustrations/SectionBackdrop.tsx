@@ -123,7 +123,7 @@ export function AlponaBackdrop({ className = '' }: BackdropProps) {
         <path d="M0 -40Q12 -20 0 0Q-12 -20 0 -40Z" fill="currentColor" transform="rotate(180)" />
         <path d="M0 -40Q12 -20 0 0Q-12 -20 0 -40Z" fill="currentColor" transform="rotate(240)" />
         <path d="M0 -40Q12 -20 0 0Q-12 -20 0 -40Z" fill="currentColor" transform="rotate(300)" />
-        <circle r="6" fill="currentColor" />
+        <circle cx="0" cy="0" r="6" fill="currentColor" />
       </g>
 
       {/* ── Mango motif (aam) — right side ── */}
@@ -140,7 +140,7 @@ export function AlponaBackdrop({ className = '' }: BackdropProps) {
         <path d="M0 -40Q12 -20 0 0Q-12 -20 0 -40Z" fill="currentColor" transform="rotate(180)" />
         <path d="M0 -40Q12 -20 0 0Q-12 -20 0 -40Z" fill="currentColor" transform="rotate(240)" />
         <path d="M0 -40Q12 -20 0 0Q-12 -20 0 -40Z" fill="currentColor" transform="rotate(300)" />
-        <circle r="5" fill="currentColor" />
+        <circle cx="0" cy="0" r="5" fill="currentColor" />
       </g>
 
       {/* ── Leaf — mid left ── */}
@@ -218,7 +218,7 @@ export function KanthaBackdrop({ className = '' }: BackdropProps) {
       {/* ── Twin fish (joy-mach) — top right, classic Bengali symbol ── */}
       <g opacity="0.045" transform="translate(1200 100) rotate(15)">
         <path d="M0 0C15 -20 45 -20 60 0C45 5 15 5 0 0Z" fill="currentColor" />
-        <circle cx="50" cy="-6" r="3" fill="currentColor" opacity="0" />
+
         <path d="M0 12C15 32 45 32 60 12C45 7 15 7 0 12Z" fill="currentColor" />
       </g>
 
@@ -248,7 +248,7 @@ export function KanthaBackdrop({ className = '' }: BackdropProps) {
         <path d="M0 -40Q12 -20 0 0Q-12 -20 0 -40Z" fill="currentColor" transform="rotate(144)" />
         <path d="M0 -40Q12 -20 0 0Q-12 -20 0 -40Z" fill="currentColor" transform="rotate(216)" />
         <path d="M0 -40Q12 -20 0 0Q-12 -20 0 -40Z" fill="currentColor" transform="rotate(288)" />
-        <circle r="5" fill="currentColor" />
+        <circle cx="0" cy="0" r="5" fill="currentColor" />
       </g>
 
       {/* ── Diamond — center right ── */}
