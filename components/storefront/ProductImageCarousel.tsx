@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ProductImageCarouselProps {
@@ -14,8 +14,6 @@ interface ProductImageCarouselProps {
 export function ProductImageCarousel({ images, productName }: ProductImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
-  const [isZoomed, setIsZoomed] = useState(false);
-
   const paginate = useCallback((newDirection: number) => {
     setDirection(newDirection);
     setCurrentIndex((prev) => (prev + newDirection + images.length) % images.length);
@@ -62,7 +60,7 @@ export function ProductImageCarousel({ images, productName }: ProductImageCarous
   return (
     <div className="flex flex-col gap-3 md:gap-4 w-full">
       {/* Main Image */}
-      <div className="relative aspect-[3/4] w-full bg-muted/30 rounded-2xl lg:rounded-3xl overflow-hidden border border-border/60 group">
+      <div className="relative aspect-[3/4] w-full bg-muted/30 rounded-2xl lg:rounded-3xl overflow-hidden border border-border/60 group touch-pan-y">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={currentIndex}
