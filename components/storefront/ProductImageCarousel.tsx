@@ -56,7 +56,7 @@ export function ProductImageCarousel({ images, productName }: ProductImageCarous
   return (
     <div className="flex flex-col gap-4 w-full">
       {/* Main Image */}
-      <div className="relative aspect-[3/4] md:aspect-[4/5] w-full bg-bengal-kori/50 rounded-2xl md:rounded-3xl overflow-hidden border border-bengal-kansa/20 group">
+      <div className="relative aspect-[3/4] md:aspect-[4/5] w-full bg-bengal-kori/50 rounded-2xl md:rounded-3xl overflow-hidden border border-bengal-kansa/20 group touch-pan-y">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={currentIndex}
@@ -70,6 +70,7 @@ export function ProductImageCarousel({ images, productName }: ProductImageCarous
               opacity: { duration: 0.2 },
             }}
             drag="x"
+            dragDirectionLock
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={1}
             onDragEnd={(e, { offset, velocity }) => {
@@ -81,7 +82,8 @@ export function ProductImageCarousel({ images, productName }: ProductImageCarous
                 paginate(-1);
               }
             }}
-            className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing"
+            className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing touch-pan-y"
+            style={{ touchAction: 'pan-y' }}
           >
             <Image
               src={images[currentIndex]}
