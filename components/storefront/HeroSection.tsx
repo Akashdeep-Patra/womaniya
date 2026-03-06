@@ -61,12 +61,12 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 w-full max-w-[1800px] mx-auto px-5 sm:px-6 md:px-8 lg:px-[6%] xl:px-[8%]">
-        <div className="flex flex-col lg:flex-row lg:items-center min-h-svh pt-[140px] sm:pt-[160px] lg:pt-[140px] pb-12 lg:pb-0 gap-8 lg:gap-0">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:min-h-svh pt-[100px] sm:pt-[110px] lg:pt-[140px] pb-8 lg:pb-0 gap-0">
 
           {/* ── TYPOGRAPHY (unchanged) ── */}
           <motion.div
             style={{ y: yText }}
-            className="w-full lg:w-[42%] flex flex-col justify-center relative z-30 lg:pr-6 order-2 lg:order-1 mt-4 lg:mt-0"
+            className="hidden lg:flex w-[42%] flex-col justify-center relative z-30 lg:pr-6 order-1"
           >
             <div className="absolute -left-12 top-1/2 -translate-y-1/2 -rotate-90 origin-center text-[9px] tracking-[0.4em] uppercase text-muted-foreground/50 font-sans-en whitespace-nowrap hidden xl:block">
               {t('badge')} — EST. 2019
@@ -150,31 +150,184 @@ export function HeroSection() {
             </motion.div>
           </motion.div>
 
-          {/* ── MOBILE COLLAGE — LCP image is NOT animated to avoid delaying paint ── */}
-          <div className="w-full lg:hidden relative z-10 order-1 pt-6 pb-2">
-            <div className="relative w-full max-w-[420px] mx-auto aspect-4/5 p-2">
-              <div className="absolute bottom-2 left-2 w-[65%] h-[75%] rounded-4xl overflow-hidden shadow-xl border-[6px] border-background z-20 bg-muted">
-                <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority fetchPriority="high" className="object-cover" style={{ objectPosition: IMAGES.card1.pos }} sizes="60vw" />
+          {/* ── MOBILE HERO — Editorial magazine layout ── */}
+          <div className="w-full lg:hidden relative z-10 order-1">
+
+            {/* ── Badge + Headline — punchy intro ── */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: EASE }}
+              className="mb-6"
+            >
+              <div className="flex items-center gap-3 mb-4 overflow-hidden">
+                <div className="w-8 h-px bg-primary shrink-0" />
+                <span className="text-[9px] tracking-[0.3em] uppercase text-primary font-sans-en font-semibold whitespace-nowrap">
+                  {t('badge')}
+                </span>
               </div>
 
+              <h1 className={`${isBn ? 'font-bengali-serif' : ''}`}>
+                <span
+                  className={`block leading-[0.85] tracking-tight text-foreground ${!isBn ? 'font-editorial' : ''}`}
+                  style={{ fontSize: 'clamp(2.8rem, 12vw, 5rem)' }}
+                >
+                  {t('headline_1')}
+                </span>
+                <span
+                  className={`block leading-[0.8] tracking-tight text-primary mt-0.5 ml-2 sm:ml-4 ${!isBn ? 'font-editorial italic' : ''}`}
+                  style={{ fontSize: 'clamp(3.2rem, 14vw, 6rem)' }}
+                >
+                  {t('headline_2')}
+                </span>
+                <span
+                  className={`block leading-[0.9] tracking-tight text-foreground mt-1 ${!isBn ? 'font-editorial' : ''}`}
+                  style={{ fontSize: 'clamp(2.6rem, 11vw, 4.5rem)' }}
+                >
+                  {t('headline_3')}
+                </span>
+              </h1>
+            </motion.div>
+
+            {/* ── 5-image editorial mosaic ── */}
+            <div className="grid grid-cols-12 gap-2 sm:gap-2.5 mb-6">
+              {/* Hero image — spans left 7 columns, tall */}
+              <div className="col-span-7 row-span-2 relative aspect-3/4 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-sm">
+                <Image
+                  src={IMAGES.card1.src}
+                  alt={IMAGES.card1.alt}
+                  fill
+                  priority
+                  fetchPriority="high"
+                  className="object-cover"
+                  style={{ objectPosition: IMAGES.card1.pos }}
+                  sizes="58vw"
+                />
+                {/* Floating label */}
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
+                  className="absolute bottom-3 left-3 bg-background/90 backdrop-blur-sm px-3 py-1.5 rounded-full border border-border/60"
+                >
+                  <span className="text-[7px] tracking-[0.2em] uppercase text-primary font-sans-en font-bold">{t('stamp')}</span>
+                </motion.div>
+              </div>
+
+              {/* Top right — square-ish */}
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.25, ease: EASE }}
-                className="absolute top-2 right-2 w-[50%] h-[60%] rounded-3xl overflow-hidden shadow-lg border-[6px] border-background z-10 group bg-muted"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
+                className="col-span-5 relative aspect-square rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-sm"
               >
-                <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card2.pos }} sizes="45vw" />
+                <Image
+                  src={IMAGES.card2.src}
+                  alt={IMAGES.card2.alt}
+                  fill
+                  loading="lazy"
+                  className="object-cover"
+                  style={{ objectPosition: IMAGES.card2.pos }}
+                  sizes="40vw"
+                />
+              </motion.div>
+
+              {/* Bottom right — shorter landscape */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.3, ease: EASE }}
+                className="col-span-5 relative aspect-4/3 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-sm"
+              >
+                <Image
+                  src={IMAGES.card3.src}
+                  alt={IMAGES.card3.alt}
+                  fill
+                  loading="lazy"
+                  className="object-cover"
+                  style={{ objectPosition: IMAGES.card3.pos }}
+                  sizes="40vw"
+                />
+              </motion.div>
+
+              {/* Bottom row — two wide images */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.4, ease: EASE }}
+                className="col-span-5 relative aspect-3/4 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-sm"
+              >
+                <Image
+                  src={IMAGES.card4.src}
+                  alt={IMAGES.card4.alt}
+                  fill
+                  loading="lazy"
+                  className="object-cover"
+                  style={{ objectPosition: IMAGES.card4.pos }}
+                  sizes="40vw"
+                />
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.6, type: 'spring' }}
-                className="absolute top-[50%] left-[55%] z-40 bg-background/95 backdrop-blur-md px-4 py-2 rounded-full border border-border shadow-md"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.5, ease: EASE }}
+                className="col-span-7 relative aspect-7/5 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-sm"
               >
-                <span className="text-[8px] tracking-[0.25em] uppercase text-primary font-sans-en font-bold">Handwoven</span>
+                <Image
+                  src={IMAGES.card5.src}
+                  alt={IMAGES.card5.alt}
+                  fill
+                  loading="lazy"
+                  className="object-cover"
+                  style={{ objectPosition: IMAGES.card5.pos }}
+                  sizes="58vw"
+                />
+                {/* "The Edit" badge */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.9, type: 'spring' }}
+                  className="absolute top-3 right-3 bg-background/90 backdrop-blur-sm px-3 py-1.5 rounded-full border border-border/60 flex items-center gap-2"
+                >
+                  <div className="w-1 h-1 rounded-full bg-primary" />
+                  <span className="text-[7px] tracking-[0.2em] uppercase text-foreground font-sans-en font-bold">The Edit</span>
+                </motion.div>
               </motion.div>
             </div>
+
+            {/* ── Subtitle + CTAs ── */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6, ease: EASE }}
+              className="mb-4"
+            >
+              <div className="flex items-start gap-3 mb-6">
+                <div className="w-0.5 h-10 bg-primary/20 shrink-0 mt-1" />
+                <p className={`text-muted-foreground text-sm leading-relaxed max-w-[340px] ${isBn ? 'font-bengali text-base' : 'font-sans-en font-light'}`}>
+                  {t('subtitle')}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <Link prefetch={true} href={`/${locale}/shop`}
+                  className="group relative inline-flex items-center justify-center h-11 px-7 bg-foreground text-background text-[9px] tracking-[0.2em] uppercase font-medium rounded-full overflow-hidden transition-all hover:shadow-md pointer-events-auto"
+                >
+                  <span className="absolute inset-0 bg-primary w-0 group-hover:w-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]" />
+                  <span className="relative z-10 group-hover:text-primary-foreground transition-colors duration-500">{t('cta_shop')}</span>
+                </Link>
+                <Link
+                  href={`/${locale}/stories`}
+                  className="group flex items-center gap-2 text-[9px] tracking-[0.2em] uppercase text-foreground/70 hover:text-primary transition-colors font-medium py-2 pointer-events-auto"
+                >
+                  <span className="relative pb-0.5">
+                    {t('cta_story')}
+                    <span className="absolute left-0 bottom-0 w-0 h-px bg-primary transition-all duration-300 group-hover:w-full" />
+                  </span>
+                </Link>
+              </div>
+            </motion.div>
           </div>
 
           {/* ── DESKTOP COLLAGE — Magazine Cover Orchestration ── */}
