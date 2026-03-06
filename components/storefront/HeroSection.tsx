@@ -59,11 +59,16 @@ const imageReveal = {
   hidden: (custom: number) => ({
     clipPath: `circle(0% at ${imageOrigins[custom] || "50% 50%"})`,
     scale: 1.15,
+    WebkitTransform: "translateZ(0)", // Force GPU acceleration before animation starts
   }),
   visible: (custom: number) => ({
     clipPath: `circle(150% at ${imageOrigins[custom] || "50% 50%"})`,
     scale: 1,
-    transition: { delay: custom * 0.15 + 0.3, duration: 1.6, ease: EASE }
+    transition: { delay: custom * 0.15 + 0.3, duration: 1.6, ease: EASE },
+    transitionEnd: {
+      clipPath: "none", // CRITICAL: Remove clip-path after animation so it doesn't lag the parallax scrolling
+      WebkitTransform: "none",
+    }
   })
 };
 
@@ -83,14 +88,7 @@ export function HeroSection() {
   // Smooth Parallax Values
   const yText = useTransform(smoothProgress, [0, 1], [0, -120]);
   
-  // Mobile parallax
-  const yMobile1 = useTransform(smoothProgress, [0, 1], [0, -30]);
-  const yMobile2 = useTransform(smoothProgress, [0, 1], [0, -80]);
-  const yMobile3 = useTransform(smoothProgress, [0, 1], [0, -50]);
-  const yMobile4 = useTransform(smoothProgress, [0, 1], [0, -100]);
-  const yMobile5 = useTransform(smoothProgress, [0, 1], [0, -40]);
-
-  // Desktop parallax transforms (creating 3D depth)
+  // Desktop-only parallax transforms (creating 3D depth)
   const yImage1 = useTransform(smoothProgress, [0, 1], [0, -140]); // Main
   const yImage2 = useTransform(smoothProgress, [0, 1], [0, -260]); // Top right (faster)
   const yImage3 = useTransform(smoothProgress, [0, 1], [0, -380]); // Floating overlap (fastest, feels closest)
@@ -273,9 +271,9 @@ export function HeroSection() {
               </h1>
             </motion.div>
 
-            {/* Mobile Grid with Parallax */}
+            {/* Mobile image mosaic — clean static grid, no parallax */}
             <div className="grid grid-cols-12 gap-2 sm:gap-3 mb-6">
-              <motion.div style={{ y: yMobile1 }} className="col-span-7 row-span-2 relative aspect-3/4 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-lg">
+              <div className="col-span-7 row-span-2 relative aspect-3/4 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-lg">
                 <motion.div custom={1} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
                   <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card1.pos }} sizes="58vw" />
                 </motion.div>
@@ -287,31 +285,31 @@ export function HeroSection() {
                 >
                   <span className="text-[7px] tracking-[0.2em] uppercase text-primary font-sans-en font-bold">{t('stamp')}</span>
                 </motion.div>
-              </motion.div>
+              </div>
 
-              <motion.div style={{ y: yMobile2 }} className="col-span-5 relative aspect-square rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md">
+              <div className="col-span-5 relative aspect-square rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md">
                 <motion.div custom={2} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
                   <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card2.pos }} sizes="40vw" />
                 </motion.div>
-              </motion.div>
+              </div>
 
-              <motion.div style={{ y: yMobile3 }} className="col-span-5 relative aspect-4/3 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md">
+              <div className="col-span-5 relative aspect-4/3 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md">
                 <motion.div custom={3} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
                   <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card3.pos }} sizes="40vw" />
                 </motion.div>
-              </motion.div>
+              </div>
 
-              <motion.div style={{ y: yMobile4 }} className="col-span-5 relative aspect-3/4 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md mt-2">
+              <div className="col-span-5 relative aspect-3/4 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md mt-2">
                 <motion.div custom={4} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
                   <Image src={IMAGES.card4.src} alt={IMAGES.card4.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card4.pos }} sizes="40vw" />
                 </motion.div>
-              </motion.div>
+              </div>
 
-              <motion.div style={{ y: yMobile5 }} className="col-span-7 relative aspect-7/5 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md mt-2">
+              <div className="col-span-7 relative aspect-7/5 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md mt-2">
                 <motion.div custom={5} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
                   <Image src={IMAGES.card5.src} alt={IMAGES.card5.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card5.pos }} sizes="58vw" />
                 </motion.div>
-              </motion.div>
+              </div>
             </div>
 
             <div className="overflow-hidden mb-4">
@@ -347,7 +345,7 @@ export function HeroSection() {
               {/* Back Left (Slow Parallax) */}
               <motion.div
                 style={{ y: yImage5 }}
-                className="absolute top-[12%] left-[2%] w-[38%] h-[55%] rounded-4xl overflow-hidden shadow-lg border-8 border-background z-0 group bg-muted"
+                className="absolute top-[12%] left-[2%] w-[38%] h-[55%] rounded-4xl overflow-hidden shadow-lg border-8 border-background z-0 group bg-muted will-change-transform"
               >
                 <motion.div custom={1} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
                   <Image src={IMAGES.card5.src} alt={IMAGES.card5.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card5.pos }} sizes="20vw" />
@@ -357,7 +355,7 @@ export function HeroSection() {
               {/* Main Center-Left (Medium Parallax) */}
               <motion.div
                 style={{ y: yImage1 }}
-                className="absolute bottom-[2%] left-[12%] w-[45%] h-[75%] rounded-[2.5rem] overflow-hidden shadow-2xl border-10 border-background z-20 group bg-muted"
+                className="absolute bottom-[2%] left-[12%] w-[45%] h-[75%] rounded-[2.5rem] overflow-hidden shadow-2xl border-10 border-background z-20 group bg-muted will-change-transform"
               >
                 <motion.div custom={2} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
                   <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority className="object-cover transition-transform duration-[2s] group-hover:scale-[1.03]" style={{ objectPosition: IMAGES.card1.pos }} sizes="30vw" />
@@ -368,7 +366,7 @@ export function HeroSection() {
               {/* Top Right (Fast Parallax) */}
               <motion.div
                 style={{ y: yImage2 }}
-                className="absolute top-[8%] right-[5%] w-[42%] h-[60%] rounded-4xl overflow-hidden shadow-xl border-8 border-background z-10 group bg-muted"
+                className="absolute top-[8%] right-[5%] w-[42%] h-[60%] rounded-4xl overflow-hidden shadow-xl border-8 border-background z-10 group bg-muted will-change-transform"
               >
                 <motion.div custom={3} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
                   <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card2.pos }} sizes="25vw" />
@@ -378,7 +376,7 @@ export function HeroSection() {
               {/* Bottom Right (Fast Parallax) */}
               <motion.div
                 style={{ y: yImage4 }}
-                className="absolute bottom-[4%] right-[2%] w-[35%] h-[45%] rounded-3xl overflow-hidden shadow-xl border-8 border-background z-10 group bg-muted"
+                className="absolute bottom-[4%] right-[2%] w-[35%] h-[45%] rounded-3xl overflow-hidden shadow-xl border-8 border-background z-10 group bg-muted will-change-transform"
               >
                 <motion.div custom={4} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
                   <Image src={IMAGES.card4.src} alt={IMAGES.card4.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card4.pos }} sizes="20vw" />
@@ -388,7 +386,7 @@ export function HeroSection() {
               {/* Small Floating Overlap (Fastest Parallax) */}
               <motion.div
                 style={{ y: yImage3 }}
-                className="absolute bottom-[20%] right-[32%] w-[22%] aspect-4/5 rounded-[1.25rem] overflow-hidden shadow-2xl border-[6px] border-background z-30 group bg-muted"
+                className="absolute bottom-[20%] right-[32%] w-[22%] aspect-4/5 rounded-[1.25rem] overflow-hidden shadow-2xl border-[6px] border-background z-30 group bg-muted will-change-transform"
               >
                 <motion.div custom={5} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
                   <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-110" style={{ objectPosition: IMAGES.card3.pos }} sizes="15vw" />
