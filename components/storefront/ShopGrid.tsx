@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, Fragment } from 'react';
+import { Fragment, useCallback } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { CategoryFilter } from './CategoryFilter';
 import { ProductCard }    from './ProductCard';
@@ -20,7 +21,22 @@ interface Props {
 export function ShopGrid({ products, categories, isCompact = false, banners = [] }: Props) {
   const t = useTranslations('shop');
   const locale = useLocale();
-  const [activeCategory, setActiveCategory] = useState('All');
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const activeCategory = searchParams.get('category') || 'All';
+
+  const setActiveCategory = useCallback((cat: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (cat === 'All') {
+      params.delete('category');
+    } else {
+      params.set('category', cat);
+    }
+    const qs = params.toString();
+    router.replace(`${pathname}${qs ? `?${qs}` : ''}`, { scroll: false });
+  }, [searchParams, router, pathname]);
 
   const filtered = activeCategory === 'All'
     ? products

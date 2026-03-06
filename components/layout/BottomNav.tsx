@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import { 
@@ -62,10 +62,10 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
   const closeSheet = () => setIsOpen(false);
 
   const mainLinks = [
-    { href: `/${locale}`,      label: t('home'),  Icon: Home        },
-    { href: `/${locale}/shop`, label: t('shop'),  Icon: ShoppingBag },
-    { href: `/${locale}/collections`, label: isBn ? 'সংগ্রহ' : 'Collections', Icon: Layers },
-    { href: `/${locale}/categories`,  label: isBn ? 'ক্যাটাগরি' : 'Categories', Icon: LayoutGrid },
+    { href: `/${locale}`,      path: '/',            label: t('home'),  Icon: Home        },
+    { href: `/${locale}/shop`, path: '/shop',       label: t('shop'),  Icon: ShoppingBag },
+    { href: `/${locale}/collections`, path: '/collections', label: isBn ? 'সংগ্রহ' : 'Collections', Icon: Layers },
+    { href: `/${locale}/categories`,  path: '/categories',  label: isBn ? 'ক্যাটাগরি' : 'Categories', Icon: LayoutGrid },
   ];
 
   const categories = dbCategories && dbCategories.length > 0
@@ -79,8 +79,8 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
     <>
       <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 z-40 md:hidden bg-background/90 backdrop-blur-md border-t border-border pb-safe w-full max-w-[1800px]">
         <div className="grid grid-cols-5 h-15">
-          {mainLinks.map(({ href, label, Icon }) => {
-            const active = pathname === href;
+          {mainLinks.map(({ href, path, label, Icon }) => {
+            const active = pathname === path;
             return (
               <Link prefetch={true} key={href}
                 href={href}
@@ -144,7 +144,7 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="fixed inset-0 left-1/2 -translate-x-1/2 max-w-[1800px] bg-bengal-kajal/40 backdrop-blur-sm z-30 md:hidden"
+              className="fixed top-0 bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[1800px] bg-bengal-kajal/40 backdrop-blur-sm z-30 md:hidden"
               onClick={closeSheet}
             />
 

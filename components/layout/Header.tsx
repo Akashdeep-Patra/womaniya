@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { useRouter as useIntlRouter, usePathname as useIntlPathname } from '@/i18n/navigation';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { BrandMascot } from '@/components/illustrations/BrandMascot';
@@ -50,10 +51,12 @@ function ThemeToggle() {
 ───────────────────────────────────────────────────────────────── */
 function LocaleToggle({ locale }: { locale: string }) {
   const isEn = locale === 'en';
+  const intlRouter = useIntlRouter();
+  const intlPathname = useIntlPathname();
 
   const handleSwitch = () => {
     const next = isEn ? 'bn' : 'en';
-    window.location.href = window.location.pathname.replace(`/${locale}`, `/${next}`);
+    intlRouter.replace(intlPathname, { locale: next });
   };
 
   return (
