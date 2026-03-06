@@ -26,13 +26,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      images: coverImage ? [coverImage] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: coverImage ? [coverImage] : undefined,
     },
     alternates: {
       canonical: `/${locale}/pages/${slug}`,

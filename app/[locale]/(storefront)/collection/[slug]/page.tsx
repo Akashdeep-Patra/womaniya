@@ -30,13 +30,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      images: ogImage ? [ogImage] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: ogImage ? [ogImage] : undefined,
     },
     alternates: {
       canonical: `/${locale}/collection/${slug}`,
