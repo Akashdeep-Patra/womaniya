@@ -39,8 +39,9 @@ yarn-error.log*
 # vercel
 .vercel
 
-# claude
-.claude/settings.local.json
+# claude and mcp
+.claude/
+.mcp.json
 
 # typescript
 *.tsbuildinfo
