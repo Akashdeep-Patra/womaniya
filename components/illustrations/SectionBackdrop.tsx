@@ -28,7 +28,19 @@ export function JamdaniBackdrop({ className = '' }: BackdropProps) {
       preserveAspectRatio="xMidYMid slice"
       aria-hidden="true"
     >
-      {/* ── Background Layer (2-3% opacity): Night Sky Elements ── */}
+      <defs>
+        <linearGradient id="jamdani-fade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="white" stopOpacity="1" />
+          <stop offset="60%" stopColor="white" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="white" stopOpacity="0" />
+        </linearGradient>
+        <mask id="jamdani-mask">
+          <rect width="1440" height="900" fill="url(#jamdani-fade)" />
+        </mask>
+      </defs>
+
+      <g mask="url(#jamdani-mask)">
+        {/* ── Background Layer (2-3% opacity): Night Sky Elements ── */}
       {/* Crescent Moon with detailed filigree inner pattern */}
       <g opacity="0.02" fill="currentColor">
         <path d="M1200 150 C 1170 150 1150 170 1150 200 C 1150 240 1180 270 1220 270 C 1220 270 1190 240 1190 200 C 1190 170 1200 150 1200 150 Z" />
@@ -177,6 +189,7 @@ export function JamdaniBackdrop({ className = '' }: BackdropProps) {
         {/* Buffalo body */}
         <path d="M-120 180 C -150 140 -80 150 -100 180 Z" />
       </g>
+      </g>
     </svg>
   );
 }
@@ -195,7 +208,19 @@ export function AlponaBackdrop({ className = '' }: BackdropProps) {
       preserveAspectRatio="xMidYMid slice"
       aria-hidden="true"
     >
-      {/* ── Background Layer (2-3% opacity): Sky & Distant Birds ── */}
+      <defs>
+        <linearGradient id="alpona-fade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="white" stopOpacity="1" />
+          <stop offset="50%" stopColor="white" stopOpacity="0.7" />
+          <stop offset="100%" stopColor="white" stopOpacity="0" />
+        </linearGradient>
+        <mask id="alpona-mask">
+          <rect width="1440" height="800" fill="url(#alpona-fade)" />
+        </mask>
+      </defs>
+
+      <g mask="url(#alpona-mask)">
+        {/* ── Background Layer (2-3% opacity): Sky & Distant Birds ── */}
       {/* Birds (pakhir dol) in V-formation */}
       <g opacity="0.025" fill="currentColor">
         <path d="M1200 200 q 10 -5 20 0 q -10 5 -20 0" stroke="currentColor" strokeWidth="2" />
@@ -263,6 +288,7 @@ export function AlponaBackdrop({ className = '' }: BackdropProps) {
         <circle cx="-40" cy="90" r="15" />
         <path d="M-40 75 L -60 20 M -25 80 L 10 30" stroke="currentColor" strokeWidth="3" fill="none" />
       </g>
+      </g>
 
     </svg>
   );
@@ -283,7 +309,19 @@ export function KanthaBackdrop({ className = '' }: BackdropProps) {
       preserveAspectRatio="xMidYMid slice"
       aria-hidden="true"
     >
-      {/* ── Background Layer (2-3% opacity): Sky, Temple, Fireflies ── */}
+      <defs>
+        <linearGradient id="kantha-fade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="white" stopOpacity="1" />
+          <stop offset="60%" stopColor="white" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="white" stopOpacity="0" />
+        </linearGradient>
+        <mask id="kantha-mask">
+          <rect width="1440" height="600" fill="url(#kantha-fade)" />
+        </mask>
+      </defs>
+
+      <g mask="url(#kantha-mask)">
+        {/* ── Background Layer (2-3% opacity): Sky, Temple, Fireflies ── */}
       {/* Temple Spire (mandir chura) in distance */}
       <g opacity="0.02" fill="currentColor">
         <path d="M1100 300 L 1150 150 L 1200 300 Z" />
@@ -365,6 +403,7 @@ export function KanthaBackdrop({ className = '' }: BackdropProps) {
         <path d="M80 -65 C 90 -40 90 -20 85 0 C 100 -20 100 -50 80 -65 Z" />
         {/* Arm reaching to loom */}
         <path d="M60 -30 L 20 -20" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+      </g>
       </g>
     </svg>
   );
