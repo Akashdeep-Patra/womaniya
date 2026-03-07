@@ -2,12 +2,13 @@
 
 import { motion }          from 'framer-motion';
 import { useLocale, useTranslations } from 'next-intl';
+import { ArrowUpRight } from 'lucide-react';
 import { AbstractThreadIcon } from '@/components/illustrations/AbstractThreadIcon';
 import { AbstractConnectionIcon } from '@/components/illustrations/AbstractConnectionIcon';
 import { AbstractBloomIcon } from '@/components/illustrations/AbstractBloomIcon';
 import { AbstractDrapeIcon } from '@/components/illustrations/AbstractDrapeIcon';
 import { AlponaDivider }            from '@/components/illustrations/AlponaDivider';
-import { AlponaBackdrop }          from '@/components/illustrations/SectionBackdrop';
+import { AlponaBackdrop, JamdaniBackdrop }          from '@/components/illustrations/SectionBackdrop';
 
 const keys  = ['handwoven', 'artisan', 'conscious', 'heritage'] as const;
 const icons = [AbstractThreadIcon, AbstractConnectionIcon, AbstractBloomIcon, AbstractDrapeIcon];
@@ -52,37 +53,65 @@ export function FeaturesSection() {
           <AlponaDivider className="mx-auto text-primary opacity-60" width={260} />
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 lg:gap-6 mt-16 md:mt-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mt-16 md:mt-24">
           {keys.map((key, i) => {
             const Icon = icons[i];
 
             return (
               <motion.div
                 key={key}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.8, ease: 'easeOut', delay: i * 0.15 }}
-                className="flex flex-col items-center text-center relative group"
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: i * 0.15 }}
+                className="group relative flex flex-col justify-between p-8 sm:p-10 md:p-12 rounded-[2.5rem] bg-card/40 hover:bg-card/60 border border-border/50 hover:border-primary/20 shadow-sm hover:shadow-xl transition-all duration-700 overflow-hidden backdrop-blur-sm"
               >
-                {/* Organic circular background with subtle float — CSS animation for performance */}
-                <div
-                  className={`relative w-40 h-40 mb-8 flex items-center justify-center rounded-full bg-muted/40 border border-border shadow-inner group-hover:bg-muted/60 transition-colors duration-500 ${i % 2 === 0 ? 'animate-folk-drift-soft' : 'animate-folk-drift'}`}
-                >
-                  <Icon size={72} className="text-foreground opacity-90 transition-transform duration-700 group-hover:scale-110" />
-                  
-                  {/* Decorative concentric dashed ring */}
-                  <div className="absolute inset-2 rounded-full border border-dashed border-border/80 rotate-45 group-hover:rotate-90 transition-all duration-1000" />
+                {/* Subtle animated background gradient on hover */}
+                <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+
+                {/* Watermark of the abstract icon */}
+                <div className="absolute -bottom-16 -right-16 text-muted-foreground/[0.03] group-hover:text-primary/[0.05] transition-colors duration-700 pointer-events-none transform group-hover:scale-110 group-hover:-rotate-6">
+                  <Icon size={320} />
                 </div>
 
-                <div className="max-w-[260px]">
-                  <h3 className={`font-semibold text-foreground text-lg md:text-xl mb-3 ${isBn ? 'font-bengali' : 'font-editorial italic tracking-wide'}`}>
-                    {t(key)}
-                  </h3>
-                  <div className="w-10 h-px bg-primary/30 mx-auto mb-4" />
-                  <p className={`text-muted-foreground text-sm leading-relaxed ${isBn ? 'font-bengali' : 'font-sans-en font-light'}`}>
-                    {t(`${key}_desc`)}
-                  </p>
+                <div className="relative z-10 flex flex-col h-full">
+                  {/* Top Header: Badge/Number and Small Icon */}
+                  <div className="flex items-center justify-between mb-12">
+                    <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-background/80 border border-border/50 shadow-sm group-hover:scale-110 group-hover:bg-primary/5 transition-all duration-500">
+                      <Icon size={32} className="text-foreground/80 group-hover:text-primary transition-colors" />
+                    </div>
+                    <span className="font-editorial text-5xl text-muted-foreground/20 group-hover:text-primary/20 transition-colors duration-500 font-bold">
+                      0{i + 1}
+                    </span>
+                  </div>
+
+                  {/* Content */}
+                  <div className="relative flex-grow">
+                    <h3 className={`text-2xl md:text-3xl lg:text-4xl font-semibold mb-6 text-foreground group-hover:text-primary transition-colors duration-500 ${isBn ? 'font-bengali' : 'font-editorial tracking-wide'}`}>
+                      {t(key)}
+                    </h3>
+                    
+                    <p className={`text-muted-foreground text-base md:text-lg leading-relaxed max-w-[90%] ${isBn ? 'font-bengali' : 'font-sans-en font-light'}`}>
+                      {t(`${key}_desc`)}
+                    </p>
+                  </div>
+                  
+                  {/* Bottom decorative interaction */}
+                  <div className="mt-12 pt-6 border-t border-border/40 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {[1,2,3].map(dot => (
+                         <div key={dot} className="w-1.5 h-1.5 rounded-full bg-primary/20 group-hover:bg-primary/60 transition-colors duration-500" style={{ transitionDelay: `${dot * 100}ms` }} />
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors duration-500">
+                       <span className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
+                         {isBn ? 'আরও জানুন' : 'Discover'}
+                       </span>
+                       <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors duration-500">
+                         <ArrowUpRight className="w-5 h-5 group-hover:rotate-12 transition-transform duration-500" />
+                       </div>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             );
