@@ -98,15 +98,17 @@ export function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full bg-background overflow-hidden"
+      className="relative w-full overflow-hidden"
     >
       {/* Atmospheric background */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-background to-secondary/10" />
+        <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-secondary/10" />
         <JamdaniBackdrop className="text-foreground" />
         <div className="absolute left-[8%] top-0 bottom-0 w-px bg-primary/5 hidden lg:block" />
         <div className="absolute right-[8%] top-0 bottom-0 w-px bg-primary/5 hidden lg:block" />
         <div className="absolute inset-0 bg-noise opacity-[0.015] mix-blend-overlay" />
+        {/* Soft bottom fade to blend with the next section seamlessly */}
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-linear-to-t from-background to-transparent" />
       </div>
 
       <div className="relative z-10 w-full max-w-[1800px] mx-auto px-5 sm:px-6 md:px-8 lg:px-[6%] xl:px-[8%]">
