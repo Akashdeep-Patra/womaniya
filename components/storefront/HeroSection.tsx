@@ -98,17 +98,25 @@ export function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full overflow-hidden"
+      className="relative w-full overflow-hidden bg-background"
     >
       {/* Atmospheric background */}
+      <div className="absolute inset-0 pointer-events-none z-0 flex justify-center overflow-hidden">
+        <div className="relative w-[150vw] sm:w-[120vw] md:w-[100vw] max-w-[3000px] h-[150%] -top-[25%] left-1/2 -translate-x-1/2">
+          <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-secondary/10" />
+          <JamdaniBackdrop className="text-foreground object-cover w-full h-full opacity-[0.4]" />
+          <div className="absolute left-[8%] top-0 bottom-0 w-px bg-primary/5 hidden lg:block" />
+          <div className="absolute right-[8%] top-0 bottom-0 w-px bg-primary/5 hidden lg:block" />
+          <div className="absolute inset-0 bg-noise opacity-[0.015] mix-blend-overlay" />
+        </div>
+      </div>
+      
+      {/* Soft fade masks so the background doesn't abruptly end or interfere with content */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-linear-to-br from-primary/5 to-secondary/10" />
-        <JamdaniBackdrop className="text-foreground" />
-        <div className="absolute left-[8%] top-0 bottom-0 w-px bg-primary/5 hidden lg:block" />
-        <div className="absolute right-[8%] top-0 bottom-0 w-px bg-primary/5 hidden lg:block" />
-        <div className="absolute inset-0 bg-noise opacity-[0.015] mix-blend-overlay" />
-        {/* Soft bottom fade to blend with the next section seamlessly */}
-        <div className="absolute bottom-0 left-0 right-0 h-40 bg-linear-to-t from-background to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-[20vh] bg-linear-to-b from-background to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-[20vh] bg-linear-to-t from-background to-transparent" />
+        <div className="absolute top-0 bottom-0 left-0 w-[15vw] max-w-[200px] bg-linear-to-r from-background to-transparent" />
+        <div className="absolute top-0 bottom-0 right-0 w-[15vw] max-w-[200px] bg-linear-to-l from-background to-transparent" />
       </div>
 
       <div className="relative z-10 w-full max-w-[1800px] mx-auto px-5 sm:px-6 md:px-8 lg:px-[6%] xl:px-[8%]">

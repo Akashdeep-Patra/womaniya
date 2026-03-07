@@ -21,8 +21,21 @@ export function AboutSection() {
   ];
 
   return (
-    <section id="story" className="relative bg-card text-card-foreground overflow-hidden border-y border-border">
-      <AlponaBackdrop className="text-card-foreground" />
+    <section id="story" className="relative w-full mx-auto bg-card text-card-foreground overflow-hidden border-y border-border">
+      <div className="absolute inset-0 pointer-events-none z-0 flex justify-center overflow-hidden">
+        <div className="relative w-[150vw] sm:w-[120vw] md:w-[100vw] max-w-[3000px] h-[150%] -top-[25%] left-1/2 -translate-x-1/2">
+          <AlponaBackdrop className="text-foreground object-cover w-full h-full opacity-[0.4]" />
+        </div>
+      </div>
+      
+      {/* Soft fade masks so the background doesn't abruptly end or interfere with content */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 left-0 right-0 h-[20vh] bg-linear-to-b from-card to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-[20vh] bg-linear-to-t from-card to-transparent" />
+        <div className="absolute top-0 bottom-0 left-0 w-[15vw] max-w-[200px] bg-linear-to-r from-card to-transparent" />
+        <div className="absolute top-0 bottom-0 right-0 w-[15vw] max-w-[200px] bg-linear-to-l from-card to-transparent" />
+      </div>
+
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-28 lg:py-32 relative z-10">
 
         {/* ── Section label ── */}

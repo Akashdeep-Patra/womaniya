@@ -18,16 +18,24 @@ export function FeaturesSection() {
   const isBn   = locale === 'bn';
 
   return (
-    <section className="relative px-4 sm:px-6 py-20 md:py-32 max-w-[1400px] mx-auto overflow-hidden">
+    <section className="relative px-4 sm:px-6 py-20 md:py-32 w-full mx-auto overflow-hidden bg-background">
       {/* Intricate decorative background */}
+      <div className="absolute inset-0 pointer-events-none z-0 flex justify-center overflow-hidden">
+        <div className="relative w-[150vw] sm:w-[120vw] md:w-[100vw] max-w-[3000px] h-[150%] -top-[25%] left-1/2 -translate-x-1/2">
+          <JamdaniBackdrop className="text-foreground object-cover w-full h-full opacity-[0.4]" />
+        </div>
+      </div>
+      
+      {/* Soft fade masks so the background doesn't abruptly end or interfere with content */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <AlponaBackdrop className="text-foreground" />
-        <div className="absolute left-[5%] top-0 bottom-0 w-px bg-border/50" />
-        <div className="absolute right-[5%] top-0 bottom-0 w-px bg-border/50" />
-        <div className="absolute left-0 right-0 top-[10%] h-px bg-border/50" />
+        <div className="absolute top-0 left-0 right-0 h-[20vh] bg-linear-to-b from-background to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-[20vh] bg-linear-to-t from-background to-transparent" />
+        <div className="absolute top-0 bottom-0 left-0 w-[15vw] max-w-[200px] bg-linear-to-r from-background to-transparent" />
+        <div className="absolute top-0 bottom-0 right-0 w-[15vw] max-w-[200px] bg-linear-to-l from-background to-transparent" />
       </div>
 
-      <div className="relative z-10">
+      {/* Main Content Container */}
+      <div className="relative z-10 px-4 sm:px-6 py-20 md:py-32 max-w-[1400px] mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

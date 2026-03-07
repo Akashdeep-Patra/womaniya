@@ -23,8 +23,21 @@ export function FeaturedCollectionsSection({ collections, isCompact = false }: P
   if (!collections || collections.length === 0) return null;
 
   return (
-    <section className="py-20 md:py-32 relative overflow-hidden bg-background">
-      <JamdaniBackdrop className="text-foreground" />
+    <section className="relative py-20 md:py-32 w-full mx-auto overflow-hidden bg-background">
+      <div className="absolute inset-0 pointer-events-none z-0 flex justify-center overflow-hidden">
+        <div className="relative w-[150vw] sm:w-[120vw] md:w-[100vw] max-w-[3000px] h-[150%] -top-[25%] left-1/2 -translate-x-1/2">
+          <JamdaniBackdrop className="text-foreground object-cover w-full h-full opacity-[0.4]" />
+        </div>
+      </div>
+      
+      {/* Soft fade masks so the background doesn't abruptly end or interfere with content */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 left-0 right-0 h-[20vh] bg-linear-to-b from-background to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-[20vh] bg-linear-to-t from-background to-transparent" />
+        <div className="absolute top-0 bottom-0 left-0 w-[15vw] max-w-[200px] bg-linear-to-r from-background to-transparent" />
+        <div className="absolute top-0 bottom-0 right-0 w-[15vw] max-w-[200px] bg-linear-to-l from-background to-transparent" />
+      </div>
+
       <div className="px-4 sm:px-6 max-w-7xl mx-auto mb-12 md:mb-16 flex flex-col items-center text-center relative z-10">
         <motion.p 
           initial={{ opacity: 0, y: 10 }}

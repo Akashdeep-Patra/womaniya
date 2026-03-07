@@ -14,11 +14,21 @@ export function ManifestoSection() {
   const isBn = locale === 'bn';
 
   return (
-    <section className="relative py-24 md:py-36 bg-card text-card-foreground overflow-hidden border-y border-border">
+    <section className="relative py-24 md:py-36 w-full mx-auto bg-card text-card-foreground overflow-hidden border-y border-border">
       {/* Subtle radial glow + textile pattern */}
-      <div className="absolute inset-0 pointer-events-none">
-        <KanthaBackdrop className="text-card-foreground" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl" />
+      <div className="absolute inset-0 pointer-events-none z-0 flex justify-center overflow-hidden">
+        <div className="relative w-[150vw] sm:w-[120vw] md:w-[100vw] max-w-[3000px] h-[150%] -top-[25%] left-1/2 -translate-x-1/2">
+          <KanthaBackdrop className="text-card-foreground object-cover w-full h-full opacity-[0.4]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl" />
+        </div>
+      </div>
+      
+      {/* Soft fade masks so the background doesn't abruptly end or interfere with content */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 left-0 right-0 h-[20vh] bg-linear-to-b from-card to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-[20vh] bg-linear-to-t from-card to-transparent" />
+        <div className="absolute top-0 bottom-0 left-0 w-[15vw] max-w-[200px] bg-linear-to-r from-card to-transparent" />
+        <div className="absolute top-0 bottom-0 right-0 w-[15vw] max-w-[200px] bg-linear-to-l from-card to-transparent" />
       </div>
 
       <div className="relative z-10 px-6 md:px-12 max-w-4xl mx-auto text-center">
