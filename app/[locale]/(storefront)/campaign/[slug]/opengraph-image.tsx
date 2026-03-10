@@ -12,10 +12,15 @@ export default async function CampaignOgImage({
 }) {
   const { slug } = await params;
 
-  const campaign = await db.query.campaigns.findFirst({
-    where: (c, { eq }) => eq(c.slug, slug),
-    with: { banners: true },
-  });
+  let campaign;
+  try {
+    campaign = await db.query.campaigns.findFirst({
+      where: (c, { eq }) => eq(c.slug, slug),
+      with: { banners: true },
+    });
+  } catch {
+    /* fallback */
+  }
 
   if (!campaign) {
     return generateOgImage({ title: 'Campaign', variant: 'default' });

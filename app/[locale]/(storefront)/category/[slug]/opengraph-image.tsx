@@ -12,9 +12,14 @@ export default async function CategoryOgImage({
 }) {
   const { slug } = await params;
 
-  const category = await db.query.categories.findFirst({
-    where: (c, { eq }) => eq(c.slug, slug),
-  });
+  let category;
+  try {
+    category = await db.query.categories.findFirst({
+      where: (c, { eq }) => eq(c.slug, slug),
+    });
+  } catch {
+    /* fallback */
+  }
 
   if (!category) {
     return generateOgImage({ title: 'Category', variant: 'category' });

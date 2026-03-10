@@ -12,9 +12,14 @@ export default async function CollectionOgImage({
 }) {
   const { slug } = await params;
 
-  const collection = await db.query.collections.findFirst({
-    where: (c, { eq }) => eq(c.slug, slug),
-  });
+  let collection;
+  try {
+    collection = await db.query.collections.findFirst({
+      where: (c, { eq }) => eq(c.slug, slug),
+    });
+  } catch {
+    /* fallback */
+  }
 
   if (!collection) {
     return generateOgImage({ title: 'Collection', variant: 'collection' });

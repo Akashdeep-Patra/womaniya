@@ -12,9 +12,14 @@ export default async function PageOgImage({
 }) {
   const { slug } = await params;
 
-  const page = await db.query.pages.findFirst({
-    where: (p, { eq }) => eq(p.slug, slug),
-  });
+  let page;
+  try {
+    page = await db.query.pages.findFirst({
+      where: (p, { eq }) => eq(p.slug, slug),
+    });
+  } catch {
+    /* fallback */
+  }
 
   if (!page) {
     return generateOgImage({ title: 'Womaniya' });
