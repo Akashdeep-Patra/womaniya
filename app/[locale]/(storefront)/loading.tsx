@@ -108,7 +108,7 @@ export default function StorefrontLoading() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="rounded-2xl overflow-hidden border border-border/40 bg-muted/10">
-                <div className="aspect-[4/3] bg-muted" />
+                <div className="aspect-4/3 bg-muted" />
                 <div className="p-5 flex flex-col gap-2">
                   <div className="h-5 w-3/4 bg-muted rounded" />
                   <div className="h-3 w-1/2 bg-muted/60 rounded" />
@@ -130,7 +130,7 @@ export default function StorefrontLoading() {
           <div className="flex gap-4 overflow-hidden md:grid md:grid-cols-4 md:gap-6">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="shrink-0 w-[200px] md:w-auto rounded-2xl overflow-hidden border border-border/40 bg-background">
-                <div className="aspect-[3/4] bg-muted" />
+                <div className="aspect-3/4 bg-muted" />
                 <div className="p-4">
                   <div className="h-4 w-2/3 bg-muted rounded mb-2" />
                   <div className="h-3 w-1/3 bg-muted/60 rounded" />
@@ -151,7 +151,7 @@ export default function StorefrontLoading() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="flex flex-col">
-                <div className={`w-full ${i % 3 === 2 ? 'aspect-square' : 'aspect-[3/4]'} bg-muted rounded-2xl mb-3`} />
+                <div className={`w-full ${i % 3 === 2 ? 'aspect-square' : 'aspect-3/4'} bg-muted rounded-2xl mb-3`} />
                 <div className="flex flex-col gap-1.5 px-1">
                   <div className="h-3 w-16 bg-muted/60 rounded" />
                   <div className="h-4 w-3/4 bg-muted rounded" />

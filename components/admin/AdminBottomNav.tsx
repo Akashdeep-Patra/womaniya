@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname } from '@/i18n/navigation';
 import { Home, PlusCircle, List } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -18,7 +18,8 @@ export function AdminBottomNav({ locale }: { locale: string }) {
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-bengal-kajal border-t border-bengal-kansa/20 pb-safe">
       <div className="grid grid-cols-3 h-[3.5rem]">
         {links.map(({ href, label, Icon }) => {
-          const active = pathname === href;
+          const path = href.replace(new RegExp(`^/${locale}`), '');
+          const active = pathname === path;
           return (
             <Link prefetch={true}
               key={href}

@@ -1,5 +1,6 @@
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { cache } from 'react';
 import { db } from '@/lib/db';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,11 +11,23 @@ import type { Metadata } from 'next';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
+const getCollectionWithProducts = cache(async (slug: string) => {
+  return db.query.collections.findFirst({
+    where: (c, { eq }) => eq(c.slug, slug),
+    with: {
+      productLinks: {
+        orderBy: (pl, { asc }) => [asc(pl.sort_order)],
+        with: {
+          product: true,
+        }
+      }
+    }
+  });
+});
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
-  const collection = await db.query.collections.findFirst({
-    where: (c, { eq }) => eq(c.slug, slug),
-  });
+  const collection = await getCollectionWithProducts(slug);
   if (!collection || collection.status === 'draft' || collection.status === 'archived') return { title: 'Not Found' };
 
   const title = (locale === 'bn' && collection.seo_title_bn ? collection.seo_title_bn : collection.seo_title_en) || 
@@ -48,17 +61,7 @@ export default async function CollectionPage({ params }: Props) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
-  const collection = await db.query.collections.findFirst({
-    where: (c, { eq }) => eq(c.slug, slug),
-    with: {
-      productLinks: {
-        orderBy: (pl, { asc }) => [asc(pl.sort_order)],
-        with: {
-          product: true,
-        }
-      }
-    }
-  });
+  const collection = await getCollectionWithProducts(slug);
 
   if (!collection || collection.status === 'draft' || collection.status === 'archived') notFound();
 
@@ -80,9 +83,9 @@ export default async function CollectionPage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: `https://womaniya.in/${locale}` },
-      { '@type': 'ListItem', position: 2, name: 'Collections', item: `https://womaniya.in/${locale}/collections` },
-      { '@type': 'ListItem', position: 3, name: collection.name_en, item: `https://womaniya.in/${locale}/collection/${slug}` },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `https://womaniyakolkata.in/${locale}` },
+      { '@type': 'ListItem', position: 2, name: 'Collections', item: `https://womaniyakolkata.in/${locale}/collections` },
+      { '@type': 'ListItem', position: 3, name: collection.name_en, item: `https://womaniyakolkata.in/${locale}/collection/${slug}` },
     ],
   };
 
@@ -91,7 +94,7 @@ export default async function CollectionPage({ params }: Props) {
     '@type': 'CollectionPage',
     name: collection.name_en,
     description: collection.description_en ?? `${collection.name_en} — Authentic Handloom Collection by Womaniya`,
-    url: `https://womaniya.in/${locale}/collection/${slug}`,
+    url: `https://womaniyakolkata.in/${locale}/collection/${slug}`,
     ...(allImages[0] ? { image: allImages[0] } : {}),
     numberOfItems: products.length,
   };
@@ -99,8 +102,8 @@ export default async function CollectionPage({ params }: Props) {
   return (
     <>
       <WhatsAppContextSetter context={{ type: 'collection', name: collection.name_en }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd).replace(/</g, '\\u003c') }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd).replace(/</g, '\\u003c') }} />
     <div className="min-h-screen bg-bengal-cream pt-24 pb-12">
       <div className="max-w-7xl mx-auto px-4">
         {hasImages && allImages.length > 1 ? (
@@ -114,7 +117,7 @@ export default async function CollectionPage({ params }: Props) {
           </div>
         ) : hasImages ? (
           <div className="relative w-full h-64 md:h-96 rounded-2xl overflow-hidden mb-8">
-            <Image src={allImages[0]} alt={name} fill className="object-cover" />
+            <Image src={allImages[0]} alt={name} fill className="object-cover" sizes="100vw" />
             {heroOverlay}
           </div>
         ) : (
@@ -136,7 +139,7 @@ export default async function CollectionPage({ params }: Props) {
             {products.map(p => (
               <Link prefetch={true} key={p.id} href={`/${locale}/shop/${p.slug}`} className="group">
                 <div className="relative aspect-3/4 rounded-xl overflow-hidden bg-bengal-mati mb-3">
-                  <Image src={p.image_url} alt={p.name_en} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <Image src={p.image_url} alt={p.name_en} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw" />
                 </div>
                 <h3 className="font-medium text-bengal-kajal">{locale === 'bn' ? p.name_bn || p.name_en : p.name_en}</h3>
                 <p className="text-bengal-sindoor font-editorial">₹{p.price}</p>

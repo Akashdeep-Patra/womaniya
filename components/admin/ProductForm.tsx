@@ -25,7 +25,9 @@ const productFormSchema = z.object({
   description_en: z.string().max(5000).optional().or(z.literal('')),
   description_bn: z.string().max(5000).optional().or(z.literal('')),
   seo_title_en: z.string().max(120).optional().or(z.literal('')),
+  seo_title_bn: z.string().max(120).optional().or(z.literal('')),
   seo_description_en: z.string().max(300).optional().or(z.literal('')),
+  seo_description_bn: z.string().max(300).optional().or(z.literal('')),
   price: z.coerce.number().positive('Price must be positive').max(999999),
   category_id: z.coerce.number().refine((n) => n > 0, 'Please select a category'),
   status: z.enum([...PRODUCT_STATUSES]).default('draft'),
@@ -54,7 +56,9 @@ type ProductFormProps = {
     description_en?: string | null;
     description_bn?: string | null;
     seo_title_en?: string | null;
+    seo_title_bn?: string | null;
     seo_description_en?: string | null;
+    seo_description_bn?: string | null;
     price?: string | null;
     category_id?: number | null;
     status?: string | null;
@@ -107,7 +111,9 @@ export function ProductForm({ initialData, initialImages, categories, collection
       description_en: initialData?.description_en ?? '',
       description_bn: initialData?.description_bn ?? '',
       seo_title_en: initialData?.seo_title_en ?? '',
+      seo_title_bn: initialData?.seo_title_bn ?? '',
       seo_description_en: initialData?.seo_description_en ?? '',
+      seo_description_bn: initialData?.seo_description_bn ?? '',
       price: initialData?.price ? Number(initialData.price) : undefined,
       category_id: (initialData?.category_id ?? '') as number,
       status: (initialData?.status as ProductFormValues['status']) ?? 'draft',
@@ -158,7 +164,9 @@ export function ProductForm({ initialData, initialImages, categories, collection
     if (data.description_en) formData.set('description_en', data.description_en);
     if (data.description_bn) formData.set('description_bn', data.description_bn);
     if (data.seo_title_en) formData.set('seo_title_en', data.seo_title_en);
+    if (data.seo_title_bn) formData.set('seo_title_bn', data.seo_title_bn);
     if (data.seo_description_en) formData.set('seo_description_en', data.seo_description_en);
+    if (data.seo_description_bn) formData.set('seo_description_bn', data.seo_description_bn);
     formData.set('price', String(data.price));
     formData.set('category_id', String(data.category_id));
     formData.set('category', categories.find((c) => c.id === data.category_id)?.name_en ?? '');
@@ -247,7 +255,7 @@ export function ProductForm({ initialData, initialImages, categories, collection
             <label className="text-[10px] tracking-widest uppercase font-medium text-muted-foreground font-sans-en block mb-2">
               Primary Image *
             </label>
-            <CameraUpload onUpload={handlePrimaryUpload} initialUrl={primaryImage} />
+            <CameraUpload onUpload={handlePrimaryUpload} initialUrl={primaryImage} pathPrefix="products" />
             {errors.image_uploaded_url && (
               <p className="text-destructive text-xs font-medium mt-1">
                 {errors.image_uploaded_url.message}
@@ -290,6 +298,7 @@ export function ProductForm({ initialData, initialImages, categories, collection
                   onUploadMultiple={handleAdditionalUploadMultiple}
                   compact
                   multiple
+                  pathPrefix="products"
                 />
               </div>
             </Reorder.Group>
@@ -357,6 +366,20 @@ export function ProductForm({ initialData, initialImages, categories, collection
               error={errors.description_bn?.message}
               isBengali
               className={inputClassName(errors.description_bn?.message)}
+            />
+            <BengalInput
+              label="SEO Title (BN)"
+              {...register('seo_title_bn')}
+              isBengali
+              error={errors.seo_title_bn?.message}
+            />
+            <FormTextarea
+              label="SEO Description (BN)"
+              {...register('seo_description_bn')}
+              rows={2}
+              isBengali
+              error={errors.seo_description_bn?.message}
+              className={inputClassName(errors.seo_description_bn?.message)}
             />
           </TabsContent>
         </Tabs>

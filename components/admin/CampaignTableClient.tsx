@@ -131,6 +131,9 @@ export function CampaignTableClient({ initialCampaigns, locale }: { initialCampa
       getRowHref={(c) => getEditUrl(c.id)}
       emptyMessage="No campaigns yet."
       mobileCard={mobileCard}
+      searchable
+      searchPlaceholder="Search campaigns..."
+      getSearchableText={(c) => [c.name_en, c.name_bn, c.slug, c.status].filter(Boolean).join(' ')}
     />
   );
 }

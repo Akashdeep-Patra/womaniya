@@ -151,6 +151,9 @@ export function ProductTableClient({ initialProducts, locale }: { initialProduct
       getRowHref={(p) => getEditUrl(p.id)}
       emptyMessage="No products yet. Add your first product!"
       mobileCard={mobileCard}
+      searchable
+      searchPlaceholder="Search products..."
+      getSearchableText={(p) => [p.name_en, p.name_bn, p.category, p.slug, p.description_en, p.description_bn, p.status, p.sku].filter(Boolean).join(' ')}
     />
   );
 }

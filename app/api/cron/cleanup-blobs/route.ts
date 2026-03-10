@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 import { sql } from 'drizzle-orm';
 import { logger } from '@/lib/logger';
 
-const GRACE_PERIOD_MS = 24 * 60 * 60 * 1000; // 24 hours
+const GRACE_PERIOD_MS = 48 * 60 * 60 * 1000; // 48 hours
 
 async function collectReferencedUrls(): Promise<Set<string>> {
   const urls = new Set<string>();

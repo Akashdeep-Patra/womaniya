@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Trash2, Edit, Star } from 'lucide-react';
+import Image from 'next/image';
+import { Trash2, Edit, Star, User } from 'lucide-react';
 import { notify } from '@/lib/notify';
 import { deleteTestimonial } from '@/actions/testimonials';
 import { EntityTable, Column, MobileCardConfig } from './EntityTable';
@@ -107,7 +108,15 @@ export function TestimonialTableClient({ initialTestimonials, locale }: { initia
   ];
 
   const mobileCard: MobileCardConfig<Testimonial> = {
-    leading: (t) => <SourceBadge source={t.source} />,
+    leading: (t) => t.author_image_url ? (
+      <div className="w-11 h-11 rounded-full overflow-hidden bg-muted relative">
+        <Image src={t.author_image_url} alt={t.author_name} fill className="object-cover" sizes="44px" />
+      </div>
+    ) : (
+      <div className="w-11 h-11 rounded-full bg-muted flex items-center justify-center">
+        <User size={18} className="text-muted-foreground" />
+      </div>
+    ),
     title: (t) => `"${truncate(t.quote_en, 50)}"`,
     subtitle: (t) => (
       <div className="flex items-center gap-2">
@@ -146,6 +155,9 @@ export function TestimonialTableClient({ initialTestimonials, locale }: { initia
       getRowHref={(t) => getEditUrl(t.id)}
       emptyMessage="No testimonials yet."
       mobileCard={mobileCard}
+      searchable
+      searchPlaceholder="Search testimonials..."
+      getSearchableText={(t) => [t.quote_en, t.quote_bn, t.author_name, t.author_title, t.source, t.status].filter(Boolean).join(' ')}
     />
   );
 }

@@ -21,7 +21,7 @@ export function StatusPill({ status, className }: StatusPillProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] tracking-[0.1em] uppercase font-semibold',
+        'inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] tracking-[0.1em] uppercase font-semibold cursor-default',
         STATUS_STYLES[styleKey],
         className,
       )}

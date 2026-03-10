@@ -36,10 +36,10 @@ export const BengalInput = React.forwardRef<HTMLInputElement, BengalInputProps>(
             id={inputId}
             type={inputType}
             className={cn(
-              'w-full h-12 px-4 rounded-xl border bg-bengal-cream',
+              'w-full h-12 px-4 rounded-xl border bg-bengal-cream cursor-text',
               'border-bengal-kansa/25 text-bengal-kajal placeholder:text-bengal-kajal/35',
               'focus:outline-none focus:ring-2 focus:ring-bengal-sindoor/20 focus:border-bengal-sindoor',
-              'transition-all text-sm shadow-sm',
+              'transition-all text-sm shadow-sm disabled:cursor-not-allowed disabled:opacity-50',
               isBengali ? 'font-bengali' : 'font-sans-en',
               error ? 'border-bengal-alta ring-2 ring-bengal-alta/20' : '',
               isPassword && 'pr-12',
@@ -51,7 +51,7 @@ export const BengalInput = React.forwardRef<HTMLInputElement, BengalInputProps>(
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-bengal-kansa hover:text-bengal-kajal transition-colors focus:outline-none"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-bengal-kansa hover:text-bengal-kajal cursor-pointer transition-colors focus:outline-none"
               tabIndex={-1}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >

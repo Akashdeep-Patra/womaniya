@@ -39,7 +39,7 @@ export function SourceBadge({ source, className }: { source: string; className?:
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase whitespace-nowrap',
+        'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase whitespace-nowrap cursor-default',
         config.bg,
         config.text,
         className,

@@ -79,13 +79,13 @@ export function ArtisanVoicesSection({ testimonials }: ArtisanVoicesSectionProps
   const voices = (testimonials && testimonials.length > 0) ? testimonials : fallbackVoices;
 
   return (
-    <section className="py-24 md:py-40 relative overflow-hidden bg-background">
+    <section id="voices" className="py-24 md:py-40 relative overflow-hidden bg-background">
       {/* Pastel 3D Space Background */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-bengal-dust/10" />
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/10 rounded-full mix-blend-multiply filter blur-[100px] opacity-70" />
-        <div className="absolute top-1/4 -right-20 w-[30rem] h-[30rem] bg-secondary/10 rounded-full mix-blend-multiply filter blur-[120px] opacity-70" />
-        <div className="absolute -bottom-40 left-1/3 w-[40rem] h-[40rem] bg-accent/5 rounded-full mix-blend-multiply filter blur-[140px] opacity-60" />
+        <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/5 rounded-full hidden md:block md:mix-blend-multiply md:filter md:blur-[100px] md:opacity-70 md:bg-primary/10" />
+        <div className="absolute top-1/4 -right-20 w-[30rem] h-[30rem] bg-secondary/5 rounded-full hidden md:block md:mix-blend-multiply md:filter md:blur-[120px] md:opacity-70 md:bg-secondary/10" />
+        <div className="absolute -bottom-40 left-1/3 w-[40rem] h-[40rem] bg-accent/3 rounded-full hidden md:block md:mix-blend-multiply md:filter md:blur-[140px] md:opacity-60 md:bg-accent/5" />
       </div>
 
       <div className="px-4 sm:px-6 max-w-[1400px] mx-auto relative z-10">
@@ -148,7 +148,7 @@ export function ArtisanVoicesSection({ testimonials }: ArtisanVoicesSectionProps
                   transition: { type: 'spring', stiffness: 400, damping: 25 }
                 }}
                 className={cn(
-                  'group relative flex flex-col rounded-[2rem] border border-border/30 bg-background/80 backdrop-blur-xl p-8 md:p-10 lg:p-12',
+                  'group relative flex flex-col rounded-[2rem] border border-border/30 bg-background/95 md:bg-background/80 md:backdrop-blur-xl p-8 md:p-10 lg:p-12',
                   'shadow-[0_8px_30px_rgb(0,0,0,0.04)]',
                   'hover:shadow-[0_20px_50px_rgb(0,0,0,0.12)]',
                   'cursor-pointer group-hover:will-change-transform'

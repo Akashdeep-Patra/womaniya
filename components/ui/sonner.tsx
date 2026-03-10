@@ -38,9 +38,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
           warning: 'border-l-admin-warning [&>[data-icon]]:text-admin-warning',
           info: 'border-l-primary [&>[data-icon]]:text-primary',
           actionButton:
-            'min-h-[32px] rounded-full touch-manipulation bg-primary text-primary-foreground hover:bg-primary/90',
+            'min-h-[32px] rounded-full touch-manipulation cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90',
           cancelButton:
-            'min-h-[32px] rounded-full touch-manipulation',
+            'min-h-[32px] rounded-full touch-manipulation cursor-pointer',
         },
       }}
       style={

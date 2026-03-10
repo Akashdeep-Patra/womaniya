@@ -17,12 +17,12 @@ const GRADIENT_COLORS = [
 ];
 
 const FALLBACK_BGS = [
-  'bg-gradient-to-br from-bengal-sindoor/20 to-bengal-kansa/10',
-  'bg-gradient-to-br from-bengal-kansa/20 to-bengal-sindoor/10',
-  'bg-gradient-to-br from-bengal-mati/40 to-bengal-dust/30',
-  'bg-gradient-to-br from-bengal-kajal/15 to-bengal-mati/20',
-  'bg-gradient-to-br from-bengal-sindoor/15 to-bengal-kajal/10',
-  'bg-gradient-to-br from-bengal-dust/30 to-bengal-kori/20',
+  'bg-linear-to-br from-bengal-sindoor/20 to-bengal-kansa/10',
+  'bg-linear-to-br from-bengal-kansa/20 to-bengal-sindoor/10',
+  'bg-linear-to-br from-bengal-mati/40 to-bengal-dust/30',
+  'bg-linear-to-br from-bengal-kajal/15 to-bengal-mati/20',
+  'bg-linear-to-br from-bengal-sindoor/15 to-bengal-kajal/10',
+  'bg-linear-to-br from-bengal-dust/30 to-bengal-kori/20',
 ];
 
 interface Props {
@@ -39,7 +39,7 @@ export function CategoriesSection({ categories, isCompact = false }: Props) {
   if (categories.length === 0) return null;
 
   return (
-    <section className="py-12 md:py-20">
+    <section id="categories" className="py-12 md:py-20">
 
       {/* Header */}
       <div className="px-4 sm:px-6 max-w-7xl mx-auto mb-6 md:mb-8 flex items-center justify-between">

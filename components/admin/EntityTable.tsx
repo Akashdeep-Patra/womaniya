@@ -1,5 +1,7 @@
 'use client';
 
+import { useState, useMemo } from 'react';
+import { Search, X as XIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -29,6 +31,12 @@ type EntityTableProps<T> = {
   className?: string;
   emptyMessage?: string;
   mobileCard?: MobileCardConfig<T>;
+  /** Enable built-in search bar */
+  searchable?: boolean;
+  /** Placeholder text for the search input */
+  searchPlaceholder?: string;
+  /** Extract all searchable text from an item. Return a single string — the search will match against it case-insensitively. */
+  getSearchableText?: (item: T) => string;
 };
 
 export function EntityTable<T>({
@@ -40,8 +48,22 @@ export function EntityTable<T>({
   className,
   emptyMessage = 'No items found',
   mobileCard,
+  searchable,
+  searchPlaceholder = 'Search...',
+  getSearchableText,
 }: EntityTableProps<T>) {
-  if (data.length === 0) {
+  const [query, setQuery] = useState('');
+
+  const filtered = useMemo(() => {
+    if (!searchable || !query.trim() || !getSearchableText) return data;
+    const q = query.toLowerCase();
+    return data.filter(item => getSearchableText(item).toLowerCase().includes(q));
+  }, [data, query, searchable, getSearchableText]);
+
+  const showEmpty = filtered.length === 0;
+  const isFiltered = query.trim().length > 0 && data.length > 0;
+
+  if (data.length === 0 && !searchable) {
     return (
       <div className="py-12 text-center text-sm text-muted-foreground bg-card rounded-xl border border-border">
         {emptyMessage}
@@ -51,10 +73,44 @@ export function EntityTable<T>({
 
   return (
     <div className={cn("bg-card rounded-xl border border-border overflow-hidden", className)}>
+      {/* Search bar */}
+      {searchable && (
+        <div className="px-3 py-2 md:px-4 md:py-3 border-b border-border">
+          <div className="relative">
+            <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={searchPlaceholder}
+              className="w-full text-xs md:text-sm pl-8 pr-8 py-1.5 md:py-2 rounded-lg border border-border bg-transparent cursor-text focus:outline-none focus:border-primary transition-colors"
+            />
+            {query && (
+              <button
+                onClick={() => setQuery('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
+              >
+                <XIcon size={14} />
+              </button>
+            )}
+          </div>
+          {isFiltered && (
+            <p className="text-[10px] text-muted-foreground mt-1.5 px-0.5">
+              {filtered.length} of {data.length} results
+            </p>
+          )}
+        </div>
+      )}
+
+      {showEmpty ? (
+        <div className="py-12 text-center text-sm text-muted-foreground">
+          {isFiltered ? 'No results match your search.' : emptyMessage}
+        </div>
+      ) : (<>
       {/* Mobile card list */}
       {mobileCard && (
         <div className="md:hidden flex flex-col">
-          {data.map((item, idx) => {
+          {filtered.map((item, idx) => {
             const href = getRowHref?.(item);
 
             return (
@@ -151,7 +207,7 @@ export function EntityTable<T>({
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {data.map((item, idx) => {
+            {filtered.map((item, idx) => {
               const href = getRowHref?.(item);
               return (
                 <motion.tr
@@ -192,6 +248,7 @@ export function EntityTable<T>({
           </tbody>
         </table>
       </div>
+      </>)}
     </div>
   );
 }

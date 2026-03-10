@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
 import { PanelLeftClose, PanelLeft } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { getNavGroups } from '@/lib/admin-nav';
 
@@ -13,9 +13,22 @@ export function AdminSidebar({ locale }: { locale: string }) {
   const [collapsed, setCollapsed] = useState(false);
   const navGroups = getNavGroups(locale);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'b') {
+        e.preventDefault();
+        setCollapsed((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const isActive = (href: string) => {
-    if (href === `/${locale}/admin`) return pathname === href;
-    return pathname.startsWith(href);
+    // usePathname from next-intl returns path without locale prefix
+    const path = href.replace(new RegExp(`^/${locale}`), '');
+    if (path === '/admin') return pathname === '/admin';
+    return pathname.startsWith(path);
   };
 
   return (
@@ -59,16 +72,16 @@ export function AdminSidebar({ locale }: { locale: string }) {
               return (
                 <Link prefetch={true} key={item.href}
                   href={item.href}
-                  
+
                   className={cn(
-                    'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors relative group',
+                    'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors relative group overflow-hidden',
                     collapsed && 'justify-center px-2',
                     active
                       ? 'bg-muted text-foreground'
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
                   )}
                 >
-                  {active && (
+                  {active && !collapsed && (
                     <motion.div
                       layoutId="sidebar-active"
                       className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-primary rounded-r-full"
@@ -91,7 +104,7 @@ export function AdminSidebar({ locale }: { locale: string }) {
       {/* Collapse toggle */}
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="h-12 flex items-center justify-center border-t border-border text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+        className="h-12 flex items-center justify-center border-t border-border text-muted-foreground hover:text-foreground hover:bg-muted/50 cursor-pointer transition-colors"
       >
         {collapsed ? <PanelLeft size={18} /> : <PanelLeftClose size={18} />}
       </button>

@@ -170,6 +170,7 @@ export function TestimonialForm({ initialData, locale }: TestimonialFormProps) {
             <CameraUpload
               onUpload={(url) => { if (url) setAuthorImage(url); }}
               compact
+              pathPrefix="testimonials"
             />
             {authorImage && (
               <button

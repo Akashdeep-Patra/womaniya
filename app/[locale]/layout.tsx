@@ -48,7 +48,7 @@ const bnFontVars = [notoSerifBn.variable, anekBn.variable].join(' ');
 
 /* ── Metadata ─────────────────────────────────────────────────── */
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://womaniya.in'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://womaniyakolkata.in'),
   title: {
     template: '%s | Womaniya',
     default:  'Womaniya — Authentic Handloom Heritage',
@@ -56,6 +56,13 @@ export const metadata: Metadata = {
   description:
     'Discover exquisite handwoven sarees, blouses & more — Jamdani, Tant, Chanderi, Ikkat, Ajrakh — crafted by master artisans in Kolkata.',
   keywords: ['Womaniya', 'handloom', 'Jamdani saree', 'Tant saree', 'Chanderi blouse', 'Ikkat', 'Ajrakh', 'Kolkata fashion', 'handwoven saree'],
+  icons: {
+    icon: [
+      { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
+  },
   // Search engine verification — set env vars after registering with each service
   ...(process.env.GOOGLE_SITE_VERIFICATION && {
     verification: {

@@ -162,7 +162,9 @@ export function DashboardClient({
       <motion.div variants={fadeUp} className="grid lg:grid-cols-5 gap-4 lg:gap-5">
         {/* Recent Products — wider column */}
         <div className="lg:col-span-3 rounded-2xl border border-border bg-card overflow-hidden">
-          <SectionHeader title="Recent Products" href={`${base}/products`} icon={Package} />
+          <div className="px-4 pt-4 pb-1">
+            <SectionHeader title="Recent Products" href={`${base}/products`} icon={Package} />
+          </div>
           {recentProducts.length === 0 ? (
             <div className="px-5 py-12 text-center">
               <Package size={28} className="mx-auto text-muted-foreground/20 mb-3" />
@@ -176,13 +178,13 @@ export function DashboardClient({
               </Link>
             </div>
           ) : (
-            <div>
+            <div className="px-2 pb-2">
               {recentProducts.map((product, i) => (
                 <Link
                   key={product.id}
                   prefetch={true}
                   href={`${base}/products/${product.id}/edit`}
-                  className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/50 border-t border-border first:border-t-0"
+                  className="group flex items-center gap-3 px-3 py-3 transition-colors hover:bg-muted rounded-xl"
                 >
                   {/* Thumbnail */}
                   <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-muted shrink-0 ring-1 ring-border">
@@ -220,19 +222,21 @@ export function DashboardClient({
         <div className="lg:col-span-2 flex flex-col gap-4 lg:gap-5">
           {/* Live Campaigns */}
           <div className="rounded-2xl border border-border bg-card overflow-hidden">
-            <SectionHeader title="Live Campaigns" href={`${base}/campaigns`} icon={Megaphone} />
+            <div className="px-4 pt-4 pb-1">
+              <SectionHeader title="Live Campaigns" href={`${base}/campaigns`} icon={Megaphone} />
+            </div>
             {liveCampaigns.length === 0 ? (
               <div className="px-4 py-8 text-center">
                 <Megaphone size={24} className="mx-auto text-muted-foreground/20 mb-2" />
                 <p className="text-sm text-muted-foreground">No active campaigns</p>
               </div>
             ) : (
-              <div>
+              <div className="px-2 pb-2">
                 {liveCampaigns.map((campaign) => (
                   <Link
                     key={campaign.id}
                     href={`${base}/campaigns/${campaign.id}/edit`}
-                    className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/50 border-t border-border first:border-t-0"
+                    className="group flex items-center gap-3 px-3 py-3 transition-colors hover:bg-muted rounded-xl"
                   >
                     <div className="w-8 h-8 rounded-lg bg-admin-success/10 flex items-center justify-center shrink-0">
                       <Megaphone size={14} className="text-admin-success" />
@@ -261,20 +265,22 @@ export function DashboardClient({
 
           {/* Upcoming Collections */}
           <div className="rounded-2xl border border-border bg-card overflow-hidden">
-            <SectionHeader title="Upcoming Collections" href={`${base}/collections`} icon={FolderOpen} />
+            <div className="px-4 pt-4 pb-1">
+              <SectionHeader title="Upcoming Collections" href={`${base}/collections`} icon={FolderOpen} />
+            </div>
             {upcomingCollections.length === 0 ? (
               <div className="px-4 py-8 text-center">
                 <FolderOpen size={24} className="mx-auto text-muted-foreground/20 mb-2" />
                 <p className="text-sm text-muted-foreground">No upcoming launches</p>
               </div>
             ) : (
-              <div>
+              <div className="px-2 pb-2">
                 {upcomingCollections.map((col) => (
                   <Link
                     key={col.id}
                     prefetch={true}
                     href={`${base}/collections/${col.id}/edit`}
-                    className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/50 border-t border-border first:border-t-0"
+                    className="group flex items-center gap-3 px-3 py-3 transition-colors hover:bg-muted rounded-xl"
                   >
                     <div className="w-8 h-8 rounded-lg bg-primary/8 dark:bg-primary/15 flex items-center justify-center shrink-0">
                       <FolderOpen size={14} className="text-primary" />

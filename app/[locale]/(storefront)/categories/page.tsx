@@ -21,12 +21,12 @@ export async function generateMetadata(
 }
 
 const FALLBACK_BGS = [
-  'bg-gradient-to-br from-bengal-sindoor/20 to-bengal-kansa/10',
-  'bg-gradient-to-br from-bengal-kansa/20 to-bengal-sindoor/10',
-  'bg-gradient-to-br from-bengal-mati/40 to-bengal-dust/30',
-  'bg-gradient-to-br from-bengal-kajal/15 to-bengal-mati/20',
-  'bg-gradient-to-br from-bengal-sindoor/15 to-bengal-kajal/10',
-  'bg-gradient-to-br from-bengal-dust/30 to-bengal-kori/20',
+  'bg-linear-to-br from-bengal-sindoor/20 to-bengal-kansa/10',
+  'bg-linear-to-br from-bengal-kansa/20 to-bengal-sindoor/10',
+  'bg-linear-to-br from-bengal-mati/40 to-bengal-dust/30',
+  'bg-linear-to-br from-bengal-kajal/15 to-bengal-mati/20',
+  'bg-linear-to-br from-bengal-sindoor/15 to-bengal-kajal/10',
+  'bg-linear-to-br from-bengal-dust/30 to-bengal-kori/20',
 ];
 
 export default async function CategoriesPage({ params }: Props) {
@@ -86,7 +86,7 @@ export default async function CategoriesPage({ params }: Props) {
                 href={`/${locale}/category/${category.slug}`}
                 className="group block"
               >
-                <div className={`relative aspect-[3/4] rounded-2xl overflow-hidden mb-4 ${coverImage ? 'bg-bengal-mati' : fallbackBg}`}>
+                <div className={`relative aspect-3/4 rounded-2xl overflow-hidden mb-4 ${coverImage ? 'bg-bengal-mati' : fallbackBg}`}>
                   {coverImage ? (
                     <Image
                       src={coverImage}

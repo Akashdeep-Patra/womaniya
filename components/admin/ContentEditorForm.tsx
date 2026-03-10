@@ -123,9 +123,75 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
     return pages.map((pg) => ({ ...pg, sections: pg.sections.filter((ns) => ns.label.toLowerCase().includes(q) || ns.description.toLowerCase().includes(q) || ns.keys.some((k) => k.label.toLowerCase().includes(q))) })).filter((pg) => pg.sections.length > 0);
   }, [pages, search]);
 
+  // Lookup: namespace name → { route, sectionId }
+  const nsRouteMap = useMemo(() => {
+    const map: Record<string, { route: string; sectionId?: string }> = {};
+    for (const pg of pages) {
+      for (const ns of pg.sections) {
+        map[ns.name] = { route: pg.route, sectionId: ns.sectionId };
+      }
+    }
+    return map;
+  }, [pages]);
+
+  const navigatePreview = useCallback((nsName: string) => {
+    const info = nsRouteMap[nsName];
+    if (!info) return;
+
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    // Global sections (nav, footer) — scroll on the current page without navigating
+    if (info.route === 'all pages') {
+      if (info.sectionId) {
+        try {
+          const el = iframe.contentWindow?.document.getElementById(info.sectionId);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } catch { /* cross-origin */ }
+      }
+      return;
+    }
+
+    // Dynamic routes like /shop/[slug] can't be previewed — fall back to parent route
+    let route = info.route;
+    if (route.includes('[')) route = route.replace(/\/\[.*$/, '');
+    route = route === '/' ? '' : route;
+
+    const targetPath = `/${activeLocale}${route}` || `/${activeLocale}`;
+
+    try {
+      const currentPath = new URL(iframe.src, window.location.origin).pathname;
+
+      if (currentPath === targetPath && info.sectionId) {
+        // Same page — scroll directly via DOM
+        const el = iframe.contentWindow?.document.getElementById(info.sectionId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+      }
+    } catch {
+      // cross-origin or iframe not loaded — fall through
+    }
+
+    // Different page or can't access DOM — navigate with hash
+    const hash = info.sectionId ? `#${info.sectionId}` : '';
+    iframe.src = `${targetPath}${hash}`;
+  }, [nsRouteMap, activeLocale]);
+
   const toggleSection = useCallback((ns: string) => {
-    setExpandedSections((prev) => { const next = new Set(prev); if (next.has(ns)) next.delete(ns); else next.add(ns); return next; });
-  }, []);
+    setExpandedSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(ns)) {
+        next.delete(ns);
+      } else {
+        next.add(ns);
+        // Navigate preview to the corresponding page/section
+        navigatePreview(ns);
+      }
+      return next;
+    });
+  }, [navigatePreview]);
 
   const handleChange = useCallback((ns: string, key: string, value: string) => {
     setOverrides((prev) => ({ ...prev, [ns]: { ...prev[ns], [key]: value } }));

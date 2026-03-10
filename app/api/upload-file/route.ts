@@ -1,63 +1,65 @@
-import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
+import { put } from '@vercel/blob';
 import { auth } from '@/auth';
 import { recordMediaAsset } from '@/actions/media';
-import { logger } from '@/lib/logger';
 import { ratelimit } from '@/lib/ratelimit';
+import { logger } from '@/lib/logger';
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const session = await auth();
-  if (!session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  if (ratelimit) {
-    const forwarded = request.headers.get('x-forwarded-for');
-    const ip = forwarded?.split(',')[0]?.trim() ?? request.headers.get('x-real-ip') ?? '127.0.0.1';
-    const { success } = await ratelimit.limit(`upload_file_${ip}`);
-    if (!success) return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
-  }
-
-  const formData = await request.formData();
-  const file = formData.get('file') as File | null;
-
-  if (!file || file.size === 0) {
-    return NextResponse.json({ error: 'No file provided' }, { status: 400 });
-  }
-
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
-  if (!allowedTypes.includes(file.type)) {
-    return NextResponse.json({ error: 'Invalid file type' }, { status: 400 });
-  }
-
-  const maxSize = 25 * 1024 * 1024; // 25MB
-  if (file.size > maxSize) {
-    return NextResponse.json({ error: 'File too large (max 25MB)' }, { status: 400 });
-  }
-
   try {
-    const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_').replace(/\.{2,}/g, '');
-    const filename = `products/${Date.now()}-${safeName || 'upload'}`;
-    const blob = await put(filename, file, { access: 'public' });
+    const session = await auth();
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-    // Record in media_assets for the library — don't fail the upload if this errors
-    try {
-      await recordMediaAsset({
-        url: blob.url,
-        filename,
-        mime_type: file.type,
-        size_bytes: file.size,
-      });
-    } catch (e) {
-      logger.warn('Failed to record media asset after upload', { url: blob.url, error: e });
+    if (ratelimit) {
+      const ip = request.headers.get('x-forwarded-for') ?? '127.0.0.1';
+      const { success } = await ratelimit.limit(`upload_file_${ip}`);
+      if (!success) {
+        return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+      }
+    }
+
+    const formData = await request.formData();
+    const file = formData.get('file') as File | null;
+    const pathname = (formData.get('pathname') as string) || `uploads/${Date.now()}-upload.webp`;
+    const skipRecord = formData.get('skipRecord') === '1';
+
+    if (!file || file.size === 0) {
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    }
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif', 'image/svg+xml'];
+    if (file.type && !allowedTypes.includes(file.type)) {
+      return NextResponse.json({ error: 'File type not allowed' }, { status: 400 });
+    }
+
+    const safePath = pathname.replace(/\.\./g, '').replace(/^\/+/, '');
+
+    const blob = await put(safePath, file, {
+      access: 'public',
+      contentType: file.type || 'image/webp',
+    });
+
+    if (!skipRecord) {
+      try {
+        await recordMediaAsset({
+          url: blob.url,
+          filename: blob.pathname,
+          mime_type: file.type || 'image/webp',
+          size_bytes: file.size,
+        });
+      } catch (e) {
+        logger.warn('Failed to record media asset', { url: blob.url, error: e });
+      }
     }
 
     return NextResponse.json({ url: blob.url });
   } catch (error) {
-    logger.error('File upload failed', { error });
+    logger.error('Upload file error', { error });
     return NextResponse.json(
-      { error: 'Upload failed' },
-      { status: 500 }
+      { error: (error as Error).message },
+      { status: 500 },
     );
   }
 }

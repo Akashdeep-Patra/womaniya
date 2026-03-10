@@ -7,9 +7,9 @@ import { ArrowUpRight, BookOpen, Feather } from 'lucide-react';
 import { AbstractThreadIcon } from '@/components/illustrations/AbstractThreadIcon';
 
 const FALLBACK_BGS = [
-  'bg-gradient-to-br from-primary/10 via-primary/5 to-transparent',
-  'bg-gradient-to-br from-secondary/10 via-secondary/5 to-transparent',
-  'bg-gradient-to-br from-accent/10 via-accent/5 to-transparent',
+  'bg-linear-to-br from-primary/10 via-primary/5 to-transparent',
+  'bg-linear-to-br from-secondary/10 via-secondary/5 to-transparent',
+  'bg-linear-to-br from-accent/10 via-accent/5 to-transparent',
 ];
 
 export function StoriesClient({ 

@@ -60,7 +60,7 @@ export function ShopGrid({ products, categories, isCompact = false, banners = []
   const inlineBanners = banners.filter(b => b.placement === 'inline' && b.status === 'published');
 
   return (
-    <section className="px-4 sm:px-6 py-12 md:py-20 max-w-7xl mx-auto">
+    <section id="shop" className="px-4 sm:px-6 py-12 md:py-20 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-6">
         <div>

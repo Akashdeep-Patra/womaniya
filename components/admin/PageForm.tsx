@@ -20,7 +20,9 @@ const pageFormSchema = z.object({
   title_en: z.string().min(2, 'Title must be at least 2 characters').max(120),
   title_bn: z.string().max(120).optional().or(z.literal('')),
   seo_title_en: z.string().max(120).optional().or(z.literal('')),
+  seo_title_bn: z.string().max(120).optional().or(z.literal('')),
   seo_description_en: z.string().max(300).optional().or(z.literal('')),
+  seo_description_bn: z.string().max(300).optional().or(z.literal('')),
   page_type: z.enum([...PAGE_TYPES]).default('static'),
   status: z.enum([...PAGE_STATUSES]).default('draft'),
 });
@@ -33,7 +35,9 @@ type PageFormProps = {
     title_en?: string | null;
     title_bn?: string | null;
     seo_title_en?: string | null;
+    seo_title_bn?: string | null;
     seo_description_en?: string | null;
+    seo_description_bn?: string | null;
     page_type?: string | null;
     status?: string | null;
     images?: string[] | null;
@@ -80,7 +84,9 @@ export function PageForm({ initialData, locale, basePath = 'pages', defaultPageT
       title_en: initialData?.title_en ?? '',
       title_bn: initialData?.title_bn ?? '',
       seo_title_en: initialData?.seo_title_en ?? '',
+      seo_title_bn: initialData?.seo_title_bn ?? '',
       seo_description_en: initialData?.seo_description_en ?? '',
+      seo_description_bn: initialData?.seo_description_bn ?? '',
       page_type: (initialData?.page_type as PageFormValues['page_type']) ?? defaultPageType,
       status: (initialData?.status as PageFormValues['status']) ?? 'draft',
     },
@@ -92,7 +98,9 @@ export function PageForm({ initialData, locale, basePath = 'pages', defaultPageT
     formData.set('title_en', data.title_en);
     if (data.title_bn) formData.set('title_bn', data.title_bn);
     if (data.seo_title_en) formData.set('seo_title_en', data.seo_title_en);
+    if (data.seo_title_bn) formData.set('seo_title_bn', data.seo_title_bn);
     if (data.seo_description_en) formData.set('seo_description_en', data.seo_description_en);
+    if (data.seo_description_bn) formData.set('seo_description_bn', data.seo_description_bn);
     formData.set('page_type', data.page_type);
     formData.set('status', data.status);
     images.forEach((img) => formData.append('images', img));
@@ -172,6 +180,20 @@ export function PageForm({ initialData, locale, basePath = 'pages', defaultPageT
               isBengali
               error={errors.title_bn?.message}
             />
+            <BengalInput
+              label="SEO Title (BN)"
+              {...register('seo_title_bn')}
+              isBengali
+              error={errors.seo_title_bn?.message}
+            />
+            <FormTextarea
+              label="SEO Description (BN)"
+              {...register('seo_description_bn')}
+              rows={2}
+              isBengali
+              error={errors.seo_description_bn?.message}
+              className={inputClassName(errors.seo_description_bn?.message)}
+            />
           </TabsContent>
         </Tabs>
       </div>
@@ -240,6 +262,7 @@ export function PageForm({ initialData, locale, basePath = 'pages', defaultPageT
                 onUploadMultiple={(urls) => setImages((prev) => [...prev, ...urls])}
                 compact
                 multiple
+                pathPrefix="pages"
               />
             </div>
           </Reorder.Group>

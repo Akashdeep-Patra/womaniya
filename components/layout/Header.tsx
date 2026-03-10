@@ -124,8 +124,10 @@ export function Header() {
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, 'change', (y) => {
-    setIsScrolled(y > SCROLL_THRESHOLD);
+    const wasScrolled = lastScrollYRef.current > SCROLL_THRESHOLD;
+    const nowScrolled = y > SCROLL_THRESHOLD;
     lastScrollYRef.current = y;
+    if (wasScrolled !== nowScrolled) setIsScrolled(nowScrolled);
   });
 
   const navLinks = [
@@ -140,7 +142,7 @@ export function Header() {
   return (
     <>
       {/* ── HEADER ── */}
-      <header className="fixed top-0 left-1/2 -translate-x-1/2 z-50 pointer-events-none pt-4 md:pt-5 flex justify-center w-full max-w-[1800px] h-24">
+      <header id="nav" className="fixed top-0 left-1/2 -translate-x-1/2 z-50 pointer-events-none pt-4 md:pt-5 flex justify-center w-full max-w-[1800px] h-24">
         
         {/* Phase 1: Expanded Header */}
         <motion.div
@@ -159,7 +161,7 @@ export function Header() {
           {/* Expanded Logo */}
           <Link prefetch={true} 
             href={`/${locale}`} 
-            className="group flex items-center shrink-0 gap-2.5 p-1.5 pr-4 md:pr-5 bg-background/50 backdrop-blur-md hover:bg-background/70 rounded-full shadow-sm border border-border/20 transition-colors"
+            className="group flex items-center shrink-0 gap-2.5 p-1.5 pr-4 md:pr-5 bg-background/80 md:bg-background/50 md:backdrop-blur-md hover:bg-background/70 rounded-full shadow-sm border border-border/20 transition-colors"
           >
             <div className="relative rounded-full flex items-center justify-center overflow-hidden size-11 md:size-12">
               <BrandMascot 
@@ -178,14 +180,14 @@ export function Header() {
           </Link>
 
           {/* Expanded Center Nav */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-2 px-5 py-1.5 bg-background/50 backdrop-blur-md rounded-full shadow-sm border border-border/20">
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2 px-5 py-1.5 bg-background/80 md:bg-background/50 md:backdrop-blur-md rounded-full shadow-sm border border-border/20">
             {navLinks.map((l) => (
               <NavLink key={l.href} href={l.href} label={l.label} isBn={isBn} />
             ))}
           </nav>
 
           {/* Expanded Right Actions */}
-          <div className="flex items-center gap-2 shrink-0 p-1.5 bg-background/50 backdrop-blur-md rounded-full shadow-sm border border-border/20">
+          <div className="flex items-center gap-2 shrink-0 p-1.5 bg-background/80 md:bg-background/50 md:backdrop-blur-md rounded-full shadow-sm border border-border/20">
             <ThemeToggle />
             <LocaleToggle locale={locale} />
           </div>
@@ -201,7 +203,7 @@ export function Header() {
           }}
           transition={{ duration: 0.4, ease: EASE }}
           className={cn(
-            "absolute top-4 md:top-5 flex items-center bg-background/85 backdrop-blur-md border border-border/60 shadow-lg rounded-full px-2 pr-4 md:px-3 md:pr-5 py-1.5 gap-4 lg:gap-8 w-max origin-top",
+            "absolute top-4 md:top-5 flex items-center bg-background/95 md:bg-background/85 md:backdrop-blur-md border border-border/60 shadow-lg rounded-full px-2 pr-4 md:px-3 md:pr-5 py-1.5 gap-4 lg:gap-8 w-max origin-top",
             isScrolled ? "pointer-events-auto" : "pointer-events-none"
           )}
         >

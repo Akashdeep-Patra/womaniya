@@ -26,7 +26,7 @@ export function GlimpsesSection() {
   const steps  = isBn ? STEPS_BN : STEPS_EN;
 
   return (
-    <section className="bg-background text-foreground py-16 md:py-24 overflow-hidden">
+    <section id="glimpses" className="bg-background text-foreground py-16 md:py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
         {/* Header */}

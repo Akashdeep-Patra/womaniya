@@ -109,7 +109,7 @@ function GalleryCard({
       style={{ transformStyle: 'preserve-3d' }}
     >
       <motion.div
-        className="w-[55vw] sm:w-[260px] lg:w-[320px] xl:w-[380px] aspect-[3/4] rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 will-change-transform bg-background"
+        className="w-[55vw] sm:w-[260px] lg:w-[320px] xl:w-[380px] aspect-3/4 rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 will-change-transform bg-background"
         style={{
           x,
           y,
@@ -215,7 +215,7 @@ export function HeroGallery3D() {
     // Initial SSR placeholder
     return (
       <div className="relative w-full h-[65vh] sm:h-[70vh] lg:h-[88vh] flex items-center justify-center">
-        <div className="w-[55vw] sm:w-[260px] lg:w-[320px] xl:w-[380px] aspect-[3/4] rounded-2xl md:rounded-3xl bg-muted animate-pulse" />
+        <div className="w-[55vw] sm:w-[260px] lg:w-[320px] xl:w-[380px] aspect-3/4 rounded-2xl md:rounded-3xl bg-muted animate-pulse" />
       </div>
     );
   }

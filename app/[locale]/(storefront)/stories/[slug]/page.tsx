@@ -62,12 +62,12 @@ export default async function StoryPage({ params }: Props) {
     '@type': 'Article',
     headline: page.title_en,
     description: page.seo_description_en ?? `${page.title_en} — Womaniya Stories`,
-    url: `https://womaniya.in/${locale}/stories/${slug}`,
+    url: `https://womaniyakolkata.in/${locale}/stories/${slug}`,
     ...(heroImage ? { image: heroImage } : {}),
     publisher: {
       '@type': 'Organization',
       name: 'Womaniya',
-      logo: { '@type': 'ImageObject', url: 'https://womaniya.in/logo.svg' },
+      logo: { '@type': 'ImageObject', url: 'https://womaniyakolkata.in/logo.svg' },
     },
     datePublished: page.created_at?.toISOString(),
     dateModified: page.updated_at?.toISOString(),
@@ -77,17 +77,17 @@ export default async function StoryPage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: `https://womaniya.in/${locale}` },
-      { '@type': 'ListItem', position: 2, name: 'Stories', item: `https://womaniya.in/${locale}/stories` },
-      { '@type': 'ListItem', position: 3, name: page.title_en, item: `https://womaniya.in/${locale}/stories/${slug}` },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `https://womaniyakolkata.in/${locale}` },
+      { '@type': 'ListItem', position: 2, name: 'Stories', item: `https://womaniyakolkata.in/${locale}/stories` },
+      { '@type': 'ListItem', position: 3, name: page.title_en, item: `https://womaniyakolkata.in/${locale}/stories/${slug}` },
     ],
   };
 
   return (
     <>
       <WhatsAppContextSetter context={{ type: 'story', name: page.title_en }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd).replace(/</g, '\\u003c') }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd).replace(/</g, '\\u003c') }} />
     <div className="min-h-screen bg-bengal-cream pb-12">
       {heroImage && (
         <div className="relative w-full h-[70vh] overflow-hidden mb-16">

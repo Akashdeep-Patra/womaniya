@@ -5,7 +5,7 @@ import { put } from '@vercel/blob';
 import { recordMediaAsset } from '@/actions/media';
 import { logger } from '@/lib/logger';
 
-export async function uploadImageToBlob(formData: FormData): Promise<string> {
+export async function uploadImageToBlob(formData: FormData, pathPrefix = 'products'): Promise<string> {
   const session = await auth();
   if (!session) throw new Error('Unauthorized');
   const file = formData.get('file') as File;
@@ -14,8 +14,11 @@ export async function uploadImageToBlob(formData: FormData): Promise<string> {
     throw new Error('No file provided');
   }
 
-  const filename = `products/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-  const { url } = await put(filename, file, { access: 'public' });
+  const filename = `${pathPrefix}/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+  const { url } = await put(filename, file, {
+    access: 'public',
+    contentType: file.type || 'image/jpeg',
+  });
 
   try {
     await recordMediaAsset({

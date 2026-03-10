@@ -52,7 +52,7 @@ export function MediaPicker({ open, onClose, onSelect, selected }: MediaPickerPr
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">
               <h2 className="font-sans font-semibold tracking-tight text-lg text-foreground">Media Library</h2>
-              <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground">
+              <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer">
                 <X size={18} />
               </button>
             </div>
@@ -64,7 +64,7 @@ export function MediaPicker({ open, onClose, onSelect, selected }: MediaPickerPr
                   placeholder="Search media..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 text-sm bg-muted rounded-md border-0 focus:ring-1 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground"
+                  className="w-full pl-9 pr-4 py-2 text-sm bg-muted rounded-md border-0 cursor-text focus:ring-1 focus:ring-primary/50 outline-none text-foreground placeholder:text-muted-foreground"
                 />
               </div>
             </div>
@@ -78,7 +78,7 @@ export function MediaPicker({ open, onClose, onSelect, selected }: MediaPickerPr
                       key={asset.id}
                       onClick={() => onSelect(asset)}
                       className={cn(
-                        'relative aspect-square rounded-lg overflow-hidden border-2 transition-colors group',
+                        'relative aspect-square rounded-lg overflow-hidden border-2 cursor-pointer transition-colors group',
                         selected === asset.url
                           ? 'border-primary'
                           : 'border-transparent hover:border-border',

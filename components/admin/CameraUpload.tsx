@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { ImagePlus, X, UploadCloud, FolderOpen } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useDropzone } from 'react-dropzone';
-import { upload } from '@vercel/blob/client';
 import imageCompression from 'browser-image-compression';
 import { cn } from '@/lib/utils';
 import { notify } from '@/lib/notify';
@@ -20,6 +19,7 @@ interface Props {
   compact?: boolean;
   multiple?: boolean;
   enableLibrary?: boolean;
+  pathPrefix?: string;
 }
 
 interface UploadingFile {
@@ -31,35 +31,86 @@ interface UploadingFile {
 }
 
 const COMPRESSION_OPTIONS = {
-  maxSizeMB: 8,
-  maxWidthOrHeight: 3840,
+  maxSizeMB: 2,
   useWebWorker: true,
-  initialQuality: 0.92,
+  initialQuality: 0.85,
   fileType: 'image/webp' as const,
+  preserveExif: true,
 };
+
+function uploadViaXhr(
+  file: File,
+  pathname: string,
+  onProgress?: (pct: number) => void,
+): Promise<{ url: string }> {
+  return new Promise((resolve, reject) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('pathname', pathname);
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.upload.addEventListener('progress', (e) => {
+      if (e.lengthComputable && onProgress) {
+        onProgress(Math.round((e.loaded / e.total) * 100));
+      }
+    });
+
+    xhr.addEventListener('load', () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          resolve(JSON.parse(xhr.responseText));
+        } catch {
+          reject(new Error('Invalid server response'));
+        }
+      } else {
+        try {
+          const body = JSON.parse(xhr.responseText);
+          reject(new Error(body.error || `Upload failed (${xhr.status})`));
+        } catch {
+          reject(new Error(`Upload failed (${xhr.status})`));
+        }
+      }
+    });
+
+    xhr.addEventListener('error', () => reject(new Error('Network error')));
+    xhr.addEventListener('abort', () => reject(new Error('Upload cancelled')));
+
+    xhr.open('POST', '/api/upload-file');
+    xhr.send(formData);
+  });
+}
 
 async function compressAndUpload(
   file: File,
   onProgress?: (pct: number) => void,
+  pathPrefix = 'uploads',
 ): Promise<{ url: string }> {
-  // Only compress large files (>4MB) — keeps original quality for reasonable sizes
-  let processedFile: File = file;
-  if (file.size > 4 * 1024 * 1024) {
-    onProgress?.(5);
-    processedFile = await imageCompression(file, COMPRESSION_OPTIONS);
-  }
+  onProgress?.(5);
 
-  // Upload directly to Vercel Blob (bypasses serverless body limit)
-  const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_').replace(/\.{2,}/g, '');
-  const blob = await upload(`products/${Date.now()}-${safeName || 'upload'}`, processedFile, {
-    access: 'public',
-    handleUploadUrl: '/api/upload',
-    onUploadProgress: (e) => {
-      onProgress?.(Math.round(10 + (e.percentage * 0.9)));
+  // Phase 1: Compress and convert to WebP (5→80%)
+  const processedFile = await imageCompression(file, {
+    ...COMPRESSION_OPTIONS,
+    onProgress: (pct: number) => {
+      onProgress?.(Math.round(5 + pct * 0.75));
     },
   });
 
-  return { url: blob.url };
+  onProgress?.(80);
+
+  // Phase 2: Upload to server via XHR with progress (80→100%)
+  const baseName = file.name.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9.-]/g, '_').replace(/\.{2,}/g, '');
+  const blobPath = `${pathPrefix}/${Date.now()}-${baseName || 'upload'}.webp`;
+
+  const result = await uploadViaXhr(
+    new File([processedFile], `${baseName || 'upload'}.webp`, { type: 'image/webp' }),
+    blobPath,
+    (uploadPct) => {
+      onProgress?.(Math.round(80 + uploadPct * 0.2));
+    },
+  );
+
+  return result;
 }
 
 export function CameraUpload({
@@ -70,6 +121,7 @@ export function CameraUpload({
   compact,
   multiple,
   enableLibrary = true,
+  pathPrefix = 'uploads',
 }: Props) {
   const t = useTranslations('admin');
 
@@ -110,7 +162,7 @@ export function CameraUpload({
                 setUploadingFiles((prev) =>
                   prev.map((p) => (p.id === uploadItem.id ? { ...p, progress: pct } : p))
                 );
-              });
+              }, pathPrefix);
               
               urls.push(newBlob.url);
               // Mark as complete by setting progress to 100
@@ -151,7 +203,7 @@ export function CameraUpload({
         try {
           const newBlob = await compressAndUpload(file, (pct) => {
             setUploadingFiles([{ ...newUploads[0], progress: pct }]);
-          });
+          }, pathPrefix);
           onUpload(newBlob.url);
         } catch (err) {
           const msg = err instanceof Error ? err.message : 'Upload failed';
@@ -230,7 +282,7 @@ export function CameraUpload({
               <button
                 type="button"
                 onClick={() => setPickerOpen(true)}
-                className="absolute top-1.5 left-1.5 w-8 h-8 bg-foreground/80 hover:bg-primary rounded-full flex items-center justify-center touch-manipulation active:scale-90 transition-all z-10"
+                className="absolute top-1.5 left-1.5 w-8 h-8 bg-foreground/80 hover:bg-primary rounded-full flex items-center justify-center cursor-pointer touch-manipulation active:scale-90 transition-all z-10"
               >
                 <FolderOpen size={14} className="text-background" />
               </button>
@@ -238,7 +290,7 @@ export function CameraUpload({
             <button
               type="button"
               onClick={clearSingle}
-              className="absolute top-1.5 right-1.5 w-8 h-8 bg-foreground/80 hover:bg-destructive rounded-full flex items-center justify-center touch-manipulation active:scale-90 transition-all z-10"
+              className="absolute top-1.5 right-1.5 w-8 h-8 bg-foreground/80 hover:bg-destructive rounded-full flex items-center justify-center cursor-pointer touch-manipulation active:scale-90 transition-all z-10"
             >
               <X size={14} className="text-background" />
             </button>
@@ -303,7 +355,7 @@ export function CameraUpload({
             type="button"
             onClick={(e) => { e.stopPropagation(); setPickerOpen(true); }}
             className={cn(
-              "flex items-center gap-1.5 text-primary hover:text-primary/80 transition-colors z-10",
+              "flex items-center gap-1.5 text-primary hover:text-primary/80 cursor-pointer transition-colors z-10",
               compact ? "text-[10px]" : "text-xs"
             )}
           >

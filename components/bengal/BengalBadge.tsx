@@ -27,7 +27,7 @@ export function BengalBadge({
   return (
     <span
       className={cn(
-        'inline-flex items-center px-3 py-1 rounded-full border shadow-none',
+        'inline-flex items-center px-3 py-1 rounded-full border shadow-none cursor-default',
         'text-[10px] tracking-widest uppercase font-medium',
         isBengali ? 'font-bengali tracking-normal text-xs' : 'font-sans-en',
         variants[variant],

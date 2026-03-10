@@ -138,6 +138,9 @@ export function BannerTableClient({ initialBanners, locale }: { initialBanners: 
       getRowHref={(b) => getEditUrl(b.id)}
       emptyMessage="No banners yet."
       mobileCard={mobileCard}
+      searchable
+      searchPlaceholder="Search banners..."
+      getSearchableText={(b) => [b.title_en, b.title_bn, b.subtitle_en, b.placement, b.status].filter(Boolean).join(' ')}
     />
   );
 }

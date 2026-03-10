@@ -49,12 +49,12 @@ export default async function ShopPage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'Womaniya Shop',
-    url: `https://womaniya.in/${locale}/shop`,
+    url: `https://womaniyakolkata.in/${locale}/shop`,
     numberOfItems: allProducts.length,
     itemListElement: allProducts.slice(0, 20).map((p, i) => ({
       '@type': 'ListItem',
       position: i + 1,
-      url: `https://womaniya.in/${locale}/shop/${p.slug}`,
+      url: `https://womaniyakolkata.in/${locale}/shop/${p.slug}`,
       name: p.name_en,
       image: p.image_url,
     })),
@@ -63,7 +63,7 @@ export default async function ShopPage({ params }: Props) {
   return (
     <>
       <WhatsAppContextSetter context={{ type: 'shop' }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd).replace(/</g, '\\u003c') }} />
       <main id="main-content" className="pt-14 md:pt-16">
         <ShopGrid products={allProducts} categories={dbCategories} banners={banners} />
       </main>

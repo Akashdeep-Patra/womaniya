@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import Image from 'next/image';
 import { Trash2, Edit, FileText } from 'lucide-react';
 import { notify } from '@/lib/notify';
 import { deletePage } from '@/actions/pages';
@@ -85,11 +86,18 @@ export function PageTableClient({ initialPages, locale, basePath = 'pages' }: { 
   ];
 
   const mobileCard: MobileCardConfig<Page> = {
-    leading: (p) => (
-      <div className="w-11 h-11 rounded-md bg-muted flex items-center justify-center">
-        <FileText size={18} className="text-muted-foreground" />
-      </div>
-    ),
+    leading: (p) => {
+      const img = p.hero_image_url || (p.images as string[] | null)?.[0];
+      return img ? (
+        <div className="w-11 h-11 rounded-md overflow-hidden bg-muted relative">
+          <Image src={img} alt={p.title_en} fill className="object-cover" sizes="44px" />
+        </div>
+      ) : (
+        <div className="w-11 h-11 rounded-md bg-muted flex items-center justify-center">
+          <FileText size={18} className="text-muted-foreground" />
+        </div>
+      );
+    },
     title: (p) => p.title_en,
     subtitle: (p) => (
       <div className="flex items-center gap-2">
@@ -129,6 +137,9 @@ export function PageTableClient({ initialPages, locale, basePath = 'pages' }: { 
       getRowHref={(p) => getEditUrl(p.id)}
       emptyMessage="No pages created yet."
       mobileCard={mobileCard}
+      searchable
+      searchPlaceholder="Search pages..."
+      getSearchableText={(p) => [p.title_en, p.title_bn, p.slug, p.page_type, p.status].filter(Boolean).join(' ')}
     />
   );
 }

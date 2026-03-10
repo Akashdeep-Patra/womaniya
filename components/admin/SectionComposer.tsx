@@ -66,7 +66,7 @@ export function SectionComposer({ sections, onChange }: Props) {
                 <button
                   type="button"
                   onClick={() => removeSection(section.id)}
-                  className="min-w-[44px] min-h-[44px] flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors touch-manipulation -mr-2"
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center text-muted-foreground hover:text-destructive cursor-pointer transition-colors touch-manipulation -mr-2"
                 >
                   <X size={18} />
                 </button>
@@ -85,7 +85,7 @@ export function SectionComposer({ sections, onChange }: Props) {
         <button
           type="button"
           onClick={() => setShowAddMenu(true)}
-          className="flex items-center justify-center gap-2 w-full py-4 border border-dashed border-border rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground transition-colors text-sm"
+          className="flex items-center justify-center gap-2 w-full py-4 border border-dashed border-border rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer transition-colors text-sm"
         >
           <Plus size={16} /> Add Section
         </button>
@@ -95,7 +95,7 @@ export function SectionComposer({ sections, onChange }: Props) {
         <div className="bg-card p-4 rounded-xl border border-border shadow-lg">
           <div className="flex items-center justify-between mb-4">
             <h4 className="text-sm font-medium text-foreground">Select Section Type</h4>
-            <button type="button" onClick={() => setShowAddMenu(false)} className="min-w-[44px] min-h-[44px] flex items-center justify-center text-muted-foreground hover:text-foreground touch-manipulation -mr-2"><X size={18} /></button>
+            <button type="button" onClick={() => setShowAddMenu(false)} className="min-w-[44px] min-h-[44px] flex items-center justify-center text-muted-foreground hover:text-foreground cursor-pointer touch-manipulation -mr-2"><X size={18} /></button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {SECTION_TYPES.map((type) => (
@@ -103,7 +103,7 @@ export function SectionComposer({ sections, onChange }: Props) {
                 key={type}
                 type="button"
                 onClick={() => addSection(type)}
-                className="p-3 min-h-[44px] text-left border border-border rounded-lg hover:border-primary/40 hover:bg-muted active:bg-muted/80 transition-colors touch-manipulation text-foreground"
+                className="p-3 min-h-[44px] text-left border border-border rounded-lg hover:border-primary/40 hover:bg-muted active:bg-muted/80 cursor-pointer transition-colors touch-manipulation text-foreground"
               >
                 <span className="text-xs capitalize">{type.replace('_', ' ')}</span>
               </button>
@@ -144,7 +144,7 @@ function SectionEditor({ section, onChange }: { section: SectionData; onChange: 
           <input type="text" placeholder="Subtitle" value={section.content.subtitle || ''} onChange={(e) => handleChange('subtitle', e.target.value)} className="w-full text-sm p-2 border-b border-border bg-transparent focus:outline-none text-foreground" />
           <div className="mt-2">
             <label className="text-[10px] uppercase mb-1 block text-muted-foreground">Background Image</label>
-            <CameraUpload onUpload={(url) => handleChange('image_url', url)} initialUrl={section.content.image_url} />
+            <CameraUpload onUpload={(url) => handleChange('image_url', url)} initialUrl={section.content.image_url} pathPrefix="pages" />
           </div>
         </div>
       );
@@ -159,7 +159,7 @@ function SectionEditor({ section, onChange }: { section: SectionData; onChange: 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="text-[10px] uppercase mb-1 block text-muted-foreground">Image</label>
-            <CameraUpload onUpload={(url) => handleChange('image_url', url)} initialUrl={section.content.image_url} />
+            <CameraUpload onUpload={(url) => handleChange('image_url', url)} initialUrl={section.content.image_url} pathPrefix="pages" />
           </div>
           <div className="flex flex-col gap-2">
             <select value={section.content.layout || IMAGE_TEXT_LAYOUTS[0]} onChange={(e) => handleChange('layout', e.target.value)} className="w-full text-sm p-2 border border-border bg-transparent rounded focus:outline-none text-foreground">

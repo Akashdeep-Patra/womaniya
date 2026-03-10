@@ -153,6 +153,9 @@ export function CollectionTableClient({ initialCollections, locale }: { initialC
       getRowHref={(c) => getEditUrl(c.id)}
       emptyMessage="No collections yet. Create your first collection!"
       mobileCard={mobileCard}
+      searchable
+      searchPlaceholder="Search collections..."
+      getSearchableText={(c) => [c.name_en, c.name_bn, c.slug, c.description_en, c.description_bn, c.status].filter(Boolean).join(' ')}
     />
   );
 }

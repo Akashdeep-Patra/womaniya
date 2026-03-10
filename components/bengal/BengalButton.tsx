@@ -39,7 +39,7 @@ export const BengalButton = React.forwardRef<HTMLButtonElement, BengalButtonProp
         whileHover={{ y: -1 }}
         disabled={disabled || loading}
         className={cn(
-          'inline-flex items-center justify-center font-medium uppercase',
+          'inline-flex items-center justify-center font-medium uppercase cursor-pointer',
           'transition-all duration-200 touch-manipulation select-none',
           'disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
           isBengali ? 'font-bengali tracking-normal' : 'font-sans-en',

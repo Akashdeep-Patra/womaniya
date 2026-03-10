@@ -77,7 +77,7 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
 
   return (
     <>
-      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 z-40 md:hidden bg-background/90 backdrop-blur-md border-t border-border pb-safe w-full max-w-[1800px]">
+      <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 z-40 md:hidden bg-background border-t border-border pb-safe w-full max-w-[1800px]">
         <div className="grid grid-cols-5 h-15">
           {mainLinks.map(({ href, path, label, Icon }) => {
             const active = pathname === path;
@@ -144,7 +144,7 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="fixed top-0 bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[1800px] bg-bengal-kajal/40 backdrop-blur-sm z-30 md:hidden"
+              className="fixed top-0 bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[1800px] bg-bengal-kajal/50 z-30 md:hidden"
               onClick={closeSheet}
             />
 

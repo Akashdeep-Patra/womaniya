@@ -65,7 +65,7 @@ function ActivityList({ entries, unread, isMarking, onMarkAllRead }: {
           <button
             onClick={onMarkAllRead}
             disabled={isMarking}
-            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <CheckCheck size={14} />
             Mark all read
@@ -179,7 +179,7 @@ export function ActivityDropdown() {
   const triggerButton = (
     <button
       aria-label="Activity log"
-      className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors relative touch-manipulation"
+      className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer transition-colors relative touch-manipulation"
       onClick={isMobile ? () => setOpen(true) : undefined}
     >
       <Bell size={18} />

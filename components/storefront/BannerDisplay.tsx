@@ -36,7 +36,7 @@ export function BannerDisplay({ banner, locale, className = '' }: { banner: any,
       {/* IMAGE SIDE */}
       <div className={cn(
         "relative overflow-hidden shrink-0 bg-muted/30",
-        isSidebar ? "w-full aspect-[4/5]" : "w-full md:w-[45%] lg:w-[50%] aspect-[4/5] md:aspect-auto",
+        isSidebar ? "w-full aspect-4/5" : "w-full md:w-[45%] lg:w-[50%] aspect-4/5 md:aspect-auto",
         !isSidebar && "md:border-r border-border/30"
       )}>
         <div className="absolute inset-0 block md:hidden">

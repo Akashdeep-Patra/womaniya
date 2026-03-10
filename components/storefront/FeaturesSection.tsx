@@ -19,7 +19,7 @@ export function FeaturesSection() {
   const isBn   = locale === 'bn';
 
   return (
-    <section className="relative px-4 sm:px-6 py-20 md:py-32 w-full mx-auto overflow-hidden bg-background">
+    <section id="features" className="relative px-4 sm:px-6 py-20 md:py-32 w-full mx-auto overflow-hidden bg-background">
       {/* Intricate decorative background */}
       <div className="absolute inset-0 pointer-events-none z-0 flex justify-center overflow-hidden">
         <div className="relative w-[150vw] sm:w-[120vw] md:w-[100vw] max-w-[3000px] h-[150%] -top-[25%] left-1/2 -translate-x-1/2">
@@ -66,7 +66,7 @@ export function FeaturesSection() {
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: i * 0.15 }}
                 className="h-full"
               >
-                <div className="group relative flex flex-col justify-between p-8 sm:p-10 md:p-12 rounded-[2.5rem] bg-card/40 hover:bg-card/60 border border-border/50 hover:border-primary/20 shadow-sm hover:shadow-xl transition-all duration-700 overflow-hidden backdrop-blur-sm h-full">
+                <div className="group relative flex flex-col justify-between p-8 sm:p-10 md:p-12 rounded-[2.5rem] bg-card/90 md:bg-card/40 hover:bg-card/60 border border-border/50 hover:border-primary/20 shadow-sm hover:shadow-xl transition-all duration-700 overflow-hidden md:backdrop-blur-sm h-full">
                   {/* Subtle animated background gradient on hover */}
                   <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 

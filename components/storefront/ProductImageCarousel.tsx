@@ -26,7 +26,7 @@ export function ProductImageCarousel({ images, productName }: ProductImageCarous
 
   if (!images || images.length === 0) {
     return (
-      <div className="relative aspect-[3/4] w-full bg-muted/50 flex items-center justify-center rounded-2xl overflow-hidden border border-border">
+      <div className="relative aspect-3/4 w-full bg-muted/50 flex items-center justify-center rounded-2xl overflow-hidden border border-border">
         <div className="text-muted-foreground/40 flex flex-col items-center gap-3">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="opacity-40">
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
@@ -60,7 +60,7 @@ export function ProductImageCarousel({ images, productName }: ProductImageCarous
   return (
     <div className="flex flex-col gap-3 md:gap-4 w-full">
       {/* Main Image */}
-      <div className="relative aspect-[3/4] w-full bg-muted/30 rounded-2xl lg:rounded-3xl overflow-hidden border border-border/60 group touch-pan-y">
+      <div className="relative aspect-3/4 w-full bg-muted/30 rounded-2xl lg:rounded-3xl overflow-hidden border border-border/60 group touch-pan-y">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={currentIndex}

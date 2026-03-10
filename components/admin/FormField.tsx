@@ -51,7 +51,7 @@ export const FormTextarea = React.forwardRef<HTMLTextAreaElement, FormTextareaPr
           id={textareaId}
           className={cn(
             inputBaseClasses,
-            'py-3 resize-none min-h-[44px]',
+            'py-3 resize-none min-h-[44px] cursor-text',
             isBengali ? 'font-bengali' : '',
             error ? 'border-bengal-alta ' + inputErrorClasses : 'border-bengal-kansa/30',
             className
@@ -129,7 +129,7 @@ export function FormSelect({ label, error, id, className, children, value, onVal
         <SelectTrigger 
           id={selectId} 
           className={cn(
-            "h-12 w-full px-4 rounded-xl border bg-card text-foreground text-sm font-sans-en focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm", 
+            "h-12 w-full px-4 rounded-xl border bg-card text-foreground text-sm font-sans-en cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm",
             error ? "border-destructive ring-2 ring-destructive/20" : "border-border", 
             className
           )}

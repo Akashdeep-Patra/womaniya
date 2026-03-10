@@ -1,4 +1,5 @@
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
+import { head } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { recordMediaAsset } from '@/actions/media';
@@ -43,11 +44,18 @@ export async function POST(request: Request): Promise<NextResponse> {
       onUploadCompleted: async ({ blob }) => {
         logger.info('Upload completed', { url: blob.url });
         try {
+          let sizeBytes = 0;
+          try {
+            const blobInfo = await head(blob.url);
+            sizeBytes = blobInfo.size;
+          } catch {
+            logger.warn('Could not fetch blob size', { url: blob.url });
+          }
           await recordMediaAsset({
             url: blob.url,
             filename: blob.pathname,
             mime_type: blob.contentType,
-            size_bytes: 0,
+            size_bytes: sizeBytes,
           });
         } catch (e) {
           logger.warn('Failed to record media asset', { url: blob.url, error: e });

@@ -14,7 +14,7 @@ export function ManifestoSection() {
   const isBn = locale === 'bn';
 
   return (
-    <section className="relative py-24 md:py-36 w-full mx-auto bg-card text-card-foreground overflow-hidden border-y border-border">
+    <section id="manifesto" className="relative py-24 md:py-36 w-full mx-auto bg-card text-card-foreground overflow-hidden border-y border-border">
       {/* Subtle radial glow + textile pattern */}
       <div className="absolute inset-0 pointer-events-none z-0 flex justify-center overflow-hidden">
         <div className="relative w-[150vw] sm:w-[120vw] md:w-[100vw] max-w-[3000px] h-[150%] -top-[25%] left-1/2 -translate-x-1/2">

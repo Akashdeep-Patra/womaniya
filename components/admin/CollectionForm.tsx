@@ -22,7 +22,9 @@ const collectionFormSchema = z.object({
   description_en: z.string().max(2000).optional().or(z.literal('')),
   description_bn: z.string().max(2000).optional().or(z.literal('')),
   seo_title_en: z.string().max(120).optional().or(z.literal('')),
+  seo_title_bn: z.string().max(120).optional().or(z.literal('')),
   seo_description_en: z.string().max(300).optional().or(z.literal('')),
+  seo_description_bn: z.string().max(300).optional().or(z.literal('')),
   status: z.enum([...COLLECTION_STATUSES]).default('draft'),
   is_featured: z
     .union([z.boolean(), z.literal('on')])
@@ -41,7 +43,9 @@ type CollectionFormProps = {
     description_en?: string | null;
     description_bn?: string | null;
     seo_title_en?: string | null;
+    seo_title_bn?: string | null;
     seo_description_en?: string | null;
+    seo_description_bn?: string | null;
     status?: string | null;
     is_featured?: boolean | null;
     carousel_images?: string[] | null;
@@ -77,7 +81,9 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
       description_en: initialData?.description_en ?? '',
       description_bn: initialData?.description_bn ?? '',
       seo_title_en: initialData?.seo_title_en ?? '',
+      seo_title_bn: initialData?.seo_title_bn ?? '',
       seo_description_en: initialData?.seo_description_en ?? '',
+      seo_description_bn: initialData?.seo_description_bn ?? '',
       status: (initialData?.status as CollectionFormValues['status']) ?? 'draft',
       is_featured: initialData?.is_featured ?? false,
     },
@@ -122,7 +128,9 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
     if (data.description_en) formData.set('description_en', data.description_en);
     if (data.description_bn) formData.set('description_bn', data.description_bn);
     if (data.seo_title_en) formData.set('seo_title_en', data.seo_title_en);
+    if (data.seo_title_bn) formData.set('seo_title_bn', data.seo_title_bn);
     if (data.seo_description_en) formData.set('seo_description_en', data.seo_description_en);
+    if (data.seo_description_bn) formData.set('seo_description_bn', data.seo_description_bn);
     formData.set('status', data.status);
     formData.set('is_featured', data.is_featured ? 'on' : '');
     images.forEach((img) => formData.append('carousel_images', img));
@@ -222,6 +230,7 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
               onUploadMultiple={handleImageUploadMultiple}
               compact
               multiple
+              pathPrefix="collections"
             />
           </div>
         </Reorder.Group>
@@ -280,6 +289,20 @@ export function CollectionForm({ initialData, allProducts }: CollectionFormProps
               error={errors.description_bn?.message}
               isBengali
               className={inputClassName(errors.description_bn?.message)}
+            />
+            <BengalInput
+              label="SEO Title (BN)"
+              {...register('seo_title_bn')}
+              isBengali
+              error={errors.seo_title_bn?.message}
+            />
+            <FormTextarea
+              label="SEO Description (BN)"
+              {...register('seo_description_bn')}
+              rows={2}
+              isBengali
+              error={errors.seo_description_bn?.message}
+              className={inputClassNameShort(errors.seo_description_bn?.message)}
             />
           </TabsContent>
         </Tabs>

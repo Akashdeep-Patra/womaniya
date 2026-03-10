@@ -73,7 +73,9 @@ export const products = pgTable('products', {
   is_featured:        boolean('is_featured').default(false),
   status:             simpleStatusEnum('status').default('published').notNull(),
   seo_title_en:       text('seo_title_en'),
+  seo_title_bn:       text('seo_title_bn'),
   seo_description_en: text('seo_description_en'),
+  seo_description_bn: text('seo_description_bn'),
   created_at:         timestamp('created_at').defaultNow(),
   updated_at:         timestamp('updated_at').defaultNow(),
 });

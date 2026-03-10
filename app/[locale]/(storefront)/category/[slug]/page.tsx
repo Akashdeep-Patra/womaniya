@@ -1,5 +1,6 @@
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { cache } from 'react';
 import { db } from '@/lib/db';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,11 +11,20 @@ import type { Metadata } from 'next';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
+const getCategoryWithProducts = cache(async (slug: string) => {
+  return db.query.categories.findFirst({
+    where: (c, { eq }) => eq(c.slug, slug),
+    with: {
+      products: {
+        where: (p, { eq }) => eq(p.status, 'published'),
+      }
+    }
+  });
+});
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
-  const category = await db.query.categories.findFirst({
-    where: (c, { eq }) => eq(c.slug, slug),
-  });
+  const category = await getCategoryWithProducts(slug);
   if (!category || category.status !== 'published') return { title: 'Not Found' };
 
   const title = (locale === 'bn' && category.seo_title_bn ? category.seo_title_bn : category.seo_title_en) || 
@@ -48,14 +58,7 @@ export default async function CategoryPage({ params }: Props) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
-  const category = await db.query.categories.findFirst({
-    where: (c, { eq }) => eq(c.slug, slug),
-    with: {
-      products: {
-        where: (p, { eq }) => eq(p.status, 'published'),
-      }
-    }
-  });
+  const category = await getCategoryWithProducts(slug);
 
   if (!category || category.status !== 'published') notFound();
 
@@ -75,9 +78,9 @@ export default async function CategoryPage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: `https://womaniya.in/${locale}` },
-      { '@type': 'ListItem', position: 2, name: 'Categories', item: `https://womaniya.in/${locale}/categories` },
-      { '@type': 'ListItem', position: 3, name: category.name_en, item: `https://womaniya.in/${locale}/category/${slug}` },
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `https://womaniyakolkata.in/${locale}` },
+      { '@type': 'ListItem', position: 2, name: 'Categories', item: `https://womaniyakolkata.in/${locale}/categories` },
+      { '@type': 'ListItem', position: 3, name: category.name_en, item: `https://womaniyakolkata.in/${locale}/category/${slug}` },
     ],
   };
 
@@ -86,7 +89,7 @@ export default async function CategoryPage({ params }: Props) {
     '@type': 'CollectionPage',
     name: category.name_en,
     description: category.description_en ?? `${category.name_en} — Authentic Handloom by Womaniya`,
-    url: `https://womaniya.in/${locale}/category/${slug}`,
+    url: `https://womaniyakolkata.in/${locale}/category/${slug}`,
     ...(allImages[0] ? { image: allImages[0] } : {}),
     numberOfItems: category.products.length,
   };
@@ -94,8 +97,8 @@ export default async function CategoryPage({ params }: Props) {
   return (
     <>
       <WhatsAppContextSetter context={{ type: 'category', name: category.name_en }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd).replace(/</g, '\\u003c') }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd).replace(/</g, '\\u003c') }} />
     <div className="min-h-screen bg-bengal-cream pt-24 pb-12">
       <div className="max-w-7xl mx-auto px-4">
         {hasImages && allImages.length > 1 ? (
@@ -109,7 +112,7 @@ export default async function CategoryPage({ params }: Props) {
           </div>
         ) : hasImages ? (
           <div className="relative w-full h-64 md:h-96 rounded-2xl overflow-hidden mb-8">
-            <Image src={allImages[0]} alt={name} fill className="object-cover" />
+            <Image src={allImages[0]} alt={name} fill className="object-cover" sizes="100vw" />
             {heroOverlay}
           </div>
         ) : (
@@ -131,7 +134,7 @@ export default async function CategoryPage({ params }: Props) {
             {category.products.map(p => (
               <Link prefetch={true} key={p.id} href={`/${locale}/shop/${p.slug}`} className="group">
                 <div className="relative aspect-3/4 rounded-xl overflow-hidden bg-bengal-mati mb-3">
-                  <Image src={p.image_url} alt={p.name_en} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <Image src={p.image_url} alt={p.name_en} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw" />
                 </div>
                 <h3 className="font-medium text-bengal-kajal">{locale === 'bn' ? p.name_bn || p.name_en : p.name_en}</h3>
                 <p className="text-bengal-sindoor font-editorial">₹{p.price}</p>

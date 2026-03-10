@@ -123,8 +123,8 @@ export default async function ProductPage({ params }: Props) {
   return (
     <>
       <WhatsAppContextSetter context={{ type: 'product', name, price: product.price, sku: product.sku }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd).replace(/</g, '\\u003c') }} />
 
       <main id="main-content" className="pt-14 md:pt-20 pb-32 md:pb-16 min-h-screen bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

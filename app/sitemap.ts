@@ -5,7 +5,7 @@ import { eq, or } from 'drizzle-orm';
 import { routing } from '@/i18n/routing';
 import { VISIBLE_LIFECYCLE_STATUSES } from '@/db/enums';
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://womaniya.in';
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://womaniyakolkata.in';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const allProducts = await db.query.products.findMany({

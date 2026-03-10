@@ -1,43 +1,48 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
-import {
-  LayoutDashboard, Package, PlusCircle, FileText, MoreHorizontal,
-  Tags, FolderOpen, Megaphone, Flag, Image as ImageIcon, BookOpen, Settings, Quote, Type,
-} from 'lucide-react';
+import { LayoutDashboard, Package, PlusCircle, FileText, MoreHorizontal } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getNavGroups } from '@/lib/admin-nav';
 
 export function AdminMobileNav({ locale }: { locale: string }) {
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
   const base = `/${locale}/admin`;
 
+  const mainTabs = [
+    { href: base, label: 'Dashboard', icon: LayoutDashboard },
+    { href: `${base}/products`, label: 'Products', icon: Package },
+    { href: `${base}/products/new`, label: 'New', icon: PlusCircle },
+    { href: `${base}/pages`, label: 'Pages', icon: FileText },
+  ];
+
   const isActive = (href: string) => {
-    if (href === base) return pathname === href;
-    return pathname.startsWith(href);
+    const path = href.replace(new RegExp(`^/${locale}`), '');
+    if (path === '/admin') return pathname === '/admin';
+    if (!pathname.startsWith(path)) return false;
+    // If a more specific main tab also matches, this one shouldn't highlight
+    const moreSpecific = mainTabs.some(t => {
+      const tp = t.href.replace(new RegExp(`^/${locale}`), '');
+      return tp !== path && tp.startsWith(path) && pathname.startsWith(tp);
+    });
+    return !moreSpecific;
   };
 
-  const mainTabs = [
-    { href: base, label: 'Home', icon: LayoutDashboard },
-    { href: `${base}/products`, label: 'Catalog', icon: Package },
-    { href: `${base}/products/new`, label: 'Add', icon: PlusCircle },
-    { href: `${base}/pages`, label: 'Content', icon: FileText },
-  ];
-
-  const moreItems = [
-    { href: `${base}/categories`, label: 'Categories', icon: Tags },
-    { href: `${base}/collections`, label: 'Collections', icon: FolderOpen },
-    { href: `${base}/campaigns`, label: 'Campaigns', icon: Megaphone },
-    { href: `${base}/banners`, label: 'Banners', icon: Flag },
-    { href: `${base}/content`, label: 'Site Copy', icon: Type },
-    { href: `${base}/stories`, label: 'Stories', icon: BookOpen },
-    { href: `${base}/testimonials`, label: 'Testimonials', icon: Quote },
-    { href: `${base}/media`, label: 'Media', icon: ImageIcon },
-    { href: `${base}/settings`, label: 'Settings', icon: Settings },
-  ];
+  // Build "More" items from the shared nav config, excluding items covered by mainTabs
+  const mainPaths = new Set(mainTabs.map(t => t.href.replace(new RegExp(`^/${locale}`), '')));
+  const navGroups = getNavGroups(locale);
+  const moreItems = navGroups
+    .flatMap(g => g.items)
+    .filter(item => {
+      const path = item.href.replace(new RegExp(`^/${locale}`), '');
+      // Exclude Dashboard (already in mainTabs) and Products (already in mainTabs)
+      return !mainPaths.has(path);
+    })
+    .map(item => ({ href: item.href, label: item.label, icon: item.icon }));
 
   return (
     <>
@@ -121,7 +126,7 @@ export function AdminMobileNav({ locale }: { locale: string }) {
           <button
             onClick={() => setMoreOpen(!moreOpen)}
             className={cn(
-              'flex flex-col items-center justify-center gap-0.5 min-h-[44px]',
+              'flex flex-col items-center justify-center gap-0.5 min-h-[44px] cursor-pointer',
               'text-[10px] tracking-wider uppercase font-medium transition-colors',
               moreOpen ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
             )}

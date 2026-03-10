@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { notify } from '@/lib/notify';
 import { BengalButton, BengalInput } from '@/components/bengal';
 import { FormTextarea, FormSelect } from './FormField';
+import { DateTimePicker } from '@/components/ui/date-time-picker';
 import { createCampaign, updateCampaign } from '@/actions/campaigns';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CAMPAIGN_STATUSES, STATUS_LABELS } from '@/db/enums';
@@ -44,10 +45,10 @@ type CampaignFormProps = {
   locale: string;
 };
 
-function formatDate(dateInput?: string | Date | null) {
+function toISOString(dateInput?: string | Date | null) {
   if (!dateInput) return '';
   const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
-  return date.toISOString().slice(0, 16);
+  return isNaN(date.getTime()) ? '' : date.toISOString();
 }
 
 export function CampaignForm({ initialData, locale }: CampaignFormProps) {
@@ -71,8 +72,8 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
       announcement_text_en: initialData?.announcement_text_en ?? '',
       announcement_text_bn: initialData?.announcement_text_bn ?? '',
       cta_url: initialData?.cta_url ?? '',
-    starts_at: formatDate(initialData?.starts_at ?? null) ?? '',
-    ends_at: formatDate(initialData?.ends_at ?? null) ?? '',
+    starts_at: toISOString(initialData?.starts_at ?? null),
+    ends_at: toISOString(initialData?.ends_at ?? null),
       status: (initialData?.status as CampaignFormValues['status']) ?? 'draft',
     },
   });
@@ -114,10 +115,6 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
       fieldError ? 'border-destructive ring-2 ring-destructive/20' : 'border-input'
     }`;
 
-  const inputClassNameShort = (fieldError?: string) =>
-    `flex h-12 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-      fieldError ? 'border-destructive ring-2 ring-destructive/20' : 'border-input'
-    }`;
 
   return (
     <form onSubmit={rhfHandleSubmit(onSubmit)} className="flex flex-col gap-5 md:gap-8 pb-24 md:pb-12">
@@ -206,10 +203,10 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
             <label className="text-[10px] tracking-widest uppercase font-medium text-muted-foreground font-sans-en">
               Start Date
             </label>
-            <input
-              type="datetime-local"
-              {...register('starts_at')}
-              className={inputClassNameShort(errors.starts_at?.message)}
+            <DateTimePicker
+              value={watch('starts_at')}
+              onChange={(v) => setValue('starts_at', v, { shouldValidate: true })}
+              placeholder="Select start date"
             />
             {errors.starts_at && (
               <p className="text-destructive text-xs font-medium mt-1">{errors.starts_at.message}</p>
@@ -219,10 +216,10 @@ export function CampaignForm({ initialData, locale }: CampaignFormProps) {
             <label className="text-[10px] tracking-widest uppercase font-medium text-muted-foreground font-sans-en">
               End Date
             </label>
-            <input
-              type="datetime-local"
-              {...register('ends_at')}
-              className={inputClassNameShort(errors.ends_at?.message)}
+            <DateTimePicker
+              value={watch('ends_at')}
+              onChange={(v) => setValue('ends_at', v, { shouldValidate: true })}
+              placeholder="Select end date"
             />
             {errors.ends_at && (
               <p className="text-destructive text-xs font-medium mt-1">{errors.ends_at.message}</p>

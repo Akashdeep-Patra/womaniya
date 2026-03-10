@@ -38,7 +38,7 @@ export function AdminTopBar({ userName, locale }: { userName?: string | null; lo
         <button
           onClick={() => setPaletteOpen(true)}
           aria-label="Search"
-          className="h-11 flex items-center gap-2 rounded-lg px-3 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors touch-manipulation"
+          className="h-11 flex items-center gap-2 rounded-lg px-3 hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer transition-colors touch-manipulation"
         >
           <Search size={18} />
           <kbd className="hidden lg:inline-flex h-5 items-center gap-0.5 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">

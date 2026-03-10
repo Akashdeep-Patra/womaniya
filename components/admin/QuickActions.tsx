@@ -48,7 +48,7 @@ export function QuickActions({ locale }: { locale: string }) {
       <button
         onClick={() => setOpen(!open)}
         className={cn(
-          'w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-colors',
+          'w-12 h-12 rounded-full flex items-center justify-center shadow-lg cursor-pointer transition-colors',
           open ? 'bg-bengal-kajal text-bengal-kori' : 'bg-bengal-sindoor text-bengal-kori',
         )}
       >

@@ -43,7 +43,7 @@ export function TagInput({ tags, onChange, placeholder = 'Type and press enter..
             <button
               type="button"
               onClick={() => removeTag(index)}
-              className="text-foreground/50 hover:text-bengal-alta touch-manipulation min-h-[24px] min-w-[24px] flex items-center justify-center -mr-1"
+              className="text-foreground/50 hover:text-bengal-alta touch-manipulation cursor-pointer min-h-[24px] min-w-[24px] flex items-center justify-center -mr-1"
             >
               <X size={14} />
             </button>
@@ -56,7 +56,7 @@ export function TagInput({ tags, onChange, placeholder = 'Type and press enter..
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="w-full px-4 py-3 rounded-sm border bg-bengal-cream text-foreground text-sm font-sans-en focus:outline-none focus:ring-2 focus:ring-bengal-sindoor/30 focus:border-bengal-sindoor transition-colors border-bengal-kansa/30"
+        className="w-full px-4 py-3 rounded-sm border bg-bengal-cream text-foreground text-sm font-sans-en cursor-text focus:outline-none focus:ring-2 focus:ring-bengal-sindoor/30 focus:border-bengal-sindoor transition-colors border-bengal-kansa/30"
       />
     </div>
   );

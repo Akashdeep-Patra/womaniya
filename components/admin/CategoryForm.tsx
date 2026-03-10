@@ -150,6 +150,7 @@ export function CategoryForm({ category, locale, action }: CategoryFormProps) {
               onUploadMultiple={(urls) => setImages((prev) => [...prev, ...urls])}
               compact
               multiple
+              pathPrefix="categories"
             />
           </div>
         </Reorder.Group>

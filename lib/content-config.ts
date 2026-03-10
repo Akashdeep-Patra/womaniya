@@ -8,6 +8,8 @@ export type ContentNamespaceConfig = {
   name: string;
   label: string;
   description: string;
+  /** The DOM id of the corresponding section on the storefront, used for preview scroll-to */
+  sectionId?: string;
   keys: ContentKeyConfig[];
 };
 
@@ -31,6 +33,7 @@ export const contentPages: ContentPageGroup[] = [
         name: 'hero',
         label: 'Hero Banner',
         description: 'Top hero section with headline, subtitle, and CTAs',
+        sectionId: 'hero',
         keys: [
           { key: 'intro', label: 'Intro Tag' },
           { key: 'since', label: 'Since Badge' },
@@ -49,6 +52,7 @@ export const contentPages: ContentPageGroup[] = [
         name: 'features',
         label: 'Features — The Womaniya Way',
         description: '4 feature cards below the hero',
+        sectionId: 'features',
         keys: [
           { key: 'title', label: 'Section Title' },
           { key: 'handwoven', label: 'Handwoven Title' },
@@ -65,6 +69,7 @@ export const contentPages: ContentPageGroup[] = [
         name: 'categories',
         label: 'Category Cards',
         description: 'Horizontal scroll category tiles',
+        sectionId: 'categories',
         keys: [
           { key: 'jamdani_title', label: 'Jamdani Title' },
           { key: 'jamdani_desc', label: 'Jamdani Description', multiline: true },
@@ -84,6 +89,7 @@ export const contentPages: ContentPageGroup[] = [
         name: 'manifesto',
         label: 'Manifesto',
         description: 'Philosophy / belief statement',
+        sectionId: 'manifesto',
         keys: [
           { key: 'title', label: 'Title', multiline: true },
           { key: 'subtitle', label: 'Subtitle', multiline: true },
@@ -94,6 +100,7 @@ export const contentPages: ContentPageGroup[] = [
         name: 'voices',
         label: 'Artisan Voices',
         description: 'Testimonial quotes from weavers and customers',
+        sectionId: 'voices',
         keys: [
           { key: 'title', label: 'Section Title' },
           { key: 'subtitle', label: 'Section Subtitle', multiline: true },
@@ -118,6 +125,7 @@ export const contentPages: ContentPageGroup[] = [
         name: 'shop',
         label: 'Shop Grid',
         description: 'Product listing labels, filters, and badges',
+        sectionId: 'shop',
         keys: [
           { key: 'title', label: 'Section Title' },
           { key: 'subtitle', label: 'Section Subtitle', multiline: true },
@@ -148,6 +156,7 @@ export const contentPages: ContentPageGroup[] = [
         name: 'product',
         label: 'Product Page',
         description: 'Labels, buttons, and badges on product detail',
+        sectionId: 'shop',
         keys: [
           { key: 'price', label: 'Price Label' },
           { key: 'category', label: 'Category Label' },
@@ -176,6 +185,7 @@ export const contentPages: ContentPageGroup[] = [
         name: 'about',
         label: 'About Womaniya',
         description: 'Main about section with stats',
+        sectionId: 'about',
         keys: [
           { key: 'badge', label: 'Section Badge' },
           { key: 'title', label: 'Section Title' },
@@ -196,6 +206,7 @@ export const contentPages: ContentPageGroup[] = [
         name: 'story',
         label: 'Our Story',
         description: 'Short origin story section',
+        sectionId: 'about',
         keys: [
           { key: 'title', label: 'Section Title' },
           { key: 'body', label: 'Story Body', multiline: true },
@@ -206,6 +217,7 @@ export const contentPages: ContentPageGroup[] = [
         name: 'process',
         label: 'How We Craft',
         description: 'Step-by-step process journey',
+        sectionId: 'process',
         keys: [
           { key: 'badge', label: 'Section Badge' },
           { key: 'title', label: 'Section Title' },
@@ -224,6 +236,7 @@ export const contentPages: ContentPageGroup[] = [
         name: 'glimpses',
         label: 'Glimpses — Loom to Wardrobe',
         description: 'Behind-the-scenes gallery text',
+        sectionId: 'glimpses',
         keys: [
           { key: 'badge', label: 'Section Badge' },
           { key: 'title', label: 'Section Title' },
@@ -251,6 +264,7 @@ export const contentPages: ContentPageGroup[] = [
         name: 'nav',
         label: 'Navigation',
         description: 'Header and bottom nav links',
+        sectionId: 'nav',
         keys: [
           { key: 'home', label: 'Home' },
           { key: 'shop', label: 'Shop' },
@@ -271,6 +285,7 @@ export const contentPages: ContentPageGroup[] = [
         name: 'footer',
         label: 'Footer',
         description: 'Site footer content',
+        sectionId: 'footer',
         keys: [
           { key: 'tagline', label: 'Tagline' },
           { key: 'tagline_en', label: 'Tagline (English)' },

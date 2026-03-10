@@ -195,6 +195,7 @@ export function BannerForm({ initialData, locale, refs }: BannerFormProps) {
               onUploadMultiple={(urls) => setImages((prev) => [...prev, ...urls])}
               compact
               multiple
+              pathPrefix="banners"
             />
           </div>
         </Reorder.Group>

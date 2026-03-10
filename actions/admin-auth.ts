@@ -26,7 +26,7 @@ export async function forgotPasswordAction(email: string) {
         }).returning();
         adminUser = newAdmin;
       } else {
-        return { success: false, message: "Email not found." };
+        return { success: true, message: "If the email is registered, a reset link will be sent." };
       }
     }
 
@@ -72,6 +72,9 @@ export async function forgotPasswordAction(email: string) {
 export async function resetPasswordAction(token: string, newPassword: string) {
   // No auth check — this is for unauthenticated users resetting via a token
   try {
+    if (!newPassword || newPassword.length < 8) {
+      return { success: false, message: "Password must be at least 8 characters." };
+    }
     const adminList = await db.select().from(admins).where(eq(admins.reset_token, token)).limit(1);
     const adminUser = adminList[0];
 

@@ -18,17 +18,30 @@ const POOR_THRESHOLDS: Record<string, number> = {
   TTFB: 1800,
 };
 
+const VALID_METRIC_NAMES = new Set(['LCP', 'INP', 'CLS', 'FCP', 'TTFB', 'FID']);
+
 export async function POST(request: Request) {
   try {
-    const metric = (await request.json()) as WebVitalPayload;
+    const body = await request.json();
+
+    if (
+      !body ||
+      typeof body.name !== 'string' ||
+      typeof body.value !== 'number' ||
+      !VALID_METRIC_NAMES.has(body.name)
+    ) {
+      return NextResponse.json({ ok: false }, { status: 400 });
+    }
+
+    const metric = body as WebVitalPayload;
 
     const threshold = POOR_THRESHOLDS[metric.name];
     if (threshold && metric.value > threshold) {
       logger.warn('Poor web vital detected', {
         metric: metric.name,
         value: metric.value,
-        page: metric.page,
-        navigationType: metric.navigationType,
+        page: String(metric.page || '').slice(0, 200),
+        navigationType: String(metric.navigationType || '').slice(0, 50),
       });
     }
 

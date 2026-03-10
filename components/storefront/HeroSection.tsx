@@ -97,6 +97,7 @@ export function HeroSection() {
 
   return (
     <section
+      id="hero"
       ref={containerRef}
       className="relative w-full overflow-hidden bg-background"
     >
@@ -291,7 +292,7 @@ export function HeroSection() {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.6, delay: 1 }}
-                  className="absolute bottom-3 left-3 bg-background/90 backdrop-blur-sm px-3 py-1.5 rounded-full border border-border/60"
+                  className="absolute bottom-3 left-3 bg-background/95 px-3 py-1.5 rounded-full border border-border/60"
                 >
                   <span className="text-[7px] tracking-[0.2em] uppercase text-primary font-sans-en font-bold">{t('stamp')}</span>
                 </motion.div>
@@ -408,7 +409,7 @@ export function HeroSection() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1, delay: 1.2, ease: "backOut" }}
-                className="absolute top-[48%] left-[52%] z-30 bg-background/95 backdrop-blur-md px-6 py-2.5 rounded-full border border-border shadow-lg flex items-center gap-3"
+                className="absolute top-[48%] left-[52%] z-30 bg-background/95 px-6 py-2.5 rounded-full border border-border shadow-lg flex items-center gap-3"
               >
                 <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                 <span className="text-[10px] tracking-[0.3em] uppercase text-foreground font-sans-en font-bold">The Edit</span>
