@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import { usePathname } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, Package, PlusCircle, FileText, MoreHorizontal } from 'lucide-react';
+import { LayoutDashboard, Package, PlusCircle, FileText, MoreHorizontal, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { signOut } from 'next-auth/react';
 import { getNavGroups } from '@/lib/admin-nav';
 
 export function AdminMobileNav({ locale }: { locale: string }) {
@@ -70,7 +71,7 @@ export function AdminMobileNav({ locale }: { locale: string }) {
                   return (
                     <Link prefetch={true} key={item.href}
                       href={item.href}
-                      
+
                       onClick={() => setMoreOpen(false)}
                       className={cn(
                         'flex flex-col items-center gap-1.5 py-3 rounded-xl text-[10px] tracking-wider uppercase transition-colors',
@@ -79,18 +80,31 @@ export function AdminMobileNav({ locale }: { locale: string }) {
                           : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
                       )}
                     >
-                      <item.icon 
-                        size={22} 
-                        strokeWidth={active ? 2.5 : 2} 
+                      <item.icon
+                        size={22}
+                        strokeWidth={active ? 2.5 : 2}
                         className={cn(
                           "transition-all duration-300",
                           active ? "text-foreground" : ""
-                        )} 
+                        )}
                       />
                       <span className="font-medium">{item.label}</span>
                     </Link>
                   );
                 })}
+              </div>
+              <div className="border-t border-border mx-3 mt-1 pt-1 pb-1">
+                <button
+                  onClick={() => {
+                    setMoreOpen(false);
+                    signOut({ callbackUrl: `/${locale}/admin/login` });
+                  }}
+                  className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/5 cursor-pointer transition-colors"
+                  aria-label="Logout"
+                >
+                  <LogOut size={20} />
+                  <span>Logout</span>
+                </button>
               </div>
             </motion.div>
           </>

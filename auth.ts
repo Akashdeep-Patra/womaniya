@@ -82,7 +82,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session) return true;
 
       // Redirect to the locale-correct login page (so /bn/admin → /bn/admin/login)
-      const locale   = pathname.split('/')[1] ?? 'en';
+      const firstSegment = pathname.split('/')[1] ?? 'en';
+      const locale = ['en', 'bn'].includes(firstSegment) ? firstSegment : 'en';
       const loginUrl = new URL(`/${locale}/admin/login`, request.nextUrl.origin);
       return Response.redirect(loginUrl);
     },

@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import { usePathname } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
-import { PanelLeftClose, PanelLeft } from 'lucide-react';
+import { PanelLeftClose, PanelLeft, LogOut } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { signOut } from 'next-auth/react';
 import { getNavGroups } from '@/lib/admin-nav';
 
 export function AdminSidebar({ locale }: { locale: string }) {
@@ -101,13 +102,27 @@ export function AdminSidebar({ locale }: { locale: string }) {
         ))}
       </nav>
 
-      {/* Collapse toggle */}
-      <button
-        onClick={() => setCollapsed(!collapsed)}
-        className="h-12 flex items-center justify-center border-t border-border text-muted-foreground hover:text-foreground hover:bg-muted/50 cursor-pointer transition-colors"
-      >
-        {collapsed ? <PanelLeft size={18} /> : <PanelLeftClose size={18} />}
-      </button>
+      {/* Logout + Collapse */}
+      <div className="border-t border-border">
+        <button
+          onClick={() => signOut({ callbackUrl: `/${locale}/admin/login` })}
+          className={cn(
+            'w-full h-12 flex items-center gap-3 px-3 text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/5 cursor-pointer transition-colors',
+            collapsed && 'justify-center px-2',
+          )}
+          aria-label="Logout"
+        >
+          <LogOut size={18} />
+          {!collapsed && <span>Logout</span>}
+        </button>
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="w-full h-12 flex items-center justify-center border-t border-border text-muted-foreground hover:text-foreground hover:bg-muted/50 cursor-pointer transition-colors"
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {collapsed ? <PanelLeft size={18} /> : <PanelLeftClose size={18} />}
+        </button>
+      </div>
     </aside>
   );
 }

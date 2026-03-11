@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { Search } from 'lucide-react';
+import { Search, LogOut } from 'lucide-react';
+import { signOut } from 'next-auth/react';
 import { ThemeToggle } from './ThemeToggle';
 import { CommandPalette } from './CommandPalette';
 import { ActivityDropdown } from './ActivityDropdown';
@@ -19,6 +20,18 @@ export function AdminTopBar({ userName, locale }: { userName?: string | null; lo
   const pathname = usePathname();
   const crumbs = getBreadcrumbs(pathname);
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [avatarOpen, setAvatarOpen] = useState(false);
+  const avatarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (avatarRef.current && !avatarRef.current.contains(e.target as Node)) {
+        setAvatarOpen(false);
+      }
+    }
+    if (avatarOpen) document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [avatarOpen]);
 
   return (
     <header className="h-14 lg:h-16 flex items-center justify-between px-4 lg:px-6 border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-30">
@@ -47,10 +60,34 @@ export function AdminTopBar({ userName, locale }: { userName?: string | null; lo
         </button>
         <ActivityDropdown />
         <ThemeToggle />
-        <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center ml-1">
-          <span className="font-sans font-bold text-sm text-primary uppercase">
-            {userName?.[0] ?? 'W'}
-          </span>
+        <div className="relative" ref={avatarRef}>
+          <button
+            onClick={() => setAvatarOpen(!avatarOpen)}
+            className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center ml-1 cursor-pointer hover:ring-2 hover:ring-primary/20 transition-all"
+            aria-label="Account menu"
+            aria-expanded={avatarOpen}
+            aria-haspopup="true"
+          >
+            <span className="font-sans font-bold text-sm text-primary uppercase">
+              {userName?.[0] ?? 'W'}
+            </span>
+          </button>
+          {avatarOpen && (
+            <div className="absolute right-0 top-full mt-2 w-48 bg-popover border border-border rounded-lg shadow-lg z-50 py-1">
+              {userName && (
+                <div className="px-3 py-2 border-b border-border">
+                  <p className="text-sm font-medium text-foreground truncate">{userName}</p>
+                </div>
+              )}
+              <button
+                onClick={() => signOut({ callbackUrl: `/${locale}/admin/login` })}
+                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-destructive hover:bg-destructive/5 cursor-pointer transition-colors"
+              >
+                <LogOut size={16} />
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
