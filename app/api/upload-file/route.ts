@@ -29,9 +29,18 @@ export async function POST(request: Request): Promise<NextResponse> {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif', 'image/svg+xml'];
+    const MAX_SIZE = 4 * 1024 * 1024; // 4 MB
+    if (file.size > MAX_SIZE) {
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+      return NextResponse.json(
+        { error: `File too large (${sizeMB} MB). Maximum upload size is 4 MB. Please compress or resize the image.` },
+        { status: 413 },
+      );
+    }
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif', 'image/svg+xml', 'image/heic', 'image/heif'];
     if (file.type && !allowedTypes.includes(file.type)) {
-      return NextResponse.json({ error: 'File type not allowed' }, { status: 400 });
+      return NextResponse.json({ error: `File type '${file.type}' not allowed. Accepted: JPEG, PNG, WebP, AVIF, HEIC.` }, { status: 400 });
     }
 
     const safePath = pathname.replace(/\.\./g, '').replace(/^\/+/, '');

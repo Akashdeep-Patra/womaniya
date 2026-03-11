@@ -47,8 +47,10 @@ function toFullUrl(url: string) {
   return `${window.location.origin}${url.startsWith('/') ? '' : '/'}${url}`;
 }
 
+const MAX_UPLOAD_MB = 4;
 const COMPRESSION_OPTIONS = {
   maxSizeMB: 2,
+  maxWidthOrHeight: 2400,
   useWebWorker: true,
   initialQuality: 0.85,
   fileType: 'image/webp' as const,
@@ -79,15 +81,17 @@ function uploadViaXhr(
       if (xhr.status >= 200 && xhr.status < 300) {
         try { resolve(JSON.parse(xhr.responseText)); }
         catch { reject(new Error('Invalid server response')); }
+      } else if (xhr.status === 413) {
+        reject(new Error('File too large — the server rejected the upload. Try a smaller image.'));
       } else {
         try {
           const body = JSON.parse(xhr.responseText);
-          reject(new Error(body.error || `Upload failed (${xhr.status})`));
-        } catch { reject(new Error(`Upload failed (${xhr.status})`)); }
+          reject(new Error(body.error || `Upload failed (HTTP ${xhr.status})`));
+        } catch { reject(new Error(`Upload failed (HTTP ${xhr.status})`)); }
       }
     });
 
-    xhr.addEventListener('error', () => reject(new Error('Network error')));
+    xhr.addEventListener('error', () => reject(new Error('Network error — check your connection and try again')));
     xhr.addEventListener('abort', () => reject(new Error('Upload cancelled')));
 
     xhr.open('POST', '/api/upload-file');
@@ -268,6 +272,13 @@ export function MediaLibraryClient({
         ...COMPRESSION_OPTIONS,
         onProgress: (pct: number) => setOptPercent(url, Math.round(pct * 0.7)),
       });
+
+      // Guard: reject if compressed file still exceeds Vercel's body limit
+      const compressedMB = compressed.size / (1024 * 1024);
+      if (compressedMB > MAX_UPLOAD_MB) {
+        setOptStatus(url, 'error');
+        return 0;
+      }
 
       setOptStatus(url, 'uploading');
       setOptPercent(url, 70);

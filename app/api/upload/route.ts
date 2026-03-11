@@ -34,7 +34,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         logger.info('Upload token generated', { pathname, user: session.user?.email || 'admin' });
 
         return {
-          allowedContentTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/avif'],
+          allowedContentTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/heic', 'image/heif'],
           maximumSizeInBytes: 25 * 1024 * 1024, // 25MB
           tokenPayload: JSON.stringify({
             userId: session.user?.id || 'admin',

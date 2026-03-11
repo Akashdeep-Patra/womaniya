@@ -30,8 +30,10 @@ interface UploadingFile {
   error?: string;
 }
 
+const MAX_UPLOAD_MB = 4;
 const COMPRESSION_OPTIONS = {
   maxSizeMB: 2,
+  maxWidthOrHeight: 2400,
   useWebWorker: true,
   initialQuality: 0.85,
   fileType: 'image/webp' as const,
@@ -63,17 +65,19 @@ function uploadViaXhr(
         } catch {
           reject(new Error('Invalid server response'));
         }
+      } else if (xhr.status === 413) {
+        reject(new Error('File too large — the server rejected the upload. Try a smaller image.'));
       } else {
         try {
           const body = JSON.parse(xhr.responseText);
-          reject(new Error(body.error || `Upload failed (${xhr.status})`));
+          reject(new Error(body.error || `Upload failed (HTTP ${xhr.status})`));
         } catch {
-          reject(new Error(`Upload failed (${xhr.status})`));
+          reject(new Error(`Upload failed (HTTP ${xhr.status})`));
         }
       }
     });
 
-    xhr.addEventListener('error', () => reject(new Error('Network error')));
+    xhr.addEventListener('error', () => reject(new Error('Network error — check your connection and try again')));
     xhr.addEventListener('abort', () => reject(new Error('Upload cancelled')));
 
     xhr.open('POST', '/api/upload-file');
@@ -97,6 +101,14 @@ async function compressAndUpload(
   });
 
   onProgress?.(80);
+
+  // Guard: reject if compressed file still exceeds Vercel's body limit
+  const compressedMB = processedFile.size / (1024 * 1024);
+  if (compressedMB > MAX_UPLOAD_MB) {
+    throw new Error(
+      `Image too large after compression (${compressedMB.toFixed(1)} MB). Max is ${MAX_UPLOAD_MB} MB. Try a smaller image or crop it first.`
+    );
+  }
 
   // Phase 2: Upload to server via XHR with progress (80→100%)
   const baseName = file.name.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9.-]/g, '_').replace(/\.{2,}/g, '');
@@ -226,6 +238,8 @@ export function CameraUpload({
       'image/png': [],
       'image/webp': [],
       'image/avif': [],
+      'image/heic': [],
+      'image/heif': [],
     },
     multiple,
     disabled: isUploading && !multiple,

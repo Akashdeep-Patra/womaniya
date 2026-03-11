@@ -14,6 +14,12 @@ export async function uploadImageToBlob(formData: FormData, pathPrefix = 'produc
     throw new Error('No file provided');
   }
 
+  const MAX_SIZE = 4 * 1024 * 1024; // 4 MB
+  if (file.size > MAX_SIZE) {
+    const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+    throw new Error(`File too large (${sizeMB} MB). Maximum is 4 MB. Please compress or resize the image first.`);
+  }
+
   const filename = `${pathPrefix}/${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
   const { url } = await put(filename, file, {
     access: 'public',
