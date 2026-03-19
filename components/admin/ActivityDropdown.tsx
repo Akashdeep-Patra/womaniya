@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useTransition } from 'react';
+import { useState, useEffect, useCallback, useTransition, useRef } from 'react';
 import {
   Bell, Package, Tags, FolderOpen, Megaphone, Flag,
   FileText, Quote, Image as ImageIcon, Type,
@@ -51,12 +51,36 @@ function timeAgo(date: Date | string | null): string {
   return `${Math.floor(seconds / 86400)}d ago`;
 }
 
-function ActivityList({ entries, unread, isMarking, onMarkAllRead }: {
+function ActivitySkeleton() {
+  return (
+    <div className="space-y-0 animate-pulse">
+      {[1, 2, 3, 4, 5].map((i) => (
+        <div key={i} className="flex items-start gap-3 px-4 py-3">
+          <div className="relative mt-0.5 shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-muted" />
+            <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-muted border border-background" />
+          </div>
+          <div className="flex-1 space-y-2 py-0.5">
+            <div className="h-3 bg-muted rounded w-3/4" />
+            <div className="h-2.5 bg-muted rounded w-1/2" />
+          </div>
+          <div className="h-2.5 bg-muted rounded w-10 shrink-0 mt-0.5" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ActivityList({ entries, unread, isMarking, onMarkAllRead, isLoading }: {
   entries: ActivityLogEntry[];
   unread: number;
   isMarking: boolean;
   onMarkAllRead: () => void;
+  isLoading: boolean;
 }) {
+  if (isLoading) {
+    return <ActivitySkeleton />;
+  }
   return (
     <>
       {/* Header with mark-all-read */}
@@ -121,6 +145,8 @@ export function ActivityDropdown() {
   const [entries, setEntries] = useState<ActivityLogEntry[]>([]);
   const [unread, setUnread] = useState(0);
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const hasFetchedRef = useRef(false);
   const [, startPollTransition] = useTransition();
   const [isMarking, startMarkTransition] = useTransition();
   const isMobile = useMediaQuery('(max-width: 767px)');
@@ -148,10 +174,15 @@ export function ActivityDropdown() {
   // Load entries + mark as read when dropdown opens
   useEffect(() => {
     if (!open) return;
+    // Only show skeleton on the first open; subsequent opens keep stale data visible
+    if (!hasFetchedRef.current) {
+      setIsLoading(true);
+    }
     startPollTransition(async () => {
       try {
         const data = await getRecentActivity(20);
         setEntries(data);
+        hasFetchedRef.current = true;
         // Auto-mark as read when user opens the dropdown
         if (data.some((e) => !e.is_read)) {
           await markAllAsRead();
@@ -160,6 +191,8 @@ export function ActivityDropdown() {
         }
       } catch {
         // ignore
+      } finally {
+        setIsLoading(false);
       }
     });
   }, [open]);
@@ -210,6 +243,7 @@ export function ActivityDropdown() {
               unread={unread}
               isMarking={isMarking}
               onMarkAllRead={handleMarkAllRead}
+              isLoading={isLoading}
             />
           </SheetContent>
         </Sheet>
@@ -234,6 +268,7 @@ export function ActivityDropdown() {
           unread={unread}
           isMarking={isMarking}
           onMarkAllRead={handleMarkAllRead}
+          isLoading={isLoading}
         />
       </DropdownMenuContent>
     </DropdownMenu>

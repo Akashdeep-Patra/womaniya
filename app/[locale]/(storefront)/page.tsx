@@ -11,7 +11,7 @@ const HeroSection = dynamic(
       <section className="relative w-full bg-background overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-background to-secondary/10" />
         <div className="relative z-10 w-full max-w-[1800px] mx-auto px-5 sm:px-6 md:px-8 lg:px-[6%] xl:px-[8%]">
-          <div className="flex flex-col lg:flex-row lg:items-center min-h-svh pt-[140px] sm:pt-[160px] lg:pt-[140px] pb-12 lg:pb-0 gap-8 lg:gap-0">
+          <div className="flex flex-col lg:flex-row lg:items-center min-h-svh pt-[100px] sm:pt-[110px] lg:pt-[140px] pb-8 lg:pb-0 gap-0">
             <div className="w-full lg:w-[42%] flex flex-col justify-center lg:pr-6 order-2 lg:order-1 mt-4 lg:mt-0 animate-pulse">
               <div className="flex items-center gap-3 mb-6 md:mb-8">
                 <div className="w-8 md:w-12 h-px bg-primary/20" />
@@ -65,7 +65,13 @@ import { AlponaDivider }       from '@/components/illustrations/AlponaDivider';
 /* Below-fold sections: dynamic import to reduce initial JS and improve LCP */
 const HeritageTicker = dynamic(
   () => import('@/components/storefront/HeritageTicker').then((m) => ({ default: m.HeritageTicker })),
-  { ssr: true }
+  {
+    ssr: true,
+    // Reserve exact height so no layout shift when JS hydrates
+    loading: () => (
+      <div className="bg-foreground border-y border-primary/20" style={{ height: '45px' }} />
+    ),
+  }
 );
 
 const FeaturesSection = dynamic(

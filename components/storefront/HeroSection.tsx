@@ -300,25 +300,25 @@ export function HeroSection() {
 
               <div className="col-span-5 relative aspect-square rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md">
                 <motion.div custom={2} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card2.pos }} sizes="40vw" />
+                  <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card2.pos }} sizes="40vw" />
                 </motion.div>
               </div>
 
               <div className="col-span-5 relative aspect-4/3 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md">
                 <motion.div custom={3} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card3.pos }} sizes="40vw" />
+                  <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card3.pos }} sizes="40vw" />
                 </motion.div>
               </div>
 
               <div className="col-span-5 relative aspect-3/4 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md mt-2">
                 <motion.div custom={4} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card4.src} alt={IMAGES.card4.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card4.pos }} sizes="40vw" />
+                  <Image src={IMAGES.card4.src} alt={IMAGES.card4.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card4.pos }} sizes="40vw" />
                 </motion.div>
               </div>
 
               <div className="col-span-7 relative aspect-7/5 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md mt-2">
                 <motion.div custom={5} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card5.src} alt={IMAGES.card5.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card5.pos }} sizes="58vw" />
+                  <Image src={IMAGES.card5.src} alt={IMAGES.card5.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card5.pos }} sizes="58vw" />
                 </motion.div>
               </div>
             </div>

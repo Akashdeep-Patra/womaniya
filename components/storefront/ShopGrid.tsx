@@ -19,6 +19,36 @@ interface Props {
   banners?: any[];
 }
 
+export function ShopGridSkeleton() {
+  return (
+    <section className="px-4 sm:px-6 py-12 md:py-20 max-w-7xl mx-auto animate-pulse">
+      {/* Header skeleton */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-6">
+        <div className="space-y-3">
+          <div className="h-10 bg-muted rounded-lg w-48" />
+          <div className="h-4 bg-muted rounded w-72" />
+        </div>
+      </div>
+      {/* Filter pills skeleton */}
+      <div className="mb-8 md:mb-10 flex gap-2">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="h-8 bg-muted rounded-full w-20" />
+        ))}
+      </div>
+      {/* Grid skeleton */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+        {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+          <div key={i} className="space-y-3">
+            <div className="aspect-3/4 bg-muted rounded-2xl" />
+            <div className="h-4 bg-muted rounded w-3/4" />
+            <div className="h-3.5 bg-muted rounded w-1/2" />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export function ShopGrid({ products, categories, isCompact = false, banners = [] }: Props) {
   const t = useTranslations('shop');
   const locale = useLocale();

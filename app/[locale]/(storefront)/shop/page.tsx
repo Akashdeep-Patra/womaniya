@@ -1,5 +1,6 @@
+import { Suspense } from 'react';
 import { setRequestLocale } from 'next-intl/server';
-import { ShopGrid }         from '@/components/storefront/ShopGrid';
+import { ShopGrid, ShopGridSkeleton } from '@/components/storefront/ShopGrid';
 import { getPublishedProducts } from '@/actions/products';
 import { getPublishedCategories } from '@/actions/categories';
 import { getAllBanners } from '@/actions/banners';
@@ -67,10 +68,7 @@ export async function generateMetadata(
   };
 }
 
-export default async function ShopPage({ params }: Props) {
-  const { locale } = await params;
-  setRequestLocale(locale);
-
+async function ShopContent({ locale }: { locale: string }) {
   let allProducts: Awaited<ReturnType<typeof getPublishedProducts>> = [];
   let dbCategories: Awaited<ReturnType<typeof getPublishedCategories>> = [];
   let banners: Awaited<ReturnType<typeof getAllBanners>> = [];
@@ -101,10 +99,23 @@ export default async function ShopPage({ params }: Props) {
 
   return (
     <>
-      <WhatsAppContextSetter context={{ type: 'shop' }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd).replace(/</g, '\\u003c') }} />
+      <ShopGrid products={allProducts} categories={dbCategories} banners={banners} />
+    </>
+  );
+}
+
+export default async function ShopPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  return (
+    <>
+      <WhatsAppContextSetter context={{ type: 'shop' }} />
       <main id="main-content" className="pt-14 md:pt-16">
-        <ShopGrid products={allProducts} categories={dbCategories} banners={banners} />
+        <Suspense fallback={<ShopGridSkeleton />}>
+          <ShopContent locale={locale} />
+        </Suspense>
       </main>
     </>
   );

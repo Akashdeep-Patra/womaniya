@@ -45,17 +45,25 @@ export async function getAllCollections() {
   }
 }
 
+const _getPublishedCollections = unstable_cache(
+  async () => {
+    try {
+      const res = await db.query.collections.findMany({
+        where: (c, { or, eq }) => or(eq(c.status, 'live'), eq(c.status, 'scheduled')),
+        orderBy: (c, { desc }) => [desc(c.created_at)],
+      });
+      return res || [];
+    } catch (e) {
+      logger.error('Failed to get published collections', { error: e });
+      return [];
+    }
+  },
+  ['published-collections'],
+  { revalidate: 120, tags: ['collections'] },
+);
+
 export async function getPublishedCollections() {
-  try {
-    const res = await db.query.collections.findMany({
-      where: (c, { or, eq }) => or(eq(c.status, 'live'), eq(c.status, 'scheduled')),
-      orderBy: (c, { desc }) => [desc(c.created_at)],
-    });
-    return res || [];
-  } catch (e) {
-    logger.error('Failed to get published collections', { error: e });
-    return [];
-  }
+  return _getPublishedCollections();
 }
 
 const _getFeaturedCollections = unstable_cache(

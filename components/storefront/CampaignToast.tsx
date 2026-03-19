@@ -99,8 +99,9 @@ export function CampaignToast({ campaigns, isBn, locale }: CampaignToastProps) {
                   </span>
                 </Link>
               </Button>
-              <button 
-                onClick={handleDismiss} 
+              <button
+                onClick={handleDismiss}
+                aria-label="Dismiss announcement"
                 className="w-8 h-8 flex items-center justify-center rounded-full bg-muted/80 text-muted-foreground hover:bg-muted transition-colors"
               >
                 <X size={14} />

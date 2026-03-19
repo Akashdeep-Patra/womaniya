@@ -92,7 +92,7 @@ function NavLink({ href, label, isBn, pathname, locale }: { href: string; label:
       <span className={cn(
         "uppercase font-medium transition-colors duration-200",
         isBn ? 'font-bengali text-[14px] tracking-wide' : 'font-sans-en text-[10px] tracking-[0.18em]',
-        isActive ? 'text-primary' : 'text-foreground/60 group-hover:text-foreground'
+        isActive ? 'text-primary' : 'text-foreground/70 group-hover:text-foreground'
       )}>
         {label}
       </span>
@@ -120,7 +120,7 @@ function CompactNavLink({ href, label, isBn, pathname, locale }: { href: string;
       <span className={cn(
         "uppercase font-medium transition-colors duration-200",
         isBn ? 'font-bengali text-[13px]' : 'font-sans-en text-[9px] tracking-[0.16em]',
-        isActive ? 'text-primary' : 'text-foreground/60 group-hover:text-foreground'
+        isActive ? 'text-primary' : 'text-foreground/70 group-hover:text-foreground'
       )}>
         {label}
       </span>
@@ -182,8 +182,9 @@ export function Header() {
           )}
         >
           {/* Expanded Logo */}
-          <Link prefetch={true} 
-            href={`/${locale}`} 
+          <Link prefetch={true}
+            href={`/${locale}`}
+            aria-label="Womaniya — Go to homepage"
             className="group flex items-center shrink-0 gap-2.5 p-1.5 pr-4 md:pr-5 bg-background/80 md:bg-background/50 md:backdrop-blur-md hover:bg-background/70 rounded-full shadow-sm border border-border/20 transition-colors"
           >
             <div className="relative rounded-full flex items-center justify-center overflow-hidden size-11 md:size-12">
@@ -231,8 +232,9 @@ export function Header() {
           )}
         >
           {/* Compact Logo */}
-          <Link prefetch={true} 
-            href={`/${locale}`} 
+          <Link prefetch={true}
+            href={`/${locale}`}
+            aria-label="Womaniya — Go to homepage"
             className="group flex items-center shrink-0 gap-2 p-1.5 pr-3 md:pr-4 bg-background/50 hover:bg-background/80 rounded-full transition-colors"
           >
             <div className="relative rounded-full flex items-center justify-center overflow-hidden size-9 md:size-10">
