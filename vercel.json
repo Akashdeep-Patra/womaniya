@@ -4,5 +4,13 @@
       "path": "/api/cron/cleanup-blobs",
       "schedule": "0 3 1,15 * *"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "womaniyakolkata.in" }],
+      "destination": "https://www.womaniyakolkata.in/$1",
+      "permanent": true
+    }
   ]
 }
