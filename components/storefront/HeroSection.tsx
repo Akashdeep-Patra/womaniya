@@ -121,7 +121,7 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 w-full max-w-[1800px] mx-auto px-5 sm:px-6 md:px-8 lg:px-[6%] xl:px-[8%]">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:min-h-svh pt-[100px] sm:pt-[110px] lg:pt-[140px] pb-8 lg:pb-0 gap-0">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:min-h-[max(700px,100svh)] pt-[100px] sm:pt-[110px] lg:pt-[140px] pb-8 lg:pb-0 gap-0">
 
           {/* ── TYPOGRAPHY ── */}
           <motion.div

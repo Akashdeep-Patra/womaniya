@@ -58,7 +58,7 @@ export async function Footer() {
         </div>
 
         {/* Copyright */}
-        <p className="text-center text-muted-foreground/50 text-[10px] tracking-widest uppercase">
+        <p className="text-center text-muted-foreground/70 text-[10px] tracking-widest uppercase">
           © {new Date().getFullYear()} Womaniya. {t('rights')}
         </p>
       </div>

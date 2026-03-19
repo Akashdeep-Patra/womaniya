@@ -197,7 +197,7 @@ export function Header() {
               <span className="font-sans-en font-extrabold text-foreground uppercase leading-none tracking-[0.2em] md:tracking-[0.25em] text-[17px] md:text-[20px]">
                 WOMANIYA
               </span>
-              <span className="text-[8px] md:text-[9px] tracking-[0.3em] uppercase text-primary/80 font-sans-en mt-0.5 hidden sm:block">
+              <span className="text-[8px] md:text-[9px] tracking-[0.3em] uppercase text-primary font-sans-en mt-0.5 hidden sm:block">
                 {isBn ? 'স্থাপিত ২০১৯' : 'EST. 2019'}
               </span>
             </div>

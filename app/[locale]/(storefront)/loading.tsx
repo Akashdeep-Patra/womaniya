@@ -1,80 +1,100 @@
-// Storefront loading skeleton — mirrors the homepage layout structure
-// to ensure zero layout shift when the page resolves.
+// Storefront loading skeleton — mirrors the homepage layout structure exactly
+// to prevent layout shift (CLS) when the real page resolves.
 export default function StorefrontLoading() {
   return (
     <main className="min-h-screen bg-background">
       {/* ── Hero Skeleton ── */}
       <section className="relative w-full bg-background overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-background to-secondary/10" />
-        <div className="absolute inset-0 bg-jamdani-lattice text-foreground pointer-events-none" />
         <div className="relative z-10 w-full max-w-[1800px] mx-auto px-5 sm:px-6 md:px-8 lg:px-[6%] xl:px-[8%]">
-          <div className="flex flex-col lg:flex-row lg:items-center min-h-svh pt-[140px] sm:pt-[160px] lg:pt-[140px] pb-12 lg:pb-0 gap-8 lg:gap-0">
+          {/* Matches HeroSection: flex-col on mobile, lg:flex-row on desktop */}
+          {/* min-height: none on mobile (height is driven by content), lg uses max(700px,100svh) */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:min-h-[max(700px,100svh)] pt-[100px] sm:pt-[110px] lg:pt-[140px] pb-8 lg:pb-0 gap-0">
 
-            {/* Typography skeleton */}
-            <div className="w-full lg:w-[42%] flex flex-col justify-center relative z-30 lg:pr-6 order-2 lg:order-1 mt-4 lg:mt-0 animate-pulse">
-              {/* Badge line */}
-              <div className="flex items-center gap-3 mb-6 md:mb-8">
-                <div className="w-8 md:w-12 h-px bg-primary/20" />
+            {/* ── Mobile: text block (order-1 on mobile) ── */}
+            <div className="w-full lg:hidden order-1 animate-pulse mb-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-px bg-primary/20" />
+                <div className="h-2.5 w-24 bg-primary/10 rounded" />
+              </div>
+              <div className="mb-6 flex flex-col gap-1.5">
+                <div className="h-11 w-[72%] bg-muted rounded-lg" />
+                <div className="h-13 w-[88%] bg-primary/8 rounded-lg ml-2" />
+                <div className="h-10 w-[60%] bg-muted rounded-lg" />
+              </div>
+            </div>
+
+            {/* ── Mobile: 12-col image mosaic skeleton (order-1, after text) ── */}
+            <div className="w-full lg:hidden relative z-10 order-1 mb-6 animate-pulse">
+              <div className="grid grid-cols-12 gap-2">
+                <div className="col-span-7 aspect-3/4 rounded-2xl bg-muted" />
+                <div className="col-span-5 flex flex-col gap-2">
+                  <div className="aspect-square rounded-2xl bg-muted/80" />
+                  <div className="aspect-4/3 rounded-2xl bg-muted/70" />
+                </div>
+                <div className="col-span-5 aspect-3/4 rounded-2xl bg-muted/70 mt-2" />
+                <div className="col-span-7 aspect-7/5 rounded-2xl bg-muted/60 mt-2" />
+              </div>
+            </div>
+
+            {/* ── Mobile: CTA row (order-1, below mosaic) ── */}
+            <div className="w-full lg:hidden order-1 mb-4 animate-pulse">
+              <div className="flex items-start gap-3 mb-6">
+                <div className="w-0.5 h-10 bg-primary/10 shrink-0 mt-1" />
+                <div className="flex flex-col gap-2 w-full max-w-[340px]">
+                  <div className="h-3.5 w-full bg-muted rounded" />
+                  <div className="h-3.5 w-[80%] bg-muted rounded" />
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="h-11 w-40 bg-foreground/10 rounded-full" />
+                <div className="h-3.5 w-24 bg-muted rounded" />
+              </div>
+            </div>
+
+            {/* ── Desktop: typography column (order-1) ── */}
+            <div className="hidden lg:flex w-[42%] flex-col justify-center lg:pr-6 order-1 animate-pulse">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-12 h-px bg-primary/20" />
                 <div className="h-3 w-32 bg-primary/10 rounded" />
               </div>
-
-              {/* Headline blocks */}
-              <div className="mb-6 md:mb-10 flex flex-col gap-2">
-                <div className="h-12 sm:h-16 lg:h-20 w-[70%] bg-muted rounded-lg" />
-                <div className="h-14 sm:h-20 lg:h-24 w-[85%] bg-primary/8 rounded-lg ml-4 sm:ml-8 lg:ml-14" />
-                <div className="h-10 sm:h-14 lg:h-16 w-[60%] bg-muted rounded-lg" />
+              <div className="mb-10 flex flex-col gap-2">
+                <div className="h-20 w-[70%] bg-muted rounded-lg" />
+                <div className="h-24 w-[85%] bg-primary/8 rounded-lg ml-14" />
+                <div className="h-16 w-[60%] bg-muted rounded-lg" />
               </div>
-
-              {/* Subtitle */}
-              <div className="flex items-start gap-4 mb-8 md:mb-10 pl-2 lg:pl-4">
+              <div className="flex items-start gap-4 mb-10 pl-4">
                 <div className="w-0.5 h-12 bg-primary/10 shrink-0 mt-1" />
-                <div className="flex flex-col gap-2 w-full max-w-[320px]">
+                <div className="flex flex-col gap-2 w-full max-w-[380px]">
                   <div className="h-4 w-full bg-muted rounded" />
                   <div className="h-4 w-[80%] bg-muted rounded" />
                   <div className="h-4 w-[60%] bg-muted rounded" />
                 </div>
               </div>
-
-              {/* CTA buttons */}
-              <div className="flex items-center gap-4 md:gap-7 pl-2 lg:pl-4">
-                <div className="h-12 md:h-14 w-44 md:w-48 bg-foreground/10 rounded-full" />
+              <div className="flex items-center gap-7 pl-4">
+                <div className="h-14 w-48 bg-foreground/10 rounded-full" />
                 <div className="h-4 w-24 bg-muted rounded" />
               </div>
             </div>
 
-            {/* Mobile collage skeleton */}
-            <div className="w-full lg:hidden relative z-10 order-1 pt-6 pb-2">
-              <div className="relative w-full max-w-[420px] mx-auto aspect-4/5 p-2">
-                <div className="absolute bottom-2 left-2 w-[65%] h-[75%] rounded-4xl bg-muted border-[6px] border-background z-20 animate-pulse" />
-                <div className="absolute top-2 right-2 w-[50%] h-[60%] rounded-3xl bg-muted/70 border-[6px] border-background z-10 animate-pulse" />
-              </div>
-            </div>
-
-            {/* Desktop collage skeleton */}
+            {/* ── Desktop: collage (order-2) — matches HeroSection desktop collage ── */}
             <div className="hidden lg:block w-[58%] h-full relative z-10 order-2 pt-12 pb-16 pl-12 pr-6 animate-pulse">
-              <div className="relative w-full h-[600px] max-h-[80vh]">
-                <div className="absolute left-0 top-[5%] w-[38%] h-[55%] rounded-3xl bg-muted" />
-                <div className="absolute left-[30%] top-0 w-[40%] h-[65%] rounded-3xl bg-muted/80 z-10" />
-                <div className="absolute right-0 top-[10%] w-[32%] h-[50%] rounded-3xl bg-muted/60 z-20" />
-                <div className="absolute left-[15%] bottom-0 w-[35%] h-[40%] rounded-3xl bg-muted/70 z-10" />
+              <div className="relative w-full h-[82vh] max-h-[850px]">
+                <div className="absolute top-[12%] left-[2%] w-[38%] h-[55%] rounded-4xl bg-muted" />
+                <div className="absolute bottom-[2%] left-[12%] w-[45%] h-[75%] rounded-[2.5rem] bg-muted/80 z-10" />
+                <div className="absolute top-[8%] right-[5%] w-[42%] h-[60%] rounded-4xl bg-muted/70 z-10" />
+                <div className="absolute bottom-[4%] right-[2%] w-[35%] h-[45%] rounded-2xl bg-muted/60 z-10" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Heritage Ticker Skeleton ── */}
-      <div className="py-4 md:py-6 border-y border-border/50 bg-muted/20 overflow-hidden">
-        <div className="flex gap-8 animate-pulse">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-4 w-28 bg-muted rounded shrink-0" />
-          ))}
-        </div>
-      </div>
+      {/* ── Heritage Ticker Skeleton — matches bg-foreground, py-3, height ~45px ── */}
+      <div className="bg-foreground border-y border-primary/20" style={{ height: '45px' }} />
 
       {/* ── Features Section Skeleton ── */}
       <section className="py-16 md:py-24 bg-background relative">
-        <div className="absolute inset-0 bg-alpona-grid text-foreground pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 animate-pulse">
           <div className="text-center mb-12">
             <div className="h-3 w-24 bg-muted rounded mx-auto mb-4" />
@@ -121,7 +141,6 @@ export default function StorefrontLoading() {
 
       {/* ── Categories Skeleton ── */}
       <section className="py-12 md:py-16 bg-muted/20 border-y border-border/50 relative">
-        <div className="absolute inset-0 bg-kantha-dots text-foreground pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 animate-pulse">
           <div className="text-center mb-8">
             <div className="h-3 w-20 bg-muted rounded mx-auto mb-3" />
