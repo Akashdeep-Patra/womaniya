@@ -9,6 +9,7 @@ import { z }              from 'zod';
 import { PRODUCT_STATUSES, STOCK_STATUSES } from '@/db/enums';
 import { uploadImageToBlob } from './upload';
 import { logActivity } from '@/lib/activity-logger';
+import { slugify } from '@/lib/utils';
 
 const ProductSchema = z.object({
   name_en:            z.string().min(2).max(120),
@@ -34,15 +35,6 @@ const ProductSchema = z.object({
   stock_status:       z.enum([...STOCK_STATUSES]).default('in_stock'),
   delivery_info:      z.string().optional(),
 });
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/--+/g, '-');
-}
 
 function revalidateAll() {
   updateTag('products');

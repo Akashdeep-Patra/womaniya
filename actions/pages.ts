@@ -8,6 +8,7 @@ import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
 import { PAGE_STATUSES, PAGE_TYPES } from '@/db/enums';
 import { logActivity } from '@/lib/activity-logger';
+import { slugify } from '@/lib/utils';
 
 const PageSchema = z.object({
   title_en:           z.string().min(2).max(120),
@@ -20,10 +21,6 @@ const PageSchema = z.object({
   seo_description_en: z.string().max(300).optional(),
   seo_description_bn: z.string().max(300).optional(),
 });
-
-function slugify(text: string): string {
-  return text.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/--+/g, '-');
-}
 
 const _getAllPages = unstable_cache(
   async (page_type?: string) => {
@@ -79,7 +76,7 @@ export async function createPage(formData: FormData, sectionsJson: string) {
     throw new Error(parsed.error.issues.map((i) => i.message).join(', '));
   }
 
-  const slug = slugify(parsed.data.title_en);
+  const slug = `${slugify(parsed.data.title_en)}-${Date.now()}`;
   const data = parsed.data;
 
   const [page] = await db.insert(pages).values({
@@ -98,7 +95,12 @@ export async function createPage(formData: FormData, sectionsJson: string) {
   }).returning();
 
   if (sectionsJson && page) {
-    const sections = JSON.parse(sectionsJson);
+    let sections;
+    try {
+      sections = JSON.parse(sectionsJson);
+    } catch {
+      return { error: 'Invalid sections data' };
+    }
     if (sections.length > 0) {
       const sectionValues = sections.map((s: { type: string; content: unknown }, idx: number) => ({
         page_id:      page.id,
@@ -156,7 +158,12 @@ export async function updatePage(id: number, formData: FormData, sectionsJson: s
   await db.delete(pageSections).where(eq(pageSections.page_id, id));
 
   if (sectionsJson) {
-    const sections = JSON.parse(sectionsJson);
+    let sections;
+    try {
+      sections = JSON.parse(sectionsJson);
+    } catch {
+      return { error: 'Invalid sections data' };
+    }
     if (sections.length > 0) {
       const sectionValues = sections.map((s: { type: string; content: unknown }, idx: number) => ({
         page_id:      id,

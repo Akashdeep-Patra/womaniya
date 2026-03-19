@@ -19,10 +19,14 @@ export function CustomCursor() {
     if (window.matchMedia('(hover: none)').matches) return;
     setIsTouchDevice(false);
 
+    let rafId: number;
     const moveCursor = (e: MouseEvent) => {
       if (!isVisible) setIsVisible(true);
-      cursorX.set(e.clientX - 8);
-      cursorY.set(e.clientY - 8);
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        cursorX.set(e.clientX - 8);
+        cursorY.set(e.clientY - 8);
+      });
     };
 
     const handleMouseOver = (e: MouseEvent) => {
@@ -50,6 +54,7 @@ export function CustomCursor() {
     document.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
+      cancelAnimationFrame(rafId);
       window.removeEventListener('mousemove', moveCursor);
       window.removeEventListener('mouseover', handleMouseOver);
       document.removeEventListener('mouseleave', handleMouseLeave);

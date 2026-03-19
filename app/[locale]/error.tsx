@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 
 export default function LocaleError({
   error,
@@ -12,6 +13,8 @@ export default function LocaleError({
   reset: () => void;
 }) {
   const t = useTranslations('error');
+  const params = useParams();
+  const locale = (params?.locale as string) ?? 'en';
 
   useEffect(() => {
     console.error('[LocaleError]', error);
@@ -41,7 +44,7 @@ export default function LocaleError({
           {t('try_again')}
         </button>
         <Link
-          href="/"
+          href={`/${locale}`}
           className="text-xs tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors"
         >
           {t('go_home')}

@@ -36,7 +36,9 @@ export function WhatsAppFloat({ waNumber }: { waNumber?: string }) {
   }, []);
 
   const href = useMemo(() => {
-    const currentUrl = typeof window !== 'undefined' ? window.location.href : undefined;
+    const currentUrl = typeof window !== 'undefined'
+      ? `${window.location.origin}${pathname}`
+      : undefined;
     switch (pageContext.type) {
       case 'product':
         return productViewUrl(pageContext.name, pageContext.price, locale, waNumber, currentUrl);

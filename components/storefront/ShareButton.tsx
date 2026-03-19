@@ -26,8 +26,8 @@ export function ShareButton() {
       await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy', err);
+    } catch {
+      // Clipboard write failed — silently swallow; no user action needed
     }
   };
 

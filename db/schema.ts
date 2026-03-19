@@ -177,6 +177,7 @@ export const banners = pgTable('banners', {
   starts_at:        timestamp('starts_at'),
   ends_at:          timestamp('ends_at'),
   created_at:       timestamp('created_at').defaultNow(),
+  updated_at:       timestamp('updated_at').defaultNow(),
 });
 
 export type Banner    = typeof banners.$inferSelect;

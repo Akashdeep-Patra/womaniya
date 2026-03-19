@@ -18,30 +18,9 @@ function getRating(name: string, value: number): 'good' | 'needs-improvement' | 
   return 'poor';
 }
 
-const RATING_COLORS: Record<string, string> = {
-  good: '#0CCE6B',
-  'needs-improvement': '#FFA400',
-  poor: '#FF4E42',
-};
-
 export function WebVitalsReporter() {
   useReportWebVitals((metric) => {
     const rating = metric.rating ?? getRating(metric.name, metric.value);
-    const color = RATING_COLORS[rating] ?? '#888';
-    const unit = metric.name === 'CLS' ? '' : 'ms';
-    const val = metric.name === 'CLS'
-      ? metric.value.toFixed(4)
-      : `${Math.round(metric.value)}${unit}`;
-
-    if (process.env.NODE_ENV === 'development') {
-      console.log(
-        `%c[Web Vital] %c${metric.name} %c${val} %c(${rating})`,
-        'color: #888; font-weight: bold',
-        'color: inherit; font-weight: bold',
-        `color: ${color}; font-weight: bold`,
-        `color: ${color}`,
-      );
-    }
 
     if (typeof window !== 'undefined' && 'sendBeacon' in navigator) {
       const body = JSON.stringify({

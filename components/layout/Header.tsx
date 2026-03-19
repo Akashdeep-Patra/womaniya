@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { useRouter as useIntlRouter, usePathname as useIntlPathname } from '@/i18n/navigation';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -79,16 +79,27 @@ function LocaleToggle({ locale }: { locale: string }) {
 /* ─────────────────────────────────────────────────────────────────
    Desktop nav link — compact, no word-wrap
 ───────────────────────────────────────────────────────────────── */
-function NavLink({ href, label, isBn }: { href: string; label: string; isBn: boolean }) {
+function NavLink({ href, label, isBn, pathname, locale }: { href: string; label: string; isBn: boolean; pathname: string; locale: string }) {
+  const isActive = href === `/${locale}` || href === `/${locale}/`
+    ? pathname === `/${locale}` || pathname === `/${locale}/`
+    : pathname.startsWith(href);
   return (
-    <Link href={href} prefetch={true} className="relative group py-1 px-2.5 whitespace-nowrap">
+    <Link
+      href={href}
+      prefetch={true}
+      className="relative group py-1 px-2.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded"
+    >
       <span className={cn(
-        "uppercase font-medium text-foreground/60 group-hover:text-foreground transition-colors duration-200",
-        isBn ? 'font-bengali text-[14px] tracking-wide' : 'font-sans-en text-[10px] tracking-[0.18em]'
+        "uppercase font-medium transition-colors duration-200",
+        isBn ? 'font-bengali text-[14px] tracking-wide' : 'font-sans-en text-[10px] tracking-[0.18em]',
+        isActive ? 'text-primary' : 'text-foreground/60 group-hover:text-foreground'
       )}>
         {label}
       </span>
-      <span className="absolute -bottom-0.5 left-2 right-2 h-px scale-x-0 bg-primary group-hover:scale-x-100 transition-transform duration-300 origin-center rounded-full" />
+      <span className={cn(
+        "absolute -bottom-0.5 left-2 right-2 h-px bg-primary transition-transform duration-300 origin-center rounded-full",
+        isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+      )} />
     </Link>
   );
 }
@@ -96,16 +107,27 @@ function NavLink({ href, label, isBn }: { href: string; label: string; isBn: boo
 /* ─────────────────────────────────────────────────────────────────
    Compact nav link for collapsed state
 ───────────────────────────────────────────────────────────────── */
-function CompactNavLink({ href, label, isBn }: { href: string; label: string; isBn: boolean }) {
+function CompactNavLink({ href, label, isBn, pathname, locale }: { href: string; label: string; isBn: boolean; pathname: string; locale: string }) {
+  const isActive = href === `/${locale}` || href === `/${locale}/`
+    ? pathname === `/${locale}` || pathname === `/${locale}/`
+    : pathname.startsWith(href);
   return (
-    <Link href={href} prefetch={true} className="relative group py-0.5 px-2 whitespace-nowrap">
+    <Link
+      href={href}
+      prefetch={true}
+      className="relative group py-0.5 px-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded"
+    >
       <span className={cn(
-        "uppercase font-medium text-foreground/60 group-hover:text-foreground transition-colors duration-200",
-        isBn ? 'font-bengali text-[13px]' : 'font-sans-en text-[9px] tracking-[0.16em]'
+        "uppercase font-medium transition-colors duration-200",
+        isBn ? 'font-bengali text-[13px]' : 'font-sans-en text-[9px] tracking-[0.16em]',
+        isActive ? 'text-primary' : 'text-foreground/60 group-hover:text-foreground'
       )}>
         {label}
       </span>
-      <span className="absolute bottom-0 left-1.5 right-1.5 h-px scale-x-0 bg-primary group-hover:scale-x-100 transition-transform duration-300 origin-center rounded-full" />
+      <span className={cn(
+        "absolute bottom-0 left-1.5 right-1.5 h-px bg-primary transition-transform duration-300 origin-center rounded-full",
+        isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+      )} />
     </Link>
   );
 }
@@ -117,6 +139,7 @@ export function Header() {
   const params = useParams();
   const locale = params.locale as string;
   const isBn = locale === 'bn';
+  const pathname = usePathname();
 
   const [isScrolled, setIsScrolled] = useState(false);
   const lastScrollYRef = useRef(0);
@@ -182,7 +205,7 @@ export function Header() {
           {/* Expanded Center Nav */}
           <nav className="hidden lg:flex items-center gap-1 xl:gap-2 px-5 py-1.5 bg-background/80 md:bg-background/50 md:backdrop-blur-md rounded-full shadow-sm border border-border/20">
             {navLinks.map((l) => (
-              <NavLink key={l.href} href={l.href} label={l.label} isBn={isBn} />
+              <NavLink key={l.href} href={l.href} label={l.label} isBn={isBn} pathname={pathname} locale={locale} />
             ))}
           </nav>
 
@@ -228,7 +251,7 @@ export function Header() {
           {/* Compact Center Nav */}
           <nav className="hidden lg:flex items-center gap-1 rounded-full">
             {navLinks.map((l) => (
-              <CompactNavLink key={l.href} href={l.href} label={l.label} isBn={isBn} />
+              <CompactNavLink key={l.href} href={l.href} label={l.label} isBn={isBn} pathname={pathname} locale={locale} />
             ))}
           </nav>
 

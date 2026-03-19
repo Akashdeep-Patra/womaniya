@@ -3,6 +3,7 @@
 import { LoomWeaver } from '@/components/illustrations/LoomWeaver';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 
 interface Props {
   message?: string;
@@ -24,6 +25,12 @@ export function EmptyState({ message }: Props) {
       <p className={`text-bengal-kajal/60 text-sm md:text-base leading-relaxed ${isBn ? 'font-bengali' : 'font-sans-en'}`}>
         {message || t('no_products')}
       </p>
+      <Link
+        href={`/${params.locale}/shop`}
+        className="mt-6 inline-block text-xs tracking-widest uppercase text-primary hover:underline font-sans-en cursor-pointer"
+      >
+        {isBn ? 'সব দেখুন →' : 'Browse All →'}
+      </Link>
     </div>
   );
 }

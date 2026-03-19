@@ -8,6 +8,7 @@ import { eq }             from 'drizzle-orm';
 import { z }              from 'zod';
 import { CAMPAIGN_STATUSES } from '@/db/enums';
 import { logActivity } from '@/lib/activity-logger';
+import { slugify } from '@/lib/utils';
 
 const CampaignSchema = z.object({
   name_en:              z.string().min(2).max(120),
@@ -21,10 +22,6 @@ const CampaignSchema = z.object({
   announcement_text_bn: z.string().max(300).optional(),
   cta_url:              z.string().optional(),
 });
-
-function slugify(text: string): string {
-  return text.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/--+/g, '-');
-}
 
 const _getAllCampaigns = unstable_cache(
   async () => {
@@ -70,7 +67,7 @@ export async function createCampaign(formData: FormData) {
     throw new Error(parsed.error.issues.map((i) => i.message).join(', '));
   }
 
-  const slug = slugify(parsed.data.name_en);
+  const slug = `${slugify(parsed.data.name_en)}-${Date.now()}`;
   const data = parsed.data;
 
   await db.insert(campaigns).values({

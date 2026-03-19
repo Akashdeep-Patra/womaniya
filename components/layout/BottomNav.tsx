@@ -80,7 +80,7 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
       <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 z-40 md:hidden bg-background border-t border-border pb-safe w-full max-w-[1800px]">
         <div className="grid grid-cols-5 h-15">
           {mainLinks.map(({ href, path, label, Icon }) => {
-            const active = pathname === path;
+            const active = path === '/' ? pathname === '/' : pathname === path || pathname.startsWith(path + '/');
             return (
               <Link prefetch={true} key={href}
                 href={href}
@@ -116,6 +116,9 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
           {/* Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
+            aria-expanded={isOpen}
+            aria-controls="bottom-nav-sheet"
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
             className={cn(
               'flex flex-col items-center justify-center gap-1 min-h-[44px] relative',
               'text-[9px] tracking-widest uppercase transition-all duration-300',
@@ -150,6 +153,7 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
 
             {/* Sheet */}
             <motion.div
+              id="bottom-nav-sheet"
               initial={{ y: '100%' }}
               animate={{ y: '0%' }}
               exit={{ y: '100%' }}

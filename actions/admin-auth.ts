@@ -1,5 +1,4 @@
 'use server';
-import { auth } from '@/auth';
 
 import { db } from '@/lib/db';
 import { admins } from '@/db/schema';

@@ -74,6 +74,7 @@ export function ProductOrderSection({ product, locale, isBn, waNumber }: Product
             {product.sizes!.map((size) => (
               <button
                 key={size}
+                aria-pressed={selectedSize === size}
                 onClick={() => setSelectedSize(size)}
                 className={cn(
                   'min-h-[42px] min-w-[42px] px-4 rounded-full border transition-all duration-200 touch-manipulation flex items-center justify-center gap-1.5',
@@ -105,6 +106,7 @@ export function ProductOrderSection({ product, locale, isBn, waNumber }: Product
             {product.colors!.map((color) => (
               <button
                 key={color}
+                aria-pressed={selectedColor === color}
                 onClick={() => setSelectedColor(color)}
                 className={cn(
                   'min-h-[42px] min-w-[42px] px-4 rounded-full border transition-all duration-200 touch-manipulation flex items-center justify-center gap-1.5',
