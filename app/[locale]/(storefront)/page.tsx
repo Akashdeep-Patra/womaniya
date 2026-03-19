@@ -161,20 +161,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: { absolute: titleStr },
       description: descStr,
-      images: [
-        {
-          url: '/opengraph-image',
-          width: 1200,
-          height: 630,
-          alt: 'Womaniya — Authentic Handloom Heritage',
-        },
-      ],
+      // No manual images — Next.js auto-detects opengraph-image.tsx in this route segment
+      // and generates a stable hashed URL that always resolves correctly
     },
     twitter: {
       card: 'summary_large_image',
       title: { absolute: titleStr },
       description: descStr,
-      images: ['/twitter-image'],
+      // Auto-detected from opengraph-image.tsx
     },
     alternates: {
       canonical: `https://www.womaniyakolkata.in/${locale}`,

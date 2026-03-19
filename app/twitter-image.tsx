@@ -6,10 +6,8 @@ export const size = OG_SIZE;
 export const contentType = 'image/png';
 
 export default async function TwitterImage() {
-  const subtitle = await getSetting('seo_og_subtitle') || 'Handwoven Heritage';
+  let subtitle = 'Handwoven Heritage';
+  try { subtitle = (await getSetting('seo_og_subtitle')) || subtitle; } catch { /* use fallback */ }
 
-  return generateOgImage({
-    title: 'WOMANIYA',
-    subtitle,
-  });
+  return generateOgImage({ title: 'WOMANIYA', subtitle });
 }
