@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import { BLUR_PLACEHOLDER } from '@/lib/blur-placeholder';
 
 interface HeroCarouselProps {
   images: string[];
@@ -80,6 +81,9 @@ export function HeroCarousel({
           className="object-cover"
           sizes="100vw"
           priority
+          fetchPriority="high"
+          placeholder="blur"
+          blurDataURL={BLUR_PLACEHOLDER}
         />
         {overlay}
       </div>
@@ -134,6 +138,8 @@ export function HeroCarousel({
             className="object-cover"
             sizes="100vw"
             priority={current === 0}
+            placeholder="blur"
+            blurDataURL={BLUR_PLACEHOLDER}
           />
         </motion.div>
       </AnimatePresence>

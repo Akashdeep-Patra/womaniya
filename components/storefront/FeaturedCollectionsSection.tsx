@@ -91,6 +91,7 @@ export function FeaturedCollectionsSection({ collections, isCompact = false }: P
                       src={displayImage}
                       alt={name}
                       fill
+                      loading="lazy"
                       className="object-cover transition-transform duration-1000 group-hover:scale-[1.05]"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       placeholder="blur"

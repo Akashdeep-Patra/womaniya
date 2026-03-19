@@ -284,7 +284,7 @@ export function HeroSection() {
             <div className="grid grid-cols-12 gap-2 sm:gap-3 mb-6">
               <div className="col-span-7 row-span-2 relative aspect-3/4 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-lg">
                 <motion.div custom={1} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card1.pos }} sizes="58vw" />
+                  <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority fetchPriority="high" className="object-cover" style={{ objectPosition: IMAGES.card1.pos }} sizes="58vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -298,25 +298,25 @@ export function HeroSection() {
 
               <div className="col-span-5 relative aspect-square rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md">
                 <motion.div custom={2} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card2.pos }} sizes="40vw" />
+                  <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card2.pos }} sizes="40vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
                 </motion.div>
               </div>
 
               <div className="col-span-5 relative aspect-4/3 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md">
                 <motion.div custom={3} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card3.pos }} sizes="40vw" />
+                  <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card3.pos }} sizes="40vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
                 </motion.div>
               </div>
 
               <div className="col-span-5 relative aspect-3/4 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md mt-2">
                 <motion.div custom={4} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card4.src} alt={IMAGES.card4.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card4.pos }} sizes="40vw" />
+                  <Image src={IMAGES.card4.src} alt={IMAGES.card4.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card4.pos }} sizes="40vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
                 </motion.div>
               </div>
 
               <div className="col-span-7 relative aspect-7/5 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md mt-2">
                 <motion.div custom={5} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card5.src} alt={IMAGES.card5.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card5.pos }} sizes="58vw" />
+                  <Image src={IMAGES.card5.src} alt={IMAGES.card5.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card5.pos }} sizes="58vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
                 </motion.div>
               </div>
             </div>
@@ -367,7 +367,7 @@ export function HeroSection() {
                 className="absolute bottom-[2%] left-[12%] w-[45%] h-[75%] rounded-[2.5rem] overflow-hidden shadow-2xl border-10 border-background z-20 group bg-muted will-change-transform"
               >
                 <motion.div custom={2} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority fetchPriority="high" className="object-cover transition-transform duration-[2s] group-hover:scale-[1.03]" style={{ objectPosition: IMAGES.card1.pos }} sizes="30vw" />
+                  <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority fetchPriority="high" className="object-cover transition-transform duration-[2s] group-hover:scale-[1.03]" style={{ objectPosition: IMAGES.card1.pos }} sizes="(min-width: 1024px) 30vw, 58vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
                   <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
                 </motion.div>
               </motion.div>
