@@ -2,7 +2,7 @@
 import { auth } from '@/auth';
 
 import { revalidatePath } from 'next/cache';
-import { del } from '@vercel/blob';
+import { del, list } from '@vercel/blob';
 import { db }             from '@/lib/db';
 import { mediaAssets, products, productImages, categories, collections, banners, pages, testimonials } from '@/db/schema';
 import { eq, sql }        from 'drizzle-orm';
@@ -202,6 +202,35 @@ export async function syncMediaFromEntities(): Promise<{ added: number }> {
     for (let i = 0; i < values.length; i += 50) {
       await db.insert(mediaAssets).values(values.slice(i, i + 50));
     }
+  }
+
+  // Also scan Vercel Blob directly — catches files uploaded outside the admin UI
+  // (orphaned raw uploads, files from deleted entities, external uploads)
+  // These would never appear in any entity table, so the gallery is blind to them
+  try {
+    let blobCursor: string | undefined;
+    let blobAdded = 0;
+    do {
+      const { blobs, cursor: next } = await list({ cursor: blobCursor, limit: 1000 });
+      blobCursor = next;
+      const blobVals: { url: string; filename: string; mime_type: string | null }[] = [];
+      for (const blob of blobs) {
+        if (!existingUrls.has(blob.url) && !allUrls.has(blob.url)) {
+          // Not already being added — add directly to media_assets so gallery shows it
+          const ext = blob.pathname.split('.').pop()?.toLowerCase() ?? '';
+          const mime = ext === 'webp' ? 'image/webp' : ext === 'avif' ? 'image/avif' : ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : ext === 'png' ? 'image/png' : null;
+          blobVals.push({ url: blob.url, filename: blob.pathname.split('/').pop() ?? blob.pathname, mime_type: mime });
+        }
+      }
+      for (let i = 0; i < blobVals.length; i += 50) {
+        await db.insert(mediaAssets).values(blobVals.slice(i, i + 50));
+        blobAdded += blobVals.slice(i, i + 50).length;
+      }
+    } while (blobCursor);
+    if (blobAdded > 0) logger.info('Media sync: blob scan found extra files', { blobAdded });
+    allUrls.size + blobAdded;
+  } catch (e) {
+    logger.warn('Media sync: blob scan failed (non-fatal)', { error: e });
   }
 
   logger.info('Media sync complete', { added: allUrls.size });

@@ -8,6 +8,7 @@ import type { Collection } from '@/db/schema';
 import { useTranslations } from 'next-intl';
 import { AlponaCorner } from '@/components/illustrations/AlponaCorner';
 import { JamdaniBackdrop } from '@/components/illustrations/SectionBackdrop';
+import { BLUR_PLACEHOLDER } from '@/lib/blur-placeholder';
 
 interface Props {
   collections: Collection[];
@@ -92,6 +93,8 @@ export function FeaturedCollectionsSection({ collections, isCompact = false }: P
                       fill
                       className="object-cover transition-transform duration-1000 group-hover:scale-[1.05]"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      placeholder="blur"
+                      blurDataURL={BLUR_PLACEHOLDER}
                     />
                   ) : (
                     <div className="absolute inset-0 bg-bengal-dust/40 flex items-center justify-center">

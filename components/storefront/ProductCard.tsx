@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation';
 import { BengalBadge } from '@/components/bengal';
 import type { Product } from '@/db/schema';
 import { cn } from '@/lib/utils';
+import { BLUR_PLACEHOLDER } from '@/lib/blur-placeholder';
 
 interface Props {
   product: Product;
@@ -42,6 +43,8 @@ export function ProductCard({ product, variant = 'portrait' }: Props) {
             loading="lazy"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+            placeholder="blur"
+            blurDataURL={BLUR_PLACEHOLDER}
           />
 
           {/* Hover overlay */}

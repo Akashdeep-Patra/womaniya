@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { AlponaCorner } from '@/components/illustrations/AlponaCorner';
 import { cn } from '@/lib/utils';
+import { BLUR_PLACEHOLDER } from '@/lib/blur-placeholder';
 
 export function BannerDisplay({ banner, locale, className = '' }: { banner: any, locale: string, className?: string }) {
   if (!banner || banner.status !== 'published') return null;
@@ -40,10 +41,10 @@ export function BannerDisplay({ banner, locale, className = '' }: { banner: any,
         !isSidebar && "md:border-r border-border/30"
       )}>
         <div className="absolute inset-0 block md:hidden">
-          <Image src={mobileImage} alt={title || 'Banner'} fill className="object-cover transition-transform duration-[1.5s] group-hover:scale-[1.03]" sizes="(max-width: 768px) 100vw, 50vw" />
+          <Image src={mobileImage} alt={title || 'Banner'} fill className="object-cover transition-transform duration-[1.5s] group-hover:scale-[1.03]" sizes="(max-width: 768px) 100vw, 50vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
         </div>
         <div className="absolute inset-0 hidden md:block">
-          <Image src={desktopImage} alt={title || 'Banner'} fill className="object-cover transition-transform duration-[1.5s] group-hover:scale-[1.03]" sizes="(max-width: 1200px) 50vw, 33vw" />
+          <Image src={desktopImage} alt={title || 'Banner'} fill className="object-cover transition-transform duration-[1.5s] group-hover:scale-[1.03]" sizes="(max-width: 1200px) 50vw, 33vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
         </div>
         
         {/* Editorial border overlay over image */}

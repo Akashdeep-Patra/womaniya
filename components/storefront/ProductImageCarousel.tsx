@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { BLUR_PLACEHOLDER } from '@/lib/blur-placeholder';
 
 interface ProductImageCarouselProps {
   images: string[];
@@ -95,6 +96,8 @@ export function ProductImageCarousel({ images, productName }: ProductImageCarous
               className="object-cover pointer-events-none"
               sizes="(max-width: 768px) 100vw, (max-width: 1024px) 60vw, 50vw"
               priority={currentIndex === 0}
+              placeholder="blur"
+              blurDataURL={BLUR_PLACEHOLDER}
               draggable={false}
             />
           </motion.div>
@@ -167,6 +170,8 @@ export function ProductImageCarousel({ images, productName }: ProductImageCarous
                 fill
                 className="object-cover"
                 sizes="72px"
+                placeholder="blur"
+                blurDataURL={BLUR_PLACEHOLDER}
               />
             </button>
           ))}

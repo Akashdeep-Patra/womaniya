@@ -4,6 +4,7 @@ import { cache } from 'react';
 import { db } from '@/lib/db';
 import Image from 'next/image';
 import Link from 'next/link';
+import { BLUR_PLACEHOLDER } from '@/lib/blur-placeholder';
 import { EmptyState } from '@/components/storefront/EmptyState';
 import { HeroCarousel } from '@/components/storefront/HeroCarousel';
 import { WhatsAppContextSetter } from '@/lib/whatsapp-context';
@@ -117,7 +118,7 @@ export default async function CategoryPage({ params }: Props) {
           </div>
         ) : hasImages ? (
           <div className="relative w-full h-64 md:h-96 rounded-2xl overflow-hidden mb-8">
-            <Image src={allImages[0]} alt={name} fill className="object-cover" sizes="100vw" />
+            <Image src={allImages[0]} alt={name} fill className="object-cover" sizes="100vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
             {heroOverlay}
           </div>
         ) : (
@@ -139,7 +140,7 @@ export default async function CategoryPage({ params }: Props) {
             {category.products.map(p => (
               <Link prefetch={true} key={p.id} href={`/${locale}/shop/${p.slug}`} className="group">
                 <div className="relative aspect-3/4 rounded-xl overflow-hidden bg-bengal-mati mb-3">
-                  <Image src={p.image_url} alt={p.name_en} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw" />
+                  <Image src={p.image_url} alt={p.name_en} fill className="object-cover transition-transform duration-500 group-hover:scale-105" sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
                 </div>
                 <h3 className="font-medium text-bengal-kajal">{locale === 'bn' ? p.name_bn || p.name_en : p.name_en}</h3>
                 <p className="text-bengal-sindoor font-editorial">₹{p.price}</p>

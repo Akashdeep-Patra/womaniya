@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useRef } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { JamdaniBackdrop } from '@/components/illustrations/SectionBackdrop';
+import { BLUR_PLACEHOLDER } from '@/lib/blur-placeholder';
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -356,7 +357,7 @@ export function HeroSection() {
                 className="absolute top-[12%] left-[2%] w-[38%] h-[55%] rounded-4xl overflow-hidden shadow-lg border-8 border-background z-0 group bg-muted will-change-transform"
               >
                 <motion.div custom={1} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card5.src} alt={IMAGES.card5.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card5.pos }} sizes="20vw" />
+                  <Image src={IMAGES.card5.src} alt={IMAGES.card5.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card5.pos }} sizes="20vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
                 </motion.div>
               </motion.div>
 
@@ -377,7 +378,7 @@ export function HeroSection() {
                 className="absolute top-[8%] right-[5%] w-[42%] h-[60%] rounded-4xl overflow-hidden shadow-xl border-8 border-background z-10 group bg-muted will-change-transform"
               >
                 <motion.div custom={3} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card2.pos }} sizes="25vw" />
+                  <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card2.pos }} sizes="25vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
                 </motion.div>
               </motion.div>
 
@@ -387,7 +388,7 @@ export function HeroSection() {
                 className="absolute bottom-[4%] right-[2%] w-[35%] h-[45%] rounded-3xl overflow-hidden shadow-xl border-8 border-background z-10 group bg-muted will-change-transform"
               >
                 <motion.div custom={4} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card4.src} alt={IMAGES.card4.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card4.pos }} sizes="20vw" />
+                  <Image src={IMAGES.card4.src} alt={IMAGES.card4.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card4.pos }} sizes="20vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
                 </motion.div>
               </motion.div>
 
@@ -397,7 +398,7 @@ export function HeroSection() {
                 className="absolute bottom-[20%] right-[32%] w-[22%] aspect-4/5 rounded-[1.25rem] overflow-hidden shadow-2xl border-[6px] border-background z-30 group bg-muted will-change-transform"
               >
                 <motion.div custom={5} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-110" style={{ objectPosition: IMAGES.card3.pos }} sizes="15vw" />
+                  <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-110" style={{ objectPosition: IMAGES.card3.pos }} sizes="15vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
                 </motion.div>
               </motion.div>
 

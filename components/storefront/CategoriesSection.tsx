@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation';
 import { useRef }    from 'react';
 import { useTranslations } from 'next-intl';
 import type { Category } from '@/db/schema';
+import { BLUR_PLACEHOLDER } from '@/lib/blur-placeholder';
 
 const GRADIENT_COLORS = [
   'from-bengal-sindoor/60',
@@ -100,6 +101,8 @@ export function CategoriesSection({ categories, isCompact = false }: Props) {
                     className="object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.05]"
                     sizes="(max-width: 640px) 72vw, (max-width: 1024px) 44vw, 20vw"
                     loading="lazy"
+                    placeholder="blur"
+                    blurDataURL={BLUR_PLACEHOLDER}
                   />
                 ) : (
                   <div className="absolute inset-0 opacity-10">

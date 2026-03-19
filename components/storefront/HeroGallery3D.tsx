@@ -10,6 +10,7 @@ import {
   animate,
   PanInfo,
 } from 'framer-motion';
+import { BLUR_PLACEHOLDER } from '@/lib/blur-placeholder';
 
 const GALLERY_IMAGES = [
   {
@@ -128,6 +129,8 @@ function GalleryCard({
           style={{ objectPosition: img.pos }}
           sizes="(max-width: 1024px) 55vw, 400px"
           priority={index < 3}
+          placeholder="blur"
+          blurDataURL={BLUR_PLACEHOLDER}
         />
         {/* Darken cards behind the active one */}
         <motion.div
