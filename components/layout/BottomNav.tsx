@@ -91,22 +91,22 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
                   'text-[9px] tracking-widest uppercase transition-all duration-300',
                   active
                     ? 'text-bengal-sindoor font-medium'
-                    : 'text-bengal-kajal/50 hover:text-bengal-kajal font-normal'
+                    : 'text-bengal-kajal/70 hover:text-bengal-kajal font-normal'
                 )}
               >
                 {active && (
-                  <motion.div 
-                    layoutId="bottom-nav-indicator" 
-                    className="absolute top-0 w-8 h-[2px] bg-bengal-sindoor rounded-b-md" 
+                  <motion.div
+                    layoutId="bottom-nav-indicator"
+                    className="absolute top-0 w-8 h-[2px] bg-bengal-sindoor rounded-b-md"
                   />
                 )}
-                <Icon 
-                  size={24} 
-                  strokeWidth={active ? 2.5 : 2} 
+                <Icon
+                  size={24}
+                  strokeWidth={active ? 2.5 : 2}
                   className={cn(
                     "transition-all duration-300 drop-shadow-sm",
                     active ? "fill-bengal-sindoor/20" : "fill-transparent"
-                  )} 
+                  )}
                 />
                 <span className={isBn ? 'font-bengali tracking-wide' : 'font-sans-en'}>{label}</span>
               </Link>
@@ -124,7 +124,7 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
               'text-[9px] tracking-widest uppercase transition-all duration-300',
               isOpen
                 ? 'text-bengal-sindoor font-medium'
-                : 'text-bengal-kajal/50 hover:text-bengal-kajal font-normal'
+                : 'text-bengal-kajal/70 hover:text-bengal-kajal font-normal'
             )}
           >
             {isOpen ? (
@@ -230,7 +230,7 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
 
                 {/* Categories */}
                 <div className="mb-8">
-                  <h4 className="text-[10px] tracking-[0.2em] uppercase text-bengal-kajal/50 mb-4 font-sans-en">
+                  <h4 className="text-[10px] tracking-[0.2em] uppercase text-bengal-kajal/70 mb-4 font-sans-en">
                     {isBn ? 'শাড়ির ধরন' : 'Categories'}
                   </h4>
                   <div className="grid grid-cols-2 gap-x-4 gap-y-3">
@@ -256,7 +256,7 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
                 {staticPages && staticPages.length > 0 && (
                   <>
                     <div className="mb-8">
-                      <h4 className="text-[10px] tracking-[0.2em] uppercase text-bengal-kajal/50 mb-4 font-sans-en">
+                      <h4 className="text-[10px] tracking-[0.2em] uppercase text-bengal-kajal/70 mb-4 font-sans-en">
                         {isBn ? 'তথ্য' : 'Information'}
                       </h4>
                       <div className="grid grid-cols-2 gap-x-4 gap-y-3">
@@ -282,7 +282,7 @@ export function BottomNav({ categories: dbCategories, staticPages = [], waNumber
 
                 {/* Support / Contact */}
                 <div>
-                  <h4 className="text-[10px] tracking-[0.2em] uppercase text-bengal-kajal/50 mb-4 font-sans-en">
+                  <h4 className="text-[10px] tracking-[0.2em] uppercase text-bengal-kajal/70 mb-4 font-sans-en">
                     {isBn ? 'যোগাযোগ' : 'Support'}
                   </h4>
                   <div className="space-y-4">

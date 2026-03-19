@@ -10,9 +10,9 @@ interface Props {
 }
 
 export function HeritageTicker({ categories }: Props) {
-  const categoryNames = categories && categories.length > 0
+  const categoryNames = categories
     ? categories.flatMap((c) => [c.name_en, ...(c.name_bn ? [c.name_bn] : [])])
-    : ['Dhakai Jamdani', 'Chanderi Blouse', 'Ikkat Pochampally', 'Ajrakh Block Print', 'Bengal Tant', 'জামদানি', 'তাঁত', 'আজরখ'];
+    : [];
 
   const allItems = [...categoryNames, ...STATIC_ITEMS];
   const items = [...allItems, ...allItems];

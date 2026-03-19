@@ -4,8 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Womaniya — Authentic Handloom Heritage',
     short_name: 'Womaniya',
-    description:
-      'Discover exquisite handwoven sarees, blouses & more — Jamdani, Tant, Chanderi, Ikkat, Ajrakh — crafted by master artisans in Kolkata.',
+    description: 'Authentic handwoven heritage — direct from artisans. Handloom crafts shipped from Kolkata.',
     start_url: '/en',
     display: 'standalone',
     background_color: '#FBF8F1',

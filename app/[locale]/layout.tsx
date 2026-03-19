@@ -48,14 +48,14 @@ const bnFontVars = [notoSerifBn.variable, anekBn.variable].join(' ');
 
 /* ── Metadata ─────────────────────────────────────────────────── */
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://womaniyakolkata.in'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://www.womaniyakolkata.in'),
   title: {
     template: '%s | Womaniya',
-    default:  'Womaniya — Authentic Handloom Heritage',
+    default:  'Womaniya',
   },
   description:
-    'Discover exquisite handwoven sarees, blouses & more — Jamdani, Tant, Chanderi, Ikkat, Ajrakh — crafted by master artisans in Kolkata.',
-  keywords: ['Womaniya', 'handloom', 'Jamdani saree', 'Tant saree', 'Chanderi blouse', 'Ikkat', 'Ajrakh', 'Kolkata fashion', 'handwoven saree'],
+    'Authentic handwoven heritage — direct from artisans. Discover timeless handloom crafts, shipped from Kolkata.',
+  keywords: ['Womaniya', 'handloom', 'handwoven saree', 'heritage textiles', 'artisan crafts', 'Kolkata'],
   icons: {
     icon: [
       { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
@@ -73,15 +73,15 @@ export const metadata: Metadata = {
   openGraph: {
     siteName: 'Womaniya',
     type: 'website',
-    title: 'Womaniya — Authentic Handloom Heritage',
-    description: 'Discover exquisite handwoven sarees, blouses & more — Jamdani, Tant, Chanderi, Ikkat, Ajrakh — crafted by master artisans in Kolkata.',
+    title: 'Womaniya',
+    description: 'Authentic handwoven heritage — direct from artisans. Discover timeless handloom crafts, shipped from Kolkata.',
     url: '/',
     locale: 'en_IN',
     images: [
       {
         url: '/opengraph-image',
-        width: 600,
-        height: 315,
+        width: 1200,
+        height: 630,
         alt: 'Womaniya — Authentic Handloom Heritage',
       },
     ],
@@ -89,8 +89,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     site: '@womaniya2019',
-    title: 'Womaniya — Authentic Handloom Heritage',
-    description: 'Discover exquisite handwoven sarees, blouses & more — Jamdani, Tant, Chanderi, Ikkat, Ajrakh — crafted by master artisans in Kolkata.',
+    title: 'Womaniya',
+    description: 'Authentic handwoven heritage — direct from artisans. Discover timeless handloom crafts, shipped from Kolkata.',
     images: ['/twitter-image'],
   },
   category: 'fashion',
@@ -129,6 +129,11 @@ export default async function LocaleLayout({ children, params }: Props) {
       suppressHydrationWarning
       className={fontVars}
     >
+      <head>
+        {/* Preconnect to Vercel Blob storage so hero/product images load faster */}
+        <link rel="preconnect" href="https://6s8tebgl9cnxoeev.public.blob.vercel-storage.com" />
+        <link rel="dns-prefetch" href="https://6s8tebgl9cnxoeev.public.blob.vercel-storage.com" />
+      </head>
       <body className="min-h-screen bg-background text-foreground antialiased">
         {/* Max-width shell — caps the UI on ultra-wide displays */}
         <div className="max-w-[1800px] mx-auto relative app-shell">

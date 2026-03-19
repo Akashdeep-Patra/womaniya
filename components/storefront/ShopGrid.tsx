@@ -99,6 +99,7 @@ export function ShopGrid({ products, categories, isCompact = false, banners = []
       </div>
 
       {/* Grid */}
+      {!isCompact && <h2 className="sr-only">Products</h2>}
       {filtered.length === 0 ? (
         <EmptyState />
       ) : (

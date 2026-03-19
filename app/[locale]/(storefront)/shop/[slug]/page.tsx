@@ -22,7 +22,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try { product = await getProductBySlug(slug); } catch { /* dev */ }
   if (!product) return { title: 'Product Not Found' };
   const name = locale === 'bn' && product.name_bn ? product.name_bn : product.name_en;
-  const description = product.description_en ?? `${name} — Authentic Handloom by Womaniya`;
+  const t = await getTranslations({ locale, namespace: 'meta' });
+  const description = product.description_en ?? `${name} ${t('product_suffix')}`;
 
   return {
     title: name,
@@ -38,8 +39,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
     },
     alternates: {
-      canonical: `/${locale}/shop/${slug}`,
-      languages: { en: `/en/shop/${slug}`, bn: `/bn/shop/${slug}` },
+      canonical: `https://www.womaniyakolkata.in/${locale}/shop/${slug}`,
+      languages: {
+        'en': `https://www.womaniyakolkata.in/en/shop/${slug}`,
+        'bn': `https://www.womaniyakolkata.in/bn/shop/${slug}`,
+        'x-default': `https://www.womaniyakolkata.in/en/shop/${slug}`,
+      },
     },
   };
 }

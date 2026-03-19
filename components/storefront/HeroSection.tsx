@@ -359,17 +359,17 @@ export function HeroSection() {
                 className="absolute top-[12%] left-[2%] w-[38%] h-[55%] rounded-4xl overflow-hidden shadow-lg border-8 border-background z-0 group bg-muted will-change-transform"
               >
                 <motion.div custom={1} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card5.src} alt={IMAGES.card5.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card5.pos }} sizes="20vw" />
+                  <Image src={IMAGES.card5.src} alt={IMAGES.card5.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card5.pos }} sizes="20vw" />
                 </motion.div>
               </motion.div>
 
-              {/* Main Center-Left (Medium Parallax) */}
+              {/* Main Center-Left (Medium Parallax) — LCP candidate: priority + fetchpriority high */}
               <motion.div
                 style={{ y: yImage1 }}
                 className="absolute bottom-[2%] left-[12%] w-[45%] h-[75%] rounded-[2.5rem] overflow-hidden shadow-2xl border-10 border-background z-20 group bg-muted will-change-transform"
               >
                 <motion.div custom={2} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority className="object-cover transition-transform duration-[2s] group-hover:scale-[1.03]" style={{ objectPosition: IMAGES.card1.pos }} sizes="30vw" />
+                  <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority fetchPriority="high" className="object-cover transition-transform duration-[2s] group-hover:scale-[1.03]" style={{ objectPosition: IMAGES.card1.pos }} sizes="30vw" />
                   <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
                 </motion.div>
               </motion.div>
@@ -380,7 +380,7 @@ export function HeroSection() {
                 className="absolute top-[8%] right-[5%] w-[42%] h-[60%] rounded-4xl overflow-hidden shadow-xl border-8 border-background z-10 group bg-muted will-change-transform"
               >
                 <motion.div custom={3} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card2.pos }} sizes="25vw" />
+                  <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card2.pos }} sizes="25vw" />
                 </motion.div>
               </motion.div>
 
@@ -390,7 +390,7 @@ export function HeroSection() {
                 className="absolute bottom-[4%] right-[2%] w-[35%] h-[45%] rounded-3xl overflow-hidden shadow-xl border-8 border-background z-10 group bg-muted will-change-transform"
               >
                 <motion.div custom={4} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card4.src} alt={IMAGES.card4.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card4.pos }} sizes="20vw" />
+                  <Image src={IMAGES.card4.src} alt={IMAGES.card4.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card4.pos }} sizes="20vw" />
                 </motion.div>
               </motion.div>
 
@@ -400,7 +400,7 @@ export function HeroSection() {
                 className="absolute bottom-[20%] right-[32%] w-[22%] aspect-4/5 rounded-[1.25rem] overflow-hidden shadow-2xl border-[6px] border-background z-30 group bg-muted will-change-transform"
               >
                 <motion.div custom={5} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill className="object-cover transition-transform duration-[2s] group-hover:scale-110" style={{ objectPosition: IMAGES.card3.pos }} sizes="15vw" />
+                  <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-110" style={{ objectPosition: IMAGES.card3.pos }} sizes="15vw" />
                 </motion.div>
               </motion.div>
 

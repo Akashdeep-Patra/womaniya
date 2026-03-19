@@ -35,8 +35,12 @@ export async function generateMetadata(
       description,
     },
     alternates: {
-      canonical: `/${locale}/about`,
-      languages: { en: '/en/about', bn: '/bn/about' },
+      canonical: `https://www.womaniyakolkata.in/${locale}/about`,
+      languages: {
+        'en': 'https://www.womaniyakolkata.in/en/about',
+        'bn': 'https://www.womaniyakolkata.in/bn/about',
+        'x-default': 'https://www.womaniyakolkata.in/en/about',
+      },
     },
   };
 }

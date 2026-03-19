@@ -62,7 +62,7 @@ function LocaleToggle({ locale }: { locale: string }) {
   return (
     <button
       onClick={handleSwitch}
-      aria-label="Switch language"
+      title={isEn ? 'Switch to Bengali' : 'Switch to English'}
       className={cn(
         'h-8 px-3 rounded-full border flex items-center justify-center',
         'border-border/50 text-foreground/70 bg-background shadow-sm',

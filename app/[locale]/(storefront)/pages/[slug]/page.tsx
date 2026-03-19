@@ -33,8 +33,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
     },
     alternates: {
-      canonical: `/${locale}/pages/${slug}`,
-      languages: { en: `/en/pages/${slug}`, bn: `/bn/pages/${slug}` },
+      canonical: `https://www.womaniyakolkata.in/${locale}/pages/${slug}`,
+      languages: {
+        'en': `https://www.womaniyakolkata.in/en/pages/${slug}`,
+        'bn': `https://www.womaniyakolkata.in/bn/pages/${slug}`,
+        'x-default': `https://www.womaniyakolkata.in/en/pages/${slug}`,
+      },
     },
   };
 }

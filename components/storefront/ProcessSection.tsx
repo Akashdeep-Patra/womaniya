@@ -2,6 +2,7 @@
 
 import { motion }          from 'framer-motion';
 import { useParams }       from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { generalEnquiryUrl } from '@/lib/whatsapp';
 import { AlponaDivider }   from '@/components/illustrations/AlponaDivider';
 import { PaisleyCluster }  from '@/components/illustrations/PaisleyCluster';
@@ -12,6 +13,7 @@ export function ProcessSection({ waNumber }: { waNumber?: string }) {
   const params = useParams();
   const locale = params.locale as string;
   const isBn   = locale === 'bn';
+  const t      = useTranslations('process');
   const waHref = generalEnquiryUrl(locale, waNumber);
 
   return (
@@ -35,10 +37,10 @@ export function ProcessSection({ waNumber }: { waNumber?: string }) {
               <div className="absolute bottom-4 left-4 right-4">
                 <div className="bg-bengal-kajal/85 backdrop-blur-sm rounded-3xl px-4 py-3">
                   <p className="text-bengal-kansa text-[10px] tracking-widest uppercase font-sans-en mb-0.5">
-                    {isBn ? 'আমাদের তাঁতি' : 'Our Weaver'}
+                    {t('weaver_label')}
                   </p>
                   <p className={`text-bengal-kori font-medium text-sm ${isBn ? 'font-bengali' : 'font-sans-en'}`}>
-                    {isBn ? 'মুর্শিদাবাদ, পশ্চিমবঙ্গ' : 'Murshidabad, West Bengal'}
+                    {t('weaver_location')}
                   </p>
                 </div>
               </div>

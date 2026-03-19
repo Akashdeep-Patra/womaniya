@@ -1,4 +1,4 @@
-import { setRequestLocale } from 'next-intl/server';
+import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 import { db } from '@/lib/db';
@@ -30,11 +30,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const collection = await getCollectionWithProducts(slug);
   if (!collection || collection.status === 'draft' || collection.status === 'archived') return { title: 'Not Found' };
 
-  const title = (locale === 'bn' && collection.seo_title_bn ? collection.seo_title_bn : collection.seo_title_en) || 
+  const title = (locale === 'bn' && collection.seo_title_bn ? collection.seo_title_bn : collection.seo_title_en) ||
                 (locale === 'bn' && collection.name_bn ? collection.name_bn : collection.name_en);
-  const description = (locale === 'bn' && collection.seo_description_bn ? collection.seo_description_bn : collection.seo_description_en) || 
+  const t = await getTranslations({ locale, namespace: 'meta' });
+  const description = (locale === 'bn' && collection.seo_description_bn ? collection.seo_description_bn : collection.seo_description_en) ||
                       (locale === 'bn' && collection.description_bn ? collection.description_bn : collection.description_en) ||
-                      `${title} — Authentic Handloom Collection by Womaniya`;
+                      `${title} ${t('collection_suffix')}`;
   const imgs = (collection.carousel_images as string[] | null) ?? [];
   const ogImage = imgs[0] ?? undefined;
 
@@ -51,8 +52,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
     },
     alternates: {
-      canonical: `/${locale}/collection/${slug}`,
-      languages: { en: `/en/collection/${slug}`, bn: `/bn/collection/${slug}` },
+      canonical: `https://www.womaniyakolkata.in/${locale}/collection/${slug}`,
+      languages: {
+        'en': `https://www.womaniyakolkata.in/en/collection/${slug}`,
+        'bn': `https://www.womaniyakolkata.in/bn/collection/${slug}`,
+        'x-default': `https://www.womaniyakolkata.in/en/collection/${slug}`,
+      },
     },
   };
 }
@@ -93,7 +98,7 @@ export default async function CollectionPage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: collection.name_en,
-    description: collection.description_en ?? `${collection.name_en} — Authentic Handloom Collection by Womaniya`,
+    description: collection.description_en ?? `${collection.name_en} — Collection by Womaniya`,
     url: `https://womaniyakolkata.in/${locale}/collection/${slug}`,
     ...(allImages[0] ? { image: allImages[0] } : {}),
     numberOfItems: products.length,

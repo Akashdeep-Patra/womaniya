@@ -22,6 +22,11 @@ export function SettingsForm({ initialData, locale }: SettingsFormProps) {
       announcement_text_bn: initialData['announcement_text_bn'] || 'Womaniya তে আপনাকে স্বাগতম!',
       instagram_url: initialData['instagram_url'] || '',
       facebook_url: initialData['facebook_url'] || '',
+      seo_home_title: initialData['seo_home_title'] || '',
+      seo_home_description: initialData['seo_home_description'] || '',
+      seo_shop_title: initialData['seo_shop_title'] || '',
+      seo_shop_description: initialData['seo_shop_description'] || '',
+      seo_og_subtitle: initialData['seo_og_subtitle'] || '',
     },
   });
 
@@ -84,6 +89,55 @@ export function SettingsForm({ initialData, locale }: SettingsFormProps) {
             {...register('announcement_text_bn')}
             isBengali
           />
+        </div>
+      </div>
+
+      <div className="bg-card p-3 md:p-6 rounded-xl border border-border">
+        <h3 className="font-sans font-semibold tracking-tight text-base md:text-lg text-foreground mb-3 md:mb-4">
+          SEO &amp; Metadata
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
+          <BengalInput
+            label="Homepage SEO Title"
+            {...register('seo_home_title')}
+            placeholder="e.g. Authentic Handloom Sarees from Kolkata | Womaniya"
+          />
+          <div>
+            <BengalInput
+              label="OG Image Subtitle"
+              {...register('seo_og_subtitle')}
+              placeholder="e.g. Handwoven Heritage from Bengal"
+            />
+            <p className="mt-1 text-xs text-muted-foreground">Shown on social media share cards</p>
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-foreground mb-1">
+              Homepage Meta Description
+            </label>
+            <textarea
+              {...register('seo_home_description')}
+              rows={3}
+              placeholder="155-char description for Google..."
+              className="w-full rounded-xl border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+            />
+          </div>
+          <BengalInput
+            label="Shop Page SEO Title"
+            {...register('seo_shop_title')}
+            placeholder="e.g. Shop Handloom Sarees | Womaniya"
+          />
+          <div className="hidden md:block" />
+          <div className="md:col-span-2">
+            <label className="block text-sm font-medium text-foreground mb-1">
+              Shop Page Meta Description
+            </label>
+            <textarea
+              {...register('seo_shop_description')}
+              rows={3}
+              placeholder="Description for the shop page..."
+              className="w-full rounded-xl border border-input bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+            />
+          </div>
         </div>
       </div>
 

@@ -117,31 +117,50 @@ type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'hero' });
+  const [seoTitle, seoDesc] = await Promise.all([
+    getSetting('seo_home_title'),
+    getSetting('seo_home_description'),
+  ]);
+  const titleStr = seoTitle || 'Womaniya — Authentic Handloom Heritage';
+  const descStr = seoDesc || 'Handcrafted textiles direct from artisans. Shipped from Kolkata.';
   return {
-    title:       'Womaniya — Authentic Handloom Heritage',
-    description: t('subtitle'),
+    title: { absolute: titleStr },
+    description: descStr,
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
     openGraph: {
-      title: 'Womaniya — Authentic Handloom Heritage',
-      description: t('subtitle'),
+      title: { absolute: titleStr },
+      description: descStr,
       images: [
         {
           url: '/opengraph-image',
-          width: 600,
-          height: 315,
+          width: 1200,
+          height: 630,
           alt: 'Womaniya — Authentic Handloom Heritage',
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Womaniya — Authentic Handloom Heritage',
-      description: t('subtitle'),
+      title: { absolute: titleStr },
+      description: descStr,
       images: ['/twitter-image'],
     },
     alternates: {
-      canonical: `/${locale}`,
-      languages: { en: '/en', bn: '/bn' },
+      canonical: `https://www.womaniyakolkata.in/${locale}`,
+      languages: {
+        'en': 'https://www.womaniyakolkata.in/en',
+        'bn': 'https://www.womaniyakolkata.in/bn',
+        'x-default': 'https://www.womaniyakolkata.in/en',
+      },
     },
   };
 }
@@ -157,14 +176,16 @@ export default async function HomePage({ params }: Props) {
   let testimonials: Awaited<ReturnType<typeof getPublishedTestimonials>> = [];
   let banners: Awaited<ReturnType<typeof getAllBanners>> = [];
   let waNumber = '919143161829';
+  let orgDesc = 'Handcrafted textiles direct from artisans. Shipped from Kolkata.';
   try {
-    [featured, categories, collections, testimonials, banners, waNumber] = await Promise.all([
+    [featured, categories, collections, testimonials, banners, waNumber, orgDesc] = await Promise.all([
       getFeaturedProducts(),
       getPublishedCategories(),
       getFeaturedCollections(),
       getPublishedTestimonials(),
       getAllBanners(),
       getSetting('whatsapp_number', '919143161829'),
+      getSetting('seo_home_description', 'Handcrafted textiles direct from artisans. Shipped from Kolkata.'),
     ]);
   } catch {
     // DB not yet connected in dev
@@ -179,7 +200,19 @@ export default async function HomePage({ params }: Props) {
     '@type': 'Organization',
     name: 'Womaniya',
     url: baseUrl,
-    logo: `${baseUrl}/logo.svg`,
+    logo: `${baseUrl}/opengraph-image`,
+    description: orgDesc,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Kolkata',
+      addressRegion: 'West Bengal',
+      addressCountry: 'IN',
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer service',
+      availableLanguage: ['English', 'Bengali'],
+    },
     sameAs: [
       'https://www.instagram.com/womaniya2019/',
       'https://www.facebook.com/womaniya2019/',
@@ -190,7 +223,7 @@ export default async function HomePage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'Store',
     name: 'Womaniya',
-    description: 'Authentic handwoven sarees, blouses & more — Jamdani, Tant, Chanderi, Ikkat, Ajrakh — crafted by master artisans in Kolkata.',
+    description: orgDesc,
     url: baseUrl,
     logo: `${baseUrl}/logo.svg`,
     image: `${baseUrl}/opengraph-image`,

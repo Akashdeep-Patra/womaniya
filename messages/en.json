@@ -134,7 +134,9 @@
     "step_3": "Design",
     "step_3_desc": "We collaborate with artisans to adapt traditional motifs for contemporary silhouettes.",
     "step_4": "To You",
-    "step_4_desc": "Carefully packed and sent — each piece arrives with the story of its making."
+    "step_4_desc": "Carefully packed and sent — each piece arrives with the story of its making.",
+    "weaver_label": "Our Weaver",
+    "weaver_location": "Murshidabad, West Bengal"
   },
   "manifesto": {
     "title": "We believe in the slow rhythm of the loom.",
@@ -227,5 +229,14 @@
     "error_id": "Error ID:",
     "try_again": "Try Again",
     "go_home": "Go Home"
+  },
+  "meta": {
+    "product_suffix": "— by Womaniya",
+    "category_suffix": "— Womaniya",
+    "collection_suffix": "— Collection by Womaniya"
+  },
+  "stories": {
+    "badge": "Heritage",
+    "page_description": "Discover the heritage, the artisans, and the narratives woven into every thread."
   }
 }

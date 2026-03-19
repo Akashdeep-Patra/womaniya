@@ -1,9 +1,9 @@
 import { setRequestLocale } from 'next-intl/server';
-import { getTranslations }  from 'next-intl/server';
 import { ShopGrid }         from '@/components/storefront/ShopGrid';
 import { getPublishedProducts } from '@/actions/products';
 import { getPublishedCategories } from '@/actions/categories';
 import { getAllBanners } from '@/actions/banners';
+import { getSetting } from '@/actions/settings';
 import type { Metadata }    from 'next';
 import { WhatsAppContextSetter } from '@/lib/whatsapp-context';
 
@@ -13,17 +13,34 @@ export async function generateMetadata(
   { params }: Props
 ): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'shop' });
-  const title = t('title');
-  const description = t('subtitle');
+  const [seoTitle, seoDesc] = await Promise.all([
+    getSetting('seo_shop_title'),
+    getSetting('seo_shop_description'),
+  ]);
+  const titleStr = seoTitle || 'Shop | Womaniya';
+  const description = seoDesc || 'Browse our handloom collection.';
   return {
-    title,
+    title: { absolute: titleStr },
     description,
-    openGraph: { title, description },
-    twitter: { card: 'summary_large_image' as const, title, description },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    openGraph: { title: titleStr, description },
+    twitter: { card: 'summary_large_image' as const, title: titleStr, description },
     alternates: {
-      canonical: `/${locale}/shop`,
-      languages: { en: '/en/shop', bn: '/bn/shop' },
+      canonical: `https://www.womaniyakolkata.in/${locale}/shop`,
+      languages: {
+        'en': 'https://www.womaniyakolkata.in/en/shop',
+        'bn': 'https://www.womaniyakolkata.in/bn/shop',
+        'x-default': 'https://www.womaniyakolkata.in/en/shop',
+      },
     },
   };
 }

@@ -1,13 +1,16 @@
 import { generateOgImage, OG_SIZE } from '@/lib/og-image';
+import { getSetting } from '@/actions/settings';
 
 export const alt = 'Categories — Womaniya';
 export const size = OG_SIZE;
 export const contentType = 'image/png';
 
-export default function CategoriesOgImage() {
+export default async function CategoriesOgImage() {
+  const subtitle = await getSetting('seo_og_subtitle') || 'Handwoven Heritage';
+
   return generateOgImage({
     title: 'The Living Crafts',
-    subtitle: 'Traditional weaves & artisanal craftsmanship',
+    subtitle,
     badge: 'Categories',
     variant: 'category',
   });
