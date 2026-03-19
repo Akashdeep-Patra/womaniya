@@ -48,7 +48,7 @@ export function FeaturesSection() {
             {t('title')}
           </span>
           <h2 className={`font-editorial text-4xl md:text-5xl lg:text-6xl text-foreground mb-6 max-w-2xl leading-tight ${isBn ? 'font-bengali-serif' : ''}`}>
-            {isBn ? 'ধীরে তৈরি, যত্নে বোনা।' : 'Crafted slowly, woven with intention.'}
+            {t('intro_title')}
           </h2>
           <AlponaDivider className="mx-auto text-primary opacity-60" width={260} />
         </motion.div>
@@ -106,7 +106,7 @@ export function FeaturesSection() {
                       </div>
                       <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors duration-500">
                          <span className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
-                           {isBn ? 'আরও জানুন' : 'Discover'}
+                           {t('discover')}
                          </span>
                          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors duration-500">
                            <ArrowUpRight className="w-5 h-5 group-hover:rotate-12 transition-transform duration-500" />

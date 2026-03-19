@@ -1,29 +1,20 @@
 'use client';
 
-import { motion }       from 'framer-motion';
-import { useParams }    from 'next/navigation';
-import { KanthaStitch } from '@/components/illustrations/KanthaStitch';
-import { ZariThread }   from '@/components/illustrations/ZariThread';
-
-const STEPS_EN = [
-  { n: '01', title: 'We go to them.',       body: 'Every piece starts at the loom — Murshidabad, Pochampally, Kutch. We visit the weaver, not the middleman.' },
-  { n: '02', title: 'They weave. By hand.', body: 'A single Jamdani takes 15–30 days. No shortcuts. The time is inside the cloth.' },
-  { n: '03', title: 'Checked. Carefully.',  body: "Every saree is inspected before it moves. If it isn't right, it goes back." },
-  { n: '04', title: 'Packed. Shipped. Yours.', body: "Wrapped in muslin. Shipped with a card. The weaver's name is on it." },
-];
-
-const STEPS_BN = [
-  { n: '০১', title: 'আমরা ওদের কাছে যাই।',     body: 'প্রতিটা কাপড়ের শুরু লুমে — মুর্শিদাবাদ, পোচামপল্লি, কচ্ছে। আমরা সরাসরি তাঁতির কাছে।' },
-  { n: '০২', title: 'ওরা বোনে। হাতে।',         body: 'একটা জামদানি তৈরি হতে ১৫–৩০ দিন লাগে। কোনো shortcut নেই। সময়টা কাপড়ে থেকে যায়।' },
-  { n: '০৩', title: 'পরীক্ষা হয়। হাতে।',      body: 'প্রতিটা শাড়ি পাঠানোর আগে দেখা হয়। ঠিক না হলে ফেরত।' },
-  { n: '০৪', title: 'প্যাক। পাঠানো। তোমার।',  body: 'মসলিনে মোড়া। একটা চিরকুটসহ। কার হাতে তৈরি — সেটা লেখা থাকে।' },
-];
+import { motion }            from 'framer-motion';
+import { useTranslations, useLocale } from 'next-intl';
+import { KanthaStitch }      from '@/components/illustrations/KanthaStitch';
+import { ZariThread }        from '@/components/illustrations/ZariThread';
 
 export function GlimpsesSection() {
-  const params = useParams();
-  const locale = params.locale as string;
-  const isBn   = locale === 'bn';
-  const steps  = isBn ? STEPS_BN : STEPS_EN;
+  const t    = useTranslations('how_made');
+  const isBn = useLocale() === 'bn';
+
+  const steps = [
+    { n: t('step_1_n'), title: t('step_1_title'), body: t('step_1_body') },
+    { n: t('step_2_n'), title: t('step_2_title'), body: t('step_2_body') },
+    { n: t('step_3_n'), title: t('step_3_title'), body: t('step_3_body') },
+    { n: t('step_4_n'), title: t('step_4_title'), body: t('step_4_body') },
+  ];
 
   return (
     <section id="glimpses" className="bg-background text-foreground py-16 md:py-24 overflow-hidden">
@@ -38,10 +29,10 @@ export function GlimpsesSection() {
           className="mb-16 md:mb-24 flex flex-col items-center text-center"
         >
           <p className="text-primary text-[10px] tracking-[0.3em] uppercase mb-4 font-sans-en">
-            {isBn ? 'এভাবেই তৈরি হয়' : 'How it gets made'}
+            {t('badge')}
           </p>
           <h2 className={`font-editorial text-4xl md:text-5xl lg:text-6xl leading-tight max-w-2xl ${isBn ? 'font-bengali-serif' : 'italic'}`}>
-            {isBn ? 'লুম থেকে তোমার কাছে।' : 'From their hands to yours.'}
+            {t('title')}
           </h2>
         </motion.div>
 
@@ -49,7 +40,7 @@ export function GlimpsesSection() {
         <div className="relative max-w-4xl mx-auto">
           {/* Central Thread for desktop */}
           <div className="absolute left-[27px] md:left-1/2 top-4 bottom-4 w-px bg-border -translate-x-1/2 hidden md:block" />
-          
+
           <div className="space-y-12 md:space-y-24">
             {steps.map(({ n, title, body }, i) => {
               const isEven = i % 2 === 0;
@@ -80,7 +71,7 @@ export function GlimpsesSection() {
                       {body}
                     </p>
                   </div>
-                  
+
                   {/* Empty div for balancing grid on desktop */}
                   <div className="hidden md:block flex-1" />
                 </motion.div>

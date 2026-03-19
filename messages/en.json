@@ -29,6 +29,8 @@
   },
   "features": {
     "title": "The Womaniya Way",
+    "intro_title": "Crafted slowly, woven with intention.",
+    "discover": "Discover",
     "handwoven": "Handwoven",
     "handwoven_desc": "Every thread is hand-spun and hand-woven by master weavers whose craft spans generations.",
     "artisan": "Artisan Collaboration",
@@ -41,6 +43,8 @@
   "shop": {
     "title": "The Collection",
     "subtitle": "Each piece is a conversation between tradition and the present moment.",
+    "explore_all": "Explore All",
+    "explore_all_collection": "Explore All Collection",
     "filter_all": "All",
     "filter_jamdani": "Jamdani",
     "filter_tant": "Tant",
@@ -55,6 +59,10 @@
     "featured": "Featured"
   },
   "categories": {
+    "browse_label": "Browse by craft",
+    "section_title": "The Living Crafts",
+    "view_all": "All →",
+    "view_all_crafts": "View all crafts →",
     "jamdani_title": "Dhakai Jamdani",
     "jamdani_desc": "The poetry of Bengal — woven thread by thread by masters in Dhaka and Murshidabad. A UNESCO-recognised intangible heritage.",
     "ikkat_title": "Ikkat Pochampally",
@@ -189,5 +197,35 @@
   "locale": {
     "switch_to": "বাংলা",
     "current": "EN"
+  },
+  "whatsapp": {
+    "badge": "Personal assistance",
+    "heading": "Can't find what you're looking for?",
+    "subtitle": "Message us on WhatsApp and we'll personally help you find the perfect handloom piece from our collection.",
+    "cta": "Chat with Us on WhatsApp",
+    "response_time": "Usually replies within 1 hour"
+  },
+  "how_made": {
+    "badge": "How it gets made",
+    "title": "From their hands to yours.",
+    "step_1_n": "01",
+    "step_1_title": "We go to them.",
+    "step_1_body": "Every piece starts at the loom — Murshidabad, Pochampally, Kutch. We visit the weaver, not the middleman.",
+    "step_2_n": "02",
+    "step_2_title": "They weave. By hand.",
+    "step_2_body": "A single Jamdani takes 15–30 days. No shortcuts. The time is inside the cloth.",
+    "step_3_n": "03",
+    "step_3_title": "Checked. Carefully.",
+    "step_3_body": "Every saree is inspected before it moves. If it isn't right, it goes back.",
+    "step_4_n": "04",
+    "step_4_title": "Packed. Shipped. Yours.",
+    "step_4_body": "Wrapped in muslin. Shipped with a card. The weaver's name is on it."
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "We hit an unexpected error loading this page. You can try again or head back home.",
+    "error_id": "Error ID:",
+    "try_again": "Try Again",
+    "go_home": "Go Home"
   }
 }

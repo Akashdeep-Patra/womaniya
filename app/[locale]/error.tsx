@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 export default function LocaleError({
   error,
@@ -10,6 +11,8 @@ export default function LocaleError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useTranslations('error');
+
   useEffect(() => {
     console.error('[LocaleError]', error);
   }, [error]);
@@ -22,12 +25,12 @@ export default function LocaleError({
         <circle cx="48" cy="30" r="3" fill="#D4A843" />
       </svg>
 
-      <h1 className="text-2xl font-semibold text-foreground">Something went wrong</h1>
+      <h1 className="text-2xl font-semibold text-foreground">{t('title')}</h1>
       <p className="text-muted-foreground mt-2 max-w-md">
-        We hit an unexpected error loading this page. You can try again or head back home.
+        {t('description')}
       </p>
       {error.digest && (
-        <p className="text-xs text-muted-foreground/60 mt-1">Error ID: {error.digest}</p>
+        <p className="text-xs text-muted-foreground/60 mt-1">{t('error_id')} {error.digest}</p>
       )}
 
       <div className="flex items-center gap-4 mt-6">
@@ -35,13 +38,13 @@ export default function LocaleError({
           onClick={reset}
           className="px-6 py-3 bg-foreground text-background text-xs tracking-widest uppercase font-medium rounded-full hover:bg-primary transition-colors"
         >
-          Try Again
+          {t('try_again')}
         </button>
         <Link
           href="/"
           className="text-xs tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors"
         >
-          Go Home
+          {t('go_home')}
         </Link>
       </div>
     </div>

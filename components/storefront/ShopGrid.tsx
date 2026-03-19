@@ -80,10 +80,10 @@ export function ShopGrid({ products, categories, isCompact = false, banners = []
         
         {isCompact && (
           <Link prefetch={true} href={`/${locale}/shop`}
-            
+
             className="hidden md:flex items-center gap-2 text-xs tracking-[0.2em] uppercase font-medium text-foreground hover:text-primary transition-colors group"
           >
-            Explore All
+            {t('explore_all')}
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </Link>
         )}
@@ -127,7 +127,7 @@ export function ShopGrid({ products, categories, isCompact = false, banners = []
             
             className="flex items-center justify-center gap-2 h-12 px-8 bg-primary text-primary-foreground text-[11px] tracking-[0.2em] uppercase font-medium rounded-full shadow-none ring-1 ring-border/50 hover:shadow-sm transition-all"
           >
-            Explore All Collection
+            {t('explore_all_collection')}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

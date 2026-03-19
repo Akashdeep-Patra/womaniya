@@ -5,6 +5,7 @@ import Image         from 'next/image';
 import { motion }    from 'framer-motion';
 import { useParams } from 'next/navigation';
 import { useRef }    from 'react';
+import { useTranslations } from 'next-intl';
 import type { Category } from '@/db/schema';
 
 const GRADIENT_COLORS = [
@@ -35,6 +36,7 @@ export function CategoriesSection({ categories, isCompact = false }: Props) {
   const locale      = params.locale as string;
   const isBn        = locale === 'bn';
   const scrollRef   = useRef<HTMLDivElement>(null);
+  const t           = useTranslations('categories');
 
   if (categories.length === 0) return null;
 
@@ -45,10 +47,10 @@ export function CategoriesSection({ categories, isCompact = false }: Props) {
       <div className="px-4 sm:px-6 max-w-7xl mx-auto mb-6 md:mb-8 flex items-center justify-between">
         <div>
           <p className="text-[10px] tracking-[0.28em] uppercase text-accent mb-1.5 font-sans-en">
-            {isBn ? 'কারুকাজ অনুযায়ী' : 'Browse by craft'}
+            {t('browse_label')}
           </p>
           <h2 className={`font-editorial text-2xl md:text-3xl text-foreground ${isBn ? 'font-bengali-serif' : ''}`}>
-            {isBn ? 'জীবন্ত কারুকাজ' : 'The Living Crafts'}
+            {t('section_title')}
           </h2>
         </div>
         {isCompact && (
@@ -56,7 +58,7 @@ export function CategoriesSection({ categories, isCompact = false }: Props) {
             
             className="text-[11px] tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors font-sans-en hidden md:block"
           >
-            All →
+            {t('view_all')}
           </Link>
         )}
       </div>
@@ -151,7 +153,7 @@ export function CategoriesSection({ categories, isCompact = false }: Props) {
             
             className="text-[11px] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors font-sans-en"
           >
-            {isBn ? 'সব দেখো →' : 'View all crafts →'}
+            {t('view_all_crafts')}
           </Link>
         </div>
       )}

@@ -1,23 +1,16 @@
 'use client';
 
 import { motion }          from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { useParams }       from 'next/navigation';
 import { generalEnquiryUrl } from '@/lib/whatsapp';
 import { MessageCircle }   from 'lucide-react';
 
 export function WhatsAppSection({ waNumber }: { waNumber?: string }) {
+  const t      = useTranslations('whatsapp');
   const params = useParams();
   const locale = params.locale as string;
-  const isBn   = locale === 'bn';
   const href   = generalEnquiryUrl(locale, waNumber);
-
-  const heading = isBn
-    ? 'পছন্দের শাড়ি খুঁজে পাচ্ছেন না?'
-    : "Can't find what you're looking for?";
-  const sub = isBn
-    ? 'আমাদের সরাসরি হোয়াটসঅ্যাপে মেসেজ করুন — আমরা আপনাকে সঠিক শাড়ি খুঁজে পেতে সাহায্য করব।'
-    : "Message us on WhatsApp and we'll personally help you find the perfect handloom piece from our collection.";
-  const cta = isBn ? 'হোয়াটসঅ্যাপে মেসেজ করুন' : 'Chat with Us on WhatsApp';
 
   return (
     <section className="border-t border-border bg-muted/40">
@@ -30,15 +23,15 @@ export function WhatsAppSection({ waNumber }: { waNumber?: string }) {
           className="text-center space-y-6"
         >
           <p className="text-[10px] tracking-[0.3em] uppercase text-muted-foreground font-sans-en">
-            {isBn ? 'ব্যক্তিগত সহায়তা' : 'Personal assistance'}
+            {t('badge')}
           </p>
 
-          <h2 className={`font-editorial text-2xl md:text-3xl lg:text-4xl text-foreground leading-tight ${isBn ? 'font-bengali-serif' : ''}`}>
-            {heading}
+          <h2 className="font-editorial text-2xl md:text-3xl lg:text-4xl text-foreground leading-tight">
+            {t('heading')}
           </h2>
 
-          <p className={`text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl mx-auto ${isBn ? 'font-bengali' : 'font-sans-en font-light'}`}>
-            {sub}
+          <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-xl mx-auto font-sans-en font-light">
+            {t('subtitle')}
           </p>
 
           <div className="pt-2">
@@ -49,12 +42,12 @@ export function WhatsAppSection({ waNumber }: { waNumber?: string }) {
               className="inline-flex items-center gap-2.5 h-12 px-8 rounded-full bg-foreground text-background text-xs tracking-[0.15em] uppercase font-medium transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:shadow-md hover:-translate-y-0.5"
             >
               <MessageCircle className="size-4" />
-              {cta}
+              {t('cta')}
             </a>
           </div>
 
           <p className="text-muted-foreground/50 text-[10px] tracking-widest uppercase font-sans-en">
-            {isBn ? 'সাধারণত ১ ঘণ্টার মধ্যে উত্তর' : 'Usually replies within 1 hour'}
+            {t('response_time')}
           </p>
         </motion.div>
       </div>
