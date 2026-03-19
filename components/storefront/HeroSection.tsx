@@ -58,16 +58,13 @@ const imageOrigins = [
 const imageReveal = {
   hidden: (custom: number) => ({
     clipPath: `circle(0% at ${imageOrigins[custom] || "50% 50%"})`,
-    scale: 1.15,
-    WebkitTransform: "translateZ(0)", // Force GPU acceleration before animation starts
+    // No scale — scale transforms on fill images cause CLS (Lighthouse detects visual shift)
   }),
   visible: (custom: number) => ({
     clipPath: `circle(150% at ${imageOrigins[custom] || "50% 50%"})`,
-    scale: 1,
     transition: { delay: custom * 0.15 + 0.3, duration: 1.6, ease: EASE },
     transitionEnd: {
-      clipPath: "none", // CRITICAL: Remove clip-path after animation so it doesn't lag the parallax scrolling
-      WebkitTransform: "none",
+      clipPath: "none", // Remove clip-path after animation so it doesn't lag parallax scrolling
     }
   })
 };
