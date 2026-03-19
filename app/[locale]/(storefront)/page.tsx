@@ -117,12 +117,34 @@ type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const [seoTitle, seoDesc] = await Promise.all([
+  const isBn = locale === 'bn';
+
+  // Fetch admin overrides + live DB data in parallel
+  const [seoTitle, seoDesc, storeName, categories, featured] = await Promise.all([
     getSetting('seo_home_title'),
     getSetting('seo_home_description'),
-  ]);
-  const titleStr = seoTitle || 'Womaniya — Authentic Handloom Heritage';
-  const descStr = seoDesc || 'Handcrafted textiles direct from artisans. Shipped from Kolkata.';
+    getSetting('store_name'),
+    getPublishedCategories(),
+    getFeaturedProducts(),
+  ]).catch(() => [null, null, null, [], []] as const);
+
+  const brand = storeName || 'Womaniya';
+
+  // Dynamic title from store name (admin-set) — kept generic, no product assumptions
+  const dynamicTitle = `${brand} — Handcrafted Textiles`;
+
+  // Dynamic description from actual published categories + featured product count
+  const catNames = categories.slice(0, 3)
+    .map(c => (isBn && c.name_bn ? c.name_bn : c.name_en))
+    .join(', ');
+  const n = featured.length;
+  const dynamicDesc = catNames
+    ? `${catNames}${n > 0 ? ` and more — ${n} featured piece${n !== 1 ? 's' : ''}` : ''}. Direct from artisans in Kolkata.`
+    : 'Handcrafted textiles direct from artisans. Shipped from Kolkata.';
+
+  // Admin setting is explicit override; DB-derived is the default
+  const titleStr = seoTitle || dynamicTitle;
+  const descStr = seoDesc || dynamicDesc;
   return {
     title: { absolute: titleStr },
     description: descStr,

@@ -21,21 +21,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   let product;
   try { product = await getProductBySlug(slug); } catch { /* dev */ }
   if (!product) return { title: 'Product Not Found' };
-  const name = locale === 'bn' && product.name_bn ? product.name_bn : product.name_en;
+  const isBn = locale === 'bn';
   const t = await getTranslations({ locale, namespace: 'meta' });
-  const description = product.description_en ?? `${name} ${t('product_suffix')}`;
+
+  // Priority: per-product SEO fields (set in admin) → product name/description → generic suffix
+  const title = (isBn && product.seo_title_bn)
+    ? product.seo_title_bn
+    : product.seo_title_en ?? (isBn && product.name_bn ? product.name_bn : product.name_en);
+
+  const description = (isBn && product.seo_description_bn)
+    ? product.seo_description_bn
+    : product.seo_description_en
+      ?? (isBn && product.description_bn ? product.description_bn : product.description_en)
+      ?? `${title} ${t('product_suffix')}`;
 
   return {
-    title: name,
+    title,
     description,
     openGraph: {
-      title: name,
+      title,
       description,
-      images: product.image_url ? [{ url: product.image_url, width: 1200, height: 630, alt: name }] : [],
+      images: product.image_url ? [{ url: product.image_url, width: 1200, height: 630, alt: title }] : [],
     },
     twitter: {
       card: 'summary_large_image',
-      title: name,
+      title,
       description,
     },
     alternates: {

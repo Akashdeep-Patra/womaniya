@@ -13,12 +13,34 @@ export async function generateMetadata(
   { params }: Props
 ): Promise<Metadata> {
   const { locale } = await params;
-  const [seoTitle, seoDesc] = await Promise.all([
+  const isBn = locale === 'bn';
+
+  // Fetch admin override + live DB data in parallel
+  const [seoTitle, seoDesc, storeName, categories, products] = await Promise.all([
     getSetting('seo_shop_title'),
     getSetting('seo_shop_description'),
-  ]);
-  const titleStr = seoTitle || 'Shop | Womaniya';
-  const description = seoDesc || 'Browse our handloom collection.';
+    getSetting('store_name'),
+    getPublishedCategories(),
+    getPublishedProducts(),
+  ]).catch(() => [null, null, null, [], []] as const);
+
+  const brand = storeName || 'Womaniya';
+
+  // Dynamic title — built from actual published category names in the DB
+  const catNames = categories.slice(0, 5)
+    .map(c => (isBn && c.name_bn ? c.name_bn : c.name_en))
+    .join(' · ');
+  const dynamicTitle = catNames ? `${catNames} | ${brand}` : `Shop | ${brand}`;
+
+  // Dynamic description — actual product count + category names
+  const n = products.length;
+  const dynamicDesc = catNames && n > 0
+    ? `${n} handcrafted piece${n !== 1 ? 's' : ''} across ${catNames}. Direct from artisans.`
+    : `Handcrafted textiles by ${brand}. Direct from artisans.`;
+
+  // Admin setting is an explicit override; DB data is the default
+  const titleStr = seoTitle || dynamicTitle;
+  const description = seoDesc || dynamicDesc;
   return {
     title: { absolute: titleStr },
     description,
