@@ -2,16 +2,20 @@
 
 import Image from 'next/image';
 import { useState, useTransition } from 'react';
-import { Trash2, Edit, ImageOff } from 'lucide-react';
+import { Trash2, Edit, ImageOff, GripVertical, ArrowUpDown, Check } from 'lucide-react';
+import { Reorder } from 'framer-motion';
 import { notify } from '@/lib/notify';
-import { deleteCategory } from '@/actions/categories';
+import { deleteCategory, reorderCategories } from '@/actions/categories';
 import { EntityTable, Column, MobileCardConfig } from './EntityTable';
 import { StatusPill } from './StatusPill';
 import type { Category } from '@/db/schema';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 export function CategoryTableClient({ initialCategories, locale }: { initialCategories: Category[], locale: string }) {
   const [categories, setCategories] = useState(initialCategories);
+  const [reorderList, setReorderList] = useState(initialCategories);
+  const [reorderMode, setReorderMode] = useState(false);
   const [pending, setId] = useState<number | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -25,6 +29,7 @@ export function CategoryTableClient({ initialCategories, locale }: { initialCate
       try {
         await deleteCategory(id);
         setCategories((prev) => prev.filter((c) => c.id !== id));
+        setReorderList((prev) => prev.filter((c) => c.id !== id));
         notify.success('category', 'deleted', categories.find(c => c.id === id)?.name_en);
       } catch (err) {
         notify.error('category', 'deleted', err);
@@ -34,8 +39,92 @@ export function CategoryTableClient({ initialCategories, locale }: { initialCate
     });
   };
 
+  const handleEnterReorder = () => {
+    setReorderList([...categories]);
+    setReorderMode(true);
+  };
+
+  const handleSaveOrder = () => {
+    const ids = reorderList.map(c => c.id);
+    startTransition(async () => {
+      try {
+        await reorderCategories(ids);
+        setCategories(reorderList);
+        setReorderMode(false);
+        notify.success('category', 'updated', 'Order saved');
+      } catch (err) {
+        notify.error('category', 'updated', err);
+      }
+    });
+  };
+
   const getEditUrl = (id: number) => `/${locale}/admin/categories/${id}/edit`;
 
+  // ─── Reorder Mode UI ───────────────────────────────────────────
+  if (reorderMode) {
+    return (
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/30">
+          <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
+            Drag to reorder
+          </p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setReorderMode(false)}
+              className="px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground border border-border rounded-lg transition-colors cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleSaveOrder}
+              disabled={isPending}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
+            >
+              <Check size={12} />
+              {isPending ? 'Saving…' : 'Save Order'}
+            </button>
+          </div>
+        </div>
+
+        <Reorder.Group
+          axis="y"
+          values={reorderList}
+          onReorder={setReorderList}
+          className="flex flex-col"
+        >
+          {reorderList.map((c) => (
+            <Reorder.Item
+              key={c.id}
+              value={c}
+              className="flex items-center gap-3 px-4 py-3 border-b border-border last:border-0 bg-card hover:bg-muted/30 transition-colors select-none"
+            >
+              <div className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground transition-colors">
+                <GripVertical size={18} />
+              </div>
+              {c.hero_image_url ? (
+                <div className="w-9 h-9 rounded-md overflow-hidden bg-muted relative shrink-0">
+                  <Image src={c.hero_image_url} alt={c.name_en} fill className="object-cover" sizes="36px" />
+                </div>
+              ) : (
+                <div className="w-9 h-9 rounded-md bg-muted flex items-center justify-center shrink-0">
+                  <ImageOff size={14} className="text-muted-foreground/40" />
+                </div>
+              )}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-foreground truncate">{c.name_en}</p>
+                {c.name_bn && <span className="text-xs text-muted-foreground font-bengali">{c.name_bn}</span>}
+              </div>
+              <StatusPill status={c.status} />
+            </Reorder.Item>
+          ))}
+        </Reorder.Group>
+      </div>
+    );
+  }
+
+  // ─── Normal Table Mode ─────────────────────────────────────────
   const columns: Column<Category>[] = [
     {
       key: 'image',
@@ -147,16 +236,34 @@ export function CategoryTableClient({ initialCategories, locale }: { initialCate
   };
 
   return (
-    <EntityTable
-      columns={columns}
-      data={categories}
-      keyExtractor={(c) => c.id}
-      getRowHref={(c) => getEditUrl(c.id)}
-      emptyMessage="No categories yet."
-      mobileCard={mobileCard}
-      searchable
-      searchPlaceholder="Search categories..."
-      getSearchableText={(c) => [c.name_en, c.name_bn, c.slug, c.description_en, c.status].filter(Boolean).join(' ')}
-    />
+    <div>
+      {/* Reorder trigger */}
+      {categories.length > 1 && (
+        <div className="flex justify-end mb-3">
+          <button
+            type="button"
+            onClick={handleEnterReorder}
+            className={cn(
+              'flex items-center gap-1.5 px-3 py-1.5 text-xs border border-border rounded-lg transition-colors cursor-pointer',
+              'text-muted-foreground hover:text-foreground hover:bg-muted',
+            )}
+          >
+            <ArrowUpDown size={13} />
+            Reorder
+          </button>
+        </div>
+      )}
+      <EntityTable
+        columns={columns}
+        data={categories}
+        keyExtractor={(c) => c.id}
+        getRowHref={(c) => getEditUrl(c.id)}
+        emptyMessage="No categories yet."
+        mobileCard={mobileCard}
+        searchable
+        searchPlaceholder="Search categories..."
+        getSearchableText={(c) => [c.name_en, c.name_bn, c.slug, c.description_en, c.status].filter(Boolean).join(' ')}
+      />
+    </div>
   );
 }
