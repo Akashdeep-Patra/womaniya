@@ -11,18 +11,8 @@ import {
   Smartphone, Monitor, RefreshCw, Search, X, Languages, Loader2,
 } from 'lucide-react';
 
-// ─── MyMemory free translation (no API key, no setup) ──────────────
-async function translateEN_BN(text: string): Promise<string> {
-  if (!text.trim()) return '';
-  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|bn`;
-  const res  = await fetch(url);
-  if (!res.ok) throw new Error('Translation service unavailable');
-  const data = await res.json() as { responseData?: { translatedText?: string }; responseStatus?: number };
-  const translated = data.responseData?.translatedText;
-  if (!translated || data.responseStatus === 403) throw new Error('Translation failed');
-  return translated;
-}
 import { saveContentOverrides, resetContentKey, getContentOverrides } from '@/actions/content';
+import { translateToBengali } from '@/actions/translate';
 import type { ContentPageGroup, ContentNamespaceConfig } from '@/lib/content-config';
 
 // ─── Types ─────────────────────────────────────────────────────────
@@ -93,7 +83,8 @@ function SectionAccordion({
     if (!source) return;
     setTranslating((prev) => new Set([...prev, key]));
     try {
-      const result = await translateEN_BN(source);
+      const keyLabel = ns.keys.find((k) => k.key === key)?.label ?? key;
+      const result = await translateToBengali(source);
       onChange(ns.name, key, result);
     } catch {
       notify.error('settings', 'saved', 'Translation failed — try again');
@@ -128,7 +119,7 @@ function SectionAccordion({
         onClick={onToggle}
         aria-expanded={expanded}
         aria-controls={panelId}
-        className="w-full flex items-center justify-between gap-2 px-3 sm:px-4 min-h-[48px] hover:bg-muted/50 active:bg-muted/70 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset rounded-xl"
+        className="w-full flex items-center justify-between gap-2 px-3 sm:px-4 min-h-[48px] hover:bg-muted/50 active:bg-muted/70 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset rounded-xl cursor-pointer"
       >
         <div className="flex items-center gap-2 min-w-0">
           <span className="font-sans font-semibold text-[13px] sm:text-sm text-foreground truncate">{ns.label}</span>
@@ -188,7 +179,7 @@ function SectionAccordion({
                           onClick={() => handleTranslate(k.key)}
                           disabled={translating.has(k.key) || isPending}
                           title={`Auto-translate from: "${(enDefaults[k.key] ?? '').slice(0, 60)}${(enDefaults[k.key] ?? '').length > 60 ? '…' : ''}"`}
-                          className="flex items-center gap-1 text-[10px] sm:text-[11px] text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 disabled:opacity-40 transition-colors min-h-[28px] px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/40 rounded"
+                          className="flex items-center gap-1 text-[10px] sm:text-[11px] text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors min-h-[28px] px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/40 rounded"
                           aria-label={`Translate ${k.label} from English`}
                         >
                           {translating.has(k.key)
@@ -205,7 +196,7 @@ function SectionAccordion({
                           type="button"
                           onClick={() => onReset(ns.name, k.key)}
                           disabled={isPending}
-                          className="flex items-center gap-1 text-[10px] sm:text-[11px] text-muted-foreground hover:text-destructive transition-colors whitespace-nowrap min-h-[28px] px-1 -mr-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
+                          className="flex items-center gap-1 text-[10px] sm:text-[11px] text-muted-foreground hover:text-destructive disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors whitespace-nowrap min-h-[28px] px-1 -mr-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
                           aria-label={`Reset ${k.label} to default`}
                         >
                           <RotateCcw size={10} /><span className="hidden sm:inline">Reset</span>
@@ -464,8 +455,8 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
                   'px-4 py-2 sm:py-1.5 text-sm font-medium transition-colors min-w-[72px]',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-inset',
                   activeLocale === loc
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-card text-muted-foreground hover:text-foreground active:bg-muted',
+                    ? 'bg-primary text-primary-foreground cursor-default'
+                    : 'bg-card text-muted-foreground hover:text-foreground active:bg-muted cursor-pointer',
                 )}
               >
                 {loc === 'en' ? 'English' : 'Bengali'}
@@ -487,7 +478,7 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
             {search && (
               <button
                 onClick={() => setSearch('')}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground cursor-pointer"
                 aria-label="Clear search"
               >
                 <X size={14} />
@@ -564,7 +555,7 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
                   role="radio"
                   aria-checked={previewMode === 'phone'}
                   onClick={() => setPreviewMode('phone')}
-                  className={cn('p-1.5 transition-colors', previewMode === 'phone' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground')}
+                  className={cn('p-1.5 transition-colors cursor-pointer', previewMode === 'phone' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground')}
                   aria-label="Phone preview"
                 >
                   <Smartphone size={14} />
@@ -573,16 +564,16 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
                   role="radio"
                   aria-checked={previewMode === 'desktop'}
                   onClick={() => setPreviewMode('desktop')}
-                  className={cn('p-1.5 transition-colors', previewMode === 'desktop' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground')}
+                  className={cn('p-1.5 transition-colors cursor-pointer', previewMode === 'desktop' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground')}
                   aria-label="Desktop preview"
                 >
                   <Monitor size={14} />
                 </button>
               </div>
-              <button onClick={() => setIframeKey((k) => k + 1)} className="p-1.5 text-muted-foreground hover:text-foreground rounded" aria-label="Refresh preview">
+              <button onClick={() => setIframeKey((k) => k + 1)} className="p-1.5 text-muted-foreground hover:text-foreground rounded cursor-pointer" aria-label="Refresh preview">
                 <RefreshCw size={14} />
               </button>
-              <a href={`/${activeLocale}`} target="_blank" rel="noopener noreferrer" className="p-1.5 text-muted-foreground hover:text-foreground rounded" aria-label="Open in new tab">
+              <a href={`/${activeLocale}`} target="_blank" rel="noopener noreferrer" className="p-1.5 text-muted-foreground hover:text-foreground rounded cursor-pointer" aria-label="Open in new tab">
                 <ExternalLink size={14} />
               </a>
             </div>
@@ -616,7 +607,7 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
             <Save size={15} className="mr-1.5" />
             {isPending ? 'Saving...' : totalDirtyCount > 0 ? `Save ${totalDirtyCount} Change${totalDirtyCount > 1 ? 's' : ''}` : 'All Saved'}
           </BengalButton>
-          <a href={`/${activeLocale}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full border border-border bg-card text-muted-foreground hover:text-foreground active:bg-muted transition-colors shrink-0" aria-label="Preview site">
+          <a href={`/${activeLocale}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full border border-border bg-card text-muted-foreground hover:text-foreground active:bg-muted transition-colors shrink-0 cursor-pointer" aria-label="Preview site">
             <ExternalLink size={16} />
           </a>
         </div>

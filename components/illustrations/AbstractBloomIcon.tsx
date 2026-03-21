@@ -86,11 +86,13 @@ export function AbstractBloomIcon({
         })}
 
         {/* Slow continuous rotation of the whole bloom for a hypnotic effect */}
-        <motion.circle 
+        {/* Note: pathLength on <circle> is invalid in SVG — use strokeDasharray/strokeDashoffset instead */}
+        <motion.circle
           cx="50" cy="50" r="6"
           strokeWidth="1"
-          initial={{ pathLength: 0 }}
-          whileInView={{ pathLength: 1 }}
+          strokeDasharray="37.7"
+          initial={{ strokeDashoffset: 37.7 }}
+          whileInView={{ strokeDashoffset: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 2, delay: 2 }}
         />

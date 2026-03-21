@@ -84,15 +84,16 @@ export function AbstractConnectionIcon({
           transition={{ duration: 1.5, ease: "easeInOut", delay: 1.2 }}
         />
         
-        {/* Orbiting dot representing collaboration/energy */}
-        <motion.circle 
-          cx="50" cy="25" r="2" fill={color} stroke="none"
+        {/* Orbiting dot — use translateX/Y instead of cx/cy to avoid SVG attribute undefined errors in Framer Motion */}
+        <motion.g
           animate={{
-            cx: [50, 75, 50, 25, 50],
-            cy: [25, 50, 75, 50, 25],
+            translateX: [0, 25, 0, -25, 0],
+            translateY: [0, 25, 50, 25, 0],
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-        />
+        >
+          <circle cx="50" cy="25" r="2" fill={color} stroke="none" />
+        </motion.g>
       </motion.g>
     </svg>
   );

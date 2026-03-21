@@ -363,6 +363,21 @@ export const activityLog = pgTable('activity_log', {
 export type ActivityLogEntry    = typeof activityLog.$inferSelect;
 export type NewActivityLogEntry = typeof activityLog.$inferInsert;
 
+// ─── Hero Images ────────────────────────────────────────────────────
+export const heroImages = pgTable('hero_images', {
+  id:         serial('id').primaryKey(),
+  slot:       integer('slot').notNull().unique(), // 1-5, maps to card1-card5
+  src:        text('src').notNull(),
+  alt:        text('alt').notNull().default(''),
+  position:   text('position').notNull().default('50% 50%'), // CSS object-position
+  is_active:  boolean('is_active').default(true).notNull(),
+  created_at: timestamp('created_at').defaultNow(),
+  updated_at: timestamp('updated_at').defaultNow(),
+});
+
+export type HeroImage    = typeof heroImages.$inferSelect;
+export type NewHeroImage = typeof heroImages.$inferInsert;
+
 // ─── Admins ────────────────────────────────────────────────────────
 export const admins = pgTable('admins', {
   id:                 serial('id').primaryKey(),

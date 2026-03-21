@@ -43,6 +43,7 @@ export function getNavGroups(locale: string): NavGroup[] {
     {
       title: 'Content',
       items: [
+        { label: 'Hero Images',  href: `${base}/hero`,         icon: ImageIcon },
         { label: 'Site Copy',    href: `${base}/content`,      icon: Type },
         { label: 'Pages',        href: `${base}/pages`,        icon: FileText },
         { label: 'Stories',      href: `${base}/stories`,      icon: BookOpen },

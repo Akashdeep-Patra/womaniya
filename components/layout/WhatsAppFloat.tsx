@@ -73,7 +73,7 @@ export function WhatsAppFloat({ waNumber }: { waNumber?: string }) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 12, scale: 0.9 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="fixed bottom-[84px] right-4 md:bottom-8 md:right-6 z-50 flex items-center justify-center gap-2 w-11 h-11 md:w-auto md:h-auto md:px-5 md:py-3 rounded-full bg-primary md:bg-card text-primary-foreground md:text-card-foreground border border-border/50 shadow-[0_8px_20px_rgb(0,0,0,0.15)] hover:shadow-xl transition-all duration-300"
+          className="fixed bottom-[84px] right-4 md:bottom-8 md:right-6 z-50 flex items-center justify-center gap-2 w-11 h-11 md:w-auto md:h-auto md:px-5 md:py-3 rounded-full bg-primary md:bg-card text-primary-foreground md:text-card-foreground border border-border/50 shadow-[0_8px_20px_rgb(0,0,0,0.15)] hover:shadow-xl transition-all duration-300 cursor-pointer"
         >
           <WAIcon size={20} className="flex-shrink-0 md:text-primary md:w-[18px] md:h-[18px]" />
           <span className={`text-xs font-bold tracking-wide hidden md:inline ${locale === 'bn' ? 'font-bengali' : 'font-sans-en uppercase'}`}>

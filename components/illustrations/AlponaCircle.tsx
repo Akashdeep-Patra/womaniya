@@ -49,21 +49,23 @@ export function AlponaCircle({ className = '', width = 200, height = 200 }: { cl
           </g>
         ))}
         
-        {/* Double Outer Rings */}
-        <motion.circle 
-          cx="100" cy="100" r="92" 
+        {/* Double Outer Rings — circumference r=92: 2π×92≈578.1, r=96: 2π×96≈603.2 */}
+        <motion.circle
+          cx="100" cy="100" r="92"
           className="stroke-current" strokeWidth="2" fill="none"
+          strokeDasharray="578.1"
           variants={{
-            hidden: { pathLength: 0 },
-            visible: { pathLength: 1, transition: { duration: 2, ease: "easeInOut" } }
+            hidden: { strokeDashoffset: 578.1 },
+            visible: { strokeDashoffset: 0, transition: { duration: 2, ease: "easeInOut" } }
           }}
         />
-        <motion.circle 
-          cx="100" cy="100" r="96" 
+        <motion.circle
+          cx="100" cy="100" r="96"
           className="stroke-current" strokeWidth="0.5" fill="none"
+          strokeDasharray="603.2"
           variants={{
-            hidden: { pathLength: 0 },
-            visible: { pathLength: 1, transition: { duration: 2, ease: "easeInOut", delay: 0.2 } }
+            hidden: { strokeDashoffset: 603.2 },
+            visible: { strokeDashoffset: 0, transition: { duration: 2, ease: "easeInOut", delay: 0.2 } }
           }}
         />
 

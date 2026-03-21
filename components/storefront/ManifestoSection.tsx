@@ -81,7 +81,7 @@ export function ManifestoSection() {
         >
           <Link prefetch={true}
             href={`/${locale}#story`}
-            className="inline-flex items-center gap-4 text-[10px] tracking-[0.25em] uppercase text-primary hover:text-foreground transition-colors duration-300 font-sans-en font-medium group"
+            className="inline-flex items-center gap-4 text-[10px] tracking-[0.25em] uppercase text-primary hover:text-foreground transition-colors duration-300 font-sans-en font-medium group cursor-pointer"
           >
             <span className="w-8 h-px bg-primary/40 group-hover:bg-foreground/40 group-hover:w-12 transition-all duration-300" />
             {t('cta')}

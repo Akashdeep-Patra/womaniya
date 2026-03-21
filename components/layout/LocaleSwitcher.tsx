@@ -25,7 +25,7 @@ export function LocaleSwitcher({ className }: { className?: string }) {
         'text-xs tracking-widest uppercase font-medium',
         'border border-bengal-kansa/40 rounded-sm px-3',
         'hover:border-bengal-kansa hover:text-bengal-sindoor',
-        'transition-colors duration-200',
+        'transition-colors duration-200 cursor-pointer',
         locale === 'bn' ? 'font-bengali text-sm' : '',
         className
       )}

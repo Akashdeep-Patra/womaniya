@@ -9,14 +9,14 @@ import { ProductCard }    from './ProductCard';
 import { EmptyState } from './EmptyState';
 import { BannerDisplay } from './BannerDisplay';
 import { useWhatsAppContext } from '@/lib/whatsapp-context';
-import type { Product, Category } from '@/db/schema';
+import type { Product, Category, Banner } from '@/db/schema';
 import { ArrowRight } from 'lucide-react';
 
 interface Props {
   products: Product[];
   categories?: Category[];
   isCompact?: boolean;
-  banners?: any[];
+  banners?: Banner[];
 }
 
 export function ShopGridSkeleton() {
@@ -111,7 +111,7 @@ export function ShopGrid({ products, categories, isCompact = false, banners = []
         {isCompact && (
           <Link prefetch={true} href={`/${locale}/shop`}
 
-            className="hidden md:flex items-center gap-2 text-xs tracking-[0.2em] uppercase font-medium text-foreground hover:text-primary transition-colors group"
+            className="hidden md:flex items-center gap-2 text-xs tracking-[0.2em] uppercase font-medium text-foreground hover:text-primary transition-colors group cursor-pointer"
           >
             {t('explore_all')}
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -155,8 +155,8 @@ export function ShopGrid({ products, categories, isCompact = false, banners = []
       {isCompact && (
         <div className="mt-10 flex justify-center md:hidden">
           <Link  href={`/${locale}/shop`}
-            
-            className="flex items-center justify-center gap-2 h-12 px-8 bg-primary text-primary-foreground text-[11px] tracking-[0.2em] uppercase font-medium rounded-full shadow-none ring-1 ring-border/50 hover:shadow-sm transition-all"
+
+            className="flex items-center justify-center gap-2 h-12 px-8 bg-primary text-primary-foreground text-[11px] tracking-[0.2em] uppercase font-medium rounded-full shadow-none ring-1 ring-border/50 hover:shadow-sm transition-all cursor-pointer"
           >
             {t('explore_all_collection')}
             <ArrowRight className="w-4 h-4" />

@@ -2,6 +2,7 @@ import { setRequestLocale }    from 'next-intl/server';
 import { getTranslations }     from 'next-intl/server';
 import type { Metadata }       from 'next';
 import dynamic from 'next/dynamic';
+import { getHeroImages } from '@/actions/hero-images';
 
 const HeroSection = dynamic(
   () => import('@/components/storefront/HeroSection').then((m) => ({ default: m.HeroSection })),
@@ -243,6 +244,8 @@ export default async function HomePage({ params }: Props) {
 
   const heroBanners = banners.filter(b => b.placement === 'hero' && b.status === 'published');
 
+  const heroImages = await getHeroImages().catch(() => []);
+
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://womaniyakolkata.in';
 
   const organizationLd = {
@@ -318,7 +321,7 @@ export default async function HomePage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteLd).replace(/</g, '\\u003c') }} />
       
       <main id="main-content" className="min-h-screen touch-pan-y">
-        <HeroSection />
+        <HeroSection heroImages={heroImages} />
         
         {heroBanners.length > 0 && (
           <section className="py-16 md:py-24 bg-background relative z-20 border-b border-border/50">

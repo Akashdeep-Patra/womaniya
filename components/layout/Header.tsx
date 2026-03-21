@@ -34,7 +34,7 @@ function ThemeToggle() {
         'size-8 rounded-full border flex items-center justify-center',
         'border-border/50 text-foreground/70 bg-background shadow-sm',
         'hover:bg-foreground hover:text-background hover:border-foreground',
-        'transition-all duration-300 touch-manipulation'
+        'transition-all duration-300 touch-manipulation cursor-pointer'
       )}
     >
       {resolvedTheme === 'dark' ? (
@@ -67,7 +67,7 @@ function LocaleToggle({ locale }: { locale: string }) {
         'h-8 px-3 rounded-full border flex items-center justify-center',
         'border-border/50 text-foreground/70 bg-background shadow-sm',
         'hover:bg-foreground hover:text-background hover:border-foreground',
-        'transition-all duration-300 touch-manipulation',
+        'transition-all duration-300 touch-manipulation cursor-pointer',
         !isEn ? 'font-bengali text-sm' : 'font-sans-en text-[10px] tracking-widest font-medium'
       )}
     >

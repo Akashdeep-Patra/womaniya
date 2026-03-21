@@ -32,13 +32,14 @@ export function CharkhaIcon({
         {/* Left Spindle Support */}
         <motion.path d="M 18 42 L 18 30 M 24 42 L 24 30" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 1 }} />
         
-        {/* The Big Wheel */}
-        <motion.circle 
-          cx="47" cy="26" r="14" 
-          initial={{ pathLength: 0 }} 
-          whileInView={{ pathLength: 1 }} 
+        {/* The Big Wheel — circumference of r=14 circle is 2π×14 ≈ 87.96 */}
+        <motion.circle
+          cx="47" cy="26" r="14"
+          strokeDasharray="87.96"
+          initial={{ strokeDashoffset: 87.96 }}
+          whileInView={{ strokeDashoffset: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 2, delay: 1.5 }} 
+          transition={{ duration: 2, delay: 1.5 }}
         />
         {/* Wheel Spokes */}
         <g opacity="0.6" strokeWidth="1">

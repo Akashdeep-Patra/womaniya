@@ -109,7 +109,7 @@ export function AboutSection() {
         <div className="text-center">
           <Link prefetch={true}
             href={`/${locale}/about`}
-            className="inline-flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-muted-foreground hover:text-foreground transition-colors duration-300 font-sans-en font-medium group"
+            className="inline-flex items-center gap-3 text-[10px] tracking-[0.25em] uppercase text-muted-foreground hover:text-foreground transition-colors duration-300 font-sans-en font-medium group cursor-pointer"
           >
             <span className="w-8 h-px bg-border group-hover:bg-foreground group-hover:w-12 transition-all duration-300" />
             {ts('cta')}

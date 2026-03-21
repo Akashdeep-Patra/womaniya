@@ -39,7 +39,7 @@ export function WhatsAppSection({ waNumber }: { waNumber?: string }) {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 h-12 px-8 rounded-full bg-foreground text-background text-xs tracking-[0.15em] uppercase font-medium transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:shadow-md hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2.5 h-12 px-8 rounded-full bg-foreground text-background text-xs tracking-[0.15em] uppercase font-medium transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:shadow-md hover:-translate-y-0.5 cursor-pointer"
             >
               <MessageCircle className="size-4" />
               {t('cta')}

@@ -3,10 +3,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { JamdaniBackdrop } from '@/components/illustrations/SectionBackdrop';
 import { BLUR_PLACEHOLDER } from '@/lib/blur-placeholder';
+import type { HeroImage } from '@/db/schema';
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -70,10 +71,29 @@ const imageReveal = {
   })
 };
 
-export function HeroSection() {
+export function HeroSection({ heroImages }: { heroImages?: HeroImage[] }) {
   const t = useTranslations('hero');
   const locale = useLocale();
   const isBn = locale === 'bn';
+
+  // Load-gate: track whether each image has loaded (index 0-4 = card1-card5)
+  const [loaded, setLoaded] = useState<boolean[]>([false, false, false, false, false]);
+
+  const markLoaded = useCallback((i: number) => {
+    setLoaded(prev => {
+      if (prev[i]) return prev;
+      const n = [...prev];
+      n[i] = true;
+      return n;
+    });
+  }, []);
+
+  // Resolve images: DB row when available and active, otherwise fall back to IMAGES const
+  const resolvedImages = [1, 2, 3, 4, 5].map((slot) => {
+    const dbImg = heroImages?.find(h => h.slot === slot && h.is_active);
+    const fallback = Object.values(IMAGES)[slot - 1];
+    return dbImg ? { src: dbImg.src, alt: dbImg.alt, pos: dbImg.position } : fallback;
+  });
 
   const containerRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -207,14 +227,14 @@ export function HeroSection() {
               className="flex flex-wrap items-center gap-4 md:gap-7 pl-2 lg:pl-4"
             >
               <Link prefetch={true} href={`/${locale}/shop`}
-                className="group relative inline-flex items-center justify-center h-12 md:h-14 px-8 md:px-10 bg-foreground text-background text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium rounded-full overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 pointer-events-auto"
+                className="group relative inline-flex items-center justify-center h-12 md:h-14 px-8 md:px-10 bg-foreground text-background text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium rounded-full overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1 pointer-events-auto cursor-pointer"
               >
                 <span className="absolute inset-0 bg-primary w-0 group-hover:w-full transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]" />
                 <span className="relative z-10 group-hover:text-primary-foreground transition-colors duration-500">{t('cta_shop')}</span>
               </Link>
               <Link
                 href={`/${locale}/stories`}
-                className="group flex items-center gap-2 text-[10px] md:text-[11px] tracking-[0.2em] uppercase text-foreground/70 hover:text-primary transition-colors font-medium py-2 pointer-events-auto"
+                className="group flex items-center gap-2 text-[10px] md:text-[11px] tracking-[0.2em] uppercase text-foreground/70 hover:text-primary transition-colors font-medium py-2 pointer-events-auto cursor-pointer"
               >
                 <span className="relative pb-0.5">
                   {t('cta_story')}
@@ -283,8 +303,8 @@ export function HeroSection() {
             {/* Mobile image mosaic — clean static grid, no parallax */}
             <div className="grid grid-cols-12 gap-2 sm:gap-3 mb-6">
               <div className="col-span-7 row-span-2 relative aspect-3/4 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-lg">
-                <motion.div custom={1} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority fetchPriority="high" className="object-cover" style={{ objectPosition: IMAGES.card1.pos }} sizes="58vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
+                <motion.div custom={1} initial="hidden" animate={loaded[0] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[0].src} alt={resolvedImages[0].alt} fill priority fetchPriority="high" className="object-cover" style={{ objectPosition: resolvedImages[0].pos }} sizes="58vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(0)} />
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -297,26 +317,26 @@ export function HeroSection() {
               </div>
 
               <div className="col-span-5 relative aspect-square rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md">
-                <motion.div custom={2} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill priority className="object-cover" style={{ objectPosition: IMAGES.card2.pos }} sizes="40vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
+                <motion.div custom={2} initial="hidden" animate={loaded[1] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[1].src} alt={resolvedImages[1].alt} fill priority className="object-cover" style={{ objectPosition: resolvedImages[1].pos }} sizes="40vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(1)} />
                 </motion.div>
               </div>
 
               <div className="col-span-5 relative aspect-4/3 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md">
-                <motion.div custom={3} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card3.pos }} sizes="40vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
+                <motion.div custom={3} initial="hidden" animate={loaded[2] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[2].src} alt={resolvedImages[2].alt} fill loading="lazy" className="object-cover" style={{ objectPosition: resolvedImages[2].pos }} sizes="40vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(2)} />
                 </motion.div>
               </div>
 
               <div className="col-span-5 relative aspect-3/4 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md mt-2">
-                <motion.div custom={4} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card4.src} alt={IMAGES.card4.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card4.pos }} sizes="40vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
+                <motion.div custom={4} initial="hidden" animate={loaded[3] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[3].src} alt={resolvedImages[3].alt} fill loading="lazy" className="object-cover" style={{ objectPosition: resolvedImages[3].pos }} sizes="40vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(3)} />
                 </motion.div>
               </div>
 
               <div className="col-span-7 relative aspect-7/5 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md mt-2">
-                <motion.div custom={5} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card5.src} alt={IMAGES.card5.alt} fill loading="lazy" className="object-cover" style={{ objectPosition: IMAGES.card5.pos }} sizes="58vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
+                <motion.div custom={5} initial="hidden" animate={loaded[4] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[4].src} alt={resolvedImages[4].alt} fill loading="lazy" className="object-cover" style={{ objectPosition: resolvedImages[4].pos }} sizes="58vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(4)} />
                 </motion.div>
               </div>
             </div>
@@ -331,12 +351,12 @@ export function HeroSection() {
                 </div>
                 <div className="flex items-center gap-4">
                   <Link prefetch={true} href={`/${locale}/shop`}
-                    className="group relative inline-flex items-center justify-center h-11 px-7 bg-foreground text-background text-[9px] tracking-[0.2em] uppercase font-medium rounded-full overflow-hidden transition-all hover:shadow-lg pointer-events-auto"
+                    className="group relative inline-flex items-center justify-center h-11 px-7 bg-foreground text-background text-[9px] tracking-[0.2em] uppercase font-medium rounded-full overflow-hidden transition-all hover:shadow-lg pointer-events-auto cursor-pointer"
                   >
                     <span className="absolute inset-0 bg-primary w-0 group-hover:w-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]" />
                     <span className="relative z-10 group-hover:text-primary-foreground transition-colors duration-500">{t('cta_shop')}</span>
                   </Link>
-                  <Link href={`/${locale}/stories`} className="group flex items-center gap-2 text-[9px] tracking-[0.2em] uppercase text-foreground/70 hover:text-primary transition-colors font-medium py-2 pointer-events-auto">
+                  <Link href={`/${locale}/stories`} className="group flex items-center gap-2 text-[9px] tracking-[0.2em] uppercase text-foreground/70 hover:text-primary transition-colors font-medium py-2 pointer-events-auto cursor-pointer">
                     <span className="relative pb-0.5">
                       {t('cta_story')}
                       <span className="absolute left-0 bottom-0 w-0 h-px bg-primary transition-all duration-300 group-hover:w-full" />
@@ -351,54 +371,54 @@ export function HeroSection() {
           <div className="hidden lg:block w-[58%] h-full relative z-10 order-2 pt-12 pb-16 pl-12 pr-6">
             <div className="relative w-full h-[82vh] max-h-[850px] p-4">
               
-              {/* Back Left (Slow Parallax) */}
+              {/* Back Left (Slow Parallax) — card5 = index 4 */}
               <motion.div
                 style={{ y: yImage5 }}
                 className="absolute top-[12%] left-[2%] w-[38%] h-[55%] rounded-4xl overflow-hidden shadow-lg border-8 border-background z-0 group bg-muted will-change-transform"
               >
-                <motion.div custom={1} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card5.src} alt={IMAGES.card5.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card5.pos }} sizes="20vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
+                <motion.div custom={1} initial="hidden" animate={loaded[4] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[4].src} alt={resolvedImages[4].alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: resolvedImages[4].pos }} sizes="20vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(4)} />
                 </motion.div>
               </motion.div>
 
-              {/* Main Center-Left (Medium Parallax) — LCP candidate: priority + fetchpriority high */}
+              {/* Main Center-Left (Medium Parallax) — LCP candidate: priority + fetchpriority high — card1 = index 0 */}
               <motion.div
                 style={{ y: yImage1 }}
                 className="absolute bottom-[2%] left-[12%] w-[45%] h-[75%] rounded-[2.5rem] overflow-hidden shadow-2xl border-10 border-background z-20 group bg-muted will-change-transform"
               >
-                <motion.div custom={2} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card1.src} alt={IMAGES.card1.alt} fill priority fetchPriority="high" className="object-cover transition-transform duration-[2s] group-hover:scale-[1.03]" style={{ objectPosition: IMAGES.card1.pos }} sizes="(min-width: 1024px) 30vw, 58vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
+                <motion.div custom={2} initial="hidden" animate={loaded[0] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[0].src} alt={resolvedImages[0].alt} fill priority fetchPriority="high" className="object-cover transition-transform duration-[2s] group-hover:scale-[1.03]" style={{ objectPosition: resolvedImages[0].pos }} sizes="(min-width: 1024px) 30vw, 58vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(0)} />
                   <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
                 </motion.div>
               </motion.div>
 
-              {/* Top Right (Fast Parallax) */}
+              {/* Top Right (Fast Parallax) — card2 = index 1 */}
               <motion.div
                 style={{ y: yImage2 }}
                 className="absolute top-[8%] right-[5%] w-[42%] h-[60%] rounded-4xl overflow-hidden shadow-xl border-8 border-background z-10 group bg-muted will-change-transform"
               >
-                <motion.div custom={3} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card2.src} alt={IMAGES.card2.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card2.pos }} sizes="25vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
+                <motion.div custom={3} initial="hidden" animate={loaded[1] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[1].src} alt={resolvedImages[1].alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: resolvedImages[1].pos }} sizes="25vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(1)} />
                 </motion.div>
               </motion.div>
 
-              {/* Bottom Right (Fast Parallax) */}
+              {/* Bottom Right (Fast Parallax) — card4 = index 3 */}
               <motion.div
                 style={{ y: yImage4 }}
                 className="absolute bottom-[4%] right-[2%] w-[35%] h-[45%] rounded-3xl overflow-hidden shadow-xl border-8 border-background z-10 group bg-muted will-change-transform"
               >
-                <motion.div custom={4} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card4.src} alt={IMAGES.card4.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: IMAGES.card4.pos }} sizes="20vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
+                <motion.div custom={4} initial="hidden" animate={loaded[3] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[3].src} alt={resolvedImages[3].alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: resolvedImages[3].pos }} sizes="20vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(3)} />
                 </motion.div>
               </motion.div>
 
-              {/* Small Floating Overlap (Fastest Parallax) */}
+              {/* Small Floating Overlap (Fastest Parallax) — card3 = index 2 */}
               <motion.div
                 style={{ y: yImage3 }}
                 className="absolute bottom-[20%] right-[32%] w-[22%] aspect-4/5 rounded-[1.25rem] overflow-hidden shadow-2xl border-[6px] border-background z-30 group bg-muted will-change-transform"
               >
-                <motion.div custom={5} initial="hidden" animate="visible" variants={imageReveal} className="w-full h-full">
-                  <Image src={IMAGES.card3.src} alt={IMAGES.card3.alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-110" style={{ objectPosition: IMAGES.card3.pos }} sizes="15vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
+                <motion.div custom={5} initial="hidden" animate={loaded[2] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[2].src} alt={resolvedImages[2].alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-110" style={{ objectPosition: resolvedImages[2].pos }} sizes="15vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(2)} />
                 </motion.div>
               </motion.div>
 
