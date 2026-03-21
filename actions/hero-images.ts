@@ -5,7 +5,7 @@ import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { heroImages, type HeroImage } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag, unstable_cache } from 'next/cache';
 
 // Allowlist for CSS object-position — prevents CSS injection
 const POSITION_RE = /^(top|bottom|left|right|center|\d+(\.\d+)?%)(\s+(top|bottom|left|right|center|\d+(\.\d+)?%))?$/i;
@@ -23,9 +23,23 @@ async function requireAdmin() {
   if (!session) throw new Error('Unauthorized');
 }
 
-/** Public — returns active hero images ordered by slot. */
+/**
+ * Cached DB fetch for hero images — tagged 'hero-images'.
+ * The result is cached in Next.js Data Cache (equivalent to build-time static data)
+ * and only revalidated when an admin saves via upsertHeroImage / deleteHeroImage.
+ * This means the homepage serves hero image data without a live DB roundtrip.
+ */
+const getCachedHeroImages = unstable_cache(
+  async (): Promise<HeroImage[]> => {
+    return db.select().from(heroImages).orderBy(heroImages.slot);
+  },
+  ['hero-images'],
+  { tags: ['hero-images'], revalidate: false },  // never auto-expire — only cleared on admin save
+);
+
+/** Public — returns hero images from cache (no DB roundtrip on every request). */
 export async function getHeroImages(): Promise<HeroImage[]> {
-  return db.select().from(heroImages).orderBy(heroImages.slot);
+  return getCachedHeroImages();
 }
 
 export async function upsertHeroImage(data: z.input<typeof upsertSchema>): Promise<void> {
@@ -44,16 +58,17 @@ export async function upsertHeroImage(data: z.input<typeof upsertSchema>): Promi
         updated_at: new Date(),
       },
     });
-  revalidatePath('/');
-  revalidatePath('/en');
-  revalidatePath('/bn');
+  // Invalidate cache + revalidate homepage paths so changes appear immediately
+  updateTag('hero-images');
+  revalidatePath('/en', 'page');
+  revalidatePath('/bn', 'page');
 }
 
 export async function deleteHeroImage(slot: number): Promise<void> {
   await requireAdmin();
   const validSlot = z.number().int().min(1).max(5).parse(slot);
   await db.delete(heroImages).where(eq(heroImages.slot, validSlot));
-  revalidatePath('/');
-  revalidatePath('/en');
-  revalidatePath('/bn');
+  updateTag('hero-images');
+  revalidatePath('/en', 'page');
+  revalidatePath('/bn', 'page');
 }
