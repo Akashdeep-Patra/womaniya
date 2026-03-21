@@ -35,12 +35,12 @@ export function AdminTopBar({ userName, locale }: { userName?: string | null; lo
 
   return (
     <header className="h-14 lg:h-16 flex items-center justify-between px-4 lg:px-6 border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-30">
-      <div className="flex items-center gap-2">
-        <span className="text-xs font-medium tracking-wider uppercase text-muted-foreground">Admin</span>
+      <div className="flex items-center gap-2 min-w-0 overflow-hidden">
+        <span className="text-xs font-medium tracking-wider uppercase text-muted-foreground shrink-0">Admin</span>
         {crumbs.map((crumb, i) => (
-          <span key={i} className="flex items-center gap-2">
-            <span className="text-muted-foreground/50">/</span>
-            <span className="text-xs font-medium tracking-wider uppercase text-foreground capitalize">
+          <span key={i} className="flex items-center gap-2 min-w-0">
+            <span className="text-muted-foreground/50 shrink-0">/</span>
+            <span className="text-xs font-medium tracking-wider uppercase text-foreground truncate">
               {crumb}
             </span>
           </span>

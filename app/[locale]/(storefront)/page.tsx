@@ -3,6 +3,7 @@ import { getTranslations }     from 'next-intl/server';
 import type { Metadata }       from 'next';
 import dynamic from 'next/dynamic';
 import { getHeroImages } from '@/actions/hero-images';
+import type { HeroImage } from '@/db/schema';
 
 const HeroSection = dynamic(
   () => import('@/components/storefront/HeroSection').then((m) => ({ default: m.HeroSection })),
@@ -219,7 +220,9 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const isBn = locale === 'bn';
-  const tCampaigns = await getTranslations({ locale, namespace: 'campaigns' });
+
+  // Start translations early (reads local files — never throws) in parallel with DB fetches
+  const tCampaignsPromise = getTranslations({ locale, namespace: 'campaigns' });
 
   let featured: Awaited<ReturnType<typeof getFeaturedProducts>> = [];
   let categories: Awaited<ReturnType<typeof getPublishedCategories>> = [];
@@ -228,8 +231,9 @@ export default async function HomePage({ params }: Props) {
   let banners: Awaited<ReturnType<typeof getAllBanners>> = [];
   let waNumber = '919143161829';
   let orgDesc = 'Handcrafted textiles direct from artisans. Shipped from Kolkata.';
+  let heroImages: HeroImage[] = [];
   try {
-    [featured, categories, collections, testimonials, banners, waNumber, orgDesc] = await Promise.all([
+    [featured, categories, collections, testimonials, banners, waNumber, orgDesc, heroImages] = await Promise.all([
       getFeaturedProducts(),
       getPublishedCategories(),
       getFeaturedCollections(),
@@ -237,14 +241,15 @@ export default async function HomePage({ params }: Props) {
       getAllBanners(),
       getSetting('whatsapp_number', '919143161829'),
       getSetting('seo_home_description', 'Handcrafted textiles direct from artisans. Shipped from Kolkata.'),
+      getHeroImages().catch(() => [] as HeroImage[]),
     ]);
   } catch {
     // DB not yet connected in dev
   }
+  // Await translations — already running in parallel with DB fetches above
+  const tCampaigns = await tCampaignsPromise;
 
   const heroBanners = banners.filter(b => b.placement === 'hero' && b.status === 'published');
-
-  const heroImages = await getHeroImages().catch(() => []);
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://womaniyakolkata.in';
 

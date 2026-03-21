@@ -22,13 +22,13 @@ import '@/app/globals.css';
 const dmSerifDisplay = DM_Serif_Display({
   variable: '--font-playfair',
   subsets: ['latin'],
-  display: 'swap',
+  display: 'optional',
   weight: ['400'],
 });
 const jost = Jost({
   variable: '--font-jost',
   subsets: ['latin'],
-  display: 'swap',
+  display: 'optional',
 });
 const notoSerifBn = Noto_Serif_Bengali({
   variable: '--font-noto-serif-bn',
