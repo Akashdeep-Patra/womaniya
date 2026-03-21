@@ -57,6 +57,9 @@ const imageOrigins = [
   "80% 20%", // index 5: top right
 ];
 
+// Delay lives only in the stagger — no extra base offset.
+// All cards animate from the same starting moment (when allReady flips),
+// staggered purely by custom * 0.15s so the cascade feels natural.
 const imageReveal = {
   hidden: (custom: number) => ({
     clipPath: `circle(0% at ${imageOrigins[custom] || "50% 50%"})`,
@@ -64,7 +67,7 @@ const imageReveal = {
   }),
   visible: (custom: number) => ({
     clipPath: `circle(150% at ${imageOrigins[custom] || "50% 50%"})`,
-    transition: { delay: custom * 0.15 + 0.3, duration: 1.6, ease: EASE },
+    transition: { delay: custom * 0.15, duration: 1.6, ease: EASE },
     transitionEnd: {
       clipPath: "none", // Remove clip-path after animation so it doesn't lag parallax scrolling
     }
@@ -76,23 +79,28 @@ export function HeroSection({ heroImages }: { heroImages?: HeroImage[] }) {
   const locale = useLocale();
   const isBn = locale === 'bn';
 
-  // Load-gate: track whether each image has loaded (index 0-4 = card1-card5)
-  const [loaded, setLoaded] = useState<boolean[]>([false, false, false, false, false]);
+  // Track how many images have loaded so we can fire early if all are ready
+  const loadedCount = useRef(0);
 
-  const markLoaded = useCallback((i: number) => {
-    setLoaded(prev => {
-      if (prev[i]) return prev;
-      const n = [...prev];
-      n[i] = true;
-      return n;
-    });
+  // Single gate: flip to true after 500ms (covers hydration + first paint),
+  // or immediately if all 5 images report loaded before the timer fires.
+  const [allReady, setAllReady] = useState(false);
+
+  const markLoaded = useCallback(() => {
+    loadedCount.current += 1;
+    // If every image is already loaded before the 500ms timer, reveal now
+    if (loadedCount.current >= 5) {
+      setAllReady(true);
+    }
   }, []);
 
   useEffect(() => {
-    // Fallback: priority images cached by browser fire onLoad BEFORE React
-    // attaches the handler. After 600ms, force-reveal any still-hidden images.
-    const t = setTimeout(() => setLoaded([true, true, true, true, true]), 600);
-    return () => clearTimeout(t);
+    // 500ms gives the browser time to finish first paint and attach handlers.
+    // Cached images that fire onLoad synchronously are counted via markLoaded()
+    // above; if all 5 fire before this timer, allReady is already true and this
+    // becomes a no-op. Otherwise this acts as the guaranteed reveal trigger.
+    const timer = setTimeout(() => setAllReady(true), 500);
+    return () => clearTimeout(timer);
   }, []);
 
   // Resolve images: DB row when available and active, otherwise fall back to IMAGES const
@@ -112,7 +120,7 @@ export function HeroSection({ heroImages }: { heroImages?: HeroImage[] }) {
 
   // Smooth Parallax Values
   const yText = useTransform(smoothProgress, [0, 1], [0, -120]);
-  
+
   // Desktop-only parallax transforms (creating 3D depth)
   const yImage1 = useTransform(smoothProgress, [0, 1], [0, -140]); // Main
   const yImage2 = useTransform(smoothProgress, [0, 1], [0, -260]); // Top right (faster)
@@ -136,7 +144,7 @@ export function HeroSection({ heroImages }: { heroImages?: HeroImage[] }) {
           <div className="absolute inset-0 bg-noise opacity-[0.015] mix-blend-overlay" />
         </div>
       </div>
-      
+
       {/* Soft fade masks so the background doesn't abruptly end or interfere with content */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute top-0 left-0 right-0 h-[20vh] bg-linear-to-b from-background to-transparent" />
@@ -310,8 +318,8 @@ export function HeroSection({ heroImages }: { heroImages?: HeroImage[] }) {
             {/* Mobile image mosaic — clean static grid, no parallax */}
             <div className="grid grid-cols-12 gap-2 sm:gap-3 mb-6">
               <div className="col-span-7 row-span-2 relative aspect-3/4 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-lg">
-                <motion.div custom={1} initial="hidden" animate={loaded[0] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
-                  <Image src={resolvedImages[0].src} alt={resolvedImages[0].alt} fill priority fetchPriority="high" className="object-cover" style={{ objectPosition: resolvedImages[0].pos }} sizes="(max-width: 640px) 58vw, (max-width: 768px) 58vw, (max-width: 1200px) 30vw, 25vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(0)} onError={() => markLoaded(0)} />
+                <motion.div custom={1} initial="hidden" animate={allReady ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[0].src} alt={resolvedImages[0].alt} fill priority fetchPriority="high" className="object-cover" style={{ objectPosition: resolvedImages[0].pos }} sizes="(max-width: 640px) 58vw, (max-width: 768px) 58vw, (max-width: 1200px) 30vw, 25vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={markLoaded} onError={markLoaded} />
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -324,26 +332,26 @@ export function HeroSection({ heroImages }: { heroImages?: HeroImage[] }) {
               </div>
 
               <div className="col-span-5 relative aspect-square rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md">
-                <motion.div custom={2} initial="hidden" animate={loaded[1] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
-                  <Image src={resolvedImages[1].src} alt={resolvedImages[1].alt} fill priority className="object-cover" style={{ objectPosition: resolvedImages[1].pos }} sizes="40vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(1)} onError={() => markLoaded(1)} />
+                <motion.div custom={2} initial="hidden" animate={allReady ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[1].src} alt={resolvedImages[1].alt} fill priority className="object-cover" style={{ objectPosition: resolvedImages[1].pos }} sizes="40vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={markLoaded} onError={markLoaded} />
                 </motion.div>
               </div>
 
               <div className="col-span-5 relative aspect-4/3 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md">
-                <motion.div custom={3} initial="hidden" animate={loaded[2] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
-                  <Image src={resolvedImages[2].src} alt={resolvedImages[2].alt} fill loading="lazy" className="object-cover" style={{ objectPosition: resolvedImages[2].pos }} sizes="40vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(2)} onError={() => markLoaded(2)} />
+                <motion.div custom={3} initial="hidden" animate={allReady ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[2].src} alt={resolvedImages[2].alt} fill loading="lazy" className="object-cover" style={{ objectPosition: resolvedImages[2].pos }} sizes="40vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={markLoaded} onError={markLoaded} />
                 </motion.div>
               </div>
 
               <div className="col-span-5 relative aspect-3/4 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md mt-2">
-                <motion.div custom={4} initial="hidden" animate={loaded[3] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
-                  <Image src={resolvedImages[3].src} alt={resolvedImages[3].alt} fill loading="lazy" className="object-cover" style={{ objectPosition: resolvedImages[3].pos }} sizes="40vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(3)} onError={() => markLoaded(3)} />
+                <motion.div custom={4} initial="hidden" animate={allReady ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[3].src} alt={resolvedImages[3].alt} fill loading="lazy" className="object-cover" style={{ objectPosition: resolvedImages[3].pos }} sizes="40vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={markLoaded} onError={markLoaded} />
                 </motion.div>
               </div>
 
               <div className="col-span-7 relative aspect-7/5 rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-md mt-2">
-                <motion.div custom={5} initial="hidden" animate={loaded[4] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
-                  <Image src={resolvedImages[4].src} alt={resolvedImages[4].alt} fill loading="lazy" className="object-cover" style={{ objectPosition: resolvedImages[4].pos }} sizes="58vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(4)} onError={() => markLoaded(4)} />
+                <motion.div custom={5} initial="hidden" animate={allReady ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[4].src} alt={resolvedImages[4].alt} fill loading="lazy" className="object-cover" style={{ objectPosition: resolvedImages[4].pos }} sizes="58vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={markLoaded} onError={markLoaded} />
                 </motion.div>
               </div>
             </div>
@@ -377,14 +385,14 @@ export function HeroSection({ heroImages }: { heroImages?: HeroImage[] }) {
           {/* ── DESKTOP COLLAGE ── */}
           <div className="hidden lg:block w-[58%] h-full relative z-10 order-2 pt-12 pb-16 pl-12 pr-6">
             <div className="relative w-full h-[82vh] max-h-[850px] p-4">
-              
+
               {/* Back Left (Slow Parallax) — card5 = index 4 */}
               <motion.div
                 style={{ y: yImage5 }}
                 className="absolute top-[12%] left-[2%] w-[38%] h-[55%] rounded-4xl overflow-hidden shadow-lg border-8 border-background z-0 group bg-muted will-change-transform"
               >
-                <motion.div custom={1} initial="hidden" animate={loaded[4] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
-                  <Image src={resolvedImages[4].src} alt={resolvedImages[4].alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: resolvedImages[4].pos }} sizes="20vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(4)} onError={() => markLoaded(4)} />
+                <motion.div custom={1} initial="hidden" animate={allReady ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[4].src} alt={resolvedImages[4].alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: resolvedImages[4].pos }} sizes="20vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={markLoaded} onError={markLoaded} />
                 </motion.div>
               </motion.div>
 
@@ -393,8 +401,8 @@ export function HeroSection({ heroImages }: { heroImages?: HeroImage[] }) {
                 style={{ y: yImage1 }}
                 className="absolute bottom-[2%] left-[12%] w-[45%] h-[75%] rounded-[2.5rem] overflow-hidden shadow-2xl border-10 border-background z-20 group bg-muted will-change-transform"
               >
-                <motion.div custom={2} initial="hidden" animate={loaded[0] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
-                  <Image src={resolvedImages[0].src} alt={resolvedImages[0].alt} fill priority fetchPriority="high" className="object-cover transition-transform duration-[2s] group-hover:scale-[1.03]" style={{ objectPosition: resolvedImages[0].pos }} sizes="(min-width: 1024px) 30vw, 58vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(0)} onError={() => markLoaded(0)} />
+                <motion.div custom={2} initial="hidden" animate={allReady ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[0].src} alt={resolvedImages[0].alt} fill priority fetchPriority="high" className="object-cover transition-transform duration-[2s] group-hover:scale-[1.03]" style={{ objectPosition: resolvedImages[0].pos }} sizes="(min-width: 1024px) 30vw, 58vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={markLoaded} onError={markLoaded} />
                   <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
                 </motion.div>
               </motion.div>
@@ -404,8 +412,8 @@ export function HeroSection({ heroImages }: { heroImages?: HeroImage[] }) {
                 style={{ y: yImage2 }}
                 className="absolute top-[8%] right-[5%] w-[42%] h-[60%] rounded-4xl overflow-hidden shadow-xl border-8 border-background z-10 group bg-muted will-change-transform"
               >
-                <motion.div custom={3} initial="hidden" animate={loaded[1] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
-                  <Image src={resolvedImages[1].src} alt={resolvedImages[1].alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: resolvedImages[1].pos }} sizes="25vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(1)} onError={() => markLoaded(1)} />
+                <motion.div custom={3} initial="hidden" animate={allReady ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[1].src} alt={resolvedImages[1].alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: resolvedImages[1].pos }} sizes="25vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={markLoaded} onError={markLoaded} />
                 </motion.div>
               </motion.div>
 
@@ -414,8 +422,8 @@ export function HeroSection({ heroImages }: { heroImages?: HeroImage[] }) {
                 style={{ y: yImage4 }}
                 className="absolute bottom-[4%] right-[2%] w-[35%] h-[45%] rounded-3xl overflow-hidden shadow-xl border-8 border-background z-10 group bg-muted will-change-transform"
               >
-                <motion.div custom={4} initial="hidden" animate={loaded[3] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
-                  <Image src={resolvedImages[3].src} alt={resolvedImages[3].alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: resolvedImages[3].pos }} sizes="20vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(3)} onError={() => markLoaded(3)} />
+                <motion.div custom={4} initial="hidden" animate={allReady ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[3].src} alt={resolvedImages[3].alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-105" style={{ objectPosition: resolvedImages[3].pos }} sizes="20vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={markLoaded} onError={markLoaded} />
                 </motion.div>
               </motion.div>
 
@@ -424,8 +432,8 @@ export function HeroSection({ heroImages }: { heroImages?: HeroImage[] }) {
                 style={{ y: yImage3 }}
                 className="absolute bottom-[20%] right-[32%] w-[22%] aspect-4/5 rounded-[1.25rem] overflow-hidden shadow-2xl border-[6px] border-background z-30 group bg-muted will-change-transform"
               >
-                <motion.div custom={5} initial="hidden" animate={loaded[2] ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
-                  <Image src={resolvedImages[2].src} alt={resolvedImages[2].alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-110" style={{ objectPosition: resolvedImages[2].pos }} sizes="15vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={() => markLoaded(2)} onError={() => markLoaded(2)} />
+                <motion.div custom={5} initial="hidden" animate={allReady ? "visible" : "hidden"} variants={imageReveal} className="w-full h-full">
+                  <Image src={resolvedImages[2].src} alt={resolvedImages[2].alt} fill loading="lazy" className="object-cover transition-transform duration-[2s] group-hover:scale-110" style={{ objectPosition: resolvedImages[2].pos }} sizes="15vw" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} onLoad={markLoaded} onError={markLoaded} />
                 </motion.div>
               </motion.div>
 

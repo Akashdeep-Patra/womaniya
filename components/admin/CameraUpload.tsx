@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react';
 import Image from 'next/image';
-import { ImagePlus, X, UploadCloud, FolderOpen } from 'lucide-react';
+import { ImagePlus, X, UploadCloud, FolderOpen, RefreshCw } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useDropzone } from 'react-dropzone';
 import imageCompression from 'browser-image-compression';
@@ -20,6 +20,8 @@ interface Props {
   multiple?: boolean;
   enableLibrary?: boolean;
   pathPrefix?: string;
+  /** When true, show upload + library buttons on top of existing image (no need to clear first) */
+  allowUploadInPlace?: boolean;
 }
 
 interface UploadingFile {
@@ -134,6 +136,7 @@ export function CameraUpload({
   multiple,
   enableLibrary = true,
   pathPrefix = 'uploads',
+  allowUploadInPlace = false,
 }: Props) {
   const t = useTranslations('admin');
 
@@ -271,9 +274,27 @@ export function CameraUpload({
     const isWorking = currentUpload && currentUpload.progress < 100;
 
     return (
-      <div className="relative w-full aspect-4/5 rounded-xl overflow-hidden bg-muted border border-border">
+      <div
+        {...(allowUploadInPlace ? getRootProps() : {})}
+        className={cn(
+          'relative w-full rounded-xl overflow-hidden bg-muted border border-border',
+          allowUploadInPlace ? 'aspect-video cursor-default' : 'aspect-4/5',
+          allowUploadInPlace && isDragActive && 'ring-2 ring-primary ring-offset-2',
+        )}
+      >
+        {allowUploadInPlace && <input {...getInputProps({ name })} />}
+
         <Image src={singlePreview} alt="Preview" fill className="object-cover" />
 
+        {/* Drag-over overlay */}
+        {allowUploadInPlace && isDragActive && (
+          <div className="absolute inset-0 bg-primary/30 backdrop-blur-sm flex flex-col items-center justify-center gap-2 pointer-events-none">
+            <UploadCloud size={28} className="text-white drop-shadow" />
+            <span className="text-white text-xs font-bold tracking-wider uppercase">Drop to replace</span>
+          </div>
+        )}
+
+        {/* Upload progress */}
         {isWorking && (
           <div className="absolute inset-0 bg-background/60 flex flex-col items-center justify-center gap-2 p-2 backdrop-blur-sm">
             <span className={cn("font-medium", currentUpload?.error ? "text-destructive text-xs" : "text-foreground text-[10px] tracking-widest")}>
@@ -291,24 +312,61 @@ export function CameraUpload({
         )}
 
         {!isWorking && (
-          <>
+          <div className="absolute top-1.5 right-1.5 flex items-center gap-1 z-10">
+            {allowUploadInPlace && (
+              /* Upload new image without clearing — triggers file dialog */
+              <label
+                title="Upload new image"
+                className="w-8 h-8 bg-foreground/80 hover:bg-primary rounded-full flex items-center justify-center cursor-pointer touch-manipulation active:scale-90 transition-all"
+              >
+                <input
+                  type="file"
+                  className="sr-only"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    e.target.value = '';
+                    setIsUploading(true);
+                    const id = Math.random().toString(36).substring(7);
+                    setUploadingFiles([{ id, file, progress: 0, preview: URL.createObjectURL(file) }]);
+                    try {
+                      const result = await compressAndUpload(file, (pct) => {
+                        setUploadingFiles(prev => prev.map(p => p.id === id ? { ...p, progress: pct } : p));
+                      }, pathPrefix);
+                      setSinglePreview(result.url);
+                      onUpload(result.url);
+                    } catch (err) {
+                      const msg = err instanceof Error ? err.message : 'Upload failed';
+                      notify.error('media', 'uploaded', msg);
+                    } finally {
+                      setUploadingFiles([]);
+                      setIsUploading(false);
+                    }
+                  }}
+                />
+                <RefreshCw size={13} className="text-background" />
+              </label>
+            )}
             {enableLibrary && (
               <button
                 type="button"
-                onClick={() => setPickerOpen(true)}
-                className="absolute top-1.5 left-1.5 w-8 h-8 bg-foreground/80 hover:bg-primary rounded-full flex items-center justify-center cursor-pointer touch-manipulation active:scale-90 transition-all z-10"
+                onClick={(e) => { e.stopPropagation(); setPickerOpen(true); }}
+                title="Pick from Media Library"
+                className="w-8 h-8 bg-foreground/80 hover:bg-primary rounded-full flex items-center justify-center cursor-pointer touch-manipulation active:scale-90 transition-all"
               >
-                <FolderOpen size={14} className="text-background" />
+                <FolderOpen size={13} className="text-background" />
               </button>
             )}
             <button
               type="button"
               onClick={clearSingle}
-              className="absolute top-1.5 right-1.5 w-8 h-8 bg-foreground/80 hover:bg-destructive rounded-full flex items-center justify-center cursor-pointer touch-manipulation active:scale-90 transition-all z-10"
+              title="Remove image"
+              className="w-8 h-8 bg-foreground/80 hover:bg-destructive rounded-full flex items-center justify-center cursor-pointer touch-manipulation active:scale-90 transition-all"
             >
-              <X size={14} className="text-background" />
+              <X size={13} className="text-background" />
             </button>
-          </>
+          </div>
         )}
 
         {enableLibrary && (

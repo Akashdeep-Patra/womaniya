@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useRef, useEffect } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import Image from 'next/image';
 import { Save, Eye, EyeOff, ImageOff, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -47,8 +47,8 @@ function buildInitialSlots(dbImages: HeroImage[]): SlotState[] {
   });
 }
 
-// ─── In-place popover for a single card ──────────────────────────
-function CardPopover({
+// ─── Full-screen modal editor for a single card ───────────────────
+function CardModal({
   state,
   onChange,
   onSave,
@@ -61,8 +61,6 @@ function CardPopover({
   onClose: () => void;
   saving: boolean;
 }) {
-  const panelRef = useRef<HTMLDivElement>(null);
-
   // Close on Escape key
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
@@ -70,31 +68,47 @@ function CardPopover({
     return () => window.removeEventListener('keydown', handler);
   }, [onClose]);
 
+  // Lock scroll while open
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, []);
+
+  const def = SLOT_DEFAULTS.find(d => d.slot === state.slot);
+
+  const handleUpload = (url: string) => {
+    if (!url) {
+      // Reset to fallback default when cleared
+      onChange({ src: def?.src ?? '', alt: def?.alt ?? '', position: def?.position ?? '50% 50%' });
+    } else {
+      onChange({ src: url });
+    }
+  };
+
   return (
     <>
-      {/* Dim backdrop — click to close */}
+      {/* Full-screen backdrop — fixed, outside any overflow-hidden container */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="absolute inset-0 bg-black/60 backdrop-blur-[2px] cursor-pointer"
-        style={{ zIndex: 50 }}
+        className="fixed inset-0 bg-black/70 backdrop-blur-[3px] cursor-pointer"
+        style={{ zIndex: 9998 }}
         onClick={onClose}
       />
 
-      {/* Popover panel — centred in collage */}
+      {/* Modal panel — fixed, centred on viewport, responsive */}
       <motion.div
-        ref={panelRef}
-        initial={{ opacity: 0, scale: 0.92, y: 8 }}
+        initial={{ opacity: 0, scale: 0.94, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.92, y: 8 }}
-        transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(360px,90%)] bg-card border border-border rounded-2xl shadow-2xl overflow-hidden"
-        style={{ zIndex: 51 }}
+        exit={{ opacity: 0, scale: 0.94, y: 12 }}
+        transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(440px,calc(100vw-1.5rem))] max-h-[calc(100dvh-2rem)] bg-card border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+        style={{ zIndex: 9999 }}
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/40">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/40 shrink-0">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold tracking-[0.2em] uppercase text-foreground">Card {state.slot}</span>
             <button
@@ -121,14 +135,16 @@ function CardPopover({
           </button>
         </div>
 
-        <div className="p-4 flex flex-col gap-3">
-          {/* Upload — drag & drop + media library */}
+        {/* Scrollable body */}
+        <div className="p-4 flex flex-col gap-4 overflow-y-auto">
+          {/* Upload — drag & drop + media library + upload-in-place */}
           <CameraUpload
             name={`hero-slot-${state.slot}`}
             initialUrl={state.src || null}
-            onUpload={url => onChange({ src: url })}
+            onUpload={handleUpload}
             pathPrefix="hero"
             enableLibrary
+            allowUploadInPlace
           />
 
           {/* Alt text */}
@@ -222,16 +238,14 @@ export function HeroImageManagerClient({ initialImages }: Props) {
         </p>
       </div>
 
-      {/* Collage — relative container so the popover can position absolutely inside it */}
-      <div className="rounded-2xl overflow-hidden border border-border bg-muted/20 p-3 sm:p-5">
+      {/* Collage preview */}
+      <div className="rounded-2xl border border-border bg-muted/20 p-3 sm:p-5">
         <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground font-semibold mb-3">
           Homepage Hero — click any card to edit
         </p>
 
         <div className="relative w-full" style={{ paddingBottom: '64%' }}>
           <div className="absolute inset-0">
-
-            {/* Cards */}
             {COLLAGE.map(({ slot, cls, z, r }) => {
               const s = slots.find(x => x.slot === slot);
               if (!s) return null;
@@ -280,7 +294,7 @@ export function HeroImageManagerClient({ initialImages }: Props) {
                     {slot}
                   </div>
 
-                  {/* Edit hint on hover */}
+                  {/* Edit hint */}
                   {!isEditing && (
                     <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                       <span className="text-white text-[9px] font-bold tracking-[0.2em] uppercase bg-black/60 px-2 py-1 rounded-full">Edit</span>
@@ -295,21 +309,6 @@ export function HeroImageManagerClient({ initialImages }: Props) {
                 </button>
               );
             })}
-
-            {/* In-place popover */}
-            <AnimatePresence>
-              {editingSlot !== null && activeState && (
-                <CardPopover
-                  key={editingSlot}
-                  state={activeState}
-                  onChange={patch => updateSlot(editingSlot, patch)}
-                  onSave={() => saveSlot(editingSlot)}
-                  onClose={() => setEditingSlot(null)}
-                  saving={savingSlot === editingSlot}
-                />
-              )}
-            </AnimatePresence>
-
           </div>
         </div>
       </div>
@@ -334,6 +333,20 @@ export function HeroImageManagerClient({ initialImages }: Props) {
           </button>
         ))}
       </div>
+
+      {/* Modal — rendered at root level, fixed to viewport (not clipped by collage overflow) */}
+      <AnimatePresence>
+        {editingSlot !== null && activeState && (
+          <CardModal
+            key={editingSlot}
+            state={activeState}
+            onChange={patch => updateSlot(editingSlot, patch)}
+            onSave={() => saveSlot(editingSlot)}
+            onClose={() => setEditingSlot(null)}
+            saving={savingSlot === editingSlot}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
