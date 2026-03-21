@@ -67,6 +67,12 @@ function RichText({ c, locale }: { c: C; locale: string }) {
   }
 
   // Legacy markdown — parse manually for backward compat
+  function parseInline(text: string): string {
+    return text
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
+  }
+
   const blocks = raw.split(/\n{2,}/);
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6">
@@ -74,22 +80,22 @@ function RichText({ c, locale }: { c: C; locale: string }) {
         {blocks.map((block, i) => {
           const t = block.trim();
           if (t.startsWith('## '))
-            return <h2 key={i} className="font-editorial text-3xl sm:text-4xl text-foreground tracking-tight mt-10 mb-2">{t.slice(3)}</h2>;
+            return <h2 key={i} className="font-editorial text-3xl sm:text-4xl text-foreground tracking-tight mt-10 mb-2" dangerouslySetInnerHTML={{ __html: parseInline(t.slice(3)) }} />;
           if (t.startsWith('### '))
-            return <h3 key={i} className="font-editorial text-xl sm:text-2xl text-foreground tracking-tight mt-6 mb-1">{t.slice(4)}</h3>;
+            return <h3 key={i} className="font-editorial text-xl sm:text-2xl text-foreground tracking-tight mt-6 mb-1" dangerouslySetInnerHTML={{ __html: parseInline(t.slice(4)) }} />;
           if (t.startsWith('- ') || t.startsWith('* ')) {
             const items = t.split('\n').filter(Boolean);
             return (
               <ul key={i} className="space-y-2 pl-4">
                 {items.map((li, j) => (
-                  <li key={j} className="relative text-muted-foreground font-sans-en leading-relaxed text-base sm:text-lg pl-4 before:absolute before:left-0 before:top-2.5 before:w-1.5 before:h-1.5 before:rounded-full before:bg-primary/50">
-                    {li.replace(/^[-*]\s/, '')}
-                  </li>
+                  <li key={j} className="relative text-muted-foreground font-sans-en leading-relaxed text-base sm:text-lg pl-4 before:absolute before:left-0 before:top-2.5 before:w-1.5 before:h-1.5 before:rounded-full before:bg-primary/50"
+                    dangerouslySetInnerHTML={{ __html: parseInline(li.replace(/^[-*]\s/, '')) }}
+                  />
                 ))}
               </ul>
             );
           }
-          return <p key={i} className="text-muted-foreground font-sans-en leading-relaxed text-base sm:text-lg">{t}</p>;
+          return <p key={i} className="text-muted-foreground font-sans-en leading-relaxed text-base sm:text-lg" dangerouslySetInnerHTML={{ __html: parseInline(t) }} />;
         })}
       </div>
     </div>
