@@ -315,57 +315,67 @@ export function CameraUpload({
           <div className="absolute top-1.5 right-1.5 flex items-center gap-1 z-10">
             {allowUploadInPlace && (
               /* Upload new image without clearing — triggers file dialog */
-              <label
-                title="Upload new image"
-                className="w-8 h-8 bg-foreground/80 hover:bg-primary rounded-full flex items-center justify-center cursor-pointer touch-manipulation active:scale-90 transition-all"
-              >
-                <input
-                  type="file"
-                  className="sr-only"
-                  accept="image/*"
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (!file) return;
-                    e.target.value = '';
-                    setIsUploading(true);
-                    const id = Math.random().toString(36).substring(7);
-                    setUploadingFiles([{ id, file, progress: 0, preview: URL.createObjectURL(file) }]);
-                    try {
-                      const result = await compressAndUpload(file, (pct) => {
-                        setUploadingFiles(prev => prev.map(p => p.id === id ? { ...p, progress: pct } : p));
-                      }, pathPrefix);
-                      setSinglePreview(result.url);
-                      onUpload(result.url);
-                    } catch (err) {
-                      const msg = err instanceof Error ? err.message : 'Upload failed';
-                      notify.error('media', 'uploaded', msg);
-                    } finally {
-                      setUploadingFiles([]);
-                      setIsUploading(false);
-                    }
-                  }}
-                />
-                <RefreshCw size={13} className="text-background" />
-              </label>
+              <div className="relative group/tip">
+                <label className="w-8 h-8 bg-foreground/80 hover:bg-primary rounded-full flex items-center justify-center cursor-pointer touch-manipulation active:scale-90 transition-all">
+                  <input
+                    type="file"
+                    className="sr-only"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      e.target.value = '';
+                      setIsUploading(true);
+                      const id = Math.random().toString(36).substring(7);
+                      setUploadingFiles([{ id, file, progress: 0, preview: URL.createObjectURL(file) }]);
+                      try {
+                        const result = await compressAndUpload(file, (pct) => {
+                          setUploadingFiles(prev => prev.map(p => p.id === id ? { ...p, progress: pct } : p));
+                        }, pathPrefix);
+                        setSinglePreview(result.url);
+                        onUpload(result.url);
+                      } catch (err) {
+                        const msg = err instanceof Error ? err.message : 'Upload failed';
+                        notify.error('media', 'uploaded', msg);
+                      } finally {
+                        setUploadingFiles([]);
+                        setIsUploading(false);
+                      }
+                    }}
+                  />
+                  <RefreshCw size={13} className="text-background" />
+                </label>
+                <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-foreground text-background text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-150 shadow-lg">
+                  Upload new
+                </span>
+              </div>
             )}
             {enableLibrary && (
+              <div className="relative group/tip">
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setPickerOpen(true); }}
+                  className="w-8 h-8 bg-foreground/80 hover:bg-primary rounded-full flex items-center justify-center cursor-pointer touch-manipulation active:scale-90 transition-all"
+                >
+                  <FolderOpen size={13} className="text-background" />
+                </button>
+                <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-foreground text-background text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-150 shadow-lg">
+                  Media library
+                </span>
+              </div>
+            )}
+            <div className="relative group/tip">
               <button
                 type="button"
-                onClick={(e) => { e.stopPropagation(); setPickerOpen(true); }}
-                title="Pick from Media Library"
-                className="w-8 h-8 bg-foreground/80 hover:bg-primary rounded-full flex items-center justify-center cursor-pointer touch-manipulation active:scale-90 transition-all"
+                onClick={clearSingle}
+                className="w-8 h-8 bg-foreground/80 hover:bg-destructive rounded-full flex items-center justify-center cursor-pointer touch-manipulation active:scale-90 transition-all"
               >
-                <FolderOpen size={13} className="text-background" />
+                <X size={13} className="text-background" />
               </button>
-            )}
-            <button
-              type="button"
-              onClick={clearSingle}
-              title="Remove image"
-              className="w-8 h-8 bg-foreground/80 hover:bg-destructive rounded-full flex items-center justify-center cursor-pointer touch-manipulation active:scale-90 transition-all"
-            >
-              <X size={13} className="text-background" />
-            </button>
+              <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-foreground text-background text-[10px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-150 shadow-lg">
+                Remove
+              </span>
+            </div>
           </div>
         )}
 
