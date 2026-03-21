@@ -16,27 +16,26 @@ export async function generateMetadata(
   const { locale } = await params;
   const isBn = locale === 'bn';
 
-  // Fetch admin override + live DB data in parallel
-  const [seoTitle, seoDesc, storeName, categories, products] = await Promise.all([
+  // Fetch admin overrides + published categories (all cached — zero live DB hits)
+  const [seoTitle, seoDesc, storeName, categories] = await Promise.all([
     getSetting('seo_shop_title'),
     getSetting('seo_shop_description'),
     getSetting('store_name'),
     getPublishedCategories(),
-    getPublishedProducts(),
-  ]).catch(() => [null, null, null, [], []] as const);
+  ]).catch(() => [null, null, null, []] as const);
 
   const brand = storeName || 'Womaniya';
 
   // Dynamic title — built from actual published category names in the DB
-  const catNames = categories.slice(0, 5)
+  const catNames = (categories as { name_en: string; name_bn?: string | null }[])
+    .slice(0, 5)
     .map(c => (isBn && c.name_bn ? c.name_bn : c.name_en))
     .join(' · ');
   const dynamicTitle = catNames ? `${catNames} | ${brand}` : `Shop | ${brand}`;
 
-  // Dynamic description — actual product count + category names
-  const n = products.length;
-  const dynamicDesc = catNames && n > 0
-    ? `${n} handcrafted piece${n !== 1 ? 's' : ''} across ${catNames}. Direct from artisans.`
+  // Description uses category names (no extra DB query needed)
+  const dynamicDesc = catNames
+    ? `Handcrafted ${catNames} — direct from artisans. Free shipping across India.`
     : `Handcrafted textiles by ${brand}. Direct from artisans.`;
 
   // Admin setting is an explicit override; DB data is the default

@@ -99,7 +99,7 @@ export function HeroSection({ heroImages }: { heroImages?: HeroImage[] }) {
     // Cached images that fire onLoad synchronously are counted via markLoaded()
     // above; if all 5 fire before this timer, allReady is already true and this
     // becomes a no-op. Otherwise this acts as the guaranteed reveal trigger.
-    const timer = setTimeout(() => setAllReady(true), 500);
+    const timer = setTimeout(() => setAllReady(true), 150);
     return () => clearTimeout(timer);
   }, []);
 

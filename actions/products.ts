@@ -300,17 +300,27 @@ export async function getFeaturedProducts() {
   return _getFeaturedProducts();
 }
 
-export async function getPublishedProducts(category?: string) {
-  if (category && category !== 'All') {
+// Cache published products (60 s TTL). updateTag('products') in revalidateAll()
+// invalidates this whenever a product is created, updated, or deleted.
+const _getPublishedProducts = unstable_cache(
+  async (category?: string) => {
+    if (category && category !== 'All') {
+      return db.query.products.findMany({
+        where:   (p, { and, eq }) => and(eq(p.category, category), eq(p.status, 'published')),
+        orderBy: (p, { desc }) => [desc(p.created_at)],
+      });
+    }
     return db.query.products.findMany({
-      where:   (p, { and, eq }) => and(eq(p.category, category), eq(p.status, 'published')),
+      where:   (p, { eq }) => eq(p.status, 'published'),
       orderBy: (p, { desc }) => [desc(p.created_at)],
     });
-  }
-  return db.query.products.findMany({
-    where:   (p, { eq }) => eq(p.status, 'published'),
-    orderBy: (p, { desc }) => [desc(p.created_at)],
-  });
+  },
+  ['published-products'],
+  { revalidate: 60, tags: ['products'] },
+);
+
+export async function getPublishedProducts(category?: string) {
+  return _getPublishedProducts(category);
 }
 
 export async function getAllProducts(category?: string) {
