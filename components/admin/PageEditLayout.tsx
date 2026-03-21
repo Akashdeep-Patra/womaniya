@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import {
   Monitor, Tablet, Smartphone, RefreshCw,
   ExternalLink, Eye, EyeOff, PanelRight,
@@ -47,10 +47,15 @@ export function PageEditLayout({
   const [iframeLoading, setIframeLoading] = useState(true);
   const [showPreview, setShowPreview] = useState(true);
   const [mobileTab, setMobileTab]     = useState<'edit' | 'preview'>('edit');
+  // Start with PROD_ORIGIN so server + first client render match (no hydration mismatch).
+  // After mount, switch to the actual origin so dev preview uses localhost.
+  const [origin, setOrigin]           = useState(PROD_ORIGIN);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // Use current origin so preview works in development (localhost) and production
-  const origin   = typeof window !== 'undefined' ? window.location.origin : PROD_ORIGIN;
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
+
   const liveUrl  = `${origin}/${locale}/pages/${page.slug}`;
   const isDraft  = page.status === 'draft';
   const current  = DEVICES.find((d) => d.mode === device)!;
