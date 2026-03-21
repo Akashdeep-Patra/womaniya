@@ -116,13 +116,13 @@ function HeroSection({ c, title }: { c: C; title: string }) {
           <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
         </>
       ) : (
-        <div className="absolute inset-0 bg-bengal-kajal" />
+        <div className="absolute inset-0 bg-foreground" />
       )}
       <div className="relative z-10 w-full max-w-4xl mx-auto px-6 pb-14 pt-32 sm:pt-40">
         <h1 className="font-editorial text-4xl sm:text-6xl text-white leading-[0.9] tracking-tight mb-4">{heroTitle}</h1>
         {subtitle && <p className="text-white/80 text-lg font-sans-en font-light max-w-xl">{subtitle}</p>}
         {ctaText && ctaUrl && (
-          <Link href={ctaUrl} className="mt-6 inline-flex items-center gap-2 bg-white text-bengal-kajal text-xs tracking-widest uppercase font-semibold px-7 py-3 rounded-full hover:bg-bengal-sindoor hover:text-white transition-colors">
+          <Link href={ctaUrl} className="mt-6 inline-flex items-center gap-2 bg-white text-[#1C1917] text-xs tracking-widest uppercase font-semibold px-7 py-3 rounded-full hover:bg-bengal-sindoor hover:text-white transition-colors">
             {ctaText}
           </Link>
         )}
@@ -178,14 +178,39 @@ function CtaSection({ c }: { c: C }) {
   if (!title && !text) return null;
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6">
-      <div className="bg-bengal-kajal rounded-3xl px-8 sm:px-14 py-12 sm:py-16 text-center">
-        {title && <h2 className="font-editorial text-3xl sm:text-5xl text-white leading-tight tracking-tight mb-4">{title}</h2>}
-        {text  && <p className="text-white/70 font-sans-en text-base sm:text-lg max-w-xl mx-auto mb-8">{text}</p>}
-        {btnText && btnUrl && (
-          <Link href={btnUrl} className="inline-flex items-center gap-2 bg-bengal-sindoor text-white text-xs tracking-widest uppercase font-semibold px-8 py-3.5 rounded-full hover:bg-bengal-alta transition-colors">
-            {btnText}
-          </Link>
-        )}
+      {/* Editorial CTA card — dark elevated surface with sindoor top accent */}
+      <div className="relative rounded-3xl overflow-hidden bg-card border border-border shadow-lg">
+        {/* Sindoor top border accent */}
+        <div className="absolute top-0 left-0 right-0 h-[3px] bg-linear-to-r from-bengal-sindoor/0 via-bengal-sindoor to-bengal-sindoor/0" />
+
+        <div className="px-8 sm:px-16 py-12 sm:py-16 text-center">
+          {/* Decorative mark */}
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="h-px w-10 bg-bengal-sindoor/40" />
+            <span className="text-[9px] tracking-[0.3em] uppercase text-bengal-sindoor font-sans-en font-semibold">Womaniya</span>
+            <div className="h-px w-10 bg-bengal-sindoor/40" />
+          </div>
+
+          {title && (
+            <h2 className="font-editorial text-3xl sm:text-5xl text-foreground leading-tight tracking-tight mb-4">
+              {title}
+            </h2>
+          )}
+          {text && (
+            <p className="text-muted-foreground font-sans-en text-base sm:text-lg max-w-xl mx-auto mb-8 leading-relaxed">
+              {text}
+            </p>
+          )}
+
+          {btnText && btnUrl && (
+            <Link
+              href={btnUrl}
+              className="inline-flex items-center gap-2.5 h-12 px-8 rounded-full bg-foreground text-background text-xs tracking-[0.15em] uppercase font-semibold transition-all duration-300 hover:bg-primary hover:text-primary-foreground hover:shadow-lg hover:-translate-y-0.5"
+            >
+              {btnText}
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );
