@@ -1,15 +1,27 @@
 'use client';
 
 import {
-  useState, useTransition, useCallback, useMemo, useRef, useId,
+  useState, useTransition, useCallback, useMemo, useRef, useId, useEffect,
 } from 'react';
 import { notify } from '@/lib/notify';
 import { BengalButton } from '@/components/bengal';
 import { cn } from '@/lib/utils';
 import {
   ChevronDown, RotateCcw, Save, ExternalLink, Globe,
-  Smartphone, Monitor, RefreshCw, Search, X,
+  Smartphone, Monitor, RefreshCw, Search, X, Languages, Loader2,
 } from 'lucide-react';
+
+// ─── MyMemory free translation (no API key, no setup) ──────────────
+async function translateEN_BN(text: string): Promise<string> {
+  if (!text.trim()) return '';
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|bn`;
+  const res  = await fetch(url);
+  if (!res.ok) throw new Error('Translation service unavailable');
+  const data = await res.json() as { responseData?: { translatedText?: string }; responseStatus?: number };
+  const translated = data.responseData?.translatedText;
+  if (!translated || data.responseStatus === 403) throw new Error('Translation failed');
+  return translated;
+}
 import { saveContentOverrides, resetContentKey, getContentOverrides } from '@/actions/content';
 import type { ContentPageGroup, ContentNamespaceConfig } from '@/lib/content-config';
 
@@ -23,10 +35,37 @@ type Props = {
   initialLocale: string;
 };
 
+// ─── Highlight: wraps matched portion in a <mark> ──────────────────
+function HighlightMatch({ text, query }: { text: string; query: string }) {
+  const q = query.trim().toLowerCase();
+  if (!q || !text) return null;
+
+  const lower = text.toLowerCase();
+  const idx = lower.indexOf(q);
+  if (idx === -1) return null;
+
+  // Show up to 40 chars of context around the match
+  const ctxStart = Math.max(0, idx - 30);
+  const ctxEnd   = Math.min(text.length, idx + q.length + 30);
+  const prefix   = (ctxStart > 0 ? '…' : '') + text.slice(ctxStart, idx);
+  const match    = text.slice(idx, idx + q.length);
+  const suffix   = text.slice(idx + q.length, ctxEnd) + (ctxEnd < text.length ? '…' : '');
+
+  return (
+    <p className="mt-1 text-[11px] leading-snug text-muted-foreground font-mono break-all">
+      {prefix}
+      <mark className="bg-amber-300/60 dark:bg-amber-500/30 text-foreground rounded-[2px] px-0.5 font-semibold not-italic">
+        {match}
+      </mark>
+      {suffix}
+    </p>
+  );
+}
+
 // ─── Section Accordion ─────────────────────────────────────────────
 function SectionAccordion({
   ns, expanded, onToggle, dirtyCount, overrides, defaults,
-  isBn, isPending, onChange, onReset, idPrefix,
+  isBn, isPending, onChange, onReset, idPrefix, highlightQuery, enDefaults,
 }: {
   ns: ContentNamespaceConfig;
   expanded: boolean;
@@ -39,12 +78,51 @@ function SectionAccordion({
   onChange: (ns: string, key: string, value: string) => void;
   onReset: (ns: string, key: string) => void;
   idPrefix: string;
+  highlightQuery: string;
+  enDefaults?: Record<string, string>;
 }) {
-  const panelId = `${idPrefix}-panel-${ns.name}`;
+  const panelId  = `${idPrefix}-panel-${ns.name}`;
   const headerId = `${idPrefix}-hdr-${ns.name}`;
+  const q        = highlightQuery.trim().toLowerCase();
+
+  // Per-field translate loading state
+  const [translating, setTranslating] = useState<Set<string>>(new Set());
+
+  const handleTranslate = useCallback(async (key: string) => {
+    const source = enDefaults?.[key];
+    if (!source) return;
+    setTranslating((prev) => new Set([...prev, key]));
+    try {
+      const result = await translateEN_BN(source);
+      onChange(ns.name, key, result);
+    } catch {
+      notify.error('settings', 'saved', 'Translation failed — try again');
+    } finally {
+      setTranslating((prev) => { const next = new Set(prev); next.delete(key); return next; });
+    }
+  }, [enDefaults, ns.name, onChange]);
+
+  // Pre-compute which keys have a match in their value (for header badge + field highlight)
+  const matchingKeys = useMemo(() => {
+    if (!q) return new Set<string>();
+    const result = new Set<string>();
+    for (const k of ns.keys) {
+      const def = defaults[k.key] ?? '';
+      const ov  = overrides?.[k.key] ?? '';
+      if (def.toLowerCase().includes(q) || ov.toLowerCase().includes(q)) {
+        result.add(k.key);
+      }
+    }
+    return result;
+  }, [q, ns.keys, defaults, overrides]);
+
+  const valueMatchCount = matchingKeys.size;
 
   return (
-    <div className="bg-card border border-border rounded-xl overflow-hidden">
+    <div className={cn(
+      'bg-card border border-border rounded-xl overflow-hidden transition-colors',
+      q && valueMatchCount > 0 && 'border-amber-400/40 dark:border-amber-500/30',
+    )}>
       <button
         id={headerId}
         onClick={onToggle}
@@ -56,7 +134,16 @@ function SectionAccordion({
           <span className="font-sans font-semibold text-[13px] sm:text-sm text-foreground truncate">{ns.label}</span>
           <span className="text-[11px] text-muted-foreground shrink-0">{ns.keys.length}</span>
           {dirtyCount > 0 && (
-            <span className="text-[10px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 px-1.5 py-0.5 rounded-full shrink-0">{dirtyCount}</span>
+            <span className="text-[10px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 px-1.5 py-0.5 rounded-full shrink-0">
+              {dirtyCount}
+            </span>
+          )}
+          {/* Value-match badge — shown when search is active and values matched */}
+          {q && valueMatchCount > 0 && (
+            <span className="text-[10px] font-semibold bg-amber-400/20 text-amber-700 dark:text-amber-400 border border-amber-400/30 px-1.5 py-0.5 rounded-full shrink-0 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
+              {valueMatchCount} match{valueMatchCount > 1 ? 'es' : ''}
+            </span>
           )}
         </div>
         <ChevronDown size={16} className={cn('text-muted-foreground transition-transform duration-200 shrink-0', expanded && 'rotate-180')} />
@@ -67,28 +154,97 @@ function SectionAccordion({
           <p className="text-[11px] text-muted-foreground mt-2.5 mb-3">{ns.description}</p>
           <div className="space-y-3">
             {ns.keys.map((k) => {
-              const overridden = overrides?.[k.key] !== undefined;
-              const displayVal = overridden ? (overrides?.[k.key] ?? '') : '';
-              const defaultVal = defaults[k.key] ?? '';
-              const fieldId = `${idPrefix}-${ns.name}-${k.key}`;
+              const overridden    = overrides?.[k.key] !== undefined;
+              const displayVal    = overridden ? (overrides?.[k.key] ?? '') : '';
+              const defaultVal    = defaults[k.key] ?? '';
+              const fieldId       = `${idPrefix}-${ns.name}-${k.key}`;
+              const isValueMatch  = matchingKeys.has(k.key);
+              // The text to highlight: prefer live value, fall back to default
+              const highlightText = displayVal || defaultVal;
+
               return (
-                <div key={k.key}>
+                <div
+                  key={k.key}
+                  className={cn(
+                    'rounded-lg transition-colors',
+                    isValueMatch && q && 'pl-2 border-l-2 border-amber-400 dark:border-amber-500',
+                  )}
+                >
                   <div className="flex items-center justify-between mb-1 gap-2">
-                    <label htmlFor={fieldId} className="text-[10px] sm:text-[11px] tracking-widest uppercase font-semibold text-foreground/60 font-sans truncate">{k.label}</label>
-                    {overridden && (
-                      <button type="button" onClick={() => onReset(ns.name, k.key)} disabled={isPending}
-                        className="flex items-center gap-1 text-[10px] sm:text-[11px] text-muted-foreground hover:text-destructive transition-colors whitespace-nowrap min-h-[28px] px-1 -mr-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
-                        aria-label={`Reset ${k.label} to default`}>
-                        <RotateCcw size={10} /><span className="hidden sm:inline">Reset</span>
-                      </button>
-                    )}
+                    <label
+                      htmlFor={fieldId}
+                      className={cn(
+                        'text-[10px] sm:text-[11px] tracking-widest uppercase font-semibold font-sans truncate',
+                        isValueMatch && q ? 'text-amber-700 dark:text-amber-400' : 'text-foreground/60',
+                      )}
+                    >
+                      {k.label}
+                    </label>
+                    <div className="flex items-center gap-1 shrink-0">
+                      {/* Translate button — Bengali mode only, when an EN source exists */}
+                      {isBn && enDefaults?.[k.key] && (
+                        <button
+                          type="button"
+                          onClick={() => handleTranslate(k.key)}
+                          disabled={translating.has(k.key) || isPending}
+                          title={`Auto-translate from: "${(enDefaults[k.key] ?? '').slice(0, 60)}${(enDefaults[k.key] ?? '').length > 60 ? '…' : ''}"`}
+                          className="flex items-center gap-1 text-[10px] sm:text-[11px] text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 disabled:opacity-40 transition-colors min-h-[28px] px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/40 rounded"
+                          aria-label={`Translate ${k.label} from English`}
+                        >
+                          {translating.has(k.key)
+                            ? <Loader2 size={11} className="animate-spin" />
+                            : <Languages size={11} />
+                          }
+                          <span className="hidden sm:inline">
+                            {translating.has(k.key) ? 'Translating…' : 'Translate'}
+                          </span>
+                        </button>
+                      )}
+                      {overridden && (
+                        <button
+                          type="button"
+                          onClick={() => onReset(ns.name, k.key)}
+                          disabled={isPending}
+                          className="flex items-center gap-1 text-[10px] sm:text-[11px] text-muted-foreground hover:text-destructive transition-colors whitespace-nowrap min-h-[28px] px-1 -mr-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
+                          aria-label={`Reset ${k.label} to default`}
+                        >
+                          <RotateCcw size={10} /><span className="hidden sm:inline">Reset</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
+
                   {k.multiline ? (
-                    <textarea id={fieldId} value={displayVal} onChange={(e) => onChange(ns.name, k.key, e.target.value)} placeholder={defaultVal} rows={3}
-                      className={cn('w-full px-3 py-2.5 rounded-lg border bg-background text-sm leading-relaxed resize-y border-border placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors', isBn ? 'font-bengali' : 'font-sans', overridden && 'border-primary/30 bg-primary/5')} />
+                    <textarea
+                      id={fieldId}
+                      value={displayVal}
+                      onChange={(e) => onChange(ns.name, k.key, e.target.value)}
+                      placeholder={defaultVal}
+                      rows={3}
+                      className={cn(
+                        'w-full px-3 py-2.5 rounded-lg border bg-background text-sm leading-relaxed resize-y border-border placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors',
+                        isBn ? 'font-bengali' : 'font-sans',
+                        overridden && 'border-primary/30 bg-primary/5',
+                      )}
+                    />
                   ) : (
-                    <input id={fieldId} type="text" value={displayVal} onChange={(e) => onChange(ns.name, k.key, e.target.value)} placeholder={defaultVal}
-                      className={cn('w-full h-11 sm:h-10 px-3 rounded-lg border bg-background text-sm border-border placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors', isBn ? 'font-bengali' : 'font-sans', overridden && 'border-primary/30 bg-primary/5')} />
+                    <input
+                      id={fieldId}
+                      type="text"
+                      value={displayVal}
+                      onChange={(e) => onChange(ns.name, k.key, e.target.value)}
+                      placeholder={defaultVal}
+                      className={cn(
+                        'w-full h-11 sm:h-10 px-3 rounded-lg border bg-background text-sm border-border placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors',
+                        isBn ? 'font-bengali' : 'font-sans',
+                        overridden && 'border-primary/30 bg-primary/5',
+                      )}
+                    />
+                  )}
+
+                  {/* Match highlight preview — only shown when value matched the query */}
+                  {isValueMatch && q && (
+                    <HighlightMatch text={highlightText} query={highlightQuery} />
                   )}
                 </div>
               );
@@ -103,25 +259,60 @@ function SectionAccordion({
 // ─── Main Component ────────────────────────────────────────────────
 export function ContentEditorForm({ pages, allDefaults, initialOverrides, initialLocale }: Props) {
   const idPrefix = useId();
-  const [activeLocale, setActiveLocale] = useState(initialLocale);
-  const [overrides, setOverrides] = useState<OverrideMap>(initialOverrides);
+  const [activeLocale,    setActiveLocale]    = useState(initialLocale);
+  const [overrides,       setOverrides]       = useState<OverrideMap>(initialOverrides);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
-  const [dirtyKeys, setDirtyKeys] = useState<Record<string, Set<string>>>({});
-  const [isPending, startTransition] = useTransition();
-  const [previewMode, setPreviewMode] = useState<'phone' | 'desktop'>('phone');
-  const [iframeKey, setIframeKey] = useState(0);
-  const [search, setSearch] = useState('');
+  const [dirtyKeys,       setDirtyKeys]       = useState<Record<string, Set<string>>>({});
+  const [isPending, startTransition]          = useTransition();
+  const [previewMode,     setPreviewMode]     = useState<'phone' | 'desktop'>('phone');
+  const [iframeKey,       setIframeKey]       = useState(0);
+  const [search,          setSearch]          = useState('');
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const defaults = allDefaults[activeLocale as 'en' | 'bn'] ?? allDefaults.en;
-  const isBn = activeLocale === 'bn';
-  const totalDirtyCount = useMemo(() => Object.values(dirtyKeys).reduce((sum, s) => sum + s.size, 0), [dirtyKeys]);
+  const defaults         = allDefaults[activeLocale as 'en' | 'bn'] ?? allDefaults.en;
+  const isBn             = activeLocale === 'bn';
+  const totalDirtyCount  = useMemo(() => Object.values(dirtyKeys).reduce((sum, s) => sum + s.size, 0), [dirtyKeys]);
 
   const filteredPages = useMemo(() => {
     if (!search.trim()) return pages;
     const q = search.toLowerCase();
-    return pages.map((pg) => ({ ...pg, sections: pg.sections.filter((ns) => ns.label.toLowerCase().includes(q) || ns.description.toLowerCase().includes(q) || ns.keys.some((k) => k.label.toLowerCase().includes(q))) })).filter((pg) => pg.sections.length > 0);
-  }, [pages, search]);
+    return pages
+      .map((pg) => ({
+        ...pg,
+        sections: pg.sections.filter((ns) => {
+          if (ns.label.toLowerCase().includes(q) || ns.description.toLowerCase().includes(q)) return true;
+          return ns.keys.some((k) => {
+            if (k.label.toLowerCase().includes(q)) return true;
+            const defaultVal  = defaults[ns.name]?.[k.key] ?? '';
+            const overrideVal = overrides[ns.name]?.[k.key] ?? '';
+            return defaultVal.toLowerCase().includes(q) || overrideVal.toLowerCase().includes(q);
+          });
+        }),
+      }))
+      .filter((pg) => pg.sections.length > 0);
+  }, [pages, search, defaults, overrides]);
+
+  // Auto-expand all matching sections when search changes
+  useEffect(() => {
+    if (!search.trim()) return;
+    const q = search.toLowerCase();
+    const toExpand = new Set<string>();
+    for (const pg of pages) {
+      for (const ns of pg.sections) {
+        const sectionMatches =
+          ns.label.toLowerCase().includes(q) ||
+          ns.description.toLowerCase().includes(q) ||
+          ns.keys.some((k) => {
+            if (k.label.toLowerCase().includes(q)) return true;
+            const def = defaults[ns.name]?.[k.key] ?? '';
+            const ov  = overrides[ns.name]?.[k.key] ?? '';
+            return def.toLowerCase().includes(q) || ov.toLowerCase().includes(q);
+          });
+        if (sectionMatches) toExpand.add(ns.name);
+      }
+    }
+    setExpandedSections((prev) => new Set([...prev, ...toExpand]));
+  }, [search, pages, defaults, overrides]);
 
   // Lookup: namespace name → { route, sectionId }
   const nsRouteMap = useMemo(() => {
@@ -141,7 +332,6 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
     const iframe = iframeRef.current;
     if (!iframe) return;
 
-    // Global sections (nav, footer) — scroll on the current page without navigating
     if (info.route === 'all pages') {
       if (info.sectionId) {
         try {
@@ -152,7 +342,6 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
       return;
     }
 
-    // Dynamic routes like /shop/[slug] can't be previewed — fall back to parent route
     let route = info.route;
     if (route.includes('[')) route = route.replace(/\/\[.*$/, '');
     route = route === '/' ? '' : route;
@@ -161,20 +350,15 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
 
     try {
       const currentPath = new URL(iframe.src, window.location.origin).pathname;
-
       if (currentPath === targetPath && info.sectionId) {
-        // Same page — scroll directly via DOM
         const el = iframe.contentWindow?.document.getElementById(info.sectionId);
         if (el) {
           el.scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
         }
       }
-    } catch {
-      // cross-origin or iframe not loaded — fall through
-    }
+    } catch { /* cross-origin */ }
 
-    // Different page or can't access DOM — navigate with hash
     const hash = info.sectionId ? `#${info.sectionId}` : '';
     iframe.src = `${targetPath}${hash}`;
   }, [nsRouteMap, activeLocale]);
@@ -186,7 +370,6 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
         next.delete(ns);
       } else {
         next.add(ns);
-        // Navigate preview to the corresponding page/section
         navigatePreview(ns);
       }
       return next;
@@ -241,6 +424,23 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
 
   const sectionDirtyCount = useCallback((ns: string) => dirtyKeys[ns]?.size ?? 0, [dirtyKeys]);
 
+  // Total value-match count across all filtered sections (for search status line)
+  const totalValueMatches = useMemo(() => {
+    if (!search.trim()) return 0;
+    const q = search.toLowerCase();
+    let count = 0;
+    for (const pg of filteredPages) {
+      for (const ns of pg.sections) {
+        for (const k of ns.keys) {
+          const def = defaults[ns.name]?.[k.key] ?? '';
+          const ov  = overrides[ns.name]?.[k.key] ?? '';
+          if (def.toLowerCase().includes(q) || ov.toLowerCase().includes(q)) count++;
+        }
+      }
+    }
+    return count;
+  }, [filteredPages, search, defaults, overrides]);
+
   return (
     <div className="flex flex-col">
       {/* Header */}
@@ -274,13 +474,13 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="relative flex-1 sm:flex-initial sm:w-48">
+          <div className="relative flex-1 sm:flex-initial sm:w-56">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
             <input
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Filter sections..."
+              placeholder="Search copy & values..."
               aria-label="Filter content sections"
               className="w-full h-9 pl-8 pr-8 rounded-lg border border-border bg-background text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
             />
@@ -301,12 +501,23 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
         </div>
       </div>
 
+      {/* Search status line */}
+      {search.trim() && (
+        <div className="shrink-0 mb-3 flex items-center gap-2 text-[11px] text-muted-foreground">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
+          {filteredPages.length === 0
+            ? `No sections match "${search}"`
+            : `${filteredPages.reduce((s, p) => s + p.sections.length, 0)} section${filteredPages.reduce((s, p) => s + p.sections.length, 0) !== 1 ? 's' : ''}, ${totalValueMatches} field value${totalValueMatches !== 1 ? 's' : ''} matched — all expanded`
+          }
+        </div>
+      )}
+
       {/* Body: scrollable editor + sticky preview */}
       <div className="flex-1 flex gap-4 xl:gap-6 relative items-start">
-        {/* Editor — scrolls naturally with the page */}
+        {/* Editor */}
         <div className="flex-1 min-w-0" role="group" aria-label="Content sections">
           <div className="space-y-6 pb-4">
-            {filteredPages.length === 0 && (
+            {filteredPages.length === 0 && search.trim() && (
               <p className="text-sm text-muted-foreground text-center py-8">
                 No sections match &ldquo;{search}&rdquo;
               </p>
@@ -333,6 +544,8 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
                       onChange={handleChange}
                       onReset={handleResetKey}
                       idPrefix={idPrefix}
+                      highlightQuery={search}
+                      enDefaults={isBn ? (allDefaults.en[ns.name] ?? {}) : undefined}
                     />
                   ))}
                 </div>
@@ -341,7 +554,7 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
           </div>
         </div>
 
-        {/* Preview (xl+ only) — sticky to stay in place while left side scrolls */}
+        {/* Preview (xl+ only) */}
         <div className="hidden xl:flex flex-col w-[420px] shrink-0 sticky top-4" style={{ height: 'calc(100dvh - 8rem)' }}>
           <div className="flex items-center justify-between mb-2 shrink-0">
             <span className="text-[11px] font-semibold tracking-widest uppercase text-muted-foreground">Preview</span>
@@ -396,7 +609,7 @@ export function ContentEditorForm({ pages, allDefaults, initialOverrides, initia
         </div>
       </div>
 
-      {/* Mobile Save Bar — in-flow so it doesn't overlap the scroll area */}
+      {/* Mobile Save Bar */}
       <div className="shrink-0 sm:hidden border-t border-border bg-background px-3 pt-2 pb-1" role="toolbar" aria-label="Save">
         <div className="flex items-center gap-2">
           <BengalButton type="button" variant="primary" size="md" onClick={handleSaveAll} loading={isPending} disabled={totalDirtyCount === 0} className="flex-1">

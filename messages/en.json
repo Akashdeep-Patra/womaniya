@@ -61,6 +61,9 @@
   "categories": {
     "browse_label": "Browse by craft",
     "section_title": "The Living Crafts",
+    "page_description": "Browse our diverse range of traditional weaves and artisanal craftsmanship.",
+    "meta_description": "Browse our artisanal categories and handloom crafts.",
+    "empty_state": "No categories found.",
     "view_all": "All →",
     "view_all_crafts": "View all crafts →",
     "jamdani_title": "Dhakai Jamdani",
@@ -88,7 +91,25 @@
     "share": "Share",
     "care": "Care",
     "care_desc": "Dry clean or gentle hand wash in cold water. Store in muslin bag.",
-    "artisan_made": "Artisan Made"
+    "care_fallback": "Dry Clean Only",
+    "artisan_made": "Artisan Made",
+    "fabric": "Fabric",
+    "weight": "Weight",
+    "origin": "Origin",
+    "in_stock": "In Stock",
+    "low_stock": "Low Stock",
+    "made_to_order": "Made to Order",
+    "out_of_stock": "Out of Stock",
+    "inclusive_tax": "Inclusive of all taxes",
+    "quality_label": "Quality",
+    "support_label": "Support",
+    "whatsapp_support": "WhatsApp Support"
+  },
+  "collections": {
+    "page_title": "Our Collections",
+    "page_description": "Curated stories woven in thread, celebrating the living heritage of Bengal and beyond.",
+    "meta_description": "Explore our curated collections of authentic handloom heritage.",
+    "empty_state": "No collections found."
   },
   "about": {
     "badge": "About Womaniya",
@@ -237,6 +258,19 @@
   },
   "stories": {
     "badge": "Heritage",
-    "page_description": "Discover the heritage, the artisans, and the narratives woven into every thread."
+    "title": "Our Stories",
+    "page_description": "Discover the heritage, the artisans, and the narratives woven into every thread.",
+    "empty_state": "No stories found.",
+    "read_btn": "Read Story"
+  },
+  "campaigns": {
+    "badge": "Collections",
+    "title": "Our Campaigns",
+    "description": "Discover our latest events, special collections, and featured showcases.",
+    "meta_description": "Explore our latest campaigns and collections at Womaniya.",
+    "highlights_label": "Highlights",
+    "highlights_title": "Featured Campaigns",
+    "empty_state": "No campaigns found.",
+    "explore_btn": "Explore Campaign"
   }
 }

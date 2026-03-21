@@ -61,6 +61,9 @@
   "categories": {
     "browse_label": "কারুকাজ অনুযায়ী",
     "section_title": "জীবন্ত কারুকাজ",
+    "page_description": "শাড়ির ধরন এবং প্রাচীন কারুশিল্পের বৈচিত্র্য।",
+    "meta_description": "আমাদের হাতে বোনা কারুকাজ ও ক্যাটাগরি দেখুন।",
+    "empty_state": "কোনো ক্যাটাগরি পাওয়া যায়নি।",
     "view_all": "সব →",
     "view_all_crafts": "সব দেখো →",
     "jamdani_title": "ঢাকাই জামদানি",
@@ -88,7 +91,25 @@
     "share": "শেয়ার করো",
     "care": "যত্ন",
     "care_desc": "Dry clean অথবা ঠান্ডা জলে আলতো হাত ধোয়া। দেওয়া মসলিন ব্যাগে রাখো।",
-    "artisan_made": "কারিগরের হাতের তৈরি"
+    "care_fallback": "শুধু Dry Clean",
+    "artisan_made": "কারিগরের হাতের তৈরি",
+    "fabric": "কাপড়",
+    "weight": "ওজন",
+    "origin": "উৎপত্তি",
+    "in_stock": "স্টকে আছে",
+    "low_stock": "সীমিত স্টক",
+    "made_to_order": "অর্ডার অনুযায়ী",
+    "out_of_stock": "স্টক নেই",
+    "inclusive_tax": "সকল কর সহ",
+    "quality_label": "মানের নিশ্চয়তা",
+    "support_label": "যোগাযোগ",
+    "whatsapp_support": "WhatsApp সাপোর্ট"
+  },
+  "collections": {
+    "page_title": "আমাদের সংগ্রহ",
+    "page_description": "ঐতিহ্য এবং আধুনিকতার এক অপূর্ব সংমিশ্রণ।",
+    "meta_description": "Womaniya-এর হাতে বোনা ঐতিহ্যবাহী সংগ্রহ দেখুন।",
+    "empty_state": "কোনো সংগ্রহ পাওয়া যায়নি।"
   },
   "about": {
     "badge": "আমরা কারা",
@@ -224,6 +245,19 @@
   },
   "stories": {
     "badge": "ঐতিহ্য",
-    "page_description": "কারিগরদের জীবন এবং বুননের পিছনের কাহিনী।"
+    "title": "আমাদের গল্প",
+    "page_description": "কারিগরদের জীবন এবং বুননের পিছনের কাহিনী।",
+    "empty_state": "কোনো গল্প পাওয়া যায়নি।",
+    "read_btn": "গল্পটি পড়ুন"
+  },
+  "campaigns": {
+    "badge": "সংগ্রহ",
+    "title": "আমাদের ক্যাম্পেইন",
+    "description": "আমাদের সর্বশেষ ইভেন্ট এবং অফার সম্পর্কে জানুন।",
+    "meta_description": "Womaniya-এর সর্বশেষ ক্যাম্পেইন ও সংগ্রহ দেখুন।",
+    "highlights_label": "হাইলাইটস",
+    "highlights_title": "বিশেষ আয়োজন",
+    "empty_state": "কোনো ক্যাম্পেইন পাওয়া যায়নি।",
+    "explore_btn": "এক্সপ্লোর করুন"
   }
 }

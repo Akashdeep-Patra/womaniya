@@ -41,7 +41,7 @@ export default async function StoriesPage({ params }: Props) {
            {t('badge')}
         </div>
         <h1 className={`text-5xl md:text-6xl lg:text-7xl text-foreground mb-6 tracking-tight ${isBn ? 'font-bengali-serif' : 'font-editorial'}`}>
-          {isBn ? 'আমাদের গল্প' : 'Our Stories'}
+          {t('title')}
         </h1>
         <p className={`text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto ${isBn ? 'font-bengali' : 'font-sans-en font-light'}`}>
           {t('page_description')}

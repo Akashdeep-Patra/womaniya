@@ -63,7 +63,10 @@ export default async function ProductPage({ params }: Props) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
-  const t    = await getTranslations({ locale, namespace: 'product' });
+  const [t, tWa]    = await Promise.all([
+    getTranslations({ locale, namespace: 'product' }),
+    getTranslations({ locale, namespace: 'whatsapp' }),
+  ]);
   const isBn = locale === 'bn';
 
   let product;
@@ -116,17 +119,17 @@ export default async function ProductPage({ params }: Props) {
 
   // Collect product attributes for display
   const attributes: { label: string; value: string }[] = [];
-  if (product.fabric) attributes.push({ label: isBn ? 'কাপড়' : 'Fabric', value: product.fabric });
-  if (product.weight) attributes.push({ label: isBn ? 'ওজন' : 'Weight', value: product.weight });
-  if (product.origin) attributes.push({ label: isBn ? 'উৎপত্তি' : 'Origin', value: product.origin });
+  if (product.fabric) attributes.push({ label: t('fabric'), value: product.fabric });
+  if (product.weight) attributes.push({ label: t('weight'), value: product.weight });
+  if (product.origin) attributes.push({ label: t('origin'), value: product.origin });
 
   const stockLabel = product.stock_status === 'in_stock'
-    ? (isBn ? 'স্টকে আছে' : 'In Stock')
+    ? t('in_stock')
     : product.stock_status === 'low_stock'
-    ? (isBn ? 'সীমিত স্টক' : 'Low Stock')
+    ? t('low_stock')
     : product.stock_status === 'made_to_order'
-    ? (isBn ? 'অর্ডার অনুযায়ী' : 'Made to Order')
-    : (isBn ? 'স্টক নেই' : 'Out of Stock');
+    ? t('made_to_order')
+    : t('out_of_stock');
 
   const stockColor = product.stock_status === 'in_stock'
     ? 'text-emerald-600 dark:text-emerald-400'
@@ -191,7 +194,7 @@ export default async function ProductPage({ params }: Props) {
                 ₹{Number(product.price).toLocaleString('en-IN')}
               </p>
               <p className="text-[10px] tracking-widest uppercase text-muted-foreground font-sans-en mb-5">
-                {isBn ? 'সকল কর সহ' : 'Inclusive of all taxes'}
+                {t('inclusive_tax')}
               </p>
 
               <AlponaDivider width={140} className="mb-6 opacity-50" />
@@ -232,7 +235,7 @@ export default async function ProductPage({ params }: Props) {
               <div className="flex items-center justify-center gap-2 mb-6">
                 <Clock size={12} className="text-muted-foreground" />
                 <p className="text-muted-foreground text-[10px] tracking-[0.18em] uppercase font-sans-en">
-                  {isBn ? 'সাধারণত ১ ঘণ্টার মধ্যে উত্তর' : 'Usually replies within 1 hour'}
+                  {tWa('response_time')}
                 </p>
               </div>
 
@@ -255,7 +258,7 @@ export default async function ProductPage({ params }: Props) {
                   </div>
                   <div>
                     <p className="text-[9px] tracking-[0.15em] uppercase text-muted-foreground font-sans-en leading-tight">{t('care')}</p>
-                    <p className={`text-xs text-foreground font-medium leading-tight ${isBn ? 'font-bengali' : ''}`}>{product.care_instructions || (isBn ? 'ড্রাই ক্লিন' : 'Dry Clean Only')}</p>
+                    <p className={`text-xs text-foreground font-medium leading-tight ${isBn ? 'font-bengali' : ''}`}>{product.care_instructions || t('care_fallback')}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/30 border border-border/40">
@@ -264,7 +267,7 @@ export default async function ProductPage({ params }: Props) {
                   </div>
                   <div>
                     <p className="text-[9px] tracking-[0.15em] uppercase text-muted-foreground font-sans-en leading-tight">
-                      {isBn ? 'মানের নিশ্চয়তা' : 'Quality'}
+                      {t('quality_label')}
                     </p>
                     <p className={`text-xs text-foreground font-medium leading-tight ${isBn ? 'font-bengali' : ''}`}>{t('artisan_made')}</p>
                   </div>
@@ -278,10 +281,10 @@ export default async function ProductPage({ params }: Props) {
                   </div>
                   <div>
                     <p className="text-[9px] tracking-[0.15em] uppercase text-muted-foreground font-sans-en leading-tight">
-                      {isBn ? 'যোগাযোগ' : 'Support'}
+                      {t('support_label')}
                     </p>
                     <p className={`text-xs text-foreground font-medium leading-tight ${isBn ? 'font-bengali' : ''}`}>
-                      {isBn ? 'WhatsApp সাপোর্ট' : 'WhatsApp Support'}
+                      {t('whatsapp_support')}
                     </p>
                   </div>
                 </div>

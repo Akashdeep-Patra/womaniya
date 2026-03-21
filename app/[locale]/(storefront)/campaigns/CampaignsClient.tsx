@@ -5,6 +5,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowUpRight, Sparkles, CalendarDays } from 'lucide-react';
 import { AbstractThreadIcon } from '@/components/illustrations/AbstractThreadIcon';
+import { useTranslations } from 'next-intl';
+import type { Campaign, Banner } from '@/db/schema';
+
+type CampaignWithBanners = Campaign & { banners: Banner[] };
 
 const FALLBACK_BGS = [
   'bg-linear-to-br from-primary/10 via-primary/5 to-transparent',
@@ -12,20 +16,22 @@ const FALLBACK_BGS = [
   'bg-linear-to-br from-accent/10 via-accent/5 to-transparent',
 ];
 
-export function CampaignsClient({ 
-  campaigns, 
-  locale, 
-  isBn 
-}: { 
-  campaigns: any[], 
-  locale: string, 
-  isBn: boolean 
+export function CampaignsClient({
+  campaigns,
+  locale,
+  isBn
+}: {
+  campaigns: CampaignWithBanners[],
+  locale: string,
+  isBn: boolean
 }) {
+  const t = useTranslations('campaigns');
+
   if (campaigns.length === 0) {
     return (
       <div className="text-center py-20 text-muted-foreground/50 bg-card rounded-3xl border border-border/50">
         <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-20" />
-        {isBn ? 'কোনো ক্যাম্পেইন পাওয়া যায়নি।' : 'No campaigns found.'}
+        {t('empty_state')}
       </div>
     );
   }
@@ -122,7 +128,7 @@ export function CampaignsClient({
                     </div>
                     <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors duration-500">
                        <span className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
-                         {isBn ? 'এক্সপ্লোর করুন' : 'Explore Campaign'}
+                         {t('explore_btn')}
                        </span>
                        <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary/10 border border-transparent group-hover:border-primary/20 transition-all duration-500">
                          <ArrowUpRight className="w-5 h-5 group-hover:rotate-12 transition-transform duration-500" />

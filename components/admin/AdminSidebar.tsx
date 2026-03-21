@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
 import { PanelLeftClose, PanelLeft, LogOut } from 'lucide-react';
@@ -42,16 +43,17 @@ export function AdminSidebar({ locale }: { locale: string }) {
       {/* Logo area */}
       <div className="h-16 flex items-center px-4 border-b border-border">
         {!collapsed && (
-          <Link prefetch={true} href={`/${locale}/admin`} className="flex items-center gap-2">
-            <span className="font-sans font-bold text-xl text-foreground">Womaniya</span>
-            <span className="text-[10px] tracking-widest uppercase text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+          <Link prefetch={true} href={`/${locale}/admin`} className="flex items-center gap-2.5 min-w-0">
+            <Image src="/logo.svg" alt="Womaniya" width={32} height={32} className="shrink-0" />
+            <span className="font-editorial text-lg text-foreground truncate">Womaniya</span>
+            <span className="text-[10px] tracking-widest uppercase text-muted-foreground bg-muted px-1.5 py-0.5 rounded shrink-0">
               Admin
             </span>
           </Link>
         )}
         {collapsed && (
-          <Link prefetch={true} href={`/${locale}/admin`} className="mx-auto flex items-center justify-center w-8 h-8 bg-primary/10 rounded-md">
-            <span className="font-sans font-bold text-xl text-primary">W</span>
+          <Link prefetch={true} href={`/${locale}/admin`} className="mx-auto">
+            <Image src="/logo.svg" alt="Womaniya" width={32} height={32} />
           </Link>
         )}
       </div>

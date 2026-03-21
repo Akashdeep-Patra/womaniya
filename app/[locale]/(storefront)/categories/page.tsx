@@ -13,10 +13,13 @@ export async function generateMetadata(
   { params }: Props
 ): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'nav' });
+  const [tNav, tCats] = await Promise.all([
+    getTranslations({ locale, namespace: 'nav' }),
+    getTranslations({ locale, namespace: 'categories' }),
+  ]);
   return {
-    title: t('categories') || 'Categories',
-    description: 'Browse our artisanal categories and handloom crafts.',
+    title: tNav('categories') || 'Categories',
+    description: tCats('meta_description'),
   };
 }
 
@@ -33,16 +36,11 @@ export default async function CategoriesPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  let categories: Awaited<ReturnType<typeof getPublishedCategories>> = [];
-  let banners: Awaited<ReturnType<typeof getAllBanners>> = [];
-  try {
-    [categories, banners] = await Promise.all([
-      getPublishedCategories(),
-      getAllBanners(),
-    ]);
-  } catch {
-    // dev fallback
-  }
+  const [t, categories, banners] = await Promise.all([
+    getTranslations({ locale, namespace: 'categories' }),
+    getPublishedCategories().catch(() => []),
+    getAllBanners().catch(() => []),
+  ]);
 
   const categoryBanners = banners.filter(b => b.placement === 'category_hero' && b.status === 'published');
   const isBn = locale === 'bn';
@@ -51,12 +49,10 @@ export default async function CategoriesPage({ params }: Props) {
     <main className="pt-24 pb-20 md:pt-32 min-h-screen px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <header className="mb-12 md:mb-16 text-center">
         <h1 className={`text-4xl md:text-5xl text-bengal-kajal mb-4 ${isBn ? 'font-bengali-serif' : 'font-editorial'}`}>
-          {isBn ? 'কারুকাজ অনুযায়ী' : 'The Living Crafts'}
+          {t('section_title')}
         </h1>
         <p className={`text-bengal-kansa max-w-2xl mx-auto ${isBn ? 'font-bengali' : 'font-sans-en font-light'}`}>
-          {isBn 
-            ? 'শাড়ির ধরন এবং প্রাচীন কারুশিল্পের বৈচিত্র্য।' 
-            : 'Browse our diverse range of traditional weaves and artisanal craftsmanship.'}
+          {t('page_description')}
         </p>
       </header>
 
@@ -70,7 +66,7 @@ export default async function CategoriesPage({ params }: Props) {
 
       {categories.length === 0 ? (
         <div className="text-center py-20 text-bengal-kajal/50">
-          {isBn ? 'কোনো ক্যাটাগরি পাওয়া যায়নি।' : 'No categories found.'}
+          {t('empty_state')}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -101,7 +97,7 @@ export default async function CategoriesPage({ params }: Props) {
                     </div>
                   )}
                   <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/0 to-transparent opacity-80 group-hover:opacity-100 transition-opacity" />
-                  
+
                   <div className="absolute bottom-0 left-0 right-0 p-5">
                     <h2 className={`text-xl text-white mb-1 group-hover:text-bengal-kori transition-colors ${isBn ? 'font-bengali-serif' : 'font-editorial'}`}>
                       {name}

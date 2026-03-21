@@ -131,6 +131,11 @@ const ShopGrid = dynamic(
   { ssr: true }
 );
 
+const HowMadeSection = dynamic(
+  () => import('@/components/storefront/HowMadeSection').then((m) => ({ default: m.HowMadeSection })),
+  { ssr: true }
+);
+
 const AboutSection = dynamic(
   () => import('@/components/storefront/AboutSection').then((m) => ({ default: m.AboutSection })),
   { ssr: true }
@@ -213,6 +218,7 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const isBn = locale === 'bn';
+  const tCampaigns = await getTranslations({ locale, namespace: 'campaigns' });
 
   let featured: Awaited<ReturnType<typeof getFeaturedProducts>> = [];
   let categories: Awaited<ReturnType<typeof getPublishedCategories>> = [];
@@ -319,10 +325,10 @@ export default async function HomePage({ params }: Props) {
             <div className="max-w-7xl mx-auto px-4 sm:px-6">
               <div className="text-center mb-12">
                 <p className="text-[10px] tracking-[0.28em] uppercase text-accent mb-3 font-sans-en">
-                  {isBn ? 'হাইলাইটস' : 'Highlights'}
+                  {tCampaigns('highlights_label')}
                 </p>
                 <h2 className={`font-editorial text-3xl md:text-5xl text-foreground ${isBn ? 'font-bengali-serif' : ''}`}>
-                  {isBn ? 'বিশেষ আয়োজন' : 'Featured Campaigns'}
+                  {tCampaigns('highlights_title')}
                 </h2>
               </div>
               <div className={`grid gap-8 ${
@@ -366,6 +372,7 @@ export default async function HomePage({ params }: Props) {
         )}
 
         <ManifestoSection />
+        <HowMadeSection />
         <AboutSection />
         <WhatsAppSection waNumber={waNumber} />
       </main>

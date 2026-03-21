@@ -68,9 +68,16 @@ export const contentPages: ContentPageGroup[] = [
       {
         name: 'categories',
         label: 'Category Cards',
-        description: 'Horizontal scroll category tiles',
+        description: 'Horizontal scroll category tiles and categories page header',
         sectionId: 'categories',
         keys: [
+          { key: 'section_title', label: 'Section / Page Title' },
+          { key: 'page_description', label: 'Categories Page Description', multiline: true },
+          { key: 'meta_description', label: 'Meta Description (SEO)', multiline: true },
+          { key: 'empty_state', label: 'Empty State Message' },
+          { key: 'browse_label', label: 'Browse Label' },
+          { key: 'view_all', label: 'View All (short)' },
+          { key: 'view_all_crafts', label: 'View All Crafts' },
           { key: 'jamdani_title', label: 'Jamdani Title' },
           { key: 'jamdani_desc', label: 'Jamdani Description', multiline: true },
           { key: 'ikkat_title', label: 'Ikkat Title' },
@@ -110,6 +117,28 @@ export const contentPages: ContentPageGroup[] = [
           { key: 'author_2', label: 'Author 2' },
           { key: 'quote_3', label: 'Quote 3', multiline: true },
           { key: 'author_3', label: 'Author 3' },
+        ],
+      },
+      {
+        name: 'how_made',
+        label: 'How It Gets Made',
+        description: '4-step process section — from loom to customer',
+        sectionId: 'how-made',
+        keys: [
+          { key: 'badge', label: 'Section Badge' },
+          { key: 'title', label: 'Section Title' },
+          { key: 'step_1_n', label: 'Step 1 Number' },
+          { key: 'step_1_title', label: 'Step 1 Title' },
+          { key: 'step_1_body', label: 'Step 1 Body', multiline: true },
+          { key: 'step_2_n', label: 'Step 2 Number' },
+          { key: 'step_2_title', label: 'Step 2 Title' },
+          { key: 'step_2_body', label: 'Step 2 Body', multiline: true },
+          { key: 'step_3_n', label: 'Step 3 Number' },
+          { key: 'step_3_title', label: 'Step 3 Title' },
+          { key: 'step_3_body', label: 'Step 3 Body', multiline: true },
+          { key: 'step_4_n', label: 'Step 4 Number' },
+          { key: 'step_4_title', label: 'Step 4 Title' },
+          { key: 'step_4_body', label: 'Step 4 Body', multiline: true },
         ],
       },
     ],
@@ -155,7 +184,7 @@ export const contentPages: ContentPageGroup[] = [
       {
         name: 'product',
         label: 'Product Page',
-        description: 'Labels, buttons, and badges on product detail',
+        description: 'Labels, buttons, badges, and status messages on product detail',
         sectionId: 'shop',
         keys: [
           { key: 'price', label: 'Price Label' },
@@ -169,7 +198,19 @@ export const contentPages: ContentPageGroup[] = [
           { key: 'share', label: 'Share Button' },
           { key: 'care', label: 'Care Label' },
           { key: 'care_desc', label: 'Care Description', multiline: true },
+          { key: 'care_fallback', label: 'Care Fallback (when not set)' },
           { key: 'artisan_made', label: 'Artisan Made Badge' },
+          { key: 'fabric', label: 'Fabric Attribute Label' },
+          { key: 'weight', label: 'Weight Attribute Label' },
+          { key: 'origin', label: 'Origin Attribute Label' },
+          { key: 'in_stock', label: 'In Stock Status' },
+          { key: 'low_stock', label: 'Low Stock Status' },
+          { key: 'made_to_order', label: 'Made to Order Status' },
+          { key: 'out_of_stock', label: 'Out of Stock Status' },
+          { key: 'inclusive_tax', label: 'Price Note (taxes)' },
+          { key: 'quality_label', label: 'Quality Card Label' },
+          { key: 'support_label', label: 'Support Card Label' },
+          { key: 'whatsapp_support', label: 'WhatsApp Support Label' },
         ],
       },
     ],
@@ -254,11 +295,98 @@ export const contentPages: ContentPageGroup[] = [
     ],
   },
 
+  // ── Collections ──────────────────────────────────────────────────
+  {
+    page: 'Collections',
+    route: '/collections',
+    description: 'Collections listing page header',
+    sections: [
+      {
+        name: 'collections',
+        label: 'Collections Page',
+        description: 'Header text for the collections listing page',
+        sectionId: 'collections',
+        keys: [
+          { key: 'page_title', label: 'Page Title' },
+          { key: 'page_description', label: 'Page Description', multiline: true },
+          { key: 'meta_description', label: 'Meta Description (SEO)', multiline: true },
+          { key: 'empty_state', label: 'Empty State Message' },
+        ],
+      },
+    ],
+  },
+
+  // ── Stories ──────────────────────────────────────────────────────
+  {
+    page: 'Stories',
+    route: '/stories',
+    description: 'Stories listing page — badge, title, and description',
+    sections: [
+      {
+        name: 'stories',
+        label: 'Stories Page',
+        description: 'Header text and UI labels for the stories listing page',
+        sectionId: 'stories',
+        keys: [
+          { key: 'badge', label: 'Badge' },
+          { key: 'title', label: 'Page Title' },
+          { key: 'page_description', label: 'Page Description', multiline: true },
+          { key: 'empty_state', label: 'Empty State Message' },
+          { key: 'read_btn', label: 'Read Button' },
+        ],
+      },
+    ],
+  },
+
+  // ── Campaigns ─────────────────────────────────────────────────────
+  {
+    page: 'Campaigns',
+    route: '/campaigns',
+    description: 'Campaigns listing page and featured banner section on homepage',
+    sections: [
+      {
+        name: 'campaigns',
+        label: 'Campaigns Page',
+        description: 'Page header, UI labels, and homepage featured campaigns section labels',
+        sectionId: 'campaigns',
+        keys: [
+          { key: 'badge', label: 'Badge' },
+          { key: 'title', label: 'Page Title' },
+          { key: 'description', label: 'Page Description', multiline: true },
+          { key: 'meta_description', label: 'Meta Description (SEO)', multiline: true },
+          { key: 'highlights_label', label: 'Homepage Highlights Label' },
+          { key: 'highlights_title', label: 'Homepage Highlights Title' },
+          { key: 'empty_state', label: 'Empty State Message' },
+          { key: 'explore_btn', label: 'Explore Button' },
+        ],
+      },
+    ],
+  },
+
+  // ── SEO / Meta ────────────────────────────────────────────────────
+  {
+    page: 'SEO',
+    route: 'product, category, collection pages',
+    description: 'Meta title suffixes appended to product, category, and collection page titles',
+    sections: [
+      {
+        name: 'meta',
+        label: 'Page Title Suffixes',
+        description: 'Appended to generated page titles for SEO',
+        keys: [
+          { key: 'product_suffix', label: 'Product Page Suffix' },
+          { key: 'category_suffix', label: 'Category Page Suffix' },
+          { key: 'collection_suffix', label: 'Collection Page Suffix' },
+        ],
+      },
+    ],
+  },
+
   // ── Global (all pages) ──────────────────────────────────────────
   {
     page: 'Global',
     route: 'all pages',
-    description: 'Navigation, footer, and locale — shared across every page',
+    description: 'Navigation, footer, locale, and WhatsApp section — shared across every page',
     sections: [
       {
         name: 'nav',
@@ -306,6 +434,19 @@ export const contentPages: ContentPageGroup[] = [
         keys: [
           { key: 'switch_to', label: 'Switch To Label' },
           { key: 'current', label: 'Current Locale Label' },
+        ],
+      },
+      {
+        name: 'whatsapp',
+        label: 'WhatsApp CTA Section',
+        description: 'Customer-facing WhatsApp support section — badge, heading, subtitle, button, response time',
+        sectionId: 'whatsapp',
+        keys: [
+          { key: 'badge', label: 'Badge' },
+          { key: 'heading', label: 'Heading' },
+          { key: 'subtitle', label: 'Subtitle', multiline: true },
+          { key: 'cta', label: 'CTA Button Text' },
+          { key: 'response_time', label: 'Response Time Note' },
         ],
       },
     ],
