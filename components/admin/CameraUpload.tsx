@@ -246,6 +246,9 @@ export function CameraUpload({
     },
     multiple,
     disabled: isUploading && !multiple,
+    // When allowUploadInPlace, the explicit <label><input> handles clicks.
+    // Disable dropzone click-to-open so it doesn't fire a second file dialog.
+    noClick: allowUploadInPlace,
   });
 
   const clearSingle = (e: React.MouseEvent) => {
