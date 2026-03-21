@@ -49,7 +49,9 @@ export function PageEditLayout({
   const [mobileTab, setMobileTab]     = useState<'edit' | 'preview'>('edit');
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const liveUrl  = `${PROD_ORIGIN}/${locale}/pages/${page.slug}`;
+  // Use current origin so preview works in development (localhost) and production
+  const origin   = typeof window !== 'undefined' ? window.location.origin : PROD_ORIGIN;
+  const liveUrl  = `${origin}/${locale}/pages/${page.slug}`;
   const isDraft  = page.status === 'draft';
   const current  = DEVICES.find((d) => d.mode === device)!;
 

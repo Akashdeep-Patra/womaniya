@@ -5,6 +5,7 @@ import { Reorder } from 'framer-motion';
 import { GripVertical, X, Plus } from 'lucide-react';
 import { BengalButton } from '@/components/bengal';
 import { CameraUpload } from './CameraUpload';
+import { RichTextEditor } from './RichTextEditor';
 import type { SectionType } from '@/db/enums';
 import { SECTION_TYPES, IMAGE_TEXT_LAYOUTS } from '@/db/enums';
 
@@ -151,7 +152,18 @@ function SectionEditor({ section, onChange }: { section: SectionData; onChange: 
     case 'richtext':
       return (
         <div className="flex flex-col gap-3">
-          <textarea placeholder="Write your content here (Markdown supported)..." value={section.content.content_en || ''} onChange={(e) => handleChange('content_en', e.target.value)} rows={6} className="w-full text-sm p-3 border border-border bg-transparent rounded focus:outline-none resize-y text-foreground" />
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium">Content (English)</p>
+          <RichTextEditor
+            value={section.content.content_en || ''}
+            onChange={(html) => handleChange('content_en', html)}
+            placeholder="Write your English content here…"
+          />
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium mt-2">Content (বাংলা)</p>
+          <RichTextEditor
+            value={section.content.content_bn || ''}
+            onChange={(html) => handleChange('content_bn', html)}
+            placeholder="বাংলা কন্টেন্ট এখানে লিখুন…"
+          />
         </div>
       );
     case 'image_text':

@@ -44,6 +44,29 @@ type C = Record<string, unknown>;
 function RichText({ c, locale }: { c: C; locale: string }) {
   const raw = (locale === 'bn' && c.content_bn ? String(c.content_bn) : String(c.content_en || '')).trim();
   if (!raw) return null;
+
+  // HTML from Tiptap — render directly with theme-aware prose styles
+  if (raw.startsWith('<')) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+        <div
+          className="font-sans-en
+            [&_h2]:font-editorial [&_h2]:text-3xl [&_h2]:sm:text-4xl [&_h2]:text-foreground [&_h2]:tracking-tight [&_h2]:mt-10 [&_h2]:mb-3
+            [&_h3]:font-editorial [&_h3]:text-xl [&_h3]:sm:text-2xl [&_h3]:text-foreground [&_h3]:tracking-tight [&_h3]:mt-6 [&_h3]:mb-2
+            [&_p]:text-muted-foreground [&_p]:leading-relaxed [&_p]:text-base [&_p]:sm:text-lg [&_p]:mb-4
+            [&_ul]:pl-6 [&_ul]:mb-4 [&_ul_li]:text-muted-foreground [&_ul_li]:leading-relaxed [&_ul_li]:mb-1 [&_ul_li]:list-disc
+            [&_ol]:pl-6 [&_ol]:mb-4 [&_ol_li]:text-muted-foreground [&_ol_li]:leading-relaxed [&_ol_li]:mb-1 [&_ol_li]:list-decimal
+            [&_blockquote]:border-l-4 [&_blockquote]:border-primary/40 [&_blockquote]:pl-5 [&_blockquote]:italic [&_blockquote]:text-muted-foreground [&_blockquote]:my-4
+            [&_hr]:border-border [&_hr]:my-6
+            [&_strong]:font-semibold [&_strong]:text-foreground
+            [&_em]:italic"
+          dangerouslySetInnerHTML={{ __html: raw }}
+        />
+      </div>
+    );
+  }
+
+  // Legacy markdown — parse manually for backward compat
   const blocks = raw.split(/\n{2,}/);
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6">
@@ -51,22 +74,22 @@ function RichText({ c, locale }: { c: C; locale: string }) {
         {blocks.map((block, i) => {
           const t = block.trim();
           if (t.startsWith('## '))
-            return <h2 key={i} className="font-editorial text-3xl sm:text-4xl text-bengal-kajal tracking-tight mt-10 mb-2">{t.slice(3)}</h2>;
+            return <h2 key={i} className="font-editorial text-3xl sm:text-4xl text-foreground tracking-tight mt-10 mb-2">{t.slice(3)}</h2>;
           if (t.startsWith('### '))
-            return <h3 key={i} className="font-editorial text-xl sm:text-2xl text-bengal-kajal tracking-tight mt-6 mb-1">{t.slice(4)}</h3>;
+            return <h3 key={i} className="font-editorial text-xl sm:text-2xl text-foreground tracking-tight mt-6 mb-1">{t.slice(4)}</h3>;
           if (t.startsWith('- ') || t.startsWith('* ')) {
             const items = t.split('\n').filter(Boolean);
             return (
               <ul key={i} className="space-y-2 pl-4">
                 {items.map((li, j) => (
-                  <li key={j} className="relative text-bengal-kajal/75 font-sans-en leading-relaxed text-base sm:text-lg pl-4 before:absolute before:left-0 before:top-2.5 before:w-1.5 before:h-1.5 before:rounded-full before:bg-bengal-sindoor/50">
+                  <li key={j} className="relative text-muted-foreground font-sans-en leading-relaxed text-base sm:text-lg pl-4 before:absolute before:left-0 before:top-2.5 before:w-1.5 before:h-1.5 before:rounded-full before:bg-primary/50">
                     {li.replace(/^[-*]\s/, '')}
                   </li>
                 ))}
               </ul>
             );
           }
-          return <p key={i} className="text-bengal-kajal/75 font-sans-en leading-relaxed text-base sm:text-lg">{t}</p>;
+          return <p key={i} className="text-muted-foreground font-sans-en leading-relaxed text-base sm:text-lg">{t}</p>;
         })}
       </div>
     </div>
@@ -112,13 +135,13 @@ function ImageText({ c }: { c: C }) {
     <div className="max-w-5xl mx-auto px-4 sm:px-6">
       <div className={'flex flex-col ' + (isRight ? 'md:flex-row-reverse' : 'md:flex-row') + ' gap-8 md:gap-14 items-center'}>
         {imgUrl && (
-          <div className="w-full md:w-1/2 relative aspect-4/5 rounded-3xl overflow-hidden bg-bengal-mati shrink-0">
+          <div className="w-full md:w-1/2 relative aspect-4/5 rounded-3xl overflow-hidden bg-muted shrink-0">
             <Image src={imgUrl} alt={title || 'Section image'} fill loading="lazy" className="object-cover" placeholder="blur" blurDataURL={BLUR_PLACEHOLDER} />
           </div>
         )}
         <div className="flex-1 flex flex-col justify-center gap-4">
-          {title && <h2 className="font-editorial text-3xl sm:text-4xl text-bengal-kajal leading-tight tracking-tight">{title}</h2>}
-          {text  && <p className="text-bengal-kajal/70 font-sans-en leading-relaxed text-base sm:text-lg">{text}</p>}
+          {title && <h2 className="font-editorial text-3xl sm:text-4xl text-foreground leading-tight tracking-tight">{title}</h2>}
+          {text  && <p className="text-muted-foreground font-sans-en leading-relaxed text-base sm:text-lg">{text}</p>}
         </div>
       </div>
     </div>
@@ -133,7 +156,7 @@ function QuoteSection({ c }: { c: C }) {
     <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
       <div className="relative py-10">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-px bg-bengal-sindoor/40" />
-        <p className="font-editorial text-2xl sm:text-3xl md:text-4xl text-bengal-kajal leading-snug italic mb-6">&ldquo;{text}&rdquo;</p>
+        <p className="font-editorial text-2xl sm:text-3xl md:text-4xl text-foreground leading-snug italic mb-6">&ldquo;{text}&rdquo;</p>
         {author && <p className="text-[11px] tracking-[0.25em] uppercase text-bengal-sindoor font-sans-en font-semibold">&mdash; {author}</p>}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-px bg-bengal-sindoor/40" />
       </div>
@@ -187,15 +210,15 @@ function TestimonialSection({ c }: { c: C }) {
   if (!quote) return null;
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
-      <div className="bg-bengal-kori border border-bengal-mati rounded-3xl px-8 py-10">
+      <div className="bg-card border border-border rounded-3xl px-8 py-10">
         {imgUrl && (
-          <div className="w-16 h-16 rounded-full overflow-hidden bg-bengal-mati mx-auto mb-5 relative">
+          <div className="w-16 h-16 rounded-full overflow-hidden bg-muted mx-auto mb-5 relative">
             <Image src={imgUrl} alt={author} fill className="object-cover" />
           </div>
         )}
-        <p className="font-editorial text-xl sm:text-2xl text-bengal-kajal italic mb-5 leading-snug">&ldquo;{quote}&rdquo;</p>
-        <p className="font-semibold text-sm text-bengal-kajal">{author}</p>
-        {role && <p className="text-xs text-bengal-kajal/50 mt-0.5">{role}</p>}
+        <p className="font-editorial text-xl sm:text-2xl text-foreground italic mb-5 leading-snug">&ldquo;{quote}&rdquo;</p>
+        <p className="font-semibold text-sm text-foreground">{author}</p>
+        {role && <p className="text-xs text-muted-foreground mt-0.5">{role}</p>}
       </div>
     </div>
   );
@@ -235,7 +258,7 @@ export default async function GenericPage({ params }: Props) {
             <span className="text-[10px] tracking-[0.3em] uppercase text-bengal-sindoor font-sans-en font-semibold">Womaniya</span>
             <div className="h-px w-12 bg-bengal-sindoor/40" />
           </div>
-          <h1 className="font-editorial text-5xl sm:text-6xl md:text-7xl text-bengal-kajal leading-[0.9] tracking-tight">{title}</h1>
+          <h1 className="font-editorial text-5xl sm:text-6xl md:text-7xl text-foreground leading-[0.9] tracking-tight">{title}</h1>
         </div>
       )}
 
