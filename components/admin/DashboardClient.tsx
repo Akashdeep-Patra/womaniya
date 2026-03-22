@@ -117,12 +117,12 @@ export function DashboardClient({
         ].map((s) => (
           <div
             key={s.label}
-            className="relative overflow-hidden rounded-xl border border-border bg-card px-4 py-3 lg:py-4"
+            className="relative overflow-hidden rounded-xl border border-border bg-card px-3 sm:px-4 py-3 lg:py-4"
           >
-            <p className="text-[10px] tracking-[0.15em] uppercase text-muted-foreground font-medium">
+            <p className="text-[9px] sm:text-[10px] tracking-[0.12em] sm:tracking-[0.15em] uppercase text-muted-foreground font-medium truncate">
               {s.label}
             </p>
-            <p className={`font-sans font-bold tracking-tight text-2xl lg:text-3xl tabular-nums mt-0.5 ${s.color}`}>
+            <p className={`font-sans font-bold tracking-tight text-xl sm:text-2xl lg:text-3xl tabular-nums mt-0.5 ${s.color}`}>
               {s.value}
             </p>
           </div>

@@ -15,7 +15,7 @@ export function AdminMobileNav({ locale }: { locale: string }) {
   const base = `/${locale}/admin`;
 
   const mainTabs = [
-    { href: base, label: 'Dashboard', icon: LayoutDashboard },
+    { href: base, label: 'Board', icon: LayoutDashboard },
     { href: `${base}/products`, label: 'Products', icon: Package },
     { href: `${base}/products/new`, label: 'New', icon: PlusCircle },
     { href: `${base}/pages`, label: 'Pages', icon: FileText },
@@ -62,7 +62,7 @@ export function AdminMobileNav({ locale }: { locale: string }) {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="fixed bottom-[3.5rem] left-0 right-0 z-50 bg-card border-t border-border rounded-t-2xl pb-2 lg:hidden shadow-xl"
+              className="fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom))] left-0 right-0 z-50 bg-card border-t border-border rounded-t-2xl pb-2 lg:hidden shadow-xl"
             >
               <div className="w-10 h-1 bg-muted-foreground/20 rounded-full mx-auto mt-3 mb-4" />
               <div className="grid grid-cols-4 gap-1 px-3 pb-2">
@@ -111,8 +111,8 @@ export function AdminMobileNav({ locale }: { locale: string }) {
         )}
       </AnimatePresence>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border lg:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <div className="grid grid-cols-5 h-[3.5rem] pb-[max(0px,env(safe-area-inset-bottom))]">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border lg:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-[env(safe-area-inset-bottom)]">
+        <div className="grid grid-cols-5 h-14">
           {mainTabs.map((tab) => {
             const active = isActive(tab.href);
             return (

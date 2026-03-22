@@ -51,7 +51,7 @@ export function AdminTopBar({ userName, locale }: { userName?: string | null; lo
         <button
           onClick={() => setPaletteOpen(true)}
           aria-label="Search"
-          className="h-11 flex items-center gap-2 rounded-lg px-3 hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer transition-colors touch-manipulation"
+          className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer transition-colors touch-manipulation lg:w-auto lg:px-3 lg:gap-2 lg:justify-start"
         >
           <Search size={18} />
           <kbd className="hidden lg:inline-flex h-5 items-center gap-0.5 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
@@ -73,7 +73,7 @@ export function AdminTopBar({ userName, locale }: { userName?: string | null; lo
             </span>
           </button>
           {avatarOpen && (
-            <div className="absolute right-0 top-full mt-2 w-48 bg-popover border border-border rounded-lg shadow-lg z-50 py-1">
+            <div className="absolute right-0 top-full mt-2 w-48 bg-popover border border-border rounded-lg shadow-lg z-50 py-1 max-w-[calc(100vw-2rem)]">
               {userName && (
                 <div className="px-3 py-2 border-b border-border">
                   <p className="text-sm font-medium text-foreground truncate">{userName}</p>
