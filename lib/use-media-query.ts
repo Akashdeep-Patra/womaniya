@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react';
 
 export function useMediaQuery(query: string): boolean {
-  // Initialise synchronously on the client so the first paint matches reality
-  // and avoids a hydration mismatch that causes layout shift.
-  const [matches, setMatches] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia(query).matches;
-  });
+  // Always start false so server and client render the same HTML during
+  // hydration. useEffect updates to the real value after mount.
+  const [matches, setMatches] = useState<boolean>(false);
 
   useEffect(() => {
     const mql = window.matchMedia(query);
