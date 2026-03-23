@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import Image from 'next/image';
 import { WhatsAppContextSetter } from '@/lib/whatsapp-context';
 import type { Metadata } from 'next';
+import { MarkdownContent } from '@/components/ui/MarkdownContent';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -111,24 +112,31 @@ export default async function StoryPage({ params }: Props) {
           </h1>
         )}
 
-        <div className="flex flex-col gap-12 font-editorial text-lg text-bengal-kajal/80 leading-relaxed">
+        <div className="flex flex-col gap-12">
           {page.sections.map((section) => {
             const content = section.content_json as Record<string, string>;
             if (section.section_type === 'richtext') {
+              const raw = (locale === 'bn' ? content.content_bn || content.content_en : content.content_en) ?? '';
               return (
-                <div key={section.id} className="prose prose-stone prose-lg max-w-none font-editorial">
-                  <p>{locale === 'bn' ? content.content_bn || content.content_en : content.content_en}</p>
-                </div>
+                <MarkdownContent
+                  key={section.id}
+                  content={raw}
+                  className="text-lg text-bengal-kajal/80"
+                />
               );
             }
             if (section.section_type === 'image_text') {
               return (
                 <div key={section.id} className="my-8">
-                  <div className="relative w-full aspect-video md:aspect-21/9 rounded-2xl overflow-hidden bg-bengal-mati mb-6">
-                    <Image src={content.image_url} alt={content.title || ''} fill className="object-cover" />
-                  </div>
+                  {content.image_url && (
+                    <div className="relative w-full aspect-video md:aspect-[21/9] rounded-2xl overflow-hidden bg-bengal-mati mb-6">
+                      <Image src={content.image_url} alt={content.title || ''} fill className="object-cover" />
+                    </div>
+                  )}
                   {content.title && <h2 className="text-3xl font-editorial text-bengal-kajal mb-4">{content.title}</h2>}
-                  {content.text && <p>{content.text}</p>}
+                  {content.text && (
+                    <MarkdownContent content={content.text} className="text-lg text-bengal-kajal/80" />
+                  )}
                 </div>
               );
             }

@@ -5,6 +5,7 @@ import { db } from '@/lib/db';
 import Image from 'next/image';
 import Link from 'next/link';
 import { EmptyState } from '@/components/storefront/EmptyState';
+import { MarkdownContent } from '@/components/ui/MarkdownContent';
 import { HeroCarousel } from '@/components/storefront/HeroCarousel';
 import { WhatsAppContextSetter } from '@/lib/whatsapp-context';
 import type { Metadata } from 'next';
@@ -131,9 +132,12 @@ export default async function CollectionPage({ params }: Props) {
           </h1>
         )}
 
-        <p className="text-center max-w-2xl mx-auto mb-12 text-bengal-kajal/70 font-sans-en">
-          {locale === 'bn' ? collection.description_bn || collection.description_en : collection.description_en}
-        </p>
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <MarkdownContent
+            content={locale === 'bn' ? collection.description_bn || collection.description_en : collection.description_en}
+            className="text-bengal-kajal/70 [&_p]:text-bengal-kajal/70"
+          />
+        </div>
 
         {products.length === 0 ? (
           <div className="col-span-full">

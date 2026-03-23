@@ -5,6 +5,7 @@ import Image                 from 'next/image';
 import Link                  from 'next/link';
 import type { Metadata }     from 'next';
 import { BLUR_PLACEHOLDER }  from '@/lib/blur-placeholder';
+import { MarkdownContent }   from '@/components/ui/MarkdownContent';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -147,7 +148,7 @@ function ImageText({ c }: { c: C }) {
         )}
         <div className="flex-1 flex flex-col justify-center gap-4">
           {title && <h2 className="font-editorial text-3xl sm:text-4xl text-foreground leading-tight tracking-tight">{title}</h2>}
-          {text  && <p className="text-muted-foreground font-sans-en leading-relaxed text-base sm:text-lg">{text}</p>}
+          {text  && <MarkdownContent content={text} />}
         </div>
       </div>
     </div>

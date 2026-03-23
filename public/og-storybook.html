@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OG Card Storybook</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0f0f;
+      --surface: #161616;
+      --surface-2: #1e1e1e;
+      --border: #2a2a2a;
+      --border-bright: #383838;
+      --text-primary: #f5f5f5;
+      --text-secondary: #a0a0a0;
+      --text-muted: #5a5a5a;
+      --accent-womaniya: #e84f9c;
+      --accent-womaniya-dim: rgba(232, 79, 156, 0.15);
+      --accent-sreniq: #6366f1;
+      --accent-sreniq-dim: rgba(99, 102, 241, 0.15);
+      --green: #22c55e;
+      --red: #ef4444;
+      --radius: 12px;
+    }
+
+    html { background: var(--bg); color: var(--text-primary); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    body { min-height: 100vh; padding: 48px 24px 80px; }
+
+    /* ── Header ── */
+    .header {
+      max-width: 1320px;
+      margin: 0 auto 64px;
+      text-align: center;
+    }
+    .header-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .header-eyebrow span {
+      display: inline-block;
+      width: 24px;
+      height: 1px;
+      background: var(--border-bright);
+    }
+    .header h1 {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+    .header h1 em { font-style: normal; color: var(--text-muted); }
+    .header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .project-badges {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid;
+    }
+    .badge-womaniya {
+      color: var(--accent-womaniya);
+      background: var(--accent-womaniya-dim);
+      border-color: rgba(232, 79, 156, 0.3);
+    }
+    .badge-sreniq {
+      color: var(--accent-sreniq);
+      background: var(--accent-sreniq-dim);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* ── Section ── */
+    .section {
+      max-width: 1320px;
+      margin: 0 auto 72px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .section-icon-womaniya {
+      background: var(--accent-womaniya-dim);
+      color: var(--accent-womaniya);
+      border: 1px solid rgba(232, 79, 156, 0.25);
+    }
+    .section-icon-sreniq {
+      background: var(--accent-sreniq-dim);
+      color: var(--accent-sreniq);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+    }
+    .section-title {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+    .section-count {
+      margin-left: auto;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+    }
+
+    /* ── Grid ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(560px, 1fr));
+      gap: 28px;
+    }
+    @media (max-width: 640px) {
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: var(--border-bright); }
+
+    .card-image-wrap {
+      position: relative;
+      aspect-ratio: 1200 / 630;
+      background: var(--surface-2);
+      overflow: hidden;
+    }
+    .card-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* skeleton */
+    .skeleton {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, var(--surface-2) 25%, #222 50%, var(--surface-2) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.6s infinite;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .card-image-wrap img { position: relative; z-index: 1; }
+
+    /* status overlay */
+    .status-overlay {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .status-overlay.visible { opacity: 1; }
+    .status-ok   { background: rgba(22, 163, 74, 0.9); color: #fff; }
+    .status-fail { background: rgba(220, 38,  38, 0.9); color: #fff; }
+    .status-loading { background: rgba(40,40,40,0.85); color: var(--text-muted); }
+
+    /* error placeholder */
+    .img-error-placeholder {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--text-muted);
+      font-size: 13px;
+      text-align: center;
+      padding: 24px;
+    }
+    .img-error-placeholder svg { opacity: 0.3; }
+    .img-error-placeholder .err-url {
+      font-size: 11px;
+      font-family: monospace;
+      word-break: break-all;
+      color: var(--text-muted);
+      opacity: 0.6;
+      margin-top: 4px;
+    }
+
+    /* card meta */
+    .card-meta {
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .card-meta-icon {
+      margin-top: 2px;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+    .card-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+    .card-url {
+      font-size: 11px;
+      font-family: 'Courier New', monospace;
+      color: var(--text-muted);
+      margin-top: 3px;
+      word-break: break-all;
+    }
+    .card-meta-status {
+      margin-left: auto;
+      flex-shrink: 0;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .status-text-ok      { background: rgba(22,163,74,0.12);   color: var(--green); }
+    .status-text-fail    { background: rgba(220,38,38,0.12);   color: var(--red); }
+    .status-text-loading { background: var(--surface-2);       color: var(--text-muted); }
+
+    /* ── Dynamic URL discovery notice ── */
+    .dynamic-notice {
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      max-width: 1320px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 32px;
+    }
+    .footer a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ── Refresh button ── */
+    .refresh-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--surface-2);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-bright);
+      transition: background 0.15s, color 0.15s;
+    }
+    .refresh-btn:hover { background: var(--border); color: var(--text-primary); }
+
+    /* ── Global stats bar ── */
+    .stats-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 40px;
+      font-size: 13px;
+    }
+    .stat-item { display: flex; align-items: center; gap: 6px; color: var(--text-secondary); }
+    .stat-num { font-weight: 700; color: var(--text-primary); font-size: 15px; }
+    .stat-sep { color: var(--border-bright); }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ── -->
+  <header class="header">
+    <div class="header-eyebrow">
+      <span></span>
+      Visual QA Tool
+      <span></span>
+    </div>
+    <h1>OG Card <em>Storybook</em></h1>
+    <p>Every social share card for both projects, live-loaded from local dev servers.</p>
+    <div class="project-badges">
+      <span class="badge badge-womaniya"><span class="badge-dot"></span>Womaniya · localhost:5001</span>
+      <span class="badge badge-sreniq"><span class="badge-dot"></span>Sreniq · localhost:5173</span>
+    </div>
+  </header>
+
+  <!-- ── Global stats ── -->
+  <div class="stats-bar" id="global-stats">
+    <div class="stat-item">
+      <span id="stat-total" class="stat-num">—</span>
+      <span>total cards</span>
+    </div>
+    <span class="stat-sep">·</span>
+    <div class="stat-item">
+      <span id="stat-ok" class="stat-num" style="color: var(--green);">—</span>
+      <span>loaded</span>
+    </div>
+    <span class="stat-sep">·</span>
+    <div class="stat-item">
+      <span id="stat-fail" class="stat-num" style="color: var(--red);">—</span>
+      <span>failed</span>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       WOMANIYA SECTION
+  ════════════════════════════════════════════ -->
+  <section class="section" id="section-womaniya">
+    <div class="section-header">
+      <div class="section-icon section-icon-womaniya">W</div>
+      <div>
+        <div class="section-title">Womaniya</div>
+        <div class="section-subtitle">Next.js App Router · localhost:5001</div>
+      </div>
+      <div class="section-count" id="womaniya-count">Loading…</div>
+    </div>
+
+    <!-- Static Womaniya cards -->
+    <div class="cards-grid" id="womaniya-grid"></div>
+
+    <!-- Dynamic URL discovery cards -->
+    <div style="margin-top: 32px;">
+      <div class="dynamic-notice">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        Dynamic cards below are discovered by fetching the listing page and extracting the <code>og:image</code> meta tag.
+      </div>
+      <div class="cards-grid" id="womaniya-dynamic-grid"></div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════
+       SRENIQ SECTION
+  ════════════════════════════════════════════ -->
+  <section class="section" id="section-sreniq">
+    <div class="section-header">
+      <div class="section-icon section-icon-sreniq">S</div>
+      <div>
+        <div class="section-title">Sreniq</div>
+        <div class="section-subtitle">Remix · localhost:5173</div>
+      </div>
+      <div class="section-count" id="sreniq-count">Loading…</div>
+    </div>
+
+    <!-- Static Sreniq card -->
+    <div class="cards-grid" id="sreniq-grid"></div>
+
+    <!-- Dynamic Sreniq story card -->
+    <div style="margin-top: 32px;">
+      <div class="dynamic-notice">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        Dynamic story card: fetches <code>/explore</code>, finds the first public story link, then loads its <code>og:image</code>.
+      </div>
+      <div class="cards-grid" id="sreniq-dynamic-grid"></div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <div>OG Card Storybook · Built for Womaniya &amp; Sreniq visual QA</div>
+    <div style="margin-top: 6px; color: var(--text-muted); font-size: 11px;">
+      Open with both dev servers running — Womaniya on <code>:5001</code>, Sreniq on <code>:5173</code>
+    </div>
+    <button class="refresh-btn" onclick="location.reload()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+      </svg>
+      Reload all cards
+    </button>
+  </footer>
+
+  <script>
+    // ──────────────────────────────────────────────────────────────────────────
+    // Utilities
+    // ──────────────────────────────────────────────────────────────────────────
+
+    let totalCards = 0;
+    let okCards    = 0;
+    let failCards  = 0;
+
+    function updateGlobalStats() {
+      document.getElementById('stat-total').textContent = totalCards;
+      document.getElementById('stat-ok').textContent    = okCards;
+      document.getElementById('stat-fail').textContent  = failCards;
+    }
+
+    /** Fetch a page and extract the og:image content attribute */
+    async function getOgImageUrl(pageUrl) {
+      try {
+        const res = await fetch(pageUrl, { signal: AbortSignal.timeout(8000) });
+        if (!res.ok) return null;
+        const html = await res.text();
+        // Try property="og:image" and name="og:image" patterns
+        const match =
+          html.match(/property=["']og:image["']\s+content=["']([^"']+)["']/) ||
+          html.match(/content=["']([^"']+)["']\s+property=["']og:image["']/) ||
+          html.match(/name=["']og:image["']\s+content=["']([^"']+)["']/) ||
+          html.match(/content=["']([^"']+)["']\s+name=["']og:image["']/);
+        return match ? match[1] : null;
+      } catch {
+        return null;
+      }
+    }
+
+    /** Extract first matching href from HTML */
+    function extractFirstHref(html, pattern) {
+      const match = html.match(pattern);
+      return match ? match[1] : null;
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Card builder
+    // ──────────────────────────────────────────────────────────────────────────
+
+    /**
+     * @param {object} opts
+     * @param {string} opts.name        — display name for the card
+     * @param {string} opts.imgUrl      — direct image URL
+     * @param {string} opts.pageUrl     — source URL shown in meta row
+     * @param {'womaniya'|'sreniq'} opts.project
+     */
+    function buildCard({ name, imgUrl, pageUrl, project }) {
+      totalCards++;
+      updateGlobalStats();
+
+      const accent = project === 'womaniya' ? 'var(--accent-womaniya)' : 'var(--accent-sreniq)';
+
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      card.innerHTML = `
+        <div class="card-image-wrap">
+          <div class="skeleton" id="skel-${totalCards}"></div>
+          <div class="img-error-placeholder" id="err-${totalCards}">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <div>Image failed to load</div>
+            <div class="err-url">${imgUrl}</div>
+          </div>
+          <img src="${imgUrl}" alt="${name} OG card"
+               loading="lazy"
+               id="img-${totalCards}"
+               style="opacity:0;transition:opacity 0.3s;" />
+          <div class="status-overlay status-loading" id="ov-${totalCards}">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="12" cy="12" r="10"/>
+            </svg>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-icon" style="color:${accent};">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
+          <div>
+            <div class="card-name">${name}</div>
+            <div class="card-url">${pageUrl}</div>
+          </div>
+          <div class="card-meta-status status-text-loading" id="st-${totalCards}">Loading…</div>
+        </div>
+      `;
+
+      const cardId = totalCards; // capture for closures
+      const img    = card.querySelector(`#img-${cardId}`);
+      const skel   = card.querySelector(`#skel-${cardId}`);
+      const errEl  = card.querySelector(`#err-${cardId}`);
+      const ov     = card.querySelector(`#ov-${cardId}`);
+      const st     = card.querySelector(`#st-${cardId}`);
+
+      img.addEventListener('load', () => {
+        skel.remove();
+        img.style.opacity = '1';
+        ov.className = 'status-overlay visible status-ok';
+        ov.innerHTML = '✓';
+        st.className = 'card-meta-status status-text-ok';
+        st.textContent = 'Loaded';
+        okCards++;
+        updateGlobalStats();
+      });
+
+      img.addEventListener('error', () => {
+        skel.remove();
+        errEl.style.display = 'flex';
+        ov.className = 'status-overlay visible status-fail';
+        ov.innerHTML = '✕';
+        st.className = 'card-meta-status status-text-fail';
+        st.textContent = 'Failed';
+        failCards++;
+        updateGlobalStats();
+      });
+
+      return card;
+    }
+
+    /**
+     * Build a card that first fetches a page to discover the og:image URL,
+     * then renders the card with the discovered URL.
+     */
+    async function buildDynamicCard({ name, discoverFromUrl, project, grid }) {
+      totalCards++;
+      const cardId = totalCards;
+      updateGlobalStats();
+
+      const accent = project === 'womaniya' ? 'var(--accent-womaniya)' : 'var(--accent-sreniq)';
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-image-wrap">
+          <div class="skeleton" id="skel-${cardId}"></div>
+          <div class="img-error-placeholder" id="err-${cardId}">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <div>Could not discover og:image</div>
+            <div class="err-url">Fetched: ${discoverFromUrl}</div>
+          </div>
+          <img id="img-${cardId}" alt="${name} OG card"
+               loading="lazy"
+               style="opacity:0;transition:opacity 0.3s;display:none;" />
+          <div class="status-overlay status-loading visible" id="ov-${cardId}">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite">
+              <path d="M21 12a9 9 0 1 1-6.22-8.56"/>
+            </svg>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-icon" style="color:${accent};">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+            </svg>
+          </div>
+          <div>
+            <div class="card-name">${name} <span style="font-size:10px;font-weight:400;color:var(--text-muted);font-style:italic;">(dynamic)</span></div>
+            <div class="card-url" id="url-${cardId}">Discovering from ${discoverFromUrl}…</div>
+          </div>
+          <div class="card-meta-status status-text-loading" id="st-${cardId}">Discovering…</div>
+        </div>
+      `;
+      grid.appendChild(card);
+
+      const img   = card.querySelector(`#img-${cardId}`);
+      const skel  = card.querySelector(`#skel-${cardId}`);
+      const errEl = card.querySelector(`#err-${cardId}`);
+      const ov    = card.querySelector(`#ov-${cardId}`);
+      const st    = card.querySelector(`#st-${cardId}`);
+      const urlEl = card.querySelector(`#url-${cardId}`);
+
+      const discovered = await getOgImageUrl(discoverFromUrl);
+
+      if (!discovered) {
+        skel.remove();
+        errEl.style.display = 'flex';
+        ov.className = 'status-overlay visible status-fail';
+        ov.innerHTML = '✕';
+        st.className = 'card-meta-status status-text-fail';
+        st.textContent = 'No og:image';
+        failCards++;
+        updateGlobalStats();
+        return;
+      }
+
+      urlEl.textContent = discovered;
+      img.src = discovered;
+      img.style.display = '';
+
+      img.addEventListener('load', () => {
+        skel.remove();
+        img.style.opacity = '1';
+        ov.className = 'status-overlay visible status-ok';
+        ov.innerHTML = '✓';
+        st.className = 'card-meta-status status-text-ok';
+        st.textContent = 'Loaded';
+        okCards++;
+        updateGlobalStats();
+      });
+
+      img.addEventListener('error', () => {
+        skel.remove();
+        errEl.style.display = 'flex';
+        ov.className = 'status-overlay visible status-fail';
+        ov.innerHTML = '✕';
+        st.className = 'card-meta-status status-text-fail';
+        st.textContent = 'Failed';
+        failCards++;
+        updateGlobalStats();
+      });
+    }
+
+    // Special dynamic card for Sreniq: discover first story slug from /explore
+    async function buildSreniqStoryCard(grid) {
+      totalCards++;
+      const cardId = totalCards;
+      updateGlobalStats();
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-image-wrap">
+          <div class="skeleton" id="skel-${cardId}"></div>
+          <div class="img-error-placeholder" id="err-${cardId}">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <div>No stories found on /explore</div>
+            <div class="err-url">Ensure Sreniq dev server is running on :5173 with at least one public story.</div>
+          </div>
+          <img id="img-${cardId}" alt="Sreniq Story OG card"
+               loading="lazy"
+               style="opacity:0;transition:opacity 0.3s;display:none;" />
+          <div class="status-overlay status-loading visible" id="ov-${cardId}">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite">
+              <path d="M21 12a9 9 0 1 1-6.22-8.56"/>
+            </svg>
+          </div>
+        </div>
+        <div class="card-meta">
+          <div class="card-meta-icon" style="color:var(--accent-sreniq);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+            </svg>
+          </div>
+          <div>
+            <div class="card-name">Story (first public) <span style="font-size:10px;font-weight:400;color:var(--text-muted);font-style:italic;">(dynamic)</span></div>
+            <div class="card-url" id="url-${cardId}">Scanning /explore for first story…</div>
+          </div>
+          <div class="card-meta-status status-text-loading" id="st-${cardId}">Discovering…</div>
+        </div>
+      `;
+      grid.appendChild(card);
+
+      const img   = card.querySelector(`#img-${cardId}`);
+      const skel  = card.querySelector(`#skel-${cardId}`);
+      const errEl = card.querySelector(`#err-${cardId}`);
+      const ov    = card.querySelector(`#ov-${cardId}`);
+      const st    = card.querySelector(`#st-${cardId}`);
+      const urlEl = card.querySelector(`#url-${cardId}`);
+
+      const fail = (msg) => {
+        skel.remove();
+        errEl.style.display = 'flex';
+        ov.className = 'status-overlay visible status-fail';
+        ov.innerHTML = '✕';
+        st.className = 'card-meta-status status-text-fail';
+        st.textContent = 'Failed';
+        failCards++;
+        updateGlobalStats();
+      };
+
+      try {
+        const exploreRes = await fetch('http://localhost:5173/explore', { signal: AbortSignal.timeout(8000) });
+        if (!exploreRes.ok) { fail('explore 404'); return; }
+        const exploreHtml = await exploreRes.text();
+
+        // Find first /explore/<slug> href — Sreniq uses /explore/:slug
+        const slugMatch =
+          exploreHtml.match(/href=["']\/explore\/([^"'/]+)["']/) ||
+          exploreHtml.match(/href=["'](\/explore\/[^"']+)["']/);
+
+        if (!slugMatch) { fail('no story links found'); return; }
+
+        const storyPath = slugMatch[0].startsWith('href="/explore/')
+          ? slugMatch[1]  // e.g. /explore/my-story
+          : '/explore/' + slugMatch[1];
+
+        const storyUrl = 'http://localhost:5173' + (storyPath.startsWith('/') ? storyPath : '/' + storyPath);
+        urlEl.textContent = 'Fetching og:image from ' + storyUrl + '…';
+
+        const ogUrl = await getOgImageUrl(storyUrl);
+        if (!ogUrl) { fail('no og:image on story page'); return; }
+
+        urlEl.textContent = ogUrl;
+        img.src = ogUrl;
+        img.style.display = '';
+
+        img.addEventListener('load', () => {
+          skel.remove();
+          img.style.opacity = '1';
+          ov.className = 'status-overlay visible status-ok';
+          ov.innerHTML = '✓';
+          st.className = 'card-meta-status status-text-ok';
+          st.textContent = 'Loaded';
+          okCards++;
+          updateGlobalStats();
+        });
+
+        img.addEventListener('error', () => {
+          skel.remove();
+          errEl.style.display = 'flex';
+          ov.className = 'status-overlay visible status-fail';
+          ov.innerHTML = '✕';
+          st.className = 'card-meta-status status-text-fail';
+          st.textContent = 'Failed';
+          failCards++;
+          updateGlobalStats();
+        });
+      } catch {
+        fail('fetch error');
+      }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Womaniya — static cards
+    // ──────────────────────────────────────────────────────────────────────────
+
+    const W_BASE = 'http://localhost:5001';
+
+    const womaniyaStaticCards = [
+      { name: 'Root (App Router)',     imgUrl: `${W_BASE}/opengraph-image`,               pageUrl: `${W_BASE}/opengraph-image` },
+      { name: 'Storefront Home',       imgUrl: `${W_BASE}/en/opengraph-image`,             pageUrl: `${W_BASE}/en/opengraph-image` },
+      { name: 'Shop Index',            imgUrl: `${W_BASE}/en/shop/opengraph-image`,        pageUrl: `${W_BASE}/en/shop/opengraph-image` },
+      { name: 'Stories Index',         imgUrl: `${W_BASE}/en/stories/opengraph-image`,     pageUrl: `${W_BASE}/en/stories/opengraph-image` },
+      { name: 'Collections Index',     imgUrl: `${W_BASE}/en/collections/opengraph-image`, pageUrl: `${W_BASE}/en/collections/opengraph-image` },
+      { name: 'Campaigns Index',       imgUrl: `${W_BASE}/en/campaigns/opengraph-image`,   pageUrl: `${W_BASE}/en/campaigns/opengraph-image` },
+      { name: 'About',                 imgUrl: `${W_BASE}/en/about/opengraph-image`,       pageUrl: `${W_BASE}/en/about/opengraph-image` },
+      { name: 'Categories',            imgUrl: `${W_BASE}/en/categories/opengraph-image`,  pageUrl: `${W_BASE}/en/categories/opengraph-image` },
+    ];
+
+    const womaniyaDynamicCards = [
+      { name: 'Product (Shop)',     discoverFromUrl: `${W_BASE}/en/shop` },
+      { name: 'Story',              discoverFromUrl: `${W_BASE}/en/stories` },
+      { name: 'Collection',         discoverFromUrl: `${W_BASE}/en/collections` },
+      { name: 'Campaign',           discoverFromUrl: `${W_BASE}/en/campaigns` },
+    ];
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Sreniq — static cards
+    // ──────────────────────────────────────────────────────────────────────────
+
+    const S_BASE = 'http://localhost:5173';
+
+    const sreniqStaticCards = [
+      { name: 'Generic / Branded', imgUrl: `${S_BASE}/api/og`, pageUrl: `${S_BASE}/api/og` },
+    ];
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // Render everything
+    // ──────────────────────────────────────────────────────────────────────────
+
+    const womaniyaGrid        = document.getElementById('womaniya-grid');
+    const womaniyaDynamicGrid = document.getElementById('womaniya-dynamic-grid');
+    const sreniqGrid          = document.getElementById('sreniq-grid');
+    const sreniqDynamicGrid   = document.getElementById('sreniq-dynamic-grid');
+
+    // Womaniya static
+    womaniyaStaticCards.forEach(c => {
+      womaniyaGrid.appendChild(buildCard({ ...c, project: 'womaniya' }));
+    });
+
+    // Womaniya dynamic (async — cards placeholder then fill)
+    womaniyaDynamicCards.forEach(c => {
+      buildDynamicCard({ ...c, project: 'womaniya', grid: womaniyaDynamicGrid });
+    });
+
+    // Sreniq static
+    sreniqStaticCards.forEach(c => {
+      sreniqGrid.appendChild(buildCard({ ...c, project: 'sreniq' }));
+    });
+
+    // Sreniq dynamic story
+    buildSreniqStoryCard(sreniqDynamicGrid);
+
+    // Update section counts once all cards land
+    function updateSectionCounts() {
+      const wStatic  = womaniyaStaticCards.length;
+      const wDynamic = womaniyaDynamicCards.length;
+      const sStatic  = sreniqStaticCards.length;
+      const sDynamic = 1; // the story card
+      document.getElementById('womaniya-count').textContent = `${wStatic + wDynamic} cards`;
+      document.getElementById('sreniq-count').textContent   = `${sStatic  + sDynamic} cards`;
+    }
+    updateSectionCounts();
+
+    // Add CSS for spinner animation
+    const style = document.createElement('style');
+    style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

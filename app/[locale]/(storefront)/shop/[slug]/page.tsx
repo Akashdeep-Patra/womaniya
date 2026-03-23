@@ -1,4 +1,5 @@
 import { notFound }          from 'next/navigation';
+import { MarkdownContent }   from '@/components/ui/MarkdownContent';
 import Link                  from 'next/link';
 import { setRequestLocale }  from 'next-intl/server';
 import { getTranslations }   from 'next-intl/server';
@@ -202,10 +203,11 @@ export default async function ProductPage({ params }: Props) {
 
               {/* Description */}
               {desc && (
-                <div className="mb-6">
-                  <p className={`text-muted-foreground text-sm md:text-[15px] leading-relaxed ${isBn ? 'font-bengali' : ''}`}>
-                    {desc}
-                  </p>
+                <div className={`mb-6 ${isBn ? 'font-bengali' : ''}`}>
+                  <MarkdownContent
+                    content={desc}
+                    className="text-sm md:text-[15px] [&_p]:text-sm [&_p]:md:text-[15px] [&_p]:mb-2"
+                  />
                 </div>
               )}
 

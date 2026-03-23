@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { BLUR_PLACEHOLDER } from '@/lib/blur-placeholder';
 import { EmptyState } from '@/components/storefront/EmptyState';
+import { MarkdownContent } from '@/components/ui/MarkdownContent';
 import { HeroCarousel } from '@/components/storefront/HeroCarousel';
 import { WhatsAppContextSetter } from '@/lib/whatsapp-context';
 import type { Metadata } from 'next';
@@ -127,9 +128,12 @@ export default async function CategoryPage({ params }: Props) {
           </h1>
         )}
 
-        <p className="text-center max-w-2xl mx-auto mb-12 text-bengal-kajal/70 font-sans-en">
-          {locale === 'bn' ? category.description_bn || category.description_en : category.description_en}
-        </p>
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <MarkdownContent
+            content={locale === 'bn' ? category.description_bn || category.description_en : category.description_en}
+            className="text-bengal-kajal/70 [&_p]:text-bengal-kajal/70"
+          />
+        </div>
 
         {category.products.length === 0 ? (
           <div className="col-span-full">

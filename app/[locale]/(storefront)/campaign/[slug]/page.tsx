@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 import Image from 'next/image';
 import { WhatsAppContextSetter } from '@/lib/whatsapp-context';
+import { MarkdownContent } from '@/components/ui/MarkdownContent';
 import type { Metadata } from 'next';
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -63,9 +64,12 @@ export default async function CampaignPage({ params }: Props) {
           {locale === 'bn' ? campaign.name_bn || campaign.name_en : campaign.name_en}
         </h1>
         
-        <p className="text-center max-w-2xl mx-auto mb-12 text-bengal-kajal/70 font-sans-en">
-          {locale === 'bn' ? campaign.description_bn || campaign.description_en : campaign.description_en}
-        </p>
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <MarkdownContent
+            content={locale === 'bn' ? campaign.description_bn || campaign.description_en : campaign.description_en}
+            className="text-bengal-kajal/70 [&_p]:text-bengal-kajal/70"
+          />
+        </div>
 
         {campaign.banners && campaign.banners.length > 0 && (
           <div className="grid gap-8">
