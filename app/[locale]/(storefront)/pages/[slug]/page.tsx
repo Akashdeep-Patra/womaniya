@@ -45,60 +45,9 @@ type C = Record<string, unknown>;
 function RichText({ c, locale }: { c: C; locale: string }) {
   const raw = (locale === 'bn' && c.content_bn ? String(c.content_bn) : String(c.content_en || '')).trim();
   if (!raw) return null;
-
-  // HTML from Tiptap — render directly with theme-aware prose styles
-  if (raw.startsWith('<')) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        <div
-          className="font-sans-en
-            [&_h2]:font-editorial [&_h2]:text-3xl [&_h2]:sm:text-4xl [&_h2]:text-foreground [&_h2]:tracking-tight [&_h2]:mt-10 [&_h2]:mb-3
-            [&_h3]:font-editorial [&_h3]:text-xl [&_h3]:sm:text-2xl [&_h3]:text-foreground [&_h3]:tracking-tight [&_h3]:mt-6 [&_h3]:mb-2
-            [&_p]:text-muted-foreground [&_p]:leading-relaxed [&_p]:text-base [&_p]:sm:text-lg [&_p]:mb-4
-            [&_ul]:pl-6 [&_ul]:mb-4 [&_ul_li]:text-muted-foreground [&_ul_li]:leading-relaxed [&_ul_li]:mb-1 [&_ul_li]:list-disc
-            [&_ol]:pl-6 [&_ol]:mb-4 [&_ol_li]:text-muted-foreground [&_ol_li]:leading-relaxed [&_ol_li]:mb-1 [&_ol_li]:list-decimal
-            [&_blockquote]:border-l-4 [&_blockquote]:border-primary/40 [&_blockquote]:pl-5 [&_blockquote]:italic [&_blockquote]:text-muted-foreground [&_blockquote]:my-4
-            [&_hr]:border-border [&_hr]:my-6
-            [&_strong]:font-semibold [&_strong]:text-foreground
-            [&_em]:italic"
-          dangerouslySetInnerHTML={{ __html: raw }}
-        />
-      </div>
-    );
-  }
-
-  // Legacy markdown — parse manually for backward compat
-  function parseInline(text: string): string {
-    return text
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
-  }
-
-  const blocks = raw.split(/\n{2,}/);
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6">
-      <div className="space-y-5">
-        {blocks.map((block, i) => {
-          const t = block.trim();
-          if (t.startsWith('## '))
-            return <h2 key={i} className="font-editorial text-3xl sm:text-4xl text-foreground tracking-tight mt-10 mb-2" dangerouslySetInnerHTML={{ __html: parseInline(t.slice(3)) }} />;
-          if (t.startsWith('### '))
-            return <h3 key={i} className="font-editorial text-xl sm:text-2xl text-foreground tracking-tight mt-6 mb-1" dangerouslySetInnerHTML={{ __html: parseInline(t.slice(4)) }} />;
-          if (t.startsWith('- ') || t.startsWith('* ')) {
-            const items = t.split('\n').filter(Boolean);
-            return (
-              <ul key={i} className="space-y-2 pl-4">
-                {items.map((li, j) => (
-                  <li key={j} className="relative text-muted-foreground font-sans-en leading-relaxed text-base sm:text-lg pl-4 before:absolute before:left-0 before:top-2.5 before:w-1.5 before:h-1.5 before:rounded-full before:bg-primary/50"
-                    dangerouslySetInnerHTML={{ __html: parseInline(li.replace(/^[-*]\s/, '')) }}
-                  />
-                ))}
-              </ul>
-            );
-          }
-          return <p key={i} className="text-muted-foreground font-sans-en leading-relaxed text-base sm:text-lg" dangerouslySetInnerHTML={{ __html: parseInline(t) }} />;
-        })}
-      </div>
+      <MarkdownContent content={raw} />
     </div>
   );
 }
