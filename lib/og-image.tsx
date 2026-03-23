@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import sharp from 'sharp';
 
 export const OG_SIZE = { width: 1200, height: 630 };
 
@@ -60,24 +61,73 @@ const getBaseUrl = () => {
   return `http://localhost:${process.env.PORT || 5001}`;
 };
 
-export function generateOgImage({
+/**
+ * Satori (used by next/og ImageResponse) only supports PNG and JPEG images.
+ * WebP images cause "Unsupported image type: unknown" and crash the OG route.
+ *
+ * This helper fetches any image URL, converts it to PNG via sharp if needed,
+ * and returns a data URL safe for use in Satori JSX.
+ * Returns undefined on any error so the caller can fall back gracefully.
+ */
+async function toSatoriSafeDataUrl(url: string): Promise<string | undefined> {
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    if (!res.ok) return undefined;
+
+    const buffer = Buffer.from(await res.arrayBuffer());
+    const contentType = res.headers.get('content-type') ?? '';
+
+    // Already JPEG or PNG — pass through as data URL directly
+    if (contentType.includes('image/jpeg') || contentType.includes('image/jpg')) {
+      return `data:image/jpeg;base64,${buffer.toString('base64')}`;
+    }
+    if (contentType.includes('image/png')) {
+      return `data:image/png;base64,${buffer.toString('base64')}`;
+    }
+
+    // WebP, AVIF, GIF, or unknown — convert to PNG via sharp
+    const png = await sharp(buffer).png().toBuffer();
+    return `data:image/png;base64,${png.toString('base64')}`;
+  } catch {
+    return undefined;
+  }
+}
+
+export async function generateOgImage({
   title,
   subtitle,
   badge,
   imageUrl,
   variant = 'default',
   price,
-}: OgImageOptions): ImageResponse {
+}: OgImageOptions): Promise<ImageResponse> {
   const accentColor = VARIANT_ACCENTS[variant];
 
-  let resolvedImageUrl = imageUrl;
-  if (resolvedImageUrl && resolvedImageUrl.startsWith('/')) {
+  // ── Resolve & normalise the image URL ────────────────────────────────────
+  let resolvedImageUrl: string | undefined = imageUrl;
+
+  // Make relative URLs absolute
+  if (resolvedImageUrl?.startsWith('/')) {
     if (resolvedImageUrl.endsWith('.svg')) {
-      resolvedImageUrl = undefined;
+      resolvedImageUrl = undefined; // SVGs not supported by Satori
     } else {
       resolvedImageUrl = new URL(resolvedImageUrl, getBaseUrl()).toString();
     }
   }
+
+  // Convert non-JPEG/PNG images (e.g. WebP, AVIF) to a PNG data URL.
+  // This prevents Satori from crashing with "Unsupported image type: unknown".
+  if (resolvedImageUrl) {
+    const needsConversion =
+      /\.webp([?#]|$)/i.test(resolvedImageUrl) ||
+      /\.avif([?#]|$)/i.test(resolvedImageUrl) ||
+      /\.gif([?#]|$)/i.test(resolvedImageUrl);
+
+    if (needsConversion) {
+      resolvedImageUrl = await toSatoriSafeDataUrl(resolvedImageUrl) ?? undefined;
+    }
+  }
+
   const hasImage = !!resolvedImageUrl;
 
   return new ImageResponse(

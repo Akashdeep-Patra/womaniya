@@ -8,7 +8,7 @@ export const contentType = 'image/png';
 export default async function OpenGraphImage() {
   const subtitle = await getSetting('seo_og_subtitle') || 'Handwoven Heritage';
 
-  return generateOgImage({
+  return await generateOgImage({
     title: 'WOMANIYA',
     subtitle,
   });

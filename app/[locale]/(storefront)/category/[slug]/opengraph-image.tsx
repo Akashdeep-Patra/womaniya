@@ -22,12 +22,12 @@ export default async function CategoryOgImage({
   }
 
   if (!category) {
-    return generateOgImage({ title: 'Category', variant: 'category' });
+    return await generateOgImage({ title: 'Category', variant: 'category' });
   }
 
   const images = (category.carousel_images as string[] | null) ?? [];
 
-  return generateOgImage({
+  return await generateOgImage({
     title: category.name_en,
     subtitle: category.description_en ?? undefined,
     badge: 'Category',

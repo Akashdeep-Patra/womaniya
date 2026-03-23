@@ -20,10 +20,10 @@ export default async function ProductOgImage({
   }
 
   if (!product) {
-    return generateOgImage({ title: 'Product Not Found', variant: 'product' });
+    return await generateOgImage({ title: 'Product Not Found', variant: 'product' });
   }
 
-  return generateOgImage({
+  return await generateOgImage({
     title: product.name_en,
     subtitle: product.description_en ?? undefined,
     badge: product.category ?? undefined,

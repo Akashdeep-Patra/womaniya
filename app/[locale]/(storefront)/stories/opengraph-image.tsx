@@ -4,8 +4,8 @@ export const alt = 'Stories — Womaniya';
 export const size = OG_SIZE;
 export const contentType = 'image/png';
 
-export default function StoriesOgImage() {
-  return generateOgImage({
+export default async function StoriesOgImage() {
+  return await generateOgImage({
     title: 'Our Stories',
     subtitle: 'Heritage, artisans & narratives woven into every thread',
     badge: 'Stories',

@@ -11,7 +11,7 @@ export default async function ShopOgImage() {
     ? categories.slice(0, 5).map(c => c.name_en).join(' · ')
     : 'Handwoven Heritage';
 
-  return generateOgImage({
+  return await generateOgImage({
     title: 'Shop Handlooms',
     subtitle: categoryLine,
     badge: 'Shop',

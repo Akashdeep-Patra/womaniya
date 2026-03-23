@@ -8,7 +8,7 @@ export const contentType = 'image/png';
 export default async function CategoriesOgImage() {
   const subtitle = await getSetting('seo_og_subtitle') || 'Handwoven Heritage';
 
-  return generateOgImage({
+  return await generateOgImage({
     title: 'The Living Crafts',
     subtitle,
     badge: 'Categories',

@@ -22,12 +22,12 @@ export default async function CollectionOgImage({
   }
 
   if (!collection) {
-    return generateOgImage({ title: 'Collection', variant: 'collection' });
+    return await generateOgImage({ title: 'Collection', variant: 'collection' });
   }
 
   const images = (collection.carousel_images as string[] | null) ?? [];
 
-  return generateOgImage({
+  return await generateOgImage({
     title: collection.name_en,
     subtitle: collection.description_en ?? undefined,
     badge: 'Collection',

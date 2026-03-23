@@ -23,7 +23,7 @@ export default async function CampaignOgImage({
   }
 
   if (!campaign) {
-    return generateOgImage({ title: 'Campaign', variant: 'default' });
+    return await generateOgImage({ title: 'Campaign', variant: 'default' });
   }
 
   let coverImage: string | undefined;
@@ -33,7 +33,7 @@ export default async function CampaignOgImage({
     coverImage = bannerImages[0] || banner.image_url || undefined;
   }
 
-  return generateOgImage({
+  return await generateOgImage({
     title: campaign.name_en,
     subtitle: campaign.description_en ?? undefined,
     badge: campaign.status === 'live' ? 'Live Campaign' : 'Campaign',

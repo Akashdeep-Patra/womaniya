@@ -22,13 +22,13 @@ export default async function StoryOgImage({
   }
 
   if (!page) {
-    return generateOgImage({ title: 'Story', variant: 'story' });
+    return await generateOgImage({ title: 'Story', variant: 'story' });
   }
 
   const coverImage =
     ((page.images as string[] | null) ?? [])[0] || page.hero_image_url || undefined;
 
-  return generateOgImage({
+  return await generateOgImage({
     title: page.title_en,
     subtitle: page.seo_description_en ?? undefined,
     badge: 'Story',

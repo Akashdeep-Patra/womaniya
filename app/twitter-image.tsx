@@ -9,5 +9,5 @@ export default async function TwitterImage() {
   let subtitle = 'Handwoven Heritage';
   try { subtitle = (await getSetting('seo_og_subtitle')) || subtitle; } catch { /* use fallback */ }
 
-  return generateOgImage({ title: 'WOMANIYA', subtitle });
+  return await generateOgImage({ title: 'WOMANIYA', subtitle });
 }
