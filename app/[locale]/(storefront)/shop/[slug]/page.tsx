@@ -41,7 +41,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title,
       description,
-      images: product.image_url ? [{ url: product.image_url, width: 1200, height: 630, alt: title }] : [],
+      // images intentionally omitted — opengraph-image.tsx generates the
+      // branded card (title + price + product image converted to PNG)
     },
     twitter: {
       card: 'summary_large_image',

@@ -15,7 +15,9 @@
     "vercel-build": "tsx scripts/migrate.ts && tsc --noEmit && next build",
     "perf": "pnpm build && pnpm dlx @lhci/cli autorun",
     "perf:collect": "pnpm build && pnpm dlx @lhci/cli collect",
-    "analyze": "ANALYZE=true pnpm build"
+    "analyze": "ANALYZE=true pnpm build",
+    "test:og": "bun run scripts/test-og.ts",
+    "test:og:ci": "OG_BASE_URL=$OG_BASE_URL bun run scripts/test-og.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
